@@ -14,16 +14,6 @@ export default defineConfig({
         drop_debugger: true,
       },
     },
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom'],
-          ui: ['lucide-react'],
-          supabase: ['@supabase/supabase-js'],
-          utils: ['./src/utils/analytics', './src/utils/constants']
-        }
-      }
-    },
     chunkSizeWarningLimit: 500,
     cssCodeSplit: true,
     sourcemap: false
