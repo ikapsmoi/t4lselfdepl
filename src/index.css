@@ -1,0 +1,1036 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    line-height: 1.6;
+    color: #111827;
+    background-color: #FFFFFF;
+    font-weight: 400;
+    overflow-x: hidden;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    font-weight: 700;
+    line-height: 1.12;
+    letter-spacing: -0.03em;
+  }
+
+  .font-display,
+  .font-heading {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+
+  .font-sans,
+  .font-body {
+    font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .text-shadow {
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+
+  .text-shadow-lg {
+    text-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  }
+
+  .backdrop-blur-xs {
+    backdrop-filter: blur(2px);
+  }
+
+  .gradient-overlay {
+    background: linear-gradient(135deg, rgba(14, 165, 233, 0.9) 0%, rgba(16, 185, 129, 0.7) 50%, rgba(245, 158, 11, 0.5) 100%);
+  }
+
+  .hero-gradient {
+    background: linear-gradient(135deg, #0ea5e9 0%, #10b981 50%, #f59e0b 100%);
+  }
+
+  .visitrenotahoe-gradient {
+    background: linear-gradient(135deg, #1e40af 0%, #0ea5e9 50%, #f59e0b 100%);
+  }
+}
+
+/* Custom scrollbar - VisitRenoTahoe style */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #0ea5e9, #1e40af);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #0284c7, #1d4ed8);
+}
+
+/* Performance optimizations */
+img {
+  content-visibility: auto;
+  height: auto;
+  max-width: 100%;
+}
+
+/* Reduce animation complexity on slower devices */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Optimize heavy animations */
+.animate-scroll-left-infinite,
+.animate-scroll-creators,
+.animate-scroll-testimonials {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Cloud and Airplane Animation Background - VisitRenoTahoe inspired */
+.cloud-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  overflow: hidden;
+  will-change: transform;
+  background: linear-gradient(180deg, 
+    rgba(14, 165, 233, 0.1) 0%, 
+    rgba(56, 189, 248, 0.08) 20%, 
+    rgba(186, 230, 253, 0.05) 40%, 
+    rgba(240, 249, 255, 0.03) 60%, 
+    rgba(255, 255, 255, 0.01) 80%, 
+    transparent 100%
+  );
+}
+
+.clouds {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  background-image: 
+    /* Large fluffy clouds */
+    radial-gradient(ellipse 200px 80px at 200px 120px, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 90%),
+    radial-gradient(ellipse 250px 100px at 500px 180px, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 90%),
+    radial-gradient(ellipse 180px 70px at 800px 140px, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 90%),
+    radial-gradient(ellipse 220px 90px at 1100px 200px, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 90%),
+    radial-gradient(ellipse 300px 120px at 1400px 160px, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 90%),
+    radial-gradient(ellipse 160px 60px at 1700px 190px, rgba(255, 255, 255, 0.7) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 90%),
+    radial-gradient(ellipse 240px 95px at 2000px 130px, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.4) 40%, transparent 90%),
+    radial-gradient(ellipse 190px 75px at 2300px 170px, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.3) 40%, transparent 90%),
+    /* Smaller wispy clouds */
+    radial-gradient(ellipse 120px 40px at 350px 80px, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 95%),
+    radial-gradient(ellipse 140px 50px at 750px 90px, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 95%),
+    radial-gradient(ellipse 100px 35px at 1250px 70px, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 50%, transparent 95%),
+    radial-gradient(ellipse 130px 45px at 1650px 85px, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.3) 50%, transparent 95%);
+  animation: drift-clouds 120s linear infinite;
+}
+
+.airplane {
+  position: absolute;
+  top: 20%;
+  left: -400px;
+  width: 320px;
+  height: 100px;
+  opacity: 0.5;
+  z-index: 1;
+  animation: fly-plane 90s linear infinite;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 100' fill='%23374151'%3E%3C!-- Boeing 737 inspired design --%3E%3C!-- Fuselage --%3E%3Cellipse cx='160' cy='50' rx='140' ry='18' fill='%23e5e7eb'/%3E%3Cellipse cx='160' cy='50' rx='135' ry='15' fill='%23f3f4f6'/%3E%3C!-- Cockpit windows --%3E%3Cellipse cx='80' cy='45' rx='25' ry='8' fill='%230ea5e9' opacity='0.7'/%3E%3Cellipse cx='75' cy='45' rx='15' ry='6' fill='%230284c7' opacity='0.8'/%3E%3C!-- Main wings --%3E%3Cpath d='M120 50 L200 35 L280 40 L300 45 L280 55 L200 65 L120 50 Z' fill='%23d1d5db'/%3E%3Cpath d='M125 50 L195 37 L275 42 L295 47 L275 53 L195 63 L125 50 Z' fill='%23e5e7eb'/%3E%3C!-- Tail wing --%3E%3Cpath d='M220 50 L260 25 L280 30 L270 35 L240 50 L270 65 L280 70 L260 75 L220 50 Z' fill='%23d1d5db'/%3E%3Cpath d='M225 50 L255 28 L275 32 L265 37 L235 50 L265 63 L275 68 L255 72 L225 50 Z' fill='%23e5e7eb'/%3E%3C!-- Engine nacelles --%3E%3Cellipse cx='140' cy='65' rx='20' ry='8' fill='%23374151'/%3E%3Cellipse cx='180' cy='65' rx='20' ry='8' fill='%23374151'/%3E%3Cellipse cx='140' cy='65' rx='15' ry='6' fill='%234b5563'/%3E%3Cellipse cx='180' cy='65' rx='15' ry='6' fill='%234b5563'/%3E%3C!-- Passenger windows --%3E%3Ccircle cx='100' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='110' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='120' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='130' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='140' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='150' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='160' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='170' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='180' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='190' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='200' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3Ccircle cx='210' cy='48' r='3' fill='%230ea5e9' opacity='0.6'/%3E%3C!-- Airline livery stripe --%3E%3Cpath d='M60 55 L240 55 L240 58 L60 58 Z' fill='%230ea5e9' opacity='0.8'/%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+@keyframes drift-clouds {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes fly-plane {
+  0% {
+    transform: translateX(-400px) translateY(0px) rotate(0deg);
+  }
+  25% {
+    transform: translateX(25vw) translateY(-20px) rotate(2deg);
+  }
+  50% {
+    transform: translateX(50vw) translateY(10px) rotate(-1deg);
+  }
+  75% {
+    transform: translateX(75vw) translateY(-15px) rotate(1deg);
+  }
+  100% {
+    transform: translateX(calc(100vw + 400px)) translateY(0px) rotate(0deg);
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .airplane {
+    width: 200px;
+    height: 65px;
+    animation-duration: 70s;
+    top: 15%;
+  }
+  
+  .clouds {
+    animation-duration: 90s;
+  }
+  
+  /* Mobile floating elements adjustments */
+  .animate-float,
+  .animate-bounce-gentle {
+    animation-duration: 2s;
+  }
+  
+  /* Ensure floating elements are visible on mobile */
+  .bg-white\/90 {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(8px);
+  }
+}
+
+/* Reduce motion for accessibility */
+@media (prefers-reduced-motion: reduce) {
+  .clouds,
+  .airplane {
+    animation-duration: 300s;
+  }
+  
+  .animate-float,
+  .animate-bounce-gentle {
+    animation: none;
+  }
+}
+
+/* Moving Clouds with Walking Boots Animation */
+.clouds-with-boots {
+  position: absolute;
+  width: 200%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+
+.cloud-boot-combo {
+  position: absolute;
+  animation: float-across 25s linear infinite;
+}
+
+.cloud {
+  width: 120px;
+  height: 60px;
+  background: rgba(255, 255, 255, 0.45);
+  border-radius: 60px;
+  position: relative;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 50px;
+}
+
+.cloud::before {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  left: 10px;
+}
+
+.cloud::after {
+  width: 60px;
+  height: 40px;
+  top: -15px;
+  right: 15px;
+}
+
+.walking-boots {
+  position: absolute;
+  font-size: 2rem;
+  top: 45px;
+  left: 50%;
+  transform: translateX(-50%);
+  animation: boot-walk 2s ease-in-out infinite;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* Individual cloud positioning and timing */
+.cloud-1 {
+  top: 15%;
+  animation-delay: 0s;
+  animation-duration: 30s;
+}
+
+.cloud-2 {
+  top: 35%;
+  animation-delay: -8s;
+  animation-duration: 25s;
+}
+
+.cloud-3 {
+  top: 55%;
+  animation-delay: -15s;
+  animation-duration: 35s;
+}
+
+.cloud-4 {
+  top: 25%;
+  animation-delay: -22s;
+  animation-duration: 28s;
+}
+
+.cloud-5 {
+  top: 45%;
+  animation-delay: -30s;
+  animation-duration: 32s;
+}
+
+/* Boot walking animation */
+@keyframes boot-walk {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0px) rotate(-2deg);
+  }
+  25% {
+    transform: translateX(-50%) translateY(-3px) rotate(0deg);
+  }
+  50% {
+    transform: translateX(-50%) translateY(0px) rotate(2deg);
+  }
+  75% {
+    transform: translateX(-50%) translateY(-2px) rotate(0deg);
+  }
+}
+
+/* Cloud floating animation */
+@keyframes float-across {
+  0% {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(calc(100vw + 200px));
+    opacity: 0;
+  }
+}
+
+/* Responsive adjustments for clouds */
+@media (max-width: 768px) {
+  .cloud {
+    width: 80px;
+    height: 40px;
+  }
+  
+  .cloud::before {
+    width: 35px;
+    height: 35px;
+    top: -18px;
+    left: 8px;
+  }
+  
+  .cloud::after {
+    width: 40px;
+    height: 25px;
+    top: -10px;
+    right: 10px;
+  }
+  
+  .walking-boots {
+    font-size: 1.5rem;
+    top: 30px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cloud {
+    width: 60px;
+    height: 30px;
+  }
+  
+  .walking-boots {
+    font-size: 1.2rem;
+    top: 25px;
+  }
+}
+
+/* Focus styles - VisitRenoTahoe inspired */
+.focus-ring {
+  @apply focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+}
+
+/* Smooth transitions for all interactive elements */
+button, a, input, select, textarea {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* VisitRenoTahoe inspired gradient backgrounds */
+.gradient-primary {
+  background: linear-gradient(135deg, #0ea5e9 0%, #1e40af 100%);
+}
+
+.gradient-adventure {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.gradient-culture {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+}
+
+.gradient-wellness {
+  background: linear-gradient(135deg, #d946ef 0%, #c026d3 100%);
+}
+
+.gradient-tahoe {
+  background: linear-gradient(135deg, #1e40af 0%, #0ea5e9 50%, #f59e0b 100%);
+}
+
+/* Loading animations */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200px 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Responsive image containers */
+.aspect-ratio-16-9 {
+  aspect-ratio: 16 / 9;
+}
+
+.aspect-ratio-4-3 {
+  aspect-ratio: 4 / 3;
+}
+
+.aspect-ratio-1-1 {
+  aspect-ratio: 1 / 1;
+}
+
+/* VisitRenoTahoe inspired form styles */
+.form-input {
+  @apply w-full px-6 py-4 border-2 border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-300 bg-white font-body text-base;
+}
+
+.form-input:invalid {
+  @apply border-red-300 focus:ring-red-500;
+}
+
+.form-input:focus {
+  @apply shadow-soft;
+}
+
+/* Card hover effects - VisitRenoTahoe style */
+.card-hover {
+  @apply transition-all duration-500 hover:shadow-card-hover hover:-translate-y-3 hover:scale-105;
+}
+
+/* Button loading state */
+.btn-loading {
+  @apply relative overflow-hidden;
+}
+
+.btn-loading::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: loading-shimmer 2s infinite;
+}
+
+@keyframes loading-shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* VisitRenoTahoe inspired button styles */
+.btn-primary {
+  @apply bg-contiki-teal hover:bg-contiki-teal/90 text-white font-body font-semibold py-4 px-8 rounded-contiki shadow-contiki hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1;
+}
+
+.btn-secondary {
+  @apply bg-white hover:bg-contiki-grayLight text-contiki-teal font-body font-semibold py-4 px-8 rounded-contiki border-2 border-contiki-teal hover:border-contiki-navy hover:shadow-contiki transition-all duration-300 transform hover:scale-105;
+}
+
+.btn-accent {
+  @apply bg-contiki-coral hover:bg-contiki-coral/90 text-white font-body font-semibold py-4 px-8 rounded-contiki shadow-contiki hover:shadow-lg transition-all duration-300 transform hover:scale-105 hover:-translate-y-1;
+}
+
+/* Section spacing inspired by VisitRenoTahoe */
+.section-padding {
+  @apply py-24 lg:py-32;
+}
+
+.container-padding {
+  @apply px-6 sm:px-8 lg:px-12;
+}
+
+/* Typography scale inspired by VisitRenoTahoe */
+.heading-xl {
+  @apply text-5xl md:text-7xl lg:text-8xl font-display font-bold tracking-tight leading-none;
+}
+
+.heading-lg {
+  @apply text-4xl md:text-5xl lg:text-6xl font-display font-bold tracking-tight leading-tight;
+}
+
+.heading-md {
+  @apply text-3xl md:text-4xl lg:text-5xl font-display font-bold tracking-tight leading-tight;
+}
+
+.heading-sm {
+  @apply text-2xl md:text-3xl font-display font-semibold tracking-tight leading-tight;
+}
+
+.body-xl {
+  @apply text-xl md:text-2xl font-body leading-relaxed;
+}
+
+.body-lg {
+  @apply text-lg md:text-xl font-body leading-relaxed;
+}
+
+.body-md {
+  @apply text-base md:text-lg font-body leading-relaxed;
+}
+
+.body-sm {
+  @apply text-sm md:text-base font-body leading-relaxed;
+}
+
+/* VisitRenoTahoe inspired hero section */
+.hero-section {
+  @apply relative min-h-[85vh] md:min-h-screen flex items-center justify-center overflow-hidden;
+}
+
+.hero-content {
+  @apply relative z-10 text-center text-white w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+/* Enhanced card styles */
+.travel-card {
+  @apply bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:scale-105 hover:-translate-y-1 relative;
+}
+
+/* New Users Ticker Animation */
+@keyframes scroll-users-vertical {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-50%);
+  }
+}
+
+.animate-scroll-users-vertical {
+  animation: scroll-users-vertical 280s linear infinite;
+}
+
+.animate-scroll-users-vertical:hover {
+  animation-play-state: paused;
+}
+
+@keyframes fade-in-out {
+  0% { opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.animate-fade-in-out {
+  animation: fade-in-out 3s ease-in-out infinite;
+}
+
+/* Responsive adjustments for users ticker */
+@media (max-width: 768px) {
+  .animate-scroll-users-vertical {
+    animation: scroll-users-vertical 110s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-scroll-users-vertical {
+    animation: scroll-users-vertical 120s linear infinite;
+  }
+}
+
+/* Instagram-style gradient border effect */
+.travel-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  padding: 2px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+  border-radius: inherit;
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask-composite: exclude;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.travel-card:hover::before {
+  opacity: 0.6;
+}
+
+.travel-card-image {
+  @apply w-full h-40 md:h-48 object-cover;
+}
+
+.travel-card-content {
+  @apply p-8;
+}
+
+/* Visually hidden but accessible for screen readers and programmatic access */
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+/* Gen Z Hero Animations */
+@keyframes slideInFromRight {
+  0% {
+    transform: translateX(100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromLeft {
+  0% {
+    transform: translateX(-100px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0.8) rotate(-5deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.1) rotate(2deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+  }
+}
+
+@keyframes floatSocial {
+  0%, 100% {
+    transform: translateY(0px) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-10px) rotate(1deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(236, 72, 153, 0.6), 0 0 60px rgba(147, 51, 234, 0.4);
+  }
+}
+
+@keyframes textShimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+/* Enhanced animations for Gen Z vibe */
+.animate-slide-in-right {
+  animation: slideInFromRight 0.8s ease-out;
+}
+
+/* Smooth image transitions for featured trip */
+.featured-trip-image {
+  transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+}
+
+.featured-trip-image.fade-enter {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.featured-trip-image.fade-enter-active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.animate-slide-in-left {
+  animation: slideInFromLeft 0.8s ease-out;
+}
+
+.animate-pop-in {
+  animation: popIn 0.6s ease-out;
+}
+
+.animate-float-social {
+  animation: floatSocial 4s ease-in-out infinite;
+}
+
+.animate-glow-pulse {
+  animation: glowPulse 2s ease-in-out infinite;
+}
+
+.animate-text-shimmer {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.8), transparent);
+  background-size: 200% 100%;
+  animation: textShimmer 3s ease-in-out infinite;
+}
+
+/* Touch-friendly mobile elements */
+.touch-friendly {
+  min-height: 48px;
+  min-width: 48px;
+}
+
+@media (max-width: 768px) {
+  .touch-friendly {
+    padding: 14px 18px;
+    font-size: 14px;
+    min-height: 48px;
+    min-width: 48px;
+  }
+}
+
+/* Instagram-style gradient animations */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.animate-gradient-shift {
+  background-size: 200% 200%;
+  animation: gradientShift 3s ease infinite;
+}
+
+/* Animated lime bar for header */
+@keyframes scroll-left-infinite {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-left-infinite {
+  animation: scroll-left-infinite 15s linear infinite;
+}
+
+/* Mobile-optimized hero */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: 100vh;
+  }
+  
+  .hero-content {
+    padding: 2rem 1rem;
+  }
+  
+  .animate-scroll-left-infinite {
+    animation: scroll-left-infinite 12s linear infinite;
+  }
+}
+
+/* Social media style elements */
+.social-element {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Vibrant button effects */
+.btn-gen-z {
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+  background-size: 300% 300%;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Navigation enhancements */
+.nav-link {
+  @apply font-sans font-medium text-gray-700 hover:text-primary-600 transition-colors duration-300 relative;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px;
+  bottom: -4px;
+  left: 50%;
+  background: linear-gradient(90deg, #0ea5e9, #1e40af);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Enhanced search bar */
+.search-container {
+  @apply bg-white/95 backdrop-blur-md rounded-3xl shadow-lg p-8 border border-white/20;
+}
+
+/* Fix button text visibility */
+button {
+  color: inherit;
+}
+
+/* Improve contrast for better accessibility */
+.text-gray-500 {
+  color: #6b7280 !important;
+}
+
+.text-gray-600 {
+  color: #4b5563 !important;
+}
+
+/* Ensure sufficient contrast for interactive elements */
+.nav-link {
+  color: #374151 !important;
+}
+
+.nav-link:hover {
+  color: #1f2937 !important;
+}
+
+/* Fix select dropdown text */
+select {
+  color: #1f2937 !important;
+}
+
+select option {
+  color: #1f2937 !important;
+  background: white !important;
+}
+
+/* Stats section enhancements */
+.stat-item {
+  @apply text-center;
+}
+
+.stat-icon {
+  @apply inline-flex items-center justify-center w-20 h-20 rounded-contiki shadow-contiki mb-6 group-hover:scale-110 group-hover:animate-float transition-all duration-300;
+}
+
+.stat-number {
+  @apply text-4xl md:text-5xl font-heading font-bold text-contiki-navy mb-2 tracking-tight;
+}
+
+.stat-label {
+  @apply text-contiki-grayMid text-lg font-body font-medium;
+}
+
+
+/* Brand Gradient */
+.brand-gradient {
+  background: linear-gradient(135deg, #00FFC6, #00BFFF, #FF6B6B);
+}
+
+/* Glow Pulse for Social/CTA */
+.glow-pulse {
+  animation: glow 2s ease-in-out infinite;
+}
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 10px rgba(0,255,198,0.5); }
+  50% { box-shadow: 0 0 25px rgba(255,107,107,0.6); }
+}
+
+/* Frosted Nav/Footer */
+.nav-frost {
+  @apply bg-white/10 backdrop-blur-md border-b border-white/20;
+}
+
+/* Card Hover Premium */
+.card-hover {
+  @apply transition-transform duration-300 ease-out hover:scale-105 hover:shadow-2xl;
+}
+
+/* Client Gallery Animations */
+@keyframes bounce-gentle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.animate-bounce-gentle {
+  animation: bounce-gentle 2s ease-in-out infinite;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out;
+}
+
+/* Gallery slide transitions */
+.gallery-slide-enter {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+.gallery-slide-enter-active {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 800ms ease-in-out, transform 800ms ease-in-out;
+}
+
+.gallery-slide-exit {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.gallery-slide-exit-active {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 800ms ease-in-out, transform 800ms ease-in-out;
+}
+
+/* Mobile gallery optimizations */
+@media (max-width: 768px) {
+  .animate-bounce-gentle {
+    animation: bounce-gentle 3s ease-in-out infinite;
+  }
+
+  .gallery-shuffle-item {
+    animation: gallery-shuffle 12s ease-in-out infinite;
+  }
+}
+
+@keyframes gallery-shuffle {
+  0%, 100% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(-6px) scale(1.01); }
+  40% { transform: translateY(4px) scale(0.99); }
+  60% { transform: translateY(-3px) scale(1.005); }
+  80% { transform: translateY(2px) scale(0.995); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-bounce-gentle,
+  .animate-fade-in {
+    animation: none;
+  }
+
+  .gallery-slide-enter-active,
+  .gallery-slide-exit-active {
+    transition: opacity 0.3s ease-in-out;
+    transform: none;
+  }
+}
