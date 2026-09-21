@@ -172,7 +172,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
               >
                 <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
                 Secret Miles Deals
-                <span className="ml-1 text-[8px] sm:text-[9px] font-semibold text-amber-300 tracking-wider opacity-90">Join Now</span>
+                <span className="ml-1 text-[8px] sm:text-[9px] font-semibold text-amber-300 tracking-wider opacity-90"></span>
               </a>
             </div>
 
