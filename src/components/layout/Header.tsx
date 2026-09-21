@@ -165,7 +165,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             <div className="relative inline-flex items-center ml-2 sm:ml-3 group">
               <div className="absolute -inset-[1.5px] rounded-lg bg-[length:300%_300%] bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 animate-golden-border opacity-80 group-hover:opacity-100 transition-opacity"></div>
               <a
-                href="t.me/secret_miles_channel"
+                href="https://t.me/secret_miles_channel"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="relative inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white text-[10px] sm:text-xs font-bold rounded-lg hover:from-black hover:to-gray-900 transition-all duration-300 tracking-wide uppercase"
