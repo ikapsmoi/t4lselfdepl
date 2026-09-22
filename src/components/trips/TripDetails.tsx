@@ -13,7 +13,6 @@ import { BookingModal } from './BookingModal';
 import { ReviewSection } from './ReviewSection';
 import { VRPreview } from '../vr/VRPreview';
 import { InquireNowModal } from './InquireNowModal';
-import { MessageHostModal } from './MessageHostModal';
 import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
 import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES } from '../../utils/constants';
@@ -28,7 +27,7 @@ interface TripDetailsProps {
 }
 
 export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
-  const { viewTrip, clickJoin } = useAnalytics();
+  const { viewTrip, clickJoin, whatsappClick } = useAnalytics();
   const { user } = useAuth();
   const { getBookingByTripAndUser } = useBookings();
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
@@ -36,8 +35,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   const [showInquireModal, setShowInquireModal] = useState(false);
   const [showVRPreview, setShowVRPreview] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
-  const [showMessageModal, setShowMessageModal] = useState(false);
-  const [showMessageHostModal, setShowMessageHostModal] = useState(false);
   const [showPromoteModal, setShowPromoteModal] = useState(false);
   const [showExistingBookingConfirmationModal, setShowExistingBookingConfirmationModal] = useState(false);
   const [userBookingForThisTrip, setUserBookingForThisTrip] = useState<Booking | null>(null);
@@ -101,6 +98,12 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
       month: 'long', 
       day: 'numeric' 
     });
+  };
+
+  const handleWhatsAppClick = () => {
+    const message = `Hi Travel4life! I would like to check availability for "${trip.title}" in ${trip.destination}. Dates: ${formatDate(trip.start_date)} - ${formatDate(trip.end_date)}. Please share the package details and next steps.`;
+    window.open(`https://wa.me/919871621921?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+    whatsappClick('trip_details', trip.id);
   };
 
   const handleShare = () => {
@@ -292,8 +295,11 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             <div className="lg:col-span-1">
               <div className="sticky top-20 bg-white rounded-xl shadow-lg p-3 md:p-6 border">
                 <div className="text-center mb-4 md:mb-6">
-                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{getCurrencySymbol(trip.currency || 'USD')}{trip.price}</div>
-                  <div className="text-[10px] md:text-sm text-gray-600">per person</div>
+                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{displayCurrencySymbol}{trip.price}</div>
+                  <div className="text-xs md:text-sm text-gray-600">per person · total trip price</div>
+                  <div className="mt-1 text-xs font-semibold text-amber-700">
+                    {displayCurrencySymbol}{trip.deposit_required} deposit due today ({Math.round((trip.deposit_required / trip.price) * 100)}%)
+                  </div>
                   {trip.early_bird_discount && (
                     <Badge variant="success" size="sm" className="mt-2 text-[9px] md:text-xs">
                       Save {trip.early_bird_discount}% - Early Bird!
@@ -349,13 +355,13 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                       Book Now - {getCurrencySymbol(trip.currency || 'USD')}{trip.deposit_required} deposit
                     </Button>
                     
-                    <Button 
-                      variant="outline" 
-                      className="w-full text-[10px] md:text-sm"
-                      onClick={() => setShowMessageHostModal(true)}
+                    <Button
+                      variant="outline"
+                      className="w-full text-xs md:text-sm"
+                      onClick={handleWhatsAppClick}
                       icon={MessageCircle}
                     >
-                      Message Host
+                      Ask on WhatsApp
                     </Button>
                     <Button 
                       variant="secondary" 
@@ -387,14 +393,18 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   </div>
                 )}
 
-                <div className="mt-4 md:mt-6 p-2.5 md:p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-1 md:mb-2 text-[10px] md:text-sm">Cancellation Policy</h4>
-                  <p className="text-[10px] text-gray-600 md:text-sm">{trip.cancellation_policy}</p>
+                <div className="mt-4 md:mt-6 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-blue-900 md:p-4 md:text-sm">
+                  <strong>What happens next?</strong> Choose your travelers, review inclusions and add-ons, then confirm your booking. You will receive a booking reference before completing payment.
+                </div>
+
+                <div className="mt-4 md:mt-6 p-3 md:p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-1 md:mb-2 text-xs md:text-sm">Cancellation Policy</h4>
+                  <p className="text-xs text-gray-600 md:text-sm">{trip.cancellation_policy}</p>
                 </div>
 
                 {trip.group_discount > 0 && (
                   <div className="mt-3 md:mt-4 p-2 md:p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="text-green-800 text-[10px] md:text-sm">
+                    <div className="text-green-800 text-xs md:text-sm">
                       <strong>Group Discount:</strong> Save {trip.group_discount}% when booking with 4+ people
                     </div>
                   </div>
@@ -415,18 +425,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
       <InquireNowModal
         isOpen={showInquireModal}
         onClose={() => setShowInquireModal(false)}
-        trip={trip}
-      />
-
-      <MessageHostModal
-        isOpen={showMessageModal}
-        onClose={() => setShowMessageModal(false)}
-        trip={trip}
-      />
-
-      <MessageHostModal
-        isOpen={showMessageHostModal}
-        onClose={() => setShowMessageHostModal(false)}
         trip={trip}
       />
 

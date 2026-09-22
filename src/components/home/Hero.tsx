@@ -6,11 +6,13 @@ import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
 import { NewUsersTicker } from '../common/NewUsersTicker';
 import { useTrips } from '../../hooks/useTrips';
+import { useAnalytics } from '../../utils/analytics';
 import { supabase } from '../../lib/supabase';
 import { MessageCircle } from 'lucide-react';
 
 const Hero: React.FC = memo(() => {
   const { getFeaturedTripsArray, searchTrips } = useTrips();
+  const { whatsappClick } = useAnalytics();
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [currentTripIndex, setCurrentTripIndex] = useState(0);
@@ -41,11 +43,11 @@ const Hero: React.FC = memo(() => {
 
   // Five sets of three words, one for each background image
   const fadingWordSets = [
-  ["Tomorrowland Ultra Coachella"],
-    ["Epic Group Trips"],
-["Every Destination Affordable"],
-    ["Travel Free as a Host"],
-   ["Content & Memories"]
+    ['Festival trips worth travelling for'],
+    ['Tomorrowland, Ultra and Coachella'],
+    ['Curated group adventures'],
+    ['Verified hosts and real experiences'],
+    ['Stories you bring home']
   ];
 
   // Dynamic background images for Gen Z travel vibes
@@ -241,7 +243,7 @@ const Hero: React.FC = memo(() => {
               {/* Label */}
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.1 mb-6">
                 <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
-                <span className="text-xs font-semibold text-white/90 tracking-widest uppercase">Curated Travel Experiences</span>
+                <span className="text-xs font-semibold text-white/90 tracking-widest uppercase">Festival & Group Travel</span>
               </div>
 
               <h1 className={`text-4xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.08] mb-5 text-white transition-opacity duration-300 ${
@@ -251,7 +253,7 @@ const Hero: React.FC = memo(() => {
               </h1>
 
               <p className="text-base md:text-xl font-body font-normal text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Grand Events · 13 years of excellence · Unbeatable prices. 
+                Discover festival trips and curated group adventures with clear details, trusted hosts, and support when you need it.
               </p>
 
               {/* Floating glass search card */}
@@ -267,7 +269,7 @@ const Hero: React.FC = memo(() => {
                     }}
                     className="flex-1 py-2.5 px-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg text-xs sm:text-sm"
                   >
-                    Explore Experiences
+                    Explore Festival Trips
                   </button>
                   <button
                     onClick={() => {
@@ -315,7 +317,10 @@ const Hero: React.FC = memo(() => {
       {/* WhatsApp Support Button */}
       <div className="fixed bottom-6 right-6 z-40">
         <button
-          onClick={() => window.open('https://wa.link/ghfcus', '_blank')}
+          onClick={() => {
+            whatsappClick('homepage_support');
+            window.open('https://wa.link/ghfcus', '_blank');
+          }}
           className="bg-green-500 hover:bg-green-600 text-white p-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 group"
           aria-label="Contact support via WhatsApp"
         >

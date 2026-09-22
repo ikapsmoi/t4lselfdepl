@@ -85,9 +85,14 @@ export const analytics = {
   // Page views
   viewHome: () => trackEvent('view_home'),
   viewTrip: (tripId: string) => trackEvent('view_trip', { trip_id: tripId }),
+  clickTripCard: (tripId: string) => trackEvent('click_trip_card', { trip_id: tripId }),
   
   // User actions
   clickJoin: (tripId: string) => trackEvent('click_join', { trip_id: tripId }),
+  whatsappClick: (context: string, tripId?: string) => trackEvent('whatsapp_click', {
+    context,
+    ...(tripId ? { trip_id: tripId } : {})
+  }),
   startBooking: (tripId: string, tripPrice: number) => trackEvent('start_booking', { 
     trip_id: tripId, 
     trip_price: tripPrice 

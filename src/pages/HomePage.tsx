@@ -10,6 +10,7 @@ import { CreatorTrips } from '../components/creator/CreatorTrips';
 import { IndiaSpecials } from '../components/india/IndiaSpecials';
 import { ClientGallery } from '../components/home/ClientGallery';
 import { SocialReviews } from '../components/home/SocialReviews';
+import { FestivalReleaseCTA } from '../components/home/FestivalReleaseCTA';
 import { HowItWorksPage } from './HowItWorksPage';
 import { SafetyPage } from './SafetyPage';
 import { useTrips } from '../hooks/useTrips';
@@ -133,6 +134,7 @@ export const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen">
       <Hero />
+      <FestivalReleaseCTA />
 
       {/* Top-Rated Adventures */}
       <div id="top-rated-adventures">
