@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, ThumbsUp, Filter, Search, ChevronDown, User, Calendar } from 'lucide-react';
+import { Star, ThumbsUp, Filter, Search, ChevronDown, User } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
@@ -66,15 +66,6 @@ export const ReviewsPage: React.FC = () => {
         ))}
       </div>
     );
-  };
-
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
   };
 
   const averageRating = reviews.length > 0
@@ -232,10 +223,6 @@ export const ReviewsPage: React.FC = () => {
                               {review.reviewer.tier}
                             </Badge>
                           )}
-                        </div>
-                        <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
-                          <Calendar className="w-4 h-4" />
-                          {formatDate(review.created_at)}
                         </div>
                       </div>
                     </div>

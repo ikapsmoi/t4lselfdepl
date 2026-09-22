@@ -162,17 +162,16 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             </button>
 
             {/* Travel4life Reserve VVIP Button */}
-            <div className="relative inline-flex items-center ml-2 sm:ml-3 group">
-              <div className="absolute -inset-[1.5px] rounded-lg bg-[length:300%_300%] bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 animate-golden-border opacity-80 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative inline-flex items-center ml-1.5 sm:ml-3 group">
+              <div className="absolute -inset-px rounded-full bg-amber-400/70 opacity-80 group-hover:opacity-100 transition-opacity"></div>
               <a
                 href="https://t.me/secret_miles_channel"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="relative inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 text-white text-[10px] sm:text-xs font-bold rounded-lg hover:from-black hover:to-gray-900 transition-all duration-300 tracking-wide uppercase"
+                className="relative inline-flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 bg-amber-50 text-amber-900 text-[9px] sm:text-xs font-bold rounded-full border border-amber-200 hover:bg-amber-100 transition-colors duration-200 tracking-wide uppercase whitespace-nowrap"
               >
-                <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse"></span>
-                Secret Miles Deals
-                <span className="ml-1 text-[8px] sm:text-[9px] font-semibold text-amber-300 tracking-wider opacity-90"></span>
+                <span className="w-1.5 h-1.5 bg-amber-500 rounded-full animate-pulse shrink-0"></span>
+                <span>Secret Miles<span className="hidden sm:inline"> Deals</span></span>
               </a>
             </div>
 

@@ -262,17 +262,49 @@ export const useAuthProvider = () => {
           }
 
           const { profile } = await profileResponse.json();
+          const resolvedUser = profile || data.user;
+
+          // Prefer an authenticated session when available, but still return the created profile
+          // for guest booking flows so the UI can proceed without blocking on email verification.
+          if (resolvedUser) {
+            setUser(resolvedUser as User);
+          }
+
+          // If signup succeeds without an auth session (common with email verification enabled),
+          // still try to sign the new user in immediately so the booking flow can continue and
+          // the user is authenticated in the background.
+          if (!data.session && resolvedUser?.id) {
+            try {
+              const { data: loginData, error: loginError } = await supabase.auth.signInWithPassword({
+                email: email.toLowerCase().trim(),
+                password,
+              });
+
+              if (!loginError && loginData?.session && loginData.user) {
+                const signedInProfile = await fetchUserProfile(loginData.user.id);
+                setUser(signedInProfile || profile);
+                setLoading(false);
+                return { success: true, user: signedInProfile || resolvedUser };
+              }
+
+              if (loginError) {
+                console.warn('Auto-registration succeeded but immediate sign-in failed:', loginError.message);
+              }
+            } catch (loginException) {
+              console.error('Automatic sign-in after signup failed:', loginException);
+            }
+          }
           
           // If session exists, user is automatically signed in
           if (data.session) {
-            setUser(profile);
+            setUser(resolvedUser as User);
             setLoading(false);
-            return { success: true, user: profile };
+            return { success: true, user: resolvedUser };
           }
           
           // If no session, email confirmation is required
           setLoading(false);
-          return { success: true, user: null };
+          return { success: true, user: resolvedUser || null };
         } catch (profileError) {
           console.error('Profile creation error:', profileError);
           setLoading(false);

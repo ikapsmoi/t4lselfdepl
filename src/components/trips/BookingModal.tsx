@@ -108,7 +108,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, tri
   useEffect(() => {
     if (showSuccess && !hasRedirected) {
       const timer = setTimeout(() => {
-        window.open('https://razorpay.me/@travel4lifeglobal', '_blank');
+        window.open('https://razorpay.me/@travel4life', '_blank');
         setHasRedirected(true);
       }, 1000); // 1 second delay before redirecting
       return () => clearTimeout(timer);
@@ -159,7 +159,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({ isOpen, onClose, tri
   const earlyBirdDiscount = trip.early_bird_discount ? (subtotal * trip.early_bird_discount / 100) : 0;
   const total = subtotal - groupDiscount - earlyBirdDiscount - firstBookingDiscount + addonsTotal;
   const depositAmount = paymentOption === 'deposit'
-    ? (trip.deposit_required ? trip.deposit_required * travelers : total * 0.05)
+    ? (trip.deposit_required ? trip.deposit_required * travelers : total * 0.5)
     : total;
 
   const handleNext = () => {
@@ -469,7 +469,7 @@ Please respond to this inquiry through your TravelTag dashboard.`;
                   🔗 Pay Now via Razorpay:
                 </p>
                 <a
-                  href="https://razorpay.me/@travel4lifeglobal"
+                  href="https://razorpay.me/@travel4life"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-center transition-all duration-300 transform hover:scale-105 shadow-lg"
@@ -663,7 +663,7 @@ Please respond to this inquiry through your TravelTag dashboard.`;
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="font-medium text-gray-900">Pay Deposit Now</div>
-                        <div className="text-sm text-gray-600">Secure your spot with {getCurrencySymbol(trip.currency || 'USD')}{(trip.deposit_required || (trip.price * 0.05)) * travelers}</div>
+                        <div className="text-sm text-gray-600">Secure your spot with {getCurrencySymbol(trip.currency || 'USD')}{(trip.deposit_required || (trip.price * 0.5)) * travelers}</div>
                       </div>
                       <Badge variant="success" size="sm">Recommended</Badge>
                     </div>
@@ -852,48 +852,48 @@ Please respond to this inquiry through your TravelTag dashboard.`;
             <div className="space-y-6">
               <h3 className="text-lg font-semibold text-gray-900">Review Your Booking</h3>
 
-              <div className="bg-gray-50 rounded-lg p-4 space-y-3">
-                <div className="flex justify-between">
+              <div className="bg-gray-50 rounded-lg p-4 space-y-3 text-gray-900">
+                <div className="flex justify-between items-center gap-3">
                   <span className="text-gray-600">Trip:</span>
-                  <span className="font-medium">{trip.title}</span>
+                  <span className="font-medium text-gray-900">{trip.title}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center gap-3">
                   <span className="text-gray-600">Travelers:</span>
-                  <span className="font-medium">{travelers}</span>
+                  <span className="font-medium text-gray-900">{travelers}</span>
                 </div>
-                <div className="flex justify-between">
+                <div className="flex justify-between items-center gap-3">
                   <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-medium">{getCurrencySymbol(trip.currency || 'USD')}{subtotal.toLocaleString()}</span>
+                  <span className="font-medium text-gray-900">{getCurrencySymbol(trip.currency || 'USD')}{subtotal.toLocaleString()}</span>
                 </div>
                 {addonsTotal > 0 && (
-                  <div className="flex justify-between">
+                  <div className="flex justify-between items-center gap-3">
                     <span className="text-gray-600">Add-ons:</span>
-                    <span className="font-medium">{getCurrencySymbol(trip.currency || 'USD')}{addonsTotal.toLocaleString()}</span>
+                    <span className="font-medium text-gray-900">{getCurrencySymbol(trip.currency || 'USD')}{addonsTotal.toLocaleString()}</span>
                   </div>
                 )}
                 {groupDiscount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Group discount ({trip.group_discount}%):</span>
-                    <span>-{getCurrencySymbol(trip.currency || 'USD')}{groupDiscount.toLocaleString()}</span>
+                  <div className="flex justify-between items-center gap-3 text-green-600">
+                    <span className="text-green-700">Group discount ({trip.group_discount}%):</span>
+                    <span className="font-medium text-green-700">-{getCurrencySymbol(trip.currency || 'USD')}{groupDiscount.toLocaleString()}</span>
                   </div>
                 )}
                 {earlyBirdDiscount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>Early bird discount ({trip.early_bird_discount}%):</span>
-                    <span>-{getCurrencySymbol(trip.currency || 'USD')}{earlyBirdDiscount.toLocaleString()}</span>
+                  <div className="flex justify-between items-center gap-3 text-green-600">
+                    <span className="text-green-700">Early bird discount ({trip.early_bird_discount}%):</span>
+                    <span className="font-medium text-green-700">-{getCurrencySymbol(trip.currency || 'USD')}{earlyBirdDiscount.toLocaleString()}</span>
                   </div>
                 )}
                 {firstBookingDiscount > 0 && (
-                  <div className="flex justify-between text-green-600">
-                    <span>First booking discount (10%):</span>
-                    <span>-{getCurrencySymbol(trip.currency || 'USD')}{firstBookingDiscount.toLocaleString()}</span>
+                  <div className="flex justify-between items-center gap-3 text-green-600">
+                    <span className="text-green-700">First booking discount (10%):</span>
+                    <span className="font-medium text-green-700">-{getCurrencySymbol(trip.currency || 'USD')}{firstBookingDiscount.toLocaleString()}</span>
                   </div>
                 )}
-                <div className="border-t pt-3 flex justify-between text-lg font-bold">
+                <div className="border-t pt-3 flex justify-between items-center gap-3 text-lg font-bold text-gray-900">
                   <span>Total:</span>
                   <span>{getCurrencySymbol(trip.currency || 'USD')}{total.toLocaleString()}</span>
                 </div>
-                <div className="flex justify-between text-yellow-600 font-medium">
+                <div className="flex justify-between items-center gap-3 text-yellow-700 font-medium">
                   <span>Amount due today:</span>
                   <span>{getCurrencySymbol(trip.currency || 'USD')}{depositAmount.toLocaleString()}</span>
                 </div>

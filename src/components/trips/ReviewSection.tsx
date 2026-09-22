@@ -72,14 +72,6 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId }) => {
     }
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', { 
-      year: 'numeric',
-      month: 'long', 
-      day: 'numeric' 
-    });
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -137,10 +129,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId }) => {
                   <div className="flex items-center justify-between mb-2">
                     <div>
                       <h4 className="font-semibold text-gray-900">{review.reviewer?.name || 'Anonymous'}</h4>
-                      <div className="flex items-center space-x-2">
-                        <Rating rating={review.rating} showNumber={false} size="sm" />
-                        <span className="text-sm text-gray-500">• {formatDate(review.created_at)}</span>
-                      </div>
+                      <Rating rating={review.rating} showNumber={false} size="sm" />
                     </div>
                     
                     {review.reviewer?.badges && (

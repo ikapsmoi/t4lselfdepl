@@ -2,59 +2,77 @@ import { createClient } from "@supabase/supabase-js";
 
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey);
 
-// Check if environment variables are configured
-if (!supabaseUrl || !supabaseAnonKey) {
-  // Show user-friendly error message once
-  if (typeof window !== 'undefined' && !document.getElementById('supabase-config-error')) {
-    const errorDiv = document.createElement('div');
-    errorDiv.id = 'supabase-config-error';
-    errorDiv.innerHTML = `
-      <div style="
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(0,0,0,0.9);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        font-family: system-ui;
-      ">
-        <div style="text-align: center; padding: 2rem;">
-          <h2 style="margin-bottom: 1rem;">⚠️ Configuration Required</h2>
-          <p style="margin-bottom: 1rem;">Supabase environment variables are missing.</p>
-          <p style="margin-bottom: 1rem;">Please click "Connect to Supabase" in the top right corner.</p>
-          <button onclick="this.parentElement.parentElement.remove()" style="
-            background: #0ea5e9;
-            color: white;
-            border: none;
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-          ">
-            Close
-          </button>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(errorDiv);
-  }
+const mockError = {
+  code: 'SUPABASE_NOT_CONFIGURED',
+  message: 'Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable live data.',
+};
+
+const createMockQueryBuilder = () => {
+  const query = {
+    select: () => query,
+    eq: () => query,
+    neq: () => query,
+    gt: () => query,
+    gte: () => query,
+    lt: () => query,
+    lte: () => query,
+    like: () => query,
+    ilike: () => query,
+    order: () => query,
+    limit: () => query,
+    range: () => query,
+    maybeSingle: async () => ({ data: null, error: mockError }),
+    single: async () => ({ data: null, error: mockError }),
+    insert: async () => ({ data: null, error: mockError }),
+    update: async () => ({ data: null, error: mockError }),
+    upsert: async () => ({ data: null, error: mockError }),
+    delete: async () => ({ data: null, error: mockError }),
+  };
+
+  return query;
+};
+
+const createFallbackSupabaseClient = () => ({
+  auth: {
+    getSession: async () => ({ data: { session: null }, error: null }),
+    getUser: async () => ({ data: { user: null }, error: null }),
+    onAuthStateChange: () => ({
+      data: {
+        subscription: {
+          unsubscribe: () => undefined,
+        },
+      },
+    }),
+    signInWithPassword: async () => ({ data: { user: null, session: null }, error: mockError }),
+    signUp: async () => ({ data: { user: null, session: null }, error: mockError }),
+    signOut: async () => ({ error: null }),
+    resetPasswordForEmail: async () => ({ data: null, error: mockError }),
+  },
+  from: () => createMockQueryBuilder(),
+  channel: () => ({
+    on: () => ({ subscribe: () => ({ unsubscribe: () => undefined }) }),
+    subscribe: () => ({ unsubscribe: () => undefined }),
+  }),
+  removeChannel: () => undefined,
+  storage: {
+    from: () => ({
+      upload: async () => ({ data: null, error: mockError }),
+      download: async () => ({ data: null, error: mockError }),
+      list: async () => ({ data: [], error: mockError }),
+      remove: async () => ({ data: null, error: mockError }),
+    }),
+  },
+});
+
+if (!isSupabaseConfigured) {
+  console.warn('Supabase is not configured; the app will run in read-only fallback mode. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY to enable live data.');
 }
 
-// Create client - fail fast if configuration is missing
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Supabase configuration is required. Please set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY environment variables.');
-}
-
-export const supabase = createClient(
-  supabaseUrl,
-  supabaseAnonKey,
-  {
-    auth: { persistSession: true },
-    global: { headers: {} }
-  }
-);
+export const supabase = isSupabaseConfigured
+  ? createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { persistSession: true },
+      global: { headers: {} },
+    })
+  : createFallbackSupabaseClient();

@@ -149,7 +149,7 @@ export const useTrips = () => {
           not_included: trip.itinerary?.notIncluded || [],
           requirements: trip.itinerary?.requirements || [],
           cancellation_policy: 'Free cancellation up to 14 days before departure',
-          deposit_required: Number((Number(trip.price_per_person) * 0.05).toFixed(2)),
+          deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
           group_discount: trip.group_discount || 0, // Use actual group_discount from DB, default to 0 if null
           safety_measures: trip.itinerary?.safetyMeasures || []
         }));

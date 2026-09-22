@@ -43,166 +43,119 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
 
   return (
     <>
-      <div className="relative bg-white rounded-2xl overflow-hidden shadow-xl border-2 border-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 p-1 transform hover:scale-102 transition-all duration-300 max-w-2xl mx-fixed">
-        {/* Clean white shadow container */}
-        <div className="bg-white rounded-2xl overflow-hidden relative shadow-lg">
-          {/* Close Button */}
+      <div className="relative bg-white rounded-xl overflow-hidden shadow-lg border border-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 p-[1px] transform transition-all duration-300 max-w-sm mx-auto">
+        <div className="bg-white rounded-xl overflow-hidden relative shadow-md">
           <button
             onClick={(e) => {
               e.stopPropagation();
               onClose?.();
             }}
             aria-label="Close featured trip"
-            className="absolute top-3 right-3 z-30 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200 hover:scale-110"
+            className="absolute top-2 right-2 z-30 p-1.5 bg-white/90 backdrop-blur-sm rounded-full shadow-md hover:bg-white hover:shadow-lg transition-all duration-200"
           >
-            <X className="w-4 h-4 text-gray-600 hover:text-gray-900" />
+            <X className="w-3.5 h-3.5 text-gray-600 hover:text-gray-900" />
           </button>
 
-          {/* Hero Image */}
-          <div className="relative h-48 sm:h-64 md:h-72">
+          <div className="relative h-36 sm:h-44 md:h-52">
             <img
               key={currentTrip.images[0]}
               src={currentTrip.images[0]}
               alt={currentTrip.title}
               className="w-full h-full object-cover transition-opacity duration-500 ease-in-out"
             />
-            
-            {/* Clean overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-            
-            {/* Top badges */}
-            <div className="absolute top-4 left-4 z-20">
-              <Badge variant="warning" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 shadow-md text-xs">
-                ⭐ FEATURED ADVENTURE
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+
+            <div className="absolute top-2 left-2 z-20">
+              <Badge variant="warning" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 shadow-md text-[9px] px-2 py-1">
+                ⭐ FEATURED
               </Badge>
             </div>
 
-            {/* Trip counter */}
-            <div className="absolute top-4 right-16 z-20">
-              <div className="bg-white/90 backdrop-blur-sm text-gray-900 px-3 py-1 rounded-full text-xs font-medium shadow-md">
-                {currentTripIndex + 1} of {featuredTrips.length}
+            <div className="absolute top-2 right-9 z-20">
+              <div className="bg-white/90 backdrop-blur-sm text-gray-900 px-2 py-0.5 rounded-full text-[9px] font-medium shadow-sm">
+                {currentTripIndex + 1}/{featuredTrips.length}
               </div>
             </div>
 
-            {/* Bottom info overlay - only spots left and start date */}
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2.5">
               <div className="flex items-center justify-between text-white">
-                <div className="text-sm font-medium">Starts {formatDate(currentTrip.start_date)}</div>
-                <div className="bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
-                  <span className="font-bold text-sm">{spotsLeft} spots left</span>
+                <div className="text-[10px] font-medium">Starts {formatDate(currentTrip.start_date)}</div>
+                <div className="bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
+                  <span className="font-bold text-[10px]">{spotsLeft} left</span>
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Trip Information Section */}
-          <div className="p-6">
-            <h1 className="text-lg md:text-xl font-bold text-gray-900 mb-3 leading-tight line-clamp-2 min-h-[2.5rem]">
+          <div className="p-3 sm:p-4">
+            <h1 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 leading-tight line-clamp-2 min-h-[2rem]">
               {currentTrip.title}
             </h1>
-            
-            {/* Trip Details Grid - Fixed height container */}
-            <div className="grid grid-cols-2 gap-4 mb-4 min-h-[100px]">
+
+            <div className="grid grid-cols-2 gap-2 mb-3 min-h-[82px]">
               <div className="flex items-center text-gray-700">
-                <MapPin className="w-5 h-5 mr-2 text-blue-600" />
+                <MapPin className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
                 <div>
-                  <div className="text-sm text-gray-500">Destination</div>
-                  <div className="font-semibold text-sm">{currentTrip.destination}</div>
+                  <div className="text-[10px] text-gray-500">Destination</div>
+                  <div className="font-semibold text-[10px] leading-tight">{currentTrip.destination}</div>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
-                <span className="text-sm font-bold text-green-600 mr-2">₹{currentTrip.price}</span>
+                <span className="text-[10px] font-bold text-green-600 mr-1.5">₹{currentTrip.price}</span>
                 <div>
-                  <div className="font-small">per person</div>
+                  <div className="text-[10px] leading-tight">/person</div>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
-                <Calendar className="w-5 h-5 mr-2 text-blue-600" />
+                <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
                 <div>
-                  <div className="text-sm text-gray-500">Duration</div>
-                  <div className="font-semibold text-sm">{currentTrip.duration} days</div>
+                  <div className="text-[10px] text-gray-500">Duration</div>
+                  <div className="font-semibold text-[10px] leading-tight">{currentTrip.duration} days</div>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
-                <Star className="w-5 h-5 mr-2 text-yellow-500 fill-current" />
+                <Star className="w-3.5 h-3.5 mr-1.5 text-yellow-500 fill-current flex-shrink-0" />
                 <div>
-                  <div className="text-sm text-gray-500">Rating</div>
-                  <div className="font-semibold text-sm">{currentTrip.rating}</div>
+                  <div className="text-[10px] text-gray-500">Rating</div>
+                  <div className="font-semibold text-[10px] leading-tight">{currentTrip.rating}</div>
                 </div>
               </div>
             </div>
 
-            {/* Description with fixed height
-            <div className="mb-6 min-h-[4rem]">
-              <p className="text-gray-600 line-clamp-3 leading-relaxed">
-                {currentTrip.description}
-              </p>
-            </div> */}
-
-            {/* Host Information - Fixed height container
-            {currentTrip.host && (
-              <div className="flex items-center mb-6 p-4 bg-gray-50 rounded-xl min-h-[5rem]">
-                <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-200 flex-shrink-0 mr-4">
-                  {currentTrip.host.avatar_url ? (
-                    <img
-                      src={currentTrip.host.avatar_url}
-                      alt={currentTrip.host.name}
-                      className="w-full h-full object-cover"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <User className="w-6 h-6 text-gray-400" />
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <div className="flex items-center space-x-2">
-                    <span className="font-semibold text-gray-900 text-lg">{currentTrip.host.name}</span>
-                    {currentTrip.host.verified && (
-                      <Verified className="w-5 h-5 text-blue-500" />
-                    )}
-                  </div>
-                  <div className="text-sm text-gray-600">Verified Host • Expert Guide</div>
-                </div>
-              </div>
-            )}*/}
-            
-            {/* Action buttons with fixed height container */}
-            <div className="min-h-[3rem] flex items-end">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
+            <div className="mt-1">
+              <div className="flex items-center gap-1.5 sm:gap-2 w-full overflow-hidden">
                 <Button 
                   variant="outline" 
                   onClick={() => onViewDetails?.(currentTrip)}
-                  className="w-full border-2 border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 py-2 text-sm font-semibold"
+                  className="flex-1 min-w-0 border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 py-1.5 px-1.5 text-[10px] font-semibold rounded-md"
                 >
-                  <Eye className="w-4 h-4 mr-1" />
-                  View Details
+                  <Eye className="w-3.5 h-3.5 mr-1" />
+                  Details
                 </Button>
                 
                 <Button 
                   variant="primary" 
                   onClick={() => setShowBookingModal(true)}
-                  className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 py-2 text-sm font-bold"
+                  className="flex-1 min-w-0 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg transform transition-all duration-300 py-1.5 px-1.5 text-[10px] font-bold rounded-md"
                 >
-                  <Heart className="w-4 h-4 mr-1" />
-                  Book Now
+                  <Heart className="w-3.5 h-3.5 mr-1" />
+                  Book
                 </Button>
                 
                 <Button 
                   onClick={() => setShowCreatorModal(true)}
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 py-2 text-sm font-bold"
+                  className="flex-1 min-w-0 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transform transition-all duration-300 py-1.5 px-1.5 text-[10px] font-bold rounded-md"
                 >
-                  <Crown className="w-4 h-4 mr-1" />
-                  Host This Trip
+                  <Crown className="w-3.5 h-3.5 mr-1" />
+                  Host
                 </Button>
               </div>
             </div>
-            
-            {/* Urgency Indicator - Fixed position */}
+
             {spotsLeft <= 3 && spotsLeft > 0 && (
-              <div className="mt-3 bg-gradient-to-r from-red-500 to-orange-500 text-white px-4 py-2 rounded-full text-center shadow-lg animate-pulse">
-                <span className="text-sm font-bold">
-                  Only {spotsLeft} spots left! Book now to secure your adventure.
+              <div className="mt-2 bg-gradient-to-r from-red-500 to-orange-500 text-white px-2 py-1.5 rounded-full text-center shadow-md animate-pulse">
+                <span className="text-[10px] font-bold">
+                  Only {spotsLeft} spots left!
                 </span>
               </div>
             )}

@@ -115,7 +115,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
           not_included: [],
           requirements: [],
           cancellation_policy: 'Free cancellation up to 14 days before departure',
-          deposit_required: Number((Number(booking.trips.price_per_person) * 0.3).toFixed(2)),
+          deposit_required: Number((Number(booking.trips.price_per_person) * 0.5).toFixed(2)),
           group_discount: 10,
           safety_measures: []
         };

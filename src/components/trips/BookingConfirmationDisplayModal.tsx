@@ -181,7 +181,7 @@ export const BookingConfirmationDisplayModal: React.FC<BookingConfirmationDispla
               🔗 Pay Now via Razorpay:
             </p>
             <a
-              href="https://razorpay.me/@travel4lifeglobal"
+              href="https://razorpay.me/@travel4life"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-center transition-all duration-300 transform hover:scale-105 shadow-lg"

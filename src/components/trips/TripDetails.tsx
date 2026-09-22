@@ -118,27 +118,26 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-white">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-[10px] md:text-sm">
       <div className="min-h-screen">
-        {/* Header */}
-        <div className="sticky top-0 z-10 bg-white border-b px-4 py-3">
+        <div className="sticky top-0 z-10 bg-white border-b px-3 py-2 md:px-4 md:py-3">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
             <div className="flex items-center">
-              <h1 className="text-lg font-semibold text-gray-900">Trip Details</h1> 
+              <h1 className="text-sm font-semibold text-gray-900 md:text-lg">Trip Details</h1>
             </div>
             <button 
               onClick={onClose} 
               aria-label="Close trip details"
-              className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all duration-200 hover:scale-110"
+              className="p-1.5 md:p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all duration-200"
             >
-              <X className="w-6 h-6" />
+              <X className="w-4 h-4 md:w-6 md:h-6" />
             </button>
           </div>
-          <div className="flex items-center justify-center space-x-2 mt-3 max-w-7xl mx-auto">
-              <Button variant="ghost" size="sm" onClick={handleShare} icon={Share2}>
+          <div className="flex items-center justify-center space-x-1.5 md:space-x-2 mt-2 md:mt-3 max-w-7xl mx-auto">
+              <Button variant="ghost" size="sm" onClick={handleShare} icon={Share2} className="text-[10px] px-2 py-1 md:text-sm">
                 Share
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => setShowVRPreview(true)} icon={Eye}>
+              <Button variant="ghost" size="sm" onClick={() => setShowVRPreview(true)} icon={Eye} className="text-[10px] px-2 py-1 md:text-sm">
                 Preview Trip
               </Button>
               <Button 
@@ -146,23 +145,21 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 size="sm" 
                 onClick={() => setIsSaved(!isSaved)}
                 icon={Heart}
-                className={isSaved ? 'text-red-500' : ''}
+                className={`text-[10px] px-2 py-1 md:text-sm ${isSaved ? 'text-red-500' : ''}`}
               >
                 {isSaved ? 'Saved' : 'Save'}
               </Button>
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-8">
-              {/* Image Gallery */}
-              <div className="space-y-4">
+        <div className="max-w-7xl mx-auto px-3 py-4 md:px-4 md:py-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 md:gap-8">
+            <div className="lg:col-span-2 space-y-6 md:space-y-8">
+              <div className="space-y-3 md:space-y-4">
                 <img
                   src={(trip.images && trip.images.length > 0) ? trip.images[selectedImageIndex] : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'}
                   alt={trip.title}
-                  className="w-full h-64 md:h-96 object-cover rounded-xl"
+                  className="w-full h-48 md:h-96 object-cover rounded-xl"
                 />
                 {(trip.images && trip.images.length > 1) && (
                   <div className="flex space-x-2 overflow-x-auto">
@@ -170,7 +167,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                       <button
                         key={index}
                         onClick={() => setSelectedImageIndex(index)}
-                        className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                        className={`flex-shrink-0 w-14 h-14 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
                           selectedImageIndex === index ? 'border-yellow-500' : 'border-gray-200'
                         }`}
                       >
@@ -181,67 +178,63 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 )}
               </div>
 
-              {/* Trip Info */}
               <div>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {trip.featured && <Badge variant="warning">⭐ Featured</Badge>}
-                  <Badge variant={tripType?.value === 'adventure' ? 'success' : 'info'}>
+                <div className="flex flex-wrap gap-1.5 md:gap-2 mb-3 md:mb-4">
+                  {trip.featured && <Badge variant="warning" className="text-[9px] md:text-xs">⭐ Featured</Badge>}
+                  <Badge variant={tripType?.value === 'adventure' ? 'success' : 'info'} className="text-[9px] md:text-xs">
                     {tripType?.label}
                   </Badge>
-                  <Badge variant="secondary" className={difficultyLevel?.color}>
+                  <Badge variant="secondary" className={`${difficultyLevel?.color} text-[9px] md:text-xs`}>
                     {difficultyLevel?.label}
                   </Badge>
                 </div>
 
-                <h1 className="text-3xl font-bold text-gray-900 mb-4">{trip.title}</h1>
+                <h1 className="text-lg md:text-3xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight">{trip.title}</h1>
                 {userBookingForThisTrip && (
                   <Badge
                     variant={getStatusColor(userBookingForThisTrip.status)}
-                    className="mb-4"
+                    className="mb-3 md:mb-4 text-[9px] md:text-xs"
                   >
                     Booked: {userBookingForThisTrip.status === 'cancellation_pending' ? 'Cancellation Pending' : userBookingForThisTrip.status}
                   </Badge>
                 )}
 
-                
-                <div className="flex items-center space-x-4 mb-6 text-gray-600">
-                  <div className="flex items-center">
-                    <MapPin className="w-5 h-5 mr-2" />
+                <div className="flex flex-wrap items-center gap-2 md:gap-4 mb-4 md:mb-6 text-gray-600">
+                  <div className="flex items-center text-[10px] md:text-sm">
+                    <MapPin className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
                     <span>{trip.destination}</span>
                   </div>
-                  <div className="flex items-center">
-                    <Calendar className="w-5 h-5 mr-2" />
+                  <div className="flex items-center text-[10px] md:text-sm">
+                    <Calendar className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
                     <span>{trip.duration} days</span>
                   </div>
-                  <div className="flex items-center">
-                    <Users className="w-5 h-5 mr-2" />
+                  <div className="flex items-center text-[10px] md:text-sm">
+                    <Users className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
                     <span>{trip.max_capacity} max</span>
                   </div>
                   <Rating rating={trip.rating} reviewCount={trip.review_count} />
                 </div>
 
-                <p className="text-gray-700 text-lg leading-relaxed mb-6 whitespace-pre-wrap">{trip.description}</p>
+                <p className="text-gray-700 text-[10px] leading-relaxed mb-4 md:text-lg md:mb-6 whitespace-pre-wrap">{trip.description}</p>
 
-                {/* Tags */}
-                <div className="flex flex-wrap gap-2 mb-6">
+                <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
                   {trip.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" size="sm">
+                    <Badge key={tag} variant="secondary" size="sm" className="text-[9px] md:text-xs">
                       #{tag}
                     </Badge>
                   ))}
                 </div>
               </div>
 
-              {/* What's Included */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                    <CheckCircle className="w-5 h-5 text-green-600 mr-2" />
+                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
+                    <CheckCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600 mr-1.5 md:mr-2" />
                     What's Included
                   </h3>
-                  <ul className="space-y-2 list-disc ml-5">
+                  <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
                     {trip.included.map((item, index) => (
-                      <li key={index} className="flex items-center text-gray-700">
+                      <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {item}
                       </li>
                     ))}
@@ -249,13 +242,13 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                    <XCircle className="w-5 h-5 text-red-600 mr-2" />
+                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
+                    <XCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-600 mr-1.5 md:mr-2" />
                     Not Included
                   </h3>
-                  <ul className="space-y-2 list-disc ml-5">
+                  <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
                     {trip.not_included.map((item, index) => (
-                      <li key={index} className="flex items-center text-gray-700">
+                      <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {item}
                       </li>
                     ))}
@@ -263,16 +256,15 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 </div>
               </div>
 
-              {/* Requirements & Safety */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                    <AlertTriangle className="w-5 h-5 text-orange-600 mr-2" />
+                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
+                    <AlertTriangle className="w-3.5 h-3.5 md:w-5 md:h-5 text-orange-600 mr-1.5 md:mr-2" />
                     Requirements
                   </h3>
-                  <ul className="space-y-2 list-disc ml-5">
+                  <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
                     {trip.requirements.map((req, index) => (
-                      <li key={index} className="flex items-center text-gray-700">
+                      <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {req}
                       </li>
                     ))}
@@ -280,13 +272,13 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">
-                    <Shield className="w-5 h-5 text-blue-600 mr-2" />
+                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
+                    <Shield className="w-3.5 h-3.5 md:w-5 md:h-5 text-blue-600 mr-1.5 md:mr-2" />
                     Safety Measures
                   </h3>
-                  <ul className="space-y-2 list-disc ml-5">
+                  <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
                     {trip.safety_measures.map((measure, index) => (
-                      <li key={index} className="flex items-center text-gray-700">
+                      <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {measure}
                       </li>
                     ))}
@@ -294,64 +286,61 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 </div>
               </div>
 
-              {/* Reviews */}
               <ReviewSection tripId={trip.id} />
             </div>
 
-            {/* Booking Sidebar */}
             <div className="lg:col-span-1">
-              <div className="sticky top-24 bg-white rounded-xl shadow-lg p-6 border">
-                <div className="text-center mb-6">
-                  <div className="text-3xl font-bold text-gray-900">{getCurrencySymbol(trip.currency || 'USD')}{trip.price}</div>
-                  <div className="text-gray-600">per person</div>
+              <div className="sticky top-20 bg-white rounded-xl shadow-lg p-3 md:p-6 border">
+                <div className="text-center mb-4 md:mb-6">
+                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{getCurrencySymbol(trip.currency || 'USD')}{trip.price}</div>
+                  <div className="text-[10px] md:text-sm text-gray-600">per person</div>
                   {trip.early_bird_discount && (
-                    <Badge variant="success" size="sm" className="mt-2">
+                    <Badge variant="success" size="sm" className="mt-2 text-[9px] md:text-xs">
                       Save {trip.early_bird_discount}% - Early Bird!
                     </Badge>
                   )}
                 </div>
 
-                <div className="space-y-4 mb-6">
-                  <div className="flex justify-between">
+                <div className="space-y-2 md:space-y-4 mb-4 md:mb-6">
+                  <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Dates:</span>
-                    <span className="font-medium">{formatDate(trip.start_date)} - {formatDate(trip.end_date)}</span>
+                    <span className="font-medium text-right">{formatDate(trip.start_date)} - {formatDate(trip.end_date)}</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Duration:</span>
                     <span className="font-medium">{trip.duration} days</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Group size:</span>
                     <span className="font-medium">{trip.current_bookings}/{trip.max_capacity} travelers</span>
                   </div>
-                  <div className="flex justify-between">
+                  <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Difficulty:</span>
                     <span className={`font-medium ${difficultyLevel?.color}`}>{difficultyLevel?.label}</span>
                   </div>
                 </div>
 
-                {/* Progress bar */}
-                <div className="mb-6">
-                  <div className="flex justify-between text-sm mb-2">
+                <div className="mb-4 md:mb-6">
+                  <div className="flex justify-between text-[10px] md:text-sm mb-1 md:mb-2">
                     <span className="text-gray-600">Spots filled</span>
                     <span className="font-medium">{trip.current_bookings}/{trip.max_capacity}</span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2">
                     <div 
-                      className="bg-yellow-500 h-2 rounded-full transition-all duration-500"
+                      className="bg-yellow-500 h-1.5 md:h-2 rounded-full transition-all duration-500"
                       style={{ width: `${(trip.current_bookings / trip.max_capacity) * 100}%` }}
                     />
                   </div>
                 </div>
 
                 {isFull ? (
-                  <Button variant="outline" className="w-full" disabled>
+                  <Button variant="outline" className="w-full text-[10px] md:text-sm" disabled>
                     Trip is Full
                   </Button>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-2 md:space-y-3">
                     <Button 
-                      className="w-full" 
+                      className="w-full text-[10px] md:text-sm" 
                       onClick={() => {
                         clickJoin(trip.id);
                         setShowBookingModal(true);
@@ -362,7 +351,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     
                     <Button 
                       variant="outline" 
-                      className="w-full"
+                      className="w-full text-[10px] md:text-sm"
                       onClick={() => setShowMessageHostModal(true)}
                       icon={MessageCircle}
                     >
@@ -371,7 +360,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     <Button 
                       variant="secondary" 
                       size="sm" 
-                      className="w-full mt-3"
+                      className="w-full mt-2 md:mt-3 text-[10px] md:text-sm"
                       onClick={() => setShowVRPreview(true)}
                       icon={Eye}
                     >
@@ -380,7 +369,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     <Button 
                       variant="outline" 
                       size="sm" 
-                      className="w-full mt-2"
+                      className="w-full mt-1.5 md:mt-2 text-[10px] md:text-sm"
                       onClick={() => setShowInquireModal(true)}
                       icon={MessageCircle}
                     >
@@ -390,24 +379,22 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 )}
 
                 {isAlmostFull && (
-                  <div className="mt-4 p-3 bg-orange-50 border border-orange-200 rounded-lg">
-                    <div className="flex items-center text-orange-800">
-                      <AlertTriangle className="w-4 h-4 mr-2" />
-                      <span className="text-sm font-medium">Only {spotsLeft} spots left!</span>
+                  <div className="mt-3 md:mt-4 p-2 md:p-3 bg-orange-50 border border-orange-200 rounded-lg">
+                    <div className="flex items-center text-orange-800 text-[10px] md:text-sm">
+                      <AlertTriangle className="w-3.5 h-3.5 md:w-4 md:h-4 mr-1.5 md:mr-2" />
+                      <span className="font-medium">Only {spotsLeft} spots left!</span>
                     </div>
                   </div>
                 )}
 
-                {/* Cancellation Policy */}
-                <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-2">Cancellation Policy</h4>
-                  <p className="text-sm text-gray-600">{trip.cancellation_policy}</p>
+                <div className="mt-4 md:mt-6 p-2.5 md:p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-1 md:mb-2 text-[10px] md:text-sm">Cancellation Policy</h4>
+                  <p className="text-[10px] text-gray-600 md:text-sm">{trip.cancellation_policy}</p>
                 </div>
 
-                {/* Group Discount */}
                 {trip.group_discount > 0 && (
-                  <div className="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg">
-                    <div className="text-green-800 text-sm">
+                  <div className="mt-3 md:mt-4 p-2 md:p-3 bg-green-50 border border-green-200 rounded-lg">
+                    <div className="text-green-800 text-[10px] md:text-sm">
                       <strong>Group Discount:</strong> Save {trip.group_discount}% when booking with 4+ people
                     </div>
                   </div>

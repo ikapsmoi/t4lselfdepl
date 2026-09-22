@@ -200,7 +200,7 @@ export const CreatorTrips: React.FC = () => {
           not_included: trip.itinerary?.notIncluded || [],
           requirements: trip.itinerary?.requirements || [],
           cancellation_policy: 'Free cancellation up to 14 days before departure',
-          deposit_required: Number((Number(trip.price_per_person) * 0.3).toFixed(2)),
+          deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
           group_discount: 10,
           safety_measures: trip.itinerary?.safetyMeasures || [],
           creator_verified: trip.host?.creator_verified || false,
