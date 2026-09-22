@@ -65,7 +65,8 @@ const StorytellingSection: React.FC = () => (
 );
 
 export const HomePage: React.FC = () => {
-  const { trips, loading, searchTrips, getTopRatedTrips, getTrendingTrips } = useTrips();
+  const { trips, loading } = useTrips();
+  const topRatedTrips = trips.filter(trip => trip.type !== 'indian_special');
   const { viewHome } = useAnalytics();
   const [showIndiaSpecials, setShowIndiaSpecials] = React.useState(false);
   const [showTrendingDestinations, setShowTrendingDestinations] = React.useState(false);
@@ -138,7 +139,7 @@ export const HomePage: React.FC = () => {
         <section className="py-10 md:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <TripGrid
-              trips={trips}
+              trips={topRatedTrips}
               title="Top-Rated Adventures"
               subtitle="Join our most beloved trips rated by fellow travelers"
               loading={loading}

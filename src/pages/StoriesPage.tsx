@@ -173,6 +173,18 @@ function StoryDetail({ story, onBack }: { story: Story; onBack: () => void }) {
           ))}
         </div>
 
+        {story.id === 'tomorrowland' && (
+          <p className="mt-8 text-sm text-gray-600">
+            Planning from India? Read our{' '}
+            <a
+              href="/tomorrowland-india.html"
+              className="font-semibold text-sky-700 hover:text-sky-900 underline"
+            >
+              Tomorrowland travel guide for Indian travelers
+            </a>.
+          </p>
+        )}
+
         {/* Highlights box */}
         <div className="mt-10 p-6 bg-gray-50 rounded-[20px] border border-gray-100">
           <h3 className="font-bold text-gray-900 text-lg mb-4 flex items-center gap-2">

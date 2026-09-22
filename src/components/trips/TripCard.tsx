@@ -42,6 +42,9 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   }, [savedTrips, trip.id]);
 
   const spotsLeft = trip.max_capacity - trip.current_bookings;
+  const fallbackImage = trip.type === 'indian_special'
+    ? '/pkg3.png'
+    : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
   const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === trip.difficulty);
   const isAlmostFull = spotsLeft <= 3 && spotsLeft > 0;
@@ -106,7 +109,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       >
         <div className="relative h-44 overflow-hidden">
           <img
-            src={trip.images?.[0] || 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800'}
+            src={trip.images?.[0] || fallbackImage}
             alt={trip.title}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
           />
@@ -164,7 +167,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       {/* Image takes 65% of card height */}
       <div className="relative h-60 md:h-64 overflow-hidden">
         <img
-          src={trip.images && trip.images.length > 0 ? trip.images[0] : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'}
+          src={trip.images && trip.images.length > 0 ? trip.images[0] : fallbackImage}
           alt={trip.title}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
         />

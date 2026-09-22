@@ -110,7 +110,11 @@ export const CreatorProfilePage: React.FC = () => {
           current_bookings: 0,
           start_date: trip.start_date,
           end_date: trip.end_date,
-          images: trip.images || ['https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'],
+          images: trip.images && trip.images.length > 0 ? trip.images : [
+            trip.category === 'indian_special'
+              ? '/pkg3.png'
+              : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
+          ],
           host_id: trip.host_id,
           rating: 4.8,
           review_count: 0,

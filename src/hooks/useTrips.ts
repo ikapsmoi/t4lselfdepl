@@ -123,7 +123,9 @@ export const useTrips = () => {
           start_date: trip.start_date,
           end_date: trip.end_date,
           images: trip.images && trip.images.length > 0 ? trip.images : [
-            'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
+            trip.category === 'indian_special'
+              ? '/pkg3.png'
+              : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
           ],
           host_id: trip.host_id,
           host: trip.profiles ? {

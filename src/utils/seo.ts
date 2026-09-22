@@ -1,4 +1,4 @@
-const siteUrl = 'https://travel4life.com/';
+const siteUrl = 'https://travel4life.net/';
 const defaultImage = `${siteUrl}/findyourtribe1.jpg`;
 
 type SeoConfig = {
