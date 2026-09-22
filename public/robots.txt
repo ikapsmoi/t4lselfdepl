@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Private application views are protected by runtime noindex metadata.
+Sitemap: https://travel4life.com/sitemap.xml

@@ -7,6 +7,7 @@ import { ExitIntentModal } from './components/common/ExitIntentModal';
 import { useExitIntent } from './hooks/useExitIntent';
 import { useAnalytics } from './utils/analytics';
 import { EnhancedAuthModal } from './components/auth/EnhancedAuthModal';
+import { updateSeoForPage } from './utils/seo';
 
 // Lazy load all page components
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -64,6 +65,7 @@ const AppContent: React.FC = () => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1);
       setCurrentPage(hash || 'home');
+      updateSeoForPage(hash || 'home');
       setIsMenuOpen(false); // Auto-hide mobile menu on navigation
     };
 
