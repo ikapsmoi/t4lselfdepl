@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { 
   ArrowLeft, Star, Users, MapPin, Calendar, Instagram, Youtube, 
   Heart, MessageCircle, Share2, Verified, Trophy, Globe, Camera,
@@ -315,9 +315,9 @@ export const CreatorProfilePage: React.FC = () => {
                     icon={MessageCircle}
                     onClick={() => {
                       // Create mailto link for contacting creator
-                      const subject = `Message from TravelTag - Interest in your trips`;
-                      const body = `Hi ${creator.name},\n\nI'm interested in learning more about your travel experiences and trips.\n\nBest regards,\nA TravelTag User`;
-                      const mailtoLink = `mailto:${creator.email || 'support@traveltag.net'}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                      const subject = `Message from Travel4life - Interest in your trips`;
+                      const body = `Hi ${creator.name},\n\nI'm interested in learning more about your travel experiences and trips.\n\nBest regards,\nA Travel4life User`;
+                      const mailtoLink = `mailto:${creator.email || 'support@travel4life.net'}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                       window.open(mailtoLink, '_blank');
                     }}
                   >
@@ -329,8 +329,8 @@ export const CreatorProfilePage: React.FC = () => {
                     onClick={() => {
                       if (navigator.share) {
                         navigator.share({
-                          title: `${creator.name} - TravelTag Creator`,
-                          text: `Check out ${creator.name}'s amazing travel experiences on TravelTag!`,
+                          title: `${creator.name} - Travel4life Creator`,
+                          text: `Check out ${creator.name}'s amazing travel experiences on Travel4life!`,
                           url: window.location.href
                         });
                       } else {

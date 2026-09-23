@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Shield, MapPin, Users, Phone, AlertTriangle, CheckCircle, Clock, Heart } from 'lucide-react';
 import { SafetyFeature } from '../../types';
 import { Badge } from '../ui/Badge';
@@ -66,7 +66,7 @@ export const SafetyTools: React.FC<SafetyToolsProps> = ({ tripId, isActive = fal
   const emergencyContacts = [
     { name: 'Trip Host', phone: '+91 98765 43210', type: 'primary' },
     { name: 'Local Emergency', phone: '100', type: 'emergency' },
-    { name: 'TravelTag Support', phone: '+1 555 123 4567', type: 'support' }
+    { name: 'Travel4life Support', phone: '+1 555 123 4567', type: 'support' }
   ];
 
   const handleBuddySelect = (buddyId: string) => {
@@ -166,7 +166,7 @@ export const SafetyTools: React.FC<SafetyToolsProps> = ({ tripId, isActive = fal
             size="sm" 
             className="w-full"
             onClick={() => {
-              const subject = 'Auto Check-in Request - TravelTag';
+              const subject = 'Auto Check-in Request - Travel4life';
               const body = `Auto check-in request initiated:
 
 User: ${user?.name || 'Unknown User'}
@@ -178,7 +178,7 @@ The user has initiated an auto check-in request for safety monitoring.
 
 Please set up the auto check-in system for this user.`;
               
-              const mailtoLink = `mailto:support@traveltag.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+              const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
               window.open(mailtoLink, '_blank');
               
               alert('Check-in request initiated! An email has been sent to admin and your emergency contacts will be notified.');

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -22,7 +22,6 @@ type PersistedSuccess = {
   depositAmount?: number;
   currency?: string;
 };
-
 export const BookingConfirmationDisplayModal: React.FC<BookingConfirmationDisplayModalProps> = ({
   isOpen,
   onClose,
@@ -120,7 +119,7 @@ export const BookingConfirmationDisplayModal: React.FC<BookingConfirmationDispla
             <div className="flex items-start">
               <CheckCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
               <div className="text-sm text-blue-800">
-                <strong>Account Created!</strong> We've created a TravelTag account for you with the password <strong>081087</strong>.
+                <strong>Account Created!</strong> We've created a Travel4life account for you with the password <strong>081087</strong>.
                 You can change this password anytime from your profile settings after logging in.
               </div>
             </div>
@@ -230,3 +229,4 @@ export const BookingConfirmationDisplayModal: React.FC<BookingConfirmationDispla
     </Modal>
   );
 };
+

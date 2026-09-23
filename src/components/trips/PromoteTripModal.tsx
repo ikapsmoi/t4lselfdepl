@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Trip } from '../../types';
@@ -22,7 +22,7 @@ export const PromoteTripModal: React.FC<PromoteTripModalProps> = ({
 
   const generateInstagramCaption = () => {
     const hashtags = [
-      '#TravelTag', '#GroupTravel', '#Adventure', '#TravelCommunity',
+      '#Travel4life', '#GroupTravel', '#Adventure', '#TravelCommunity',
       `#${trip.destination.replace(/\s+/g, '').replace(/,/g, '')}`,
       `#${trip.type}Travel`, '#Wanderlust', '#TravelGram'
     ].join(' ');
@@ -38,7 +38,7 @@ ${trip.description}
 
 Who's ready to join me on this incredible journey? 🚀
 
-Book now on TravelTag and let's create unforgettable memories together! ✈️
+Book now on Travel4life and let's create unforgettable memories together! ✈️
 
 ${hashtags}
 
@@ -75,7 +75,7 @@ Swipe up to book! 👆`;
       id: 'simple',
       name: 'Simple Share',
       description: 'Quick and easy sharing',
-      content: `Check out this amazing trip: ${trip.title} in ${trip.destination}! ${trip.duration} days for $${trip.price}. Book on TravelTag! ✈️`,
+      content: `Check out this amazing trip: ${trip.title} in ${trip.destination}! ${trip.duration} days for $${trip.price}. Book on Travel4life! ✈️`,
       icon: Share2
     }
   ];

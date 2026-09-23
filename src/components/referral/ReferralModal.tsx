@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -24,7 +24,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
 
   const generateReferralMessage = () => {
     const baseMessage = userRole === 'host' 
-      ? `🌟 Hey! I've been hosting amazing trips on TravelTag and it's been incredible!
+      ? `🌟 Hey! I've been hosting amazing trips on Travel4life and it's been incredible!
 
 🎯 As a host, I've:
 ✈️ Connected with amazing travelers worldwide
@@ -33,7 +33,7 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
 🌍 Shared my local expertise globally
 
 Join me as a ${userRole === 'host' ? 'fellow host' : 'traveler'} and let's create unforgettable adventures together!`
-      : `🌟 Just discovered TravelTag and I'm obsessed!
+      : `🌟 Just discovered Travel4life and I'm obsessed!
 
 🎯 Why you'll love it:
 ✈️ Join small groups of amazing people
@@ -51,15 +51,15 @@ Join me on this incredible platform!`;
 • Connect with verified travel community
 • Earn points & unlock rewards
 
-Sign up at TravelTag.com and mention my name "${userName}" for bonus points! 🚀
+Sign up at travel4life.net and mention my name "${userName}" for bonus points! 🚀
 
-#TravelTag #GroupTravel #Adventure #TravelCommunity #Wanderlust`;
+#Travel4life #GroupTravel #Adventure #TravelCommunity #Wanderlust`;
   };
 
   const generateInstagramStory = () => {
     return `🔥 Found the BEST travel platform!
 
-TravelTag = Game Changer ✨
+Travel4life = Game Changer ✨
 
 ${userRole === 'host' ? '🎯 Hosting trips & earning' : '🎯 Amazing group adventures'}
 🌍 Verified hosts & safety first
@@ -110,7 +110,7 @@ Use code "${userName.toUpperCase()}" 🎁`;
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      title="Refer Friends to TravelTag"
+      title="Refer Friends to Travel4life"
       maxWidth="max-w-lg"
     >
       <div className="space-y-4 max-h-[70vh] overflow-y-auto">
@@ -118,7 +118,7 @@ Use code "${userName.toUpperCase()}" 🎁`;
           <div className="w-12 h-12 bg-gradient-to-r from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mx-auto mb-3">
             <Users className="w-6 h-6 text-white" />
           </div>
-          <h3 className="text-lg font-semibold text-gray-900 mb-2">Share TravelTag</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-2">Share Travel4life</h3>
           
         </div>
 

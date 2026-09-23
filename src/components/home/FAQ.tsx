@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, Users, CreditCard, Shield, Home } from 'lucide-react';
 
 export const FAQ: React.FC = () => {
@@ -15,11 +15,11 @@ export const FAQ: React.FC = () => {
   const faqsByCategory = {
     general: [
       {
-        question: 'How does TravelTag work?',
-        answer: 'TravelTag connects travelers with verified hosts who create unique group travel experiences. Browse trips, join a group, and embark on adventures with like-minded people from around the world.',
+        question: 'How does Travel4life work?',
+        answer: 'Travel4life connects travelers with verified hosts who create unique group travel experiences. Browse trips, join a group, and embark on adventures with like-minded people from around the world.',
       },
       {
-        question: 'What makes TravelTag different?',
+        question: 'What makes Travel4life different?',
         answer: 'We focus on small group experiences (6-16 people), verified hosts, and authentic local connections. Plus, we offer unique features like NFT souvenirs, creator trips, and a comprehensive safety system.',
       },
       {
@@ -86,7 +86,7 @@ export const FAQ: React.FC = () => {
             Frequently Asked Questions
           </h2>
           <p className="text-lg text-gray-500 font-body">
-            Everything you need to know about traveling with TravelTag
+            Everything you need to know about traveling with Travel4life
           </p>
         </div>
 
@@ -156,3 +156,4 @@ export const FAQ: React.FC = () => {
     </section>
   );
 };
+

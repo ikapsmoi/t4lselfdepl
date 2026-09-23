@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { FileText, Shield, Users, AlertTriangle } from 'lucide-react';
 
 export const TermsPage: React.FC = () => {
@@ -46,7 +46,7 @@ export const TermsPage: React.FC = () => {
             </h1>
             
             <p className="text-lg md:text-xl font-body leading-relaxed mb-8 max-w-4xl mx-auto font-medium opacity-95 text-shadow">
-              Understanding your rights and responsibilities when using TravelTag.
+              Understanding your rights and responsibilities when using Travel4life.
             </p>
           </div>
         </div>
@@ -62,12 +62,12 @@ export const TermsPage: React.FC = () => {
 
             <h2 className="text-2xl font-bold text-gray-900 mb-4">1. Acceptance of Terms</h2>
             <p className="text-gray-700 mb-6">
-              By accessing and using TravelTag, you accept and agree to be bound by the terms and provision of this agreement.
+              By accessing and using Travel4life, you accept and agree to be bound by the terms and provision of this agreement.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 mb-4">2. Use License</h2>
             <p className="text-gray-700 mb-6">
-              Permission is granted to temporarily use TravelTag for personal, non-commercial transitory viewing only.
+              Permission is granted to temporarily use Travel4life for personal, non-commercial transitory viewing only.
             </p>
 
             <h2 className="text-2xl font-bold text-gray-900 mb-4">3. User Accounts</h2>

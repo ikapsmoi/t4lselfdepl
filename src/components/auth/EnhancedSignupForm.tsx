@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { User, Mail, Lock, Instagram, Eye, EyeOff, MapPin } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -174,7 +174,7 @@ export const EnhancedSignupForm: React.FC<SignupFormProps> = ({
         // Role Selection Landing Page
         <div className="space-y-6">
           <div className="text-center mb-6">
-            <h2 className="text-2xl font-bold text-gray-900">Join TravelTag</h2>
+            <h2 className="text-2xl font-bold text-gray-900">Join Travel4life</h2>
             <p className="text-gray-600 mt-1">Choose how you want to experience travel</p>
           </div>
 

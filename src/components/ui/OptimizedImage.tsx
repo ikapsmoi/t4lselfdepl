@@ -63,7 +63,6 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         alt={alt}
         loading={priority ? 'eager' : loading}
         decoding="async"
-        fetchPriority={priority ? 'high' : 'auto'}
         onLoad={handleLoad}
         onError={handleError}
         className={`w-full h-full object-cover transition-opacity duration-300 ${

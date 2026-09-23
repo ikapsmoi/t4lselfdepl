@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Search, Users, Plane, Heart, Shield, Star, CheckCircle, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -96,7 +96,7 @@ export const HowItWorksPage: React.FC = () => {
             </h1>
             
             <p className="text-lg md:text-xl font-body leading-relaxed mb-8 max-w-4xl mx-auto font-medium opacity-95 text-shadow">
-              From dreaming to doing in just a few clicks. Here's how TravelTag makes group travel effortless and epic.
+              From dreaming to doing in just a few clicks. Here's how Travel4life makes group travel effortless and epic.
             </p>
           </div>
         </div>
@@ -181,7 +181,7 @@ export const HowItWorksPage: React.FC = () => {
               const signUpButton = document.querySelector('[data-auth-signup]') as HTMLButtonElement;
               if (signUpButton) signUpButton.click();
             }}>
-              Join TravelTag
+              Join Travel4life
             </Button>
           </div>
         </div>

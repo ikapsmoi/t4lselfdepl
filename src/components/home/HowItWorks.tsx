@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Search, Users, Plane, Heart, Shield, Star } from 'lucide-react';
 
 export const HowItWorks: React.FC = () => {
@@ -56,7 +56,7 @@ export const HowItWorks: React.FC = () => {
       <div className="max-w-7xl mx-auto container-padding">
         <div className="text-center mb-16">
           <h2 className="heading-lg text-gray-900 mb-6">
-            How TravelTag offers experiences across 45+ countries with special focus on: Works
+            How Travel4life offers experiences across 45+ countries with special focus on: Works
           </h2>
           <p className="body-lg text-gray-600 max-w-3xl mx-auto">
             Your journey to incredible adventures starts here. Join our community of explorers 
@@ -97,7 +97,7 @@ export const HowItWorks: React.FC = () => {
           
           <div className="relative z-10">
             <div className="text-center mb-12">
-              <h3 className="heading-md text-gray-900 mb-6">Why Choose TravelTag?</h3>
+              <h3 className="heading-md text-gray-900 mb-6">Why Choose Travel4life?</h3>
               <p className="body-md text-gray-600 max-w-2xl mx-auto">
                 We're committed to providing safe, authentic, and unforgettable travel experiences
               </p>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Instagram, Facebook, Mail, Phone, MapPin, Send, Star, Shield } from 'lucide-react';
 
 interface FooterProps {
@@ -14,7 +14,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
     if (email) {
       const subject = 'Newsletter Signup';
       const body = `Email: ${email}\nDate: ${new Date().toLocaleString()}`;
-      window.open(`mailto:support@traveltag.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+      window.open(`mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
       setSubscribed(true);
       setEmail('');
       setTimeout(() => setSubscribed(false), 4000);
@@ -204,3 +204,4 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
     </footer>
   );
 };
+

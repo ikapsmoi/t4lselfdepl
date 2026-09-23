@@ -1,3 +1,5 @@
+import { getProductQuality, productPath } from './seo-quality.mjs';
+
 const siteUrl = (process.env.SITE_URL || 'https://travel4life.net').replace(/\/$/, '');
 const supabaseUrl = process.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
@@ -16,21 +18,50 @@ if (!response.ok) {
 }
 
 const trips = await response.json();
-const eligible = trips.filter((trip) => trip.id && trip.title && trip.status === 'active');
+const qualityResults = trips.map((trip) => ({ trip, quality: getProductQuality(trip) }));
+const eligible = qualityResults.filter(({ quality }) => quality.eligible).map(({ trip }) => trip);
+const excluded = qualityResults.filter(({ quality }) => !quality.eligible);
+const titleCounts = new Map();
+trips.forEach((trip) => {
+  const title = trip.title?.trim().toLowerCase();
+  if (title) titleCounts.set(title, (titleCounts.get(title) || 0) + 1);
+});
+const duplicateTitles = [...titleCounts.entries()]
+  .filter(([, count]) => count > 1)
+  .map(([title, count]) => ({ title, count }));
+const categories = trips.reduce((counts, trip) => {
+  const category = trip.category || 'missing';
+  counts[category] = (counts[category] || 0) + 1;
+  return counts;
+}, {});
+const sitemapResponse = await fetch(`${siteUrl}/sitemap-products.xml`);
+const sitemapText = sitemapResponse.ok ? await sitemapResponse.text() : '';
+const sitemapUrls = [...sitemapText.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) => match[1]);
+const expectedSitemapUrls = new Set(eligible.map((trip) => `${siteUrl}${productPath(trip.id)}`));
+const sitemapMissingUrls = [...expectedSitemapUrls].filter((url) => !sitemapUrls.includes(url));
 const report = {
   generatedAt: new Date().toISOString(),
   siteUrl,
   totalProducts: trips.length,
   indexableProducts: eligible.length,
-  missingTitle: trips.filter((trip) => !trip.title).length,
-  missingDestination: trips.filter((trip) => !trip.location).length,
-  missingDates: trips.filter((trip) => !trip.start_date || !trip.end_date).length,
-  missingPrice: trips.filter((trip) => trip.price_per_person === null || trip.price_per_person === undefined).length,
-  missingImage: trips.filter((trip) => !Array.isArray(trip.images) || trip.images.length === 0).length,
+  excludedProducts: excluded.length,
+  missingFields: excluded.reduce((counts, { quality }) => {
+    Object.entries(quality.checks).forEach(([field, present]) => {
+      if (!present) counts[field] = (counts[field] || 0) + 1;
+    });
+    return counts;
+  }, {}),
+  duplicateTitles,
+  categories,
+  sitemap: {
+    httpStatus: sitemapResponse.status,
+    listedUrls: sitemapUrls.length,
+    missingEligibleUrls: sitemapMissingUrls.length,
+  },
   sampleProduct: eligible[0] ? {
     id: eligible[0].id,
     title: eligible[0].title,
-    url: `${siteUrl}/trips/${encodeURIComponent(eligible[0].id)}`,
+    url: `${siteUrl}${productPath(eligible[0].id)}`,
   } : null,
 };
 

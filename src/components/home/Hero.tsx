@@ -182,7 +182,6 @@ const Hero: React.FC = memo(() => {
                 alt={`${bg.title} - ${bg.vibe}`}
                 className="w-full h-full object-cover"
                 loading={index === 0 ? "eager" : "lazy"}
-                fetchPriority={index === 0 ? "high" : "auto"}
                 decoding="async"
               />
             </div>

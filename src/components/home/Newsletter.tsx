@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Mail, Send, Gift, Zap } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
@@ -15,17 +15,17 @@ export const Newsletter: React.FC = () => {
       // Track newsletter signup
       newsletterSignup(email);
       
-      // Send email to support@traveltag.net
-      const subject = 'New Newsletter Subscription - TravelTag';
+      // Send email to support@travel4life.net
+      const subject = 'New Newsletter Subscription - Travel4life';
       const body = `New newsletter subscription request:
       
 Email: ${email}
 Date: ${new Date().toLocaleString()}
-Source: TravelTag Newsletter Signup
+Source: Travel4life Newsletter Signup
 
 Please add this email to the newsletter list.`;
       
-      const mailtoLink = `mailto:support@traveltag.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.open(mailtoLink, '_blank');
       
       setSubscribed(true);
@@ -71,7 +71,7 @@ Please add this email to the newsletter list.`;
             <div className="bg-green-100 border border-green-200 text-green-800 p-6 rounded-lg">
               <div className="flex items-center justify-center mb-2">
                 <Gift className="w-6 h-6 mr-2" />
-                <span className="font-semibold">Welcome to the TravelTag family!</span>
+                <span className="font-semibold">Welcome to the Travel4life family!</span>
               </div>
               <p>Check your email for a special welcome offer and travel inspiration.</p>
             </div>

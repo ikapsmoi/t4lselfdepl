@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
@@ -56,7 +56,7 @@ ${message}
 Please respond to this inquiry as soon as possible.`;
 
       // Create mailto link
-      const mailtoLink = `mailto:support@traveltag.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       
       // Open email client
       window.open(mailtoLink, '_blank');
@@ -102,9 +102,9 @@ Trip Details:
 Please ensure the host responds to this inquiry promptly.
 
 Best regards,
-TravelTag System`;
+Travel4life System`;
 
-      const adminMailtoLink = `mailto:support@traveltag.net?subject=${encodeURIComponent(adminEmailSubject)}&body=${encodeURIComponent(adminEmailBody)}`;
+      const adminMailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(adminEmailSubject)}&body=${encodeURIComponent(adminEmailBody)}`;
       window.open(adminMailtoLink, '_blank');
       
       // Save trip to user's saved trips if user is logged in

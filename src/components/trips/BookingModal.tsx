@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
@@ -402,9 +402,9 @@ Number of travelers: ${travelersCount}
 
 Message: ${inquiryMessage}
 
-Please respond to this inquiry through your TravelTag dashboard.`;
+Please respond to this inquiry through your Travel4life dashboard.`;
 
-      const mailtoLink = `mailto:${trip.host?.email || 'host@traveltag.com'}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:${trip.host?.email || 'host@travel4life.net'}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.open(mailtoLink, '_blank');
 
       handleClose();
@@ -435,7 +435,7 @@ Please respond to this inquiry through your TravelTag dashboard.`;
                 <div className="flex items-start">
                   <CheckCircle className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
                   <div className="text-sm text-blue-800">
-                    <strong>Account Created!</strong> We've created a TravelTag account for you with the password <strong>081087</strong>.
+                    <strong>Account Created!</strong> We've created a Travel4life account for you with the password <strong>081087</strong>.
                     You can change this password anytime from your profile settings.
                   </div>
                 </div>
@@ -904,7 +904,7 @@ Please respond to this inquiry through your TravelTag dashboard.`;
                   <div className="flex items-start">
                     <div className="text-2xl mr-3">🎉</div>
                     <div className="text-sm text-green-800">
-                      <strong>Welcome Discount Applied!</strong> You're saving {getCurrencySymbol(trip.currency || 'USD')}{firstBookingDiscount.toLocaleString()} on your first adventure with TravelTag!
+                      <strong>Welcome Discount Applied!</strong> You're saving {getCurrencySymbol(trip.currency || 'USD')}{firstBookingDiscount.toLocaleString()} on your first adventure with Travel4life!
                     </div>
                   </div>
                 </div>
@@ -914,7 +914,7 @@ Please respond to this inquiry through your TravelTag dashboard.`;
                 <div className="flex items-start">
                   <Shield className="w-5 h-5 text-blue-600 mr-2 mt-0.5" />
                   <div className="text-sm text-blue-800">
-                    <strong>Protected by TravelTag:</strong> Your payment is secure and protected by our guarantee.
+                    <strong>Protected by Travel4life:</strong> Your payment is secure and protected by our guarantee.
                     Full refund if trip is cancelled by host.
                   </div>
                 </div>

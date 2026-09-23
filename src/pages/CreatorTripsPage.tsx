@@ -179,7 +179,7 @@ export const CreatorTripsPage: React.FC = () => {
                             icon={Instagram}
                             onClick={(e) => {
                               e.stopPropagation();
-                              window.open(`https://www.instagram.com/${creator.instagram_id || 'traveltagnow'}`, '_blank');
+                              window.open(`https://www.instagram.com/${creator.instagram_id}`, '_blank');
                             }}
                             className="w-full border-pink-500 text-pink-500 hover:bg-pink-50 text-xs py-1.5"
                           >

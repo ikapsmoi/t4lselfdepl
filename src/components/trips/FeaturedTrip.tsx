@@ -43,8 +43,8 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
 
   return (
     <>
-      <div className="relative bg-white rounded-xl overflow-hidden shadow-lg border border-transparent bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 p-[1px] transform transition-all duration-300 max-w-sm mx-auto">
-        <div className="bg-white rounded-xl overflow-hidden relative shadow-md">
+      <div className="relative bg-white rounded-2xl overflow-hidden shadow-[0_18px_50px_-20px_rgba(15,23,42,0.6)] border border-transparent bg-gradient-to-br from-amber-400 via-fuchsia-500 to-sky-500 p-[1px] transform transition-all duration-500 max-w-md mx-auto hover:-translate-y-1">
+        <div className="bg-white rounded-2xl overflow-hidden relative shadow-md">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -56,14 +56,25 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
             <X className="w-3.5 h-3.5 text-gray-600 hover:text-gray-900" />
           </button>
 
-          <div className="relative h-36 sm:h-44 md:h-52">
+          <button
+            type="button"
+            onClick={() => onViewDetails?.(currentTrip)}
+            aria-label={`Explore ${currentTrip.title}`}
+            className="group relative block w-full h-48 sm:h-56 md:h-64 text-left overflow-hidden focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/60"
+          >
             <img
               key={currentTrip.images[0]}
               src={currentTrip.images[0]}
               alt={currentTrip.title}
-              className="w-full h-full object-cover transition-opacity duration-500 ease-in-out"
+              className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/15 to-slate-950/20 transition-colors duration-500 group-hover:from-slate-950/75" />
+
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+              <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-bold text-slate-900 shadow-xl">
+                Explore trip <ArrowRight className="w-4 h-4" />
+              </span>
+            </div>
 
             <div className="absolute top-2 left-2 z-20">
               <Badge variant="warning" className="bg-gradient-to-r from-yellow-400 to-orange-500 text-white border-0 shadow-md text-[9px] px-2 py-1">
@@ -77,47 +88,53 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
               </div>
             </div>
 
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2.5">
+            <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="flex items-center justify-between text-white">
-                <div className="text-[10px] font-medium">Starts {formatDate(currentTrip.start_date)}</div>
-                <div className="bg-white/20 backdrop-blur-sm px-2 py-0.5 rounded-full">
-                  <span className="font-bold text-[10px]">{spotsLeft} left</span>
+                <div className="text-xs sm:text-sm font-semibold">Starts {formatDate(currentTrip.start_date)}</div>
+                <div className="bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full">
+                  <span className="font-bold text-xs">{spotsLeft} spots left</span>
                 </div>
               </div>
+              <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/30">
+                <div className="h-full rounded-full bg-amber-300 transition-all duration-700" style={{ width: `${Math.min(100, Math.max(10, (spotsLeft / Math.max(currentTrip.max_capacity, 1)) * 100))}%` }} />
+              </div>
             </div>
-          </div>
+          </button>
 
           <div className="p-3 sm:p-4">
-            <h1 className="tour-title text-gray-900 mb-2 line-clamp-2 min-h-[2.75rem]">
+            <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-fuchsia-600">
+              <Sparkles className="h-3.5 w-3.5" /> Featured experience
+            </div>
+            <h1 className="tour-featured-title text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
               {currentTrip.title}
             </h1>
 
-            <div className="grid grid-cols-2 gap-2 mb-3 min-h-[82px]">
+            <div className="grid grid-cols-2 gap-2.5 mb-4 min-h-[82px]">
               <div className="flex items-center text-gray-700">
                 <MapPin className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
                 <div>
-                  <div className="text-[10px] text-gray-500">Destination</div>
-                  <div className="font-semibold text-[10px] leading-tight">{currentTrip.destination}</div>
+                  <div className="text-xs text-gray-500">Destination</div>
+                  <div className="text-sm font-semibold leading-tight">{currentTrip.destination}</div>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
-                <span className="text-[10px] font-bold text-green-600 mr-1.5">₹{currentTrip.price}</span>
+                <span className="text-sm font-bold text-green-600 mr-1.5">₹{currentTrip.price}</span>
                 <div>
-                  <div className="text-[10px] leading-tight">/person</div>
+                  <div className="text-xs leading-tight">/person</div>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
                 <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
                 <div>
-                  <div className="text-[10px] text-gray-500">Duration</div>
-                  <div className="font-semibold text-[10px] leading-tight">{currentTrip.duration} days</div>
+                  <div className="text-xs text-gray-500">Duration</div>
+                  <div className="text-sm font-semibold leading-tight">{currentTrip.duration} days</div>
                 </div>
               </div>
               <div className="flex items-center text-gray-700">
                 <Star className="w-3.5 h-3.5 mr-1.5 text-yellow-500 fill-current flex-shrink-0" />
                 <div>
-                  <div className="text-[10px] text-gray-500">Rating</div>
-                  <div className="font-semibold text-[10px] leading-tight">{currentTrip.rating}</div>
+                  <div className="text-xs text-gray-500">Rating</div>
+                  <div className="text-sm font-semibold leading-tight">{currentTrip.rating}</div>
                 </div>
               </div>
             </div>

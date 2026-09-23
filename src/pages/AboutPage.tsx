@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Globe, Users, Shield, Heart, Award, MapPin } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -88,7 +88,7 @@ export const AboutPage: React.FC = () => {
             </div>
             
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-display font-bold tracking-tight leading-none mb-6 text-shadow-lg">
-              About TravelTag
+              About Travel4life
             </h1>
             
             <p className="text-lg md:text-xl font-body leading-relaxed mb-8 max-w-4xl mx-auto font-medium opacity-95 text-shadow">
@@ -148,7 +148,7 @@ export const AboutPage: React.FC = () => {
         <div className="text-center bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Join Our Community?</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Start your journey with TravelTag and discover what makes us different.
+            Start your journey with Travel4life and discover what makes us different.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="primary">Browse Adventures</Button>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Modal } from '../ui/Modal';
 import { Input } from '../ui/Input';
 import { Button } from '../ui/Button';
@@ -55,7 +55,7 @@ export const IndiaTripInquiryModal: React.FC<IndiaTripInquiryModalProps> = ({
       const duration = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
 
       // Construct email content
-      const subject = 'Custom India Trip Inquiry - TravelTag';
+      const subject = 'Custom India Trip Inquiry - Travel4life';
       const body = `New custom India trip inquiry received:
 
 TRAVELER DETAILS:
@@ -77,14 +77,14 @@ SPECIAL REQUESTS:
 ${formData.specialRequests || 'None specified'}
 
 ---
-This inquiry was submitted through the TravelTag India Specials section.
+This inquiry was submitted through the Travel4life India Specials section.
 Please respond to the customer within 24 hours.
 
 Best regards,
-TravelTag Team`;
+Travel4life Team`;
 
       // Create mailto link
-      const mailtoLink = `mailto:support@traveltag.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       
       // Open email client
       window.open(mailtoLink, '_blank');

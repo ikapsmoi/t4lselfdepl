@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
 import { Trip, Booking } from '../types';
 import { useAnalytics } from '../utils/analytics';
@@ -581,7 +581,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
       if (existingBookings && existingBookings.length > 0) {
         return { 
           success: false, 
-          error: 'Trip has existing bookings. Please contact support@traveltag.net to proceed with deletion.' 
+          error: 'Trip has existing bookings. Please contact support@travel4life.net to proceed with deletion.'
         };
       }
 

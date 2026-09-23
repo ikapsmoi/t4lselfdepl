@@ -154,7 +154,6 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 src="logo-new.png"
                 alt="Travel4life Logo"
                 loading="eager"
-                fetchPriority="high"
                 decoding="async"
                 className="w-9 h-9 object-contain"
               />

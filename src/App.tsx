@@ -66,7 +66,9 @@ const AppContent: React.FC = () => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1).split('?')[0];
       setCurrentPage(hash || 'home');
-      updateSeoForPage(hash || 'home');
+      if (!/^\/trips\/[^/]+\/?$/.test(window.location.pathname)) {
+        updateSeoForPage(hash || 'home');
+      }
       setIsMenuOpen(false); // Auto-hide mobile menu on navigation
     };
 

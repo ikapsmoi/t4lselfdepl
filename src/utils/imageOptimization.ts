@@ -1,4 +1,4 @@
-// Image optimization utilities for TravelTag
+﻿// Image optimization utilities for Travel4life
 
 interface ImageOptions {
   width?: number;

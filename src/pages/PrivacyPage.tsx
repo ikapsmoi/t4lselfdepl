@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Shield, Lock, Eye, Database } from 'lucide-react';
 
 export const PrivacyPage: React.FC = () => {
@@ -86,7 +86,7 @@ export const PrivacyPage: React.FC = () => {
                 <div>
                   <h4 className="font-semibold text-green-900 mb-2">Your Data Rights</h4>
                   <p className="text-green-800">
-                    You have the right to access, update, or delete your personal information at any time. Contact us at privacy@traveltag.com.
+                    You have the right to access, update, or delete your personal information at any time. Contact us at privacy@travel4life.net.
                   </p>
                 </div>
               </div>

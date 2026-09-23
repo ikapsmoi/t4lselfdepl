@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Backpack, DollarSign, MapPin, Camera, Plane, Compass } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -45,7 +45,7 @@ export const TravelTipsPage: React.FC = () => {
       { title: 'Research Like a Local', content: 'Follow local Instagram accounts and food bloggers for authentic recommendations.' },
       { title: 'Seasonal Sweet Spots', content: 'Visit during shoulder seasons for better weather, fewer crowds, and lower prices.' },
       { title: 'Cultural Etiquette', content: 'Learn basic greetings and customs. Locals appreciate the effort and you\'ll get better experiences.' },
-      { title: 'Hidden Gems', content: 'Ask your TravelTag host for secret spots that aren\'t in guidebooks.' }
+      { title: 'Hidden Gems', content: 'Ask your Travel4life host for secret spots that aren\'t in guidebooks.' }
     ],
     photography: [
       { title: 'Golden Hour Magic', content: 'Shoot during sunrise/sunset for Instagram-worthy lighting. Plan your day around these times.' },
@@ -159,7 +159,7 @@ export const TravelTipsPage: React.FC = () => {
         <div className="text-center bg-white rounded-xl shadow-lg p-8">
           <h3 className="text-2xl font-bold text-gray-900 mb-4">Ready to Put These Tips to Use?</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            Join a TravelTag adventure and travel with confidence, knowing you're prepared for anything.
+            Join a Travel4life adventure and travel with confidence, knowing you're prepared for anything.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="primary" onClick={() => window.location.hash = 'home'}>

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Camera, Download, Mail, Users, Globe, TrendingUp } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
@@ -26,7 +26,7 @@ export const PressPage: React.FC = () => {
   ];
 
   const mediaKit = [
-    { name: 'TravelTag Logo Pack', type: 'ZIP', size: '2.4 MB' },
+    { name: 'Travel4life Logo Pack', type: 'ZIP', size: '2.4 MB' },
     { name: 'Brand Guidelines', type: 'PDF', size: '1.8 MB' },
     { name: 'Product Screenshots', type: 'ZIP', size: '15.2 MB' },
     { name: 'Company Fact Sheet', type: 'PDF', size: '890 KB' }
@@ -87,7 +87,7 @@ export const PressPage: React.FC = () => {
           <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
           <div className="prose prose-lg max-w-none text-gray-700">
             <p className="mb-4">
-              <strong>TravelTag</strong> was born from a simple idea: travel should bring people together, not isolate them. 
+              <strong>Travel4life</strong> was born from a simple idea: travel should bring people together, not isolate them.
               Founded in 2024, we've quickly become the go-to platform for Gen Z and millennial travelers seeking authentic, 
               social experiences.
             </p>
@@ -139,7 +139,7 @@ export const PressPage: React.FC = () => {
             <Button 
               variant="primary" 
               icon={Mail}
-              onClick={() => window.open('mailto:press@traveltag.com', '_blank')}
+              onClick={() => window.open('mailto:press@travel4life.net', '_blank')}
             >
               Contact Press Team
             </Button>
@@ -148,7 +148,7 @@ export const PressPage: React.FC = () => {
             </Button>
           </div>
           <div className="mt-6 text-sm text-gray-500">
-            <p>Press Contact: press@traveltag.com</p>
+            <p>Press Contact: press@travel4life.net</p>
             <p>Response time: Within 24 hours</p>
           </div>
         </div>
