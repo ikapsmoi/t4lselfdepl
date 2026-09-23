@@ -172,9 +172,11 @@ export const CreatorTrips: React.FC = () => {
           start_date: trip.start_date,
           end_date: trip.end_date,
           images: trip.images && trip.images.length > 0 ? trip.images : [
-            trip.category === 'indian_special'
-              ? '/pkg3.png'
-              : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
+            trip.category === 'budget'
+              ? '/pkg1.png'
+              : trip.category === 'indian_special'
+                ? '/pkg3.png'
+                : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
           ],
           host_id: trip.host_id,
           host: trip.host ? {

@@ -5,6 +5,9 @@ export const useExitIntent = () => {
   const [hasShownModal, setHasShownModal] = useState(false);
 
   useEffect(() => {
+    const minimumDwellTime = 30_000;
+    const visibilityGracePeriod = 3_000;
+
     // Check if modal has been shown in this session
     const modalShown = sessionStorage.getItem('exitModalShown');
     if (modalShown) {
@@ -13,11 +16,17 @@ export const useExitIntent = () => {
     }
 
     let timeoutId: NodeJS.Timeout | null = null;
+    let eligibilityTimeoutId: NodeJS.Timeout | null = null;
+    let isEligible = false;
     let isSubscribed = true;
+
+    eligibilityTimeoutId = setTimeout(() => {
+      isEligible = true;
+    }, minimumDwellTime);
 
     const handleMouseLeave = (e: MouseEvent) => {
       // Only trigger if mouse leaves from the top of the viewport
-      if (e.clientY <= 0 && !hasShownModal && isSubscribed) {
+      if (e.clientY <= 0 && isEligible && !hasShownModal && isSubscribed) {
         setShowExitModal(true);
         setHasShownModal(true);
         sessionStorage.setItem('exitModalShown', 'true');
@@ -25,15 +34,15 @@ export const useExitIntent = () => {
     };
 
     const handleVisibilityChange = () => {
-      if (document.hidden && !hasShownModal && isSubscribed) {
-        // Small delay to avoid triggering on quick tab switches
+      if (document.hidden && isEligible && !hasShownModal && isSubscribed) {
+        // Delay briefly to avoid triggering on quick tab switches
         timeoutId = setTimeout(() => {
           if (isSubscribed) {
             setShowExitModal(true);
             setHasShownModal(true);
             sessionStorage.setItem('exitModalShown', 'true');
           }
-        }, 1000);
+        }, visibilityGracePeriod);
       } else {
         if (timeoutId) {
           clearTimeout(timeoutId);
@@ -53,8 +62,11 @@ export const useExitIntent = () => {
       if (timeoutId) {
         clearTimeout(timeoutId);
       }
+      if (eligibilityTimeoutId) {
+        clearTimeout(eligibilityTimeoutId);
+      }
     };
-  }, []);
+  }, [hasShownModal]);
 
   const closeModal = () => {
     setShowExitModal(false);

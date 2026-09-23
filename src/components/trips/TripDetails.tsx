@@ -15,7 +15,8 @@ import { VRPreview } from '../vr/VRPreview';
 import { InquireNowModal } from './InquireNowModal';
 import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
-import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES } from '../../utils/constants';
+import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS } from '../../utils/constants';
+import { DEFAULT_TRIP_REVIEWS } from '../../utils/defaultReviews';
 import { getCurrencySymbol } from '../../utils/constants';
 import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
@@ -91,6 +92,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
     }
     return getCurrencySymbol(trip.currency || 'INR'); // Fallback to existing logic
   }, [trip.type, trip.currency]);
+  const includedItems = trip.included?.some(item => item.trim())
+    ? trip.included
+    : DEFAULT_TRIP_INCLUSIONS;
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', { 
       weekday: 'long',
@@ -160,7 +164,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             <div className="lg:col-span-2 space-y-6 md:space-y-8">
               <div className="space-y-3 md:space-y-4">
                 <img
-                  src={(trip.images && trip.images.length > 0) ? trip.images[selectedImageIndex] : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'}
+                  src={(trip.images && trip.images.length > 0) ? trip.images[selectedImageIndex] : (trip.type === 'budget' ? '/pkg1.png' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg')}
                   alt={trip.title}
                   className="w-full h-48 md:h-96 object-cover rounded-xl"
                 />
@@ -215,7 +219,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     <Users className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
                     <span>{trip.max_capacity} max</span>
                   </div>
-                  <Rating rating={trip.rating} reviewCount={trip.review_count} />
+                  <Rating rating={trip.rating} reviewCount={trip.review_count + DEFAULT_TRIP_REVIEWS.length} />
                 </div>
 
                 <p className="text-gray-700 text-[10px] leading-relaxed mb-4 md:text-lg md:mb-6 whitespace-pre-wrap">{trip.description}</p>
@@ -236,7 +240,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     What's Included
                   </h3>
                   <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
-                    {trip.included.map((item, index) => (
+                    {includedItems.map((item, index) => (
                       <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {item}
                       </li>

@@ -49,9 +49,11 @@ export const TripCard: React.FC<TripCardProps> = memo(({
     const hash = Array.from(tripKey).reduce((total, character) => total + character.charCodeAt(0), 0);
     return (hash % 9) + 2;
   }, [trip.id, trip.title]);
-  const fallbackImage = trip.type === 'indian_special'
-    ? '/pkg3.png'
-    : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
+  const fallbackImage = trip.type === 'budget'
+    ? '/pkg1.png'
+    : trip.type === 'indian_special'
+      ? '/pkg3.png'
+      : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
   const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === trip.difficulty);
   const isAlmostFull = spotsLeft <= 3 && spotsLeft > 0;

@@ -99,7 +99,11 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
           duration: durationDays, // Calculate duration dynamically
           images: booking.trips.images && booking.trips.images.length > 0
             ? booking.trips.images
-            : [booking.trips.category === 'indian_special' ? '/pkg3.png' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'], // Fallback image
+            : [booking.trips.category === 'budget'
+              ? '/pkg1.png'
+              : booking.trips.category === 'indian_special'
+                ? '/pkg3.png'
+                : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'], // Fallback image
           booking_status: booking.status,
           booking_id: booking.id,
           type: booking.trips.category,
@@ -169,7 +173,11 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
           duration: durationDays,
           images: booking.trips.images && booking.trips.images.length > 0
             ? booking.trips.images
-            : [booking.trips.category === 'indian_special' ? '/pkg3.png' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'],
+            : [booking.trips.category === 'budget'
+              ? '/pkg1.png'
+              : booking.trips.category === 'indian_special'
+                ? '/pkg3.png'
+                : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'],
           booking_status: booking.status,
           booking_id: booking.id
         };

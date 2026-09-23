@@ -13,6 +13,17 @@ export const TRIP_TYPES = [
   { value: 'indian_special', label: 'Indian Special', color: 'text-orange-600', bgColor: 'bg-orange-100' },
 ];
 
+export const DEFAULT_TRIP_INCLUSIONS = [
+  'Accommodation included for the entire duration of the stay at central 3 star property.',
+  'Daily Continental breakfast included.',
+  'Transfers as per the itinerary included.',
+  'Sightseeing as per the itinerary offered and shared with you.',
+  'Double occupancy rates.',
+  'Travel Insurance included.',
+  'Visa assistance at INR 2000 per person included.',
+  'GST and TCS additional.',
+];
+
 export const DIFFICULTY_LEVELS = [
   { value: 'easy', label: 'Easy', color: 'text-green-600' },
   { value: 'moderate', label: 'Moderate', color: 'text-yellow-600' },

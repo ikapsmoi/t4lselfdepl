@@ -109,7 +109,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
                 <div className="md:col-span-2 lg:col-span-3 mb-4">
                   <div className="relative h-64 md:h-80 rounded-[20px] overflow-hidden shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] border border-gray-100">
                     <img
-                      src={firstTrip.images?.[0] || 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'}
+                      src={firstTrip.images?.[0] || (firstTrip.type === 'budget' ? '/pkg1.png' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg')}
                       alt={firstTrip.title}
                       className="w-full h-full object-cover"
                     />
