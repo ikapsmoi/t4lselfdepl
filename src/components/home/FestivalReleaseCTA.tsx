@@ -10,7 +10,9 @@ export const FestivalReleaseCTA: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [festival, setFestival] = useState('Tomorrowland');
   const [name, setName] = useState('');
-  const [travelers, setTravelers] = useState('1');
+  const [email, setEmail] = useState('');
+  const [quantity, setQuantity] = useState('1');
+  const [bookingWindow, setBookingWindow] = useState('As soon as possible');
 
   React.useEffect(() => {
     if (sessionStorage.getItem('travel4life:festival-release-dismissed') === 'true') {
@@ -28,12 +30,12 @@ export const FestivalReleaseCTA: React.FC = () => {
 
   const openWhatsApp = () => {
     const message = [
-      'Hi Travel4life! I would like to check current Festival Release availability.',
-      `Festival: ${festival}`,
-      name.trim() ? `Name: ${name.trim()}` : '',
-      `Travelers: ${travelers}`,
-      'Please share any currently available package and applicable release benefit.'
-    ].filter(Boolean).join('\n');
+      'Hi Travel4life! I want to check Festival Release availability.',
+      `Festival: ${festival} | Quantity: ${quantity}`,
+      `Name: ${name.trim() || 'Not provided'} | Email: ${email.trim()}`,
+      `Booking timeline: ${bookingWindow}`,
+      'Please share the available package details and next steps.'
+    ].join('\n');
 
     const personalizedUrl = `https://wa.me/919871621921?text=${encodeURIComponent(message)}`;
     window.open(personalizedUrl, '_blank', 'noopener,noreferrer');
@@ -85,40 +87,69 @@ export const FestivalReleaseCTA: React.FC = () => {
       </aside>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Check Festival Release" maxWidth="max-w-md">
-        <div className="space-y-4">
+        <div className="space-y-3">
           <p className="text-sm leading-relaxed text-gray-600">
             Tell us what you are looking for and we will check current availability with the concierge.
           </p>
+          <div className="grid grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-gray-700">
+              Festival
+              <select
+                value={festival}
+                onChange={(event) => setFestival(event.target.value)}
+                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+              >
+                <option>Tomorrowland</option>
+                <option>Ultra Miami</option>
+                <option>EDC</option>
+                <option>Coachella</option>
+                <option>Other festival</option>
+              </select>
+            </label>
+            <label className="block text-sm font-medium text-gray-700">
+              Quantity
+              <select
+                value={quantity}
+                onChange={(event) => setQuantity(event.target.value)}
+                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+              >
+                {[1, 2, 3, 4, 5, 6].map((count) => <option key={count} value={count}>{count} {count === 1 ? 'traveler' : 'travelers'}</option>)}
+              </select>
+            </label>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label className="block text-sm font-medium text-gray-700">
+              Name <span className="font-normal text-gray-400">(optional)</span>
+              <input
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                placeholder="Your name"
+                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+              />
+            </label>
+            <label className="block text-sm font-medium text-gray-700">
+              Email
+              <input
+                type="email"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                placeholder="you@example.com"
+                required
+                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+              />
+            </label>
+          </div>
           <label className="block text-sm font-medium text-gray-700">
-            Festival
+            How soon do you plan to book?
             <select
-              value={festival}
-              onChange={(event) => setFestival(event.target.value)}
+              value={bookingWindow}
+              onChange={(event) => setBookingWindow(event.target.value)}
               className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
             >
-              <option>Tomorrowland</option>
-              <option>Ultra Miami</option>
-              <option>Coachella</option>
-              <option>Other festival</option>
-            </select>
-          </label>
-          <label className="block text-sm font-medium text-gray-700">
-            Name <span className="font-normal text-gray-400">(optional)</span>
-            <input
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              placeholder="Your name"
-              className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
-            />
-          </label>
-          <label className="block text-sm font-medium text-gray-700">
-            Travelers
-            <select
-              value={travelers}
-              onChange={(event) => setTravelers(event.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
-            >
-              {[1, 2, 3, 4, 5].map((count) => <option key={count} value={count}>{count}</option>)}
+              <option>As soon as possible</option>
+              <option>Within 7 days</option>
+              <option>Within 30 days</option>
+              <option>Just researching</option>
             </select>
           </label>
           <button
