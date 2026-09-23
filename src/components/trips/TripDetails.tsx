@@ -15,7 +15,7 @@ import { VRPreview } from '../vr/VRPreview';
 import { InquireNowModal } from './InquireNowModal';
 import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
-import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS } from '../../utils/constants';
+import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS, DEFAULT_TRIP_EXCLUSIONS } from '../../utils/constants';
 import { DEFAULT_TRIP_REVIEWS } from '../../utils/defaultReviews';
 import { getCurrencySymbol } from '../../utils/constants';
 import { useAnalytics } from '../../utils/analytics';
@@ -95,6 +95,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   const includedItems = trip.included?.some(item => item.trim())
     ? trip.included
     : DEFAULT_TRIP_INCLUSIONS;
+  const excludedItems = trip.not_included?.some(item => item.trim())
+    ? trip.not_included
+    : DEFAULT_TRIP_EXCLUSIONS;
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', { 
       weekday: 'long',
@@ -254,7 +257,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     Not Included
                   </h3>
                   <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
-                    {trip.not_included.map((item, index) => (
+                    {excludedItems.map((item, index) => (
                       <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {item}
                       </li>

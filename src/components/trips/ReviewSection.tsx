@@ -109,18 +109,18 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId }) => {
             <div key={review.id} className="bg-gray-50 rounded-lg p-6">
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0">
-                  {review.reviewer?.avatar ? (
+                  {review.reviewer?.avatar || review.reviewer?.avatar_url ? (
                     <img
-                      src={review.reviewer.avatar}
+                      src={review.reviewer.avatar || review.reviewer.avatar_url}
                       alt={review.reviewer.name}
-                      className="w-12 h-12 rounded-full object-cover"
+                      className={`w-12 h-12 rounded-full object-cover ${review.id.startsWith('default-review-') ? 'review-fallback-character' : ''}`}
                     />
                   ) : (
                     <div
                       className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center border border-yellow-200"
                       aria-label="Traveler review without profile image"
                     >
-                      <span className="text-xl" aria-hidden="true">💬</span>
+                      <span className="text-xs text-yellow-700" aria-hidden="true">TR</span>
                     </div>
                   )}
                 </div>

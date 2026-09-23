@@ -81,6 +81,15 @@
   .visitrenotahoe-gradient {
     background: linear-gradient(135deg, #1e40af 0%, #0ea5e9 50%, #f59e0b 100%);
   }
+
+  .review-fallback-character {
+    animation: review-character-float 3.6s ease-in-out infinite;
+  }
+}
+
+@keyframes review-character-float {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-3px) rotate(1deg); }
 }
 
 /* Custom scrollbar - VisitRenoTahoe style */

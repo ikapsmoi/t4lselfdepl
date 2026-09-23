@@ -24,6 +24,14 @@ export const DEFAULT_TRIP_INCLUSIONS = [
   'GST and TCS additional.',
 ];
 
+export const DEFAULT_TRIP_EXCLUSIONS = [
+  'GST and TCS not included.',
+  'Airfare from India not included.',
+  'Any other meals except breakfast not included.',
+  'City tax if applicable.',
+  'Visa fees not included.',
+];
+
 export const DIFFICULTY_LEVELS = [
   { value: 'easy', label: 'Easy', color: 'text-green-600' },
   { value: 'moderate', label: 'Moderate', color: 'text-yellow-600' },

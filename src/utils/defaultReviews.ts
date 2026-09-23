@@ -52,6 +52,10 @@ export const getDefaultTripReviews = (tripId: string): Review[] => {
   const offset = Array.from(tripId).reduce((total, character) => total + character.charCodeAt(0), 0) % DEFAULT_TRIP_REVIEWS.length;
   return DEFAULT_TRIP_REVIEWS.map((review, index) => ({
     ...review,
+    reviewer: review.reviewer ? {
+      ...review.reviewer,
+      avatar_url: `https://api.dicebear.com/9.x/adventurer/svg?seed=${encodeURIComponent(`${tripId}-${index}-${review.reviewer.name}`)}&backgroundColor=fef3c7`,
+    } : undefined,
     id: `${review.id}-${tripId}`,
     trip_id: tripId,
     created_at: new Date(Date.UTC(2025, 10, ((index + offset) % 28) + 1)).toISOString(),
