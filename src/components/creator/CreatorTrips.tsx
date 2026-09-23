@@ -7,6 +7,7 @@ import { TripCard } from '../trips/TripCard';
 import { CreatorApplicationModal } from './CreatorApplicationModal';
 import { supabase } from '../../lib/supabase';
 import { TripDetails } from '../trips/TripDetails';
+import { cleanTripTitle } from '../../utils/formatters';
 
 
 
@@ -159,7 +160,7 @@ export const CreatorTrips: React.FC = () => {
 
         const transformedTrips: CreatorTrip[] = data.map(trip => ({
           id: trip.id,
-          title: trip.title,
+          title: cleanTripTitle(trip.title),
           description: trip.itinerary?.description || 'Amazing creator-led travel experience awaits you.',
           destination: trip.location,
           country: trip.location.split(',').pop()?.trim() || 'Unknown',

@@ -5,6 +5,7 @@ import { Trip } from '../../types';
 import { TripCard } from './TripCard';
 import { TripDetails } from './TripDetails';
 import { INDIA_CATEGORIES, getCurrencySymbol } from '../../utils/constants';
+import { formatCitiesForDisplay } from '../../utils/formatters';
 
 interface TripGridProps {
   trips: Trip[];
@@ -115,7 +116,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
                     <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6 text-white">
-                      <h3 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1.5">{firstTrip.title}</h3>
+                      <h3 className="tour-featured-title mb-1.5">{firstTrip.title}</h3>
                       {!hideCity && (
                         <p className="text-sm md:text-base text-white/80 mb-3">{formatCitiesForDisplay(firstTrip.itinerary?.cities) || firstTrip.destination} • {firstTrip.duration} days</p>
                       )}

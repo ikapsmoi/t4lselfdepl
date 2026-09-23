@@ -1,0 +1,6 @@
+https://www.travel4life.net/* https://travel4life.net/:splat 301!
+http://www.travel4life.net/* https://travel4life.net/:splat 301!
+http://travel4life.net/* https://travel4life.net/:splat 301!
+/index.php https://travel4life.net/ 301!
+/index.php/* https://travel4life.net/:splat 301!
+/* /index.html 200

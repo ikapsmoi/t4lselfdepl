@@ -128,7 +128,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-[10px] md:text-sm">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-xs md:text-sm">
       <div className="min-h-screen">
         <div className="sticky top-0 z-10 bg-white border-b px-3 py-2 md:px-4 md:py-3">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -199,7 +199,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   </Badge>
                 </div>
 
-                <h1 className="text-lg md:text-3xl font-bold text-gray-900 mb-3 md:mb-4 leading-tight">{trip.title}</h1>
+                <h1 className="tour-detail-title text-gray-900 mb-3 md:mb-4">{trip.title}</h1>
                 {userBookingForThisTrip && (
                   <Badge
                     variant={getStatusColor(userBookingForThisTrip.status)}
@@ -225,7 +225,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   <Rating rating={trip.rating} reviewCount={trip.review_count + DEFAULT_TRIP_REVIEWS.length} />
                 </div>
 
-                <p className="text-gray-700 text-[10px] leading-relaxed mb-4 md:text-lg md:mb-6 whitespace-pre-wrap">{trip.description}</p>
+                <p className="tour-description text-gray-700 mb-4 md:mb-6 whitespace-pre-wrap">{trip.description}</p>
 
                 <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
                   {trip.tags.map((tag) => (

@@ -1,8 +1,8 @@
 
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SearchFilters, Trip } from "@/types";
-import { formatCitiesForDisplay } from '../../utils/formatters';
+import { formatCitiesForDisplay, cleanTripTitle } from '../utils/formatters';
 
 export const useTrips = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -10,9 +10,12 @@ export const useTrips = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [filters, setFilters] = useState<SearchFilters>({});
+  const requestIdRef = useRef(0);
 
   // Fetch trips from Supabase
   const fetchTrips = useCallback(async (searchFilters?: SearchFilters) => {
+    const requestId = ++requestIdRef.current;
+
     // Check if Supabase is properly configured
     if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
       setTrips([]);
@@ -43,7 +46,8 @@ export const useTrips = () => {
       }
 
       if (searchFilters?.type) {
-        query = query.eq('category', searchFilters.type);
+        const normalizedType = searchFilters.type === 'festivals' ? 'festival' : searchFilters.type;
+        query = query.eq('category', normalizedType);
       }
 
       if (searchFilters?.minPrice) {
@@ -64,6 +68,7 @@ export const useTrips = () => {
 
       const { data, error } = await query;
       if (error) throw error;
+      if (requestId !== requestIdRef.current) return;
 
       if (data) {
         // Filter by duration in-memory (since it's calculated from dates)
@@ -110,7 +115,7 @@ export const useTrips = () => {
         // Transform the data to match our Trip interface
         let transformedTrips: Trip[] = filteredData.map(trip => ({
           id: trip.id,
-          title: trip.title,
+          title: cleanTripTitle(trip.title),
           description: trip.itinerary?.description || 'Amazing travel experience awaits you on this incredible journey.',
           destination: trip.location,
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
@@ -166,6 +171,7 @@ export const useTrips = () => {
         setTrips(transformedTrips);
       }
     } catch (error) {
+      if (requestId !== requestIdRef.current) return;
       
       // Handle network/fetch errors gracefully
       if (error instanceof TypeError && error.message.includes('Failed to fetch')) {

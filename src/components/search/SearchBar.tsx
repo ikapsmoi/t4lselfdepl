@@ -108,19 +108,16 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
       <div className="flex items-center gap-1 mb-4 overflow-x-auto pb-1">
         {[
           { label: 'Adventure', value: 'adventure' },
-          { label: 'Cultural', value: 'culture' },
-          { label: 'Festivals', value: 'festivals' },
-          { label: 'Wellness', value: 'wellness' },
+          { label: 'India', value: 'indian_special' },
+          { label: 'Festivals', value: 'festival' },
+          { label: 'Budget', value: 'budget' },
         ].map((tab) => (
           <button
             key={tab.value}
             onClick={() => {
               setType(tab.value);
               if (navigateOnFilter) {
-                window.location.hash = 'trips';
-                setTimeout(() => {
-                  onSearch({ type: tab.value });
-                }, 100);
+                  window.location.hash = `trips?type=${encodeURIComponent(tab.value)}`;
               } else {
                 onSearch({ type: tab.value });
               }

@@ -153,7 +153,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           </div>
         </div>
         <div className="p-4">
-          <h3 className="font-semibold text-gray-900 text-sm line-clamp-2 mb-2 leading-snug">{trip.title}</h3>
+          <h3 className="tour-title text-gray-900 line-clamp-2 mb-2">{trip.title}</h3>
           <div className="flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
@@ -250,7 +250,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
 
       {/* Content area */}
       <div className="p-5">
-        <h3 className="text-lg font-bold text-gray-900 line-clamp-2 mb-3 leading-snug">{trip.title}</h3>
+        <h3 className="tour-title text-gray-900 line-clamp-2 mb-3">{trip.title}</h3>
 
         <div className="mb-3 text-xs font-semibold text-amber-700">
           {bookedLastWeek} booked last week
@@ -302,6 +302,14 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               <ExternalLink className="w-3 h-3" />
               <span className="hidden sm:inline">Details</span>
             </button>
+            <a
+              href={`/trips/${encodeURIComponent(trip.id)}`}
+              onClick={(event) => event.stopPropagation()}
+              className="text-xs font-medium text-gray-500 hover:text-gray-900"
+              aria-label={`Open ${trip.title} page`}
+            >
+              Open page
+            </a>
           </div>
         </div>
       </div>

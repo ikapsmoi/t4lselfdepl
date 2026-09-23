@@ -125,3 +125,34 @@ export const updateSeoForPage = (page: string) => {
   upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image' }, defaultImage);
   updateLink('canonical', siteUrl);
 };
+
+export const updateSeoForTrip = (config: {
+  title: string;
+  description: string;
+  canonicalUrl: string;
+  image?: string;
+  jsonLd: unknown;
+}) => {
+  document.title = config.title;
+  upsertMeta('meta[name="description"]', { name: 'description' }, config.description);
+  upsertMeta('meta[name="robots"]', { name: 'robots' }, 'index, follow, max-image-preview:large');
+  upsertMeta('meta[property="og:title"]', { property: 'og:title' }, config.title);
+  upsertMeta('meta[property="og:description"]', { property: 'og:description' }, config.description);
+  upsertMeta('meta[property="og:url"]', { property: 'og:url' }, config.canonicalUrl);
+  upsertMeta('meta[property="og:type"]', { property: 'og:type' }, 'product');
+  upsertMeta('meta[property="og:image"]', { property: 'og:image' }, config.image || defaultImage);
+  upsertMeta('meta[name="twitter:card"]', { name: 'twitter:card' }, 'summary_large_image');
+  upsertMeta('meta[name="twitter:title"]', { name: 'twitter:title' }, config.title);
+  upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description' }, config.description);
+  upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image' }, config.image || defaultImage);
+  updateLink('canonical', config.canonicalUrl);
+
+  let script = document.head.querySelector<HTMLScriptElement>('script[data-trip-json-ld]');
+  if (!script) {
+    script = document.createElement('script');
+    script.type = 'application/ld+json';
+    script.dataset.tripJsonLd = 'true';
+    document.head.appendChild(script);
+  }
+  script.textContent = JSON.stringify(config.jsonLd);
+};

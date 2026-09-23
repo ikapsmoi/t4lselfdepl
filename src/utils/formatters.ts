@@ -21,3 +21,12 @@ export const formatCitiesForDisplay = (cities: ItineraryCity[] | undefined): str
   // For more than 2 cities, show first and last
   return `${firstCity} → ${lastCity}`;
 };
+
+export const cleanTripTitle = (title: string | undefined): string => {
+  const cleanedTitle = (title || '')
+    .replace(/\uFFFD+/g, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  return cleanedTitle || 'Untitled trip';
+};

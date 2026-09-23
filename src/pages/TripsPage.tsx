@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Search, Filter, MapPin, Calendar, Users, Star } from 'lucide-react';
 import { SearchBar } from '../components/search/SearchBar';
 import { TripGrid } from '../components/trips/TripGrid';
@@ -10,6 +10,15 @@ export const TripsPage: React.FC = () => {
   const { trips, loading, searchTrips, getTrendingTrips } = useTrips();
   const [showFilters, setShowFilters] = useState(false);
   const trendingTrips = getTrendingTrips;
+
+  useEffect(() => {
+    const query = window.location.hash.split('?')[1];
+    const type = query ? new URLSearchParams(query).get('type') : null;
+
+    if (type) {
+      searchTrips({ type });
+    }
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">

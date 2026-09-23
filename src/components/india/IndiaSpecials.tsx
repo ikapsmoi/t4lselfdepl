@@ -24,6 +24,7 @@ export const IndiaSpecials: React.FC = () => {
     trip.type === 'indian_special' || 
     trip.type === 'spiritual' || 
     trip.type === 'food' || 
+        trip.type === 'festival' ||
         trip.type === 'festivals' || 
     trip.type === 'bollywood' || 
     trip.type === 'budget'

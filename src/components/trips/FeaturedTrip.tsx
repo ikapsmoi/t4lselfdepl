@@ -88,7 +88,7 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
           </div>
 
           <div className="p-3 sm:p-4">
-            <h1 className="text-sm sm:text-base md:text-lg font-bold text-gray-900 mb-2 leading-tight line-clamp-2 min-h-[2rem]">
+            <h1 className="tour-title text-gray-900 mb-2 line-clamp-2 min-h-[2.75rem]">
               {currentTrip.title}
             </h1>
 

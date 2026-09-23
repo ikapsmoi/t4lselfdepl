@@ -24,6 +24,7 @@ const HostDashboard = lazy(() => import('./components/dashboard/HostDashboard').
 const TravelerDashboard = lazy(() => import('./components/dashboard/TravelerDashboard').then(m => ({ default: m.TravelerDashboard })));
 const AdminDashboard = lazy(() => import('./components/admin/AdminDashboard').then(m => ({ default: m.AdminDashboard })));
 const TripsPage = lazy(() => import('./pages/TripsPage').then(m => ({ default: m.TripsPage })));
+const TripSeoPage = lazy(() => import('./pages/TripSeoPage').then(m => ({ default: m.TripSeoPage })));
 const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })));
 const ReviewsPage = lazy(() => import('./pages/ReviewsPage').then(m => ({ default: m.ReviewsPage })));
 const StoriesPage = lazy(() => import('./pages/StoriesPage').then(m => ({ default: m.StoriesPage })));
@@ -63,7 +64,7 @@ const AppContent: React.FC = () => {
   // Simple routing - in a real app you'd use React Router
   React.useEffect(() => {
     const handleHashChange = () => {
-      const hash = window.location.hash.slice(1);
+      const hash = window.location.hash.slice(1).split('?')[0];
       setCurrentPage(hash || 'home');
       updateSeoForPage(hash || 'home');
       setIsMenuOpen(false); // Auto-hide mobile menu on navigation
@@ -77,6 +78,10 @@ const AppContent: React.FC = () => {
 
   // Simple routing based on user role and current view
   const getCurrentView = () => {
+    if (/^\/trips\/[^/]+\/?$/.test(window.location.pathname)) {
+      return <Suspense fallback={<PageLoader />}><TripSeoPage /></Suspense>;
+    }
+
     // Explicitly render HomePage if the hash is 'home' or empty
     if (currentPage === 'home' || currentPage === '') {
       return (
