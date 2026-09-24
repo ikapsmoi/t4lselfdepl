@@ -44,11 +44,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   }, [savedTrips, trip.id]);
 
   const spotsLeft = trip.max_capacity - trip.current_bookings;
-  const bookedLastWeek = React.useMemo(() => {
-    const tripKey = trip.id || trip.title;
-    const hash = Array.from(tripKey).reduce((total, character) => total + character.charCodeAt(0), 0);
-    return (hash % 9) + 2;
-  }, [trip.id, trip.title]);
   const fallbackImage = trip.type === 'budget'
     ? '/pkg1.png'
     : trip.type === 'indian_special'
@@ -168,9 +163,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{formatCitiesForDisplay(trip.itinerary?.cities) || trip.destination}</span>
           </div>
-          <div className="mt-2 text-[11px] font-medium text-amber-700">
-            {bookedLastWeek} booked last week
-          </div>
         </div>
       </div>
     );
@@ -251,10 +243,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       {/* Content area */}
       <div className="p-5">
         <h3 className="tour-title text-gray-900 line-clamp-2 mb-3">{trip.title}</h3>
-
-        <div className="mb-3 text-xs font-semibold text-amber-700">
-          {bookedLastWeek} booked last week
-        </div>
 
         {/* Host Info */}
         {trip.host && (

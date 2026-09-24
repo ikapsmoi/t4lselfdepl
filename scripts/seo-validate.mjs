@@ -11,6 +11,13 @@ const pages = [
   ['tomorrowland/thailand/index.html', '/tomorrowland/thailand/'],
   ['tomorrowland/cost-from-india/index.html', '/tomorrowland/cost-from-india/'],
   ['tomorrowland/from-india/index.html', '/tomorrowland/from-india/'],
+  ['tomorrowland/compare/index.html', '/tomorrowland/compare/'],
+  ['tomorrowland/accommodation/index.html', '/tomorrowland/accommodation/'],
+  ['tomorrowland/group-travel/index.html', '/tomorrowland/group-travel/'],
+  ['tomorrowland/flights-from-india/index.html', '/tomorrowland/flights-from-india/'],
+  ['tomorrowland/visa-documents/index.html', '/tomorrowland/visa-documents/'],
+  ['tomorrowland/package-vs-independent/index.html', '/tomorrowland/package-vs-independent/'],
+  ['tomorrowland/winter/2027/index.html', '/tomorrowland/winter/2027/'],
 ];
 const knownInternalRoutes = new Set([
   '/',

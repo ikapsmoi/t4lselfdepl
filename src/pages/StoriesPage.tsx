@@ -10,6 +10,15 @@ const CATEGORIES = [
   { label: 'Destinations', value: 'destinations' },
 ];
 
+const TOMORROWLAND_STORIES = [
+  { title: 'Belgium vs Winter vs Thailand', description: 'Compare the festival settings, travel shape and planning questions before choosing a destination.', href: '/tomorrowland/compare/' },
+  { title: 'Where to stay for Tomorrowland', description: 'Understand hotels, camping, transfers and the accommodation details a package should disclose.', href: '/tomorrowland/accommodation/' },
+  { title: 'Group travel for Indian travellers', description: 'A practical guide to shared planning, rooming, communication and support.', href: '/tomorrowland/group-travel/' },
+  { title: 'Flights from India', description: 'Build a sensible international flight plan around arrival buffers and the festival dates.', href: '/tomorrowland/flights-from-india/' },
+  { title: 'Visa and document planning', description: 'Organise passports, entry requirements, insurance and booking records responsibly.', href: '/tomorrowland/visa-documents/' },
+  { title: 'Package vs independent travel', description: 'Compare coordination, flexibility, inclusions and risk before you book.', href: '/tomorrowland/package-vs-independent/' },
+];
+
 export function StoriesPage() {
   const [selectedStory, setSelectedStory] = useState<Story | null>(null);
   const [activeCategory, setActiveCategory] = useState('');
@@ -67,6 +76,26 @@ export function StoriesPage() {
           ))}
         </div>
       </div>
+
+      {/* Tomorrowland planning stories */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12" aria-labelledby="tomorrowland-stories-heading">
+        <div className="flex items-end justify-between gap-4 mb-5">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.16em] text-sky-600">Festival travel desk</p>
+            <h2 id="tomorrowland-stories-heading" className="text-2xl md:text-3xl font-bold text-gray-900 mt-1">Tomorrowland planning stories</h2>
+          </div>
+          <a href="/tomorrowland/" className="text-sm font-semibold text-sky-700 hover:text-sky-900 whitespace-nowrap">View the hub</a>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {TOMORROWLAND_STORIES.map((story) => (
+            <a key={story.href} href={story.href} className="group rounded-[20px] border border-gray-100 bg-gray-50 p-5 hover:bg-white hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.12)] transition-all duration-300">
+              <h3 className="font-bold text-gray-900 group-hover:text-sky-600 transition-colors">{story.title}</h3>
+              <p className="text-sm text-gray-500 leading-relaxed mt-2">{story.description}</p>
+              <span className="inline-block mt-4 text-sm font-semibold text-sky-700">Read guide <span aria-hidden="true">-&gt;</span></span>
+            </a>
+          ))}
+        </div>
+      </section>
 
       {/* Stories Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20">

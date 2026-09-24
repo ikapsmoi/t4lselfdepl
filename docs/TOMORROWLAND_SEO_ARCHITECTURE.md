@@ -20,6 +20,8 @@ The local repository did not expose `VITE_SUPABASE_URL` or `VITE_SUPABASE_ANON_K
 ### After
 
 - Added static, crawlable Tomorrowland hub and guide routes under `/tomorrowland/`.
+- Added a native Stories-page planning strip linking to comparison, accommodation, group, flights, documents and package-choice guides.
+- Added a factual Winter 2027 edition page because the official source publishes that edition; speculative edition pages remain excluded.
 - Added shared static presentation in `/tomorrowland-seo.css`.
 - Added visible breadcrumbs and BreadcrumbList JSON-LD to each POC page.
 - Added a controlled Belgium package-enquiry page that does not pretend to be a live product.
@@ -37,6 +39,13 @@ The local repository did not expose `VITE_SUPABASE_URL` or `VITE_SUPABASE_ANON_K
 | `/tomorrowland/thailand/` | Thailand authority guide | Indexable |
 | `/tomorrowland/cost-from-india/` | Cost methodology guide | Indexable |
 | `/tomorrowland/from-india/` | India travel logistics guide | Indexable |
+| `/tomorrowland/compare/` | Belgium vs Winter vs Thailand comparison | Indexable |
+| `/tomorrowland/accommodation/` | Accommodation guide | Indexable |
+| `/tomorrowland/group-travel/` | Group travel guide | Indexable |
+| `/tomorrowland/flights-from-india/` | India flight planning guide | Indexable |
+| `/tomorrowland/visa-documents/` | Visa and document planning guide | Indexable |
+| `/tomorrowland/package-vs-independent/` | Package comparison guide | Indexable |
+| `/tomorrowland/winter/2027/` | Officially published edition context | Indexable |
 | `/tomorrowland-india.html` | Existing editorial guide | Indexable |
 | `/trips/:id` | Existing active product route | Indexable only when active and quality-gated |
 
@@ -78,10 +87,17 @@ Tomorrowland India hub
 ├── Belgium guide
 │   └── Belgium package enquiry
 ├── Winter guide
+│   └── Winter 2027 edition context
 ├── Thailand guide
 ├── Cost from India guide
 ├── Travel from India guide
-└── Existing Tomorrowland India editorial guide
+├── Belgium vs Winter vs Thailand comparison
+├── Accommodation guide
+├── Group travel guide
+├── Flights from India guide
+├── Visa and document guide
+└── Package versus independent guide
+    └── Existing Tomorrowland India editorial guide
     └── Verified active Travel4life product pages when available
 ```
 
@@ -118,6 +134,7 @@ The hub links to all destination guides, cost, travel and package pages. Each de
 ## I. Indexability report
 
 - POC pages: `index, follow`, self-canonical, static sitemap inclusion, HTTP 200 locally.
+- Supporting guides are also exposed in the native Stories page through crawlable `<a>` links and the existing Travel4life card language.
 - Existing `/tomorrowland-india.html`: retained as indexable and sitemap-listed.
 - Existing hash routes: unchanged and still not treated as standalone indexable pages.
 - Existing `/trips/:id`: active product and quality-gated sitemap behavior retained.
@@ -145,7 +162,7 @@ The hub links to all destination guides, cost, travel and package pages. Each de
 
 ## Validation evidence
 
-- `npm run seo:validate`: passed for 7 Tomorrowland pages.
+- `npm run seo:validate`: passed for 14 Tomorrowland pages.
 - `npm run build`: passed.
-- Local HTTP probes: all 7 new routes returned HTTP 200 and contained canonical markup on the running Vite server.
+- Local HTTP probes: all new routes returned HTTP 200; explicit static `index.html` requests returned the intended canonical pages. Directory-index pretty URLs should be checked again on the deployed host because Vite's local fallback serves the SPA shell for some trailing-slash requests.
 - Official source review: Belgium, Winter and Thailand terminology was checked against the official source pages supplied in the brief; copy remains original.
