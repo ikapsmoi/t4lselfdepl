@@ -15,6 +15,7 @@ import { VRPreview } from '../vr/VRPreview';
 import { InquireNowModal } from './InquireNowModal';
 import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
+import { InvoiceModal } from './InvoiceModal';
 import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS, DEFAULT_TRIP_EXCLUSIONS } from '../../utils/constants';
 import { DEFAULT_TRIP_REVIEWS } from '../../utils/defaultReviews';
 import { getCurrencySymbol } from '../../utils/constants';
@@ -38,6 +39,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [showPromoteModal, setShowPromoteModal] = useState(false);
   const [showExistingBookingConfirmationModal, setShowExistingBookingConfirmationModal] = useState(false);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [userBookingForThisTrip, setUserBookingForThisTrip] = useState<Booking | null>(null);
 
   // Track trip view event
@@ -393,6 +395,14 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   </div>
                 )}
 
+                <Button
+                  variant="outline"
+                  className="mt-2 w-full text-[10px] md:mt-3 md:text-sm"
+                  onClick={() => setShowInvoiceModal(true)}
+                >
+                  Create Invoice
+                </Button>
+
                 {isAlmostFull && (
                   <div className="mt-3 md:mt-4 p-2 md:p-3 bg-orange-50 border border-orange-200 rounded-lg">
                     <div className="flex items-center text-orange-800 text-[10px] md:text-sm">
@@ -432,6 +442,13 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
         isOpen={showBookingModal}
         onClose={() => setShowBookingModal(false)}
         trip={trip}
+      />
+
+      <InvoiceModal
+        isOpen={showInvoiceModal}
+        onClose={() => setShowInvoiceModal(false)}
+        trip={trip}
+        currencySymbol={displayCurrencySymbol}
       />
 
       <InquireNowModal
