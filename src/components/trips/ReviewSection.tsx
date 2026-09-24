@@ -10,12 +10,14 @@ import { useAuth } from '../../hooks/useAuth';
 import { BADGES } from '../../utils/constants';
 import { useBookings } from '../../hooks/useBookings';
 import { getDefaultTripReviews } from '../../utils/defaultReviews';
+import type { Trip } from '../../types';
 
 interface ReviewSectionProps {
   tripId: string;
+  tripType: Trip['type'];
 }
 
-export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId }) => {
+export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId, tripType }) => {
   const { getTripReviews, addReview, markHelpful, loading: reviewsLoading } = useReviews();
   const { user } = useAuth();
   const { getUserBookings } = useBookings();
@@ -25,7 +27,8 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId }) => {
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const reviews = getTripReviews(tripId);
-  const displayedReviews = [...reviews, ...getDefaultTripReviews(tripId)];
+  const defaultReviews = tripType === 'festival' ? [] : getDefaultTripReviews(tripId);
+  const displayedReviews = [...reviews, ...defaultReviews];
   
   // Check if user has completed this trip
   const userBookings = user ? getUserBookings(user.id) : [];

@@ -227,7 +227,10 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     <Users className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
                     <span>{trip.max_capacity} max</span>
                   </div>
-                  <Rating rating={trip.rating} reviewCount={trip.review_count + DEFAULT_TRIP_REVIEWS.length} />
+                  <Rating
+                    rating={trip.rating}
+                    reviewCount={trip.review_count + (trip.type === 'festival' ? 0 : DEFAULT_TRIP_REVIEWS.length)}
+                  />
                 </div>
 
                 <p className="tour-description text-gray-700 mb-4 md:mb-6 whitespace-pre-wrap">{trip.description}</p>
@@ -432,7 +435,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             </div>
           </div>
           <div className="mt-6 md:mt-8">
-            <ReviewSection tripId={trip.id} />
+            <ReviewSection tripId={trip.id} tripType={trip.type} />
           </div>
         </div>
       </div>
