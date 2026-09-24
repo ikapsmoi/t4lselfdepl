@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SearchFilters, Trip } from "@/types";
 import { formatCitiesForDisplay, cleanTripTitle } from '../utils/formatters';
+import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
 export const useTrips = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -157,7 +158,7 @@ export const useTrips = () => {
           included: trip.itinerary?.included || [],
           not_included: trip.itinerary?.notIncluded || [],
           requirements: trip.itinerary?.requirements || [],
-          cancellation_policy: 'Free cancellation up to 14 days before departure',
+          cancellation_policy: DEFAULT_CANCELLATION_POLICY,
           deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
           group_discount: trip.group_discount || 0, // Use actual group_discount from DB, default to 0 if null
           safety_measures: trip.itinerary?.safetyMeasures || []

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Download, FileText, Printer } from 'lucide-react';
+import { Download, FileText } from 'lucide-react';
 import { Trip } from '../../types';
 import { Modal } from '../ui/Modal';
 
@@ -140,49 +140,58 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = ({ isOpen, onClose, tri
     }));
   };
 
-  const buildInvoiceHtml = () => {
-    const logoUrl = `${window.location.origin}/travel4life.png`;
-    const line = (label: string, value: string) => `<div class="row"><span>${label}</span><strong>${value}</strong></div>`;
+  const buildInvoiceSvg = () => {
+    const text = (value: string) => escapeHtml(value);
+    const amountLine = (label: string, value: string, y: number, bold = false) =>
+      `<text x="90" y="${y}" class="${bold ? 'bold' : ''}">${text(label)}</text><text x="1310" y="${y}" text-anchor="end" class="${bold ? 'bold' : ''}">${text(value)}</text>`;
 
-    return `<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><title>${escapeHtml(invoiceNumber)} - Travel4life</title>
-<style>
-body{margin:0;background:#f3f4f6;color:#111827;font-family:Arial,Helvetica,sans-serif}.page{max-width:850px;margin:32px auto;padding:42px;background:#fff;box-shadow:0 8px 28px rgba(15,23,42,.12)}.header{display:flex;justify-content:space-between;gap:24px;border-bottom:3px solid #0ea5e9;padding-bottom:24px}.logo{width:132px;height:72px;object-fit:contain;object-position:left}.muted{color:#64748b}.right{text-align:right}.title{font-size:28px;font-weight:700;margin:18px 0 6px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin:28px 0}.box{padding:18px;background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px}.box h3{font-size:14px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px;color:#0369a1}.row{display:flex;justify-content:space-between;gap:16px;padding:10px 0;border-bottom:1px solid #e5e7eb}.row:last-child{border-bottom:0}.total{font-size:20px;background:#ecfdf5;border-color:#a7f3d0}.footer{margin-top:30px;padding-top:18px;border-top:1px solid #e5e7eb;font-size:12px;line-height:1.6}@media print{body{background:#fff}.page{margin:0;box-shadow:none;max-width:none}}@media(max-width:650px){.page{margin:0;padding:22px}.header,.grid{display:block}.right{text-align:left;margin-top:16px}}
-</style></head><body><main class="page">
-<div class="header"><div><img class="logo" src="${logoUrl}" alt="Travel4life"><div><strong>${escapeHtml(company.name)}</strong><br>${escapeHtml(company.website)}<br>${escapeHtml(company.address)}<br>GST: ${escapeHtml(company.gst)}</div></div><div class="right"><div class="title">Invoice</div><div>Invoice no: ${escapeHtml(invoiceNumber)}</div><div>Issued: ${escapeHtml(invoiceDates.issued)}</div><div>Payment due: ${escapeHtml(invoiceDates.due)}</div></div></div>
-<div class="grid"><section class="box"><h3>Billed to</h3><div>${escapeHtml(form.fullName)}<br>${escapeHtml(form.email)}<br>${escapeHtml(form.phone)}<br>${escapeHtml(form.address).replaceAll('\n', '<br>')}${form.gstCompany ? `<br>GST / Company: ${escapeHtml(form.gstCompany)}` : ''}</div></section><section class="box"><h3>Trip</h3><div><strong>${escapeHtml(trip.title)}</strong><br>${escapeHtml(trip.destination)}<br>${escapeHtml(trip.duration.toString())} days<br>${escapeHtml(trip.start_date)} to ${escapeHtml(trip.end_date)}<br>Travellers: ${form.people}</div></section></div>
-<section class="box"><h3>Amount summary</h3>${line('Product price per person', formatMoney(Number(trip.price) || 0, currencySymbol))}${line(`Quantity (${form.people})`, formatMoney(totals.subtotal, currencySymbol))}${line('GST 5%', formatMoney(totals.gst, currencySymbol))}${line('Amount including GST', formatMoney(totals.gstInclusive, currencySymbol))}${line('TCS 5%', formatMoney(totals.tcs, currencySymbol))}<div class="row total"><span>Total amount due</span><strong>${formatMoney(totals.total, currencySymbol)}</strong></div></section>
-<div class="grid"><section class="box"><h3>Payment details</h3>Pay by card: ${escapeHtml(company.cardUrl)}<br><br>Bank: ${escapeHtml(company.bankName)}<br>Account name: ${escapeHtml(company.accountName)}<br>Account number: ${escapeHtml(company.accountNumber)}<br>Account type: ${escapeHtml(company.accountType)}<br>IFSC: ${escapeHtml(company.ifsc)}<br>Location: ${escapeHtml(company.bankLocation)}</section><section class="box"><h3>Support</h3>Customer support: ${escapeHtml(company.phone)}<br>Email: ${escapeHtml(company.email)}<br>Sales support: ${escapeHtml(company.support)}<br><br>This invoice is generated from the current trip details and is not payment confirmation.</section></div>
-<div class="footer">Payment is due by ${escapeHtml(invoiceDates.due)}. Prices and availability remain subject to the trip's booking terms. GST and TCS are calculated as shown above. Please retain this invoice for your records.</div>
-</main></body></html>`;
+    return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="1900" viewBox="0 0 1400 1900">
+<rect width="1400" height="1900" fill="#ffffff"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#111827;font-size:25px}.muted{fill:#64748b;font-size:21px}.label{fill:#0369a1;font-size:19px;font-weight:bold;letter-spacing:2px}.bold{font-weight:bold}.line{stroke:#e5e7eb;stroke-width:2}.box{fill:#f8fafc;stroke:#e5e7eb;stroke-width:2}.total{fill:#ecfdf5;stroke:#a7f3d0;stroke-width:2}</style>
+<rect x="0" y="0" width="1400" height="18" fill="#0ea5e9"/><text x="90" y="105" font-size="42" class="bold">TRAVEL4LIFE GLOBAL</text><text x="90" y="150" class="muted">${text(company.website)}</text><text x="90" y="185" class="muted">${text(company.address)}</text><text x="90" y="220" class="muted">GST: ${text(company.gst)}</text>
+<text x="1310" y="105" text-anchor="end" font-size="48" class="bold">Invoice</text><text x="1310" y="150" text-anchor="end" class="muted">Invoice no: ${text(invoiceNumber)}</text><text x="1310" y="185" text-anchor="end" class="muted">Issued: ${text(invoiceDates.issued)}</text><text x="1310" y="220" text-anchor="end" class="muted">Due: ${text(invoiceDates.due)}</text>
+<rect x="70" y="360" width="610" height="250" rx="14" class="box"/><rect x="720" y="360" width="610" height="250" rx="14" class="box"/><text x="100" y="410" class="label">BILLED TO</text><text x="100" y="455" class="bold">${text(form.fullName)}</text><text x="100" y="492" class="muted">${text(form.email)}</text><text x="100" y="529" class="muted">${text(form.phone)}</text><text x="100" y="566" class="muted">${text(form.address)}</text>${form.gstCompany ? `<text x="100" y="603" class="muted">GST / Company: ${text(form.gstCompany)}</text>` : ''}<text x="750" y="410" class="label">TRIP</text><text x="750" y="455" class="bold">${text(trip.title)}</text><text x="750" y="492" class="muted">${text(trip.destination)}</text><text x="750" y="529" class="muted">${text(trip.duration.toString())} days</text><text x="750" y="566" class="muted">${text(trip.start_date)} to ${text(trip.end_date)}</text><text x="750" y="603" class="muted">Travellers: ${form.people}</text>
+<rect x="70" y="660" width="1260" height="470" rx="14" class="box"/><text x="100" y="715" class="label">AMOUNT SUMMARY</text>${amountLine('Product price per person', formatMoney(Number(trip.price) || 0, currencySymbol), 780)}${amountLine(`Quantity (${form.people})`, formatMoney(totals.subtotal, currencySymbol), 835)}${amountLine('GST 5%', formatMoney(totals.gst, currencySymbol), 890)}${amountLine('Amount including GST', formatMoney(totals.gstInclusive, currencySymbol), 945)}${amountLine('TCS 5%', formatMoney(totals.tcs, currencySymbol), 1000)}<rect x="90" y="1030" width="1220" height="70" rx="10" class="total"/>${amountLine('Total amount due', formatMoney(totals.total, currencySymbol), 1075, true)}
+<rect x="70" y="1180" width="610" height="380" rx="14" class="box"/><rect x="720" y="1180" width="610" height="380" rx="14" class="box"/><text x="100" y="1230" class="label">PAYMENT DETAILS</text><text x="100" y="1275" class="muted">Pay by card: ${text(company.cardUrl)}</text><text x="100" y="1315" class="muted">Bank: ${text(company.bankName)}</text><text x="100" y="1355" class="muted">Account: ${text(company.accountName)}</text><text x="100" y="1395" class="muted">A/C: ${text(company.accountNumber)}</text><text x="100" y="1435" class="muted">IFSC: ${text(company.ifsc)}</text><text x="100" y="1475" class="muted">Type: ${text(company.accountType)}</text><text x="750" y="1230" class="label">SUPPORT</text><text x="750" y="1275" class="muted">${text(company.phone)}</text><text x="750" y="1315" class="muted">${text(company.email)}</text><text x="750" y="1355" class="muted">${text(company.support)}</text><text x="750" y="1435" class="muted">This invoice is not payment confirmation.</text>
+<line x1="70" y1="1650" x2="1330" y2="1650" class="line"/><text x="70" y="1700" class="muted">Payment due by ${text(invoiceDates.due)}. GST and TCS are calculated as shown above.</text><text x="70" y="1740" class="muted">Prices and availability remain subject to the trip booking terms.</text>
+</svg>`;
   };
 
-  const handleDownload = () => {
-    if (!form.fullName.trim() || !form.email.trim() || !form.address.trim() || !form.phone.trim()) return;
-    const blob = new Blob([buildInvoiceHtml()], { type: 'text/html;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${invoiceNumber}.html`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    URL.revokeObjectURL(url);
-  };
+  const hasRequiredDetails = () =>
+    Boolean(form.fullName.trim() && form.email.trim() && form.address.trim() && form.phone.trim());
 
-  const handlePrint = () => {
-    if (!form.fullName.trim() || !form.email.trim() || !form.address.trim() || !form.phone.trim()) return;
-    const printWindow = window.open('', '_blank', 'noopener,noreferrer');
-    if (!printWindow) return;
-    printWindow.document.write(buildInvoiceHtml());
-    printWindow.document.close();
-    printWindow.focus();
-    printWindow.print();
+  const handleDownloadImage = async () => {
+    if (!hasRequiredDetails()) return;
+
+    const svgBlob = new Blob([buildInvoiceSvg()], { type: 'image/svg+xml;charset=utf-8' });
+    const svgUrl = URL.createObjectURL(svgBlob);
+    const image = new Image();
+    image.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = 1400;
+      canvas.height = 1900;
+      const context = canvas.getContext('2d');
+      context?.drawImage(image, 0, 0);
+      canvas.toBlob(blob => {
+        if (!blob) return;
+        const imageUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = imageUrl;
+        link.download = `${invoiceNumber}.png`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(imageUrl);
+      }, 'image/png');
+      URL.revokeObjectURL(svgUrl);
+    };
+    image.onerror = () => URL.revokeObjectURL(svgUrl);
+    image.src = svgUrl;
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} title="Create trip invoice" maxWidth="max-w-3xl">
-      <form onSubmit={event => { event.preventDefault(); handleDownload(); }} className="space-y-4">
+      <form onSubmit={event => { event.preventDefault(); handleDownloadImage(); }} className="space-y-4">
         <div className="rounded-lg border border-sky-100 bg-sky-50 p-3 text-xs leading-relaxed text-sky-900">
           Enter the customer details and booking quantity. GST is calculated at 5%, then TCS at 5% on the GST-inclusive amount. Payment is due within 14 days.
         </div>
@@ -222,8 +231,7 @@ body{margin:0;background:#f3f4f6;color:#111827;font-family:Arial,Helvetica,sans-
 
         <div className="flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row sm:justify-end">
           <button type="button" onClick={onClose} className="rounded-lg border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50">Cancel</button>
-          <button type="button" onClick={handlePrint} className="inline-flex items-center justify-center gap-2 rounded-lg border border-sky-200 px-4 py-2 text-sm font-semibold text-sky-700 hover:bg-sky-50"><Printer className="h-4 w-4" /> Print / Save PDF</button>
-          <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700"><Download className="h-4 w-4" /> Download Invoice</button>
+          <button type="submit" className="inline-flex items-center justify-center gap-2 rounded-lg bg-gray-900 px-4 py-2 text-sm font-semibold text-white hover:bg-gray-700"><Download className="h-4 w-4" /> Download Invoice Image</button>
         </div>
       </form>
     </Modal>

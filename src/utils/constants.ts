@@ -32,6 +32,8 @@ export const DEFAULT_TRIP_EXCLUSIONS = [
   'Visa fees not included.',
 ];
 
+export const DEFAULT_CANCELLATION_POLICY = '25% cancellation cost if cancelled within 90 days of tour start date. 50% cancellation cost if cancelled within 60 days of tour start date. 75% cancellation cost if cancelled within 30 days of tour start date. 100% cancellation cost if cancelled within 15 days of tour start date.';
+
 export const DIFFICULTY_LEVELS = [
   { value: 'easy', label: 'Easy', color: 'text-green-600' },
   { value: 'moderate', label: 'Moderate', color: 'text-yellow-600' },

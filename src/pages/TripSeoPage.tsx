@@ -6,6 +6,7 @@ import { TripDetails } from '../components/trips/TripDetails';
 import { cleanTripTitle } from '../utils/formatters';
 import { getTripCanonicalUrl, getTripJsonLd, getTripPath, getTripSeoDescription, getTripSeoTitle } from '../utils/tripSeo';
 import { updateSeoForTrip } from '../utils/seo';
+import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
 const fallbackImage = (category: string): string => {
   if (category === 'budget') return '/pkg1.png';
@@ -96,7 +97,7 @@ const toTrip = (row: TripRow): Trip => {
     included,
     not_included: notIncluded,
     requirements: Array.isArray(itinerary.requirements) ? itinerary.requirements : [],
-    cancellation_policy: 'Free cancellation up to 14 days before departure',
+    cancellation_policy: DEFAULT_CANCELLATION_POLICY,
     deposit_required: Number((Number(row.price_per_person) * 0.5).toFixed(2)),
     group_discount: Number(row.group_discount || 0),
     safety_measures: Array.isArray(itinerary.safetyMeasures) ? itinerary.safetyMeasures : [],

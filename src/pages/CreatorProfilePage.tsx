@@ -11,6 +11,7 @@ import { TripDetails } from '../components/trips/TripDetails';
 import { supabase } from '../lib/supabase';
 import { Trip } from '../types';
 import { cleanTripTitle } from '../utils/formatters';
+import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
 interface CreatorProfile {
   id: string;
@@ -129,7 +130,7 @@ export const CreatorProfilePage: React.FC = () => {
           included: trip.itinerary?.included || [],
           not_included: trip.itinerary?.notIncluded || [],
           requirements: trip.itinerary?.requirements || [],
-          cancellation_policy: 'Free cancellation up to 14 days before departure',
+          cancellation_policy: DEFAULT_CANCELLATION_POLICY,
           deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
           group_discount: 10,
           safety_measures: trip.itinerary?.safetyMeasures || []

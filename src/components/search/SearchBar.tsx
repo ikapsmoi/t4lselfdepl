@@ -12,6 +12,7 @@ import {
   DIFFICULTY_LEVELS,
 } from '../../utils/constants';
 import { useAnalytics } from '../../utils/analytics';
+import { getTripPath } from '../../utils/tripSeo';
 
 interface SearchBarProps {
   onSearch: (filters: SearchFilters) => void;
@@ -35,6 +36,16 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
   const { trips, loading: tripsLoading } = useTrips();
 
   const handleSearch = () => {
+    const selectedTrip = trips.find(trip =>
+      trip.title.trim().toLocaleLowerCase() === destination.trim().toLocaleLowerCase()
+    );
+
+    if (navigateOnFilter && selectedTrip) {
+      searchTrip(destination, { selectedTripId: selectedTrip.id });
+      window.location.href = getTripPath(selectedTrip.id);
+      return;
+    }
+
     const filters: SearchFilters = {};
 
     if (destination) filters.destination = destination;
@@ -149,11 +160,22 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
                 handleSearch();
               }
             }}
-            className="w-full pl-12 pr-16 py-3.5 text-sm border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all duration-200 bg-white text-gray-900 placeholder-gray-400"
+            className="w-full pl-12 pr-24 py-3.5 text-sm border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all duration-200 bg-white text-gray-900 placeholder-gray-400"
             list="trip-titles"
           />
           {/* Social icons inside search input */}
           <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-1.5">
+            {destination && (
+              <button
+                type="button"
+                onClick={() => setDestination('')}
+                aria-label="Clear selected package"
+                title="Clear selected package"
+                className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
             <a href="https://www.instagram.com/travel4life_net/" target="_blank" rel="noopener noreferrer" className="opacity-40 hover:opacity-80 transition-opacity" aria-label="Instagram">
               <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
                 <rect x="2" y="2" width="20" height="20" rx="5" stroke="#E1306C" strokeWidth="2" fill="none"/>

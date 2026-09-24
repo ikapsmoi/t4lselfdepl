@@ -2,6 +2,7 @@
 import { supabase } from '../lib/supabase';
 import { Trip, Booking } from '../types';
 import { useAnalytics } from '../utils/analytics';
+import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
 export interface DashboardStats {
   totalTrips: number;
@@ -118,7 +119,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
           included: [],
           not_included: [],
           requirements: [],
-          cancellation_policy: 'Free cancellation up to 14 days before departure',
+          cancellation_policy: DEFAULT_CANCELLATION_POLICY,
           deposit_required: Number((Number(booking.trips.price_per_person) * 0.5).toFixed(2)),
           group_discount: 10,
           safety_measures: []
