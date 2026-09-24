@@ -16,6 +16,7 @@ import { SafetyPage } from './SafetyPage';
 import { useTrips } from '../hooks/useTrips';
 import { useAnalytics } from '../utils/analytics';
 import { MapPin, ArrowRight } from 'lucide-react';
+import { TRIP_TYPES } from '../utils/constants';
 
 const SectionDivider: React.FC = () => (
   <div className="relative py-4 md:py-6">
@@ -67,7 +68,14 @@ const StorytellingSection: React.FC = () => (
 
 export const HomePage: React.FC = () => {
   const { trips, loading } = useTrips();
-  const topRatedTrips = trips.filter(trip => trip.type !== 'indian_special');
+  const [topRatedCategory, setTopRatedCategory] = React.useState('all');
+  const topRatedTrips = trips.filter(trip =>
+    trip.type !== 'indian_special' &&
+    (topRatedCategory === 'all' || trip.type === topRatedCategory)
+  );
+  const topRatedCategories = TRIP_TYPES.filter(type =>
+    type.value !== 'indian_special' && trips.some(trip => trip.type === type.value)
+  );
   const { viewHome } = useAnalytics();
   const [showIndiaSpecials, setShowIndiaSpecials] = React.useState(false);
   const [showTrendingDestinations, setShowTrendingDestinations] = React.useState(false);
@@ -140,6 +148,36 @@ export const HomePage: React.FC = () => {
       <div id="top-rated-adventures">
         <section className="py-10 md:py-16 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <p className="text-sm font-medium text-gray-600">Browse by category</p>
+              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible">
+                <button
+                  type="button"
+                  onClick={() => setTopRatedCategory('all')}
+                  className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    topRatedCategory === 'all'
+                      ? 'border-gray-900 bg-gray-900 text-white'
+                      : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900'
+                  }`}
+                >
+                  All
+                </button>
+                {topRatedCategories.map((type) => (
+                  <button
+                    key={type.value}
+                    type="button"
+                    onClick={() => setTopRatedCategory(type.value)}
+                    className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                      topRatedCategory === type.value
+                        ? 'border-gray-900 bg-gray-900 text-white'
+                        : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900'
+                    }`}
+                  >
+                    {type.value === 'budget' ? 'Budget' : type.label}
+                  </button>
+                ))}
+              </div>
+            </div>
             <TripGrid
               trips={topRatedTrips}
               title="Top-Rated Adventures"

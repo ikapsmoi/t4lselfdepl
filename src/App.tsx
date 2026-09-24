@@ -65,7 +65,10 @@ const AppContent: React.FC = () => {
   React.useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.slice(1).split('?')[0];
-      setCurrentPage(hash || 'home');
+      const pathnamePage = window.location.pathname === '/trips' || window.location.pathname === '/trips/'
+        ? 'trips'
+        : '';
+      setCurrentPage(hash || pathnamePage || 'home');
       if (!/^\/trips\/[^/]+\/?$/.test(window.location.pathname)) {
         updateSeoForPage(hash || 'home');
       }

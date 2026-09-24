@@ -206,7 +206,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           )}
           {tripType && (
             <span className="bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
-              {tripType.label}
+              {trip.type === 'budget' ? 'Budget' : tripType.label}
             </span>
           )}
         </div>

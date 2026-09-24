@@ -29,6 +29,10 @@ export const IndiaSpecials: React.FC = () => {
     trip.type === 'bollywood' || 
     trip.type === 'budget'
   );
+  const activeIndiaCategories = INDIA_CATEGORIES.filter(category => {
+    const tripType = category.value === 'food-trails' ? 'food' : category.value;
+    return indiaTrips.some(trip => trip.type === tripType);
+  });
   const filteredTrips = selectedCategory 
     ? indiaTrips.filter(trip => {
         if (selectedCategory === 'food-trails') return trip.type === 'food';
@@ -112,7 +116,7 @@ export const IndiaSpecials: React.FC = () => {
             >
               All Categories
             </button>
-            {INDIA_CATEGORIES.map((category) => (
+            {activeIndiaCategories.map((category) => (
               <button
                 key={category.value}
                 onClick={() => setSelectedCategory(category.value)}

@@ -98,6 +98,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   const excludedItems = trip.not_included?.some(item => item.trim())
     ? trip.not_included
     : DEFAULT_TRIP_EXCLUSIONS;
+  const displayedExcludedItems = trip.type === 'indian_special'
+    ? excludedItems.filter(item => item !== 'City tax if applicable.' && item !== 'Visa fees not included.')
+    : excludedItems;
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', { 
       weekday: 'long',
@@ -257,7 +260,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     Not Included
                   </h3>
                   <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
-                    {excludedItems.map((item, index) => (
+                    {displayedExcludedItems.map((item, index) => (
                       <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
                         {item}
                       </li>
@@ -296,7 +299,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 </div>
               </div>
 
-              <ReviewSection tripId={trip.id} />
             </div>
 
             <div className="lg:col-span-1">
@@ -418,6 +420,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 )}
               </div>
             </div>
+          </div>
+          <div className="mt-6 md:mt-8">
+            <ReviewSection tripId={trip.id} />
           </div>
         </div>
       </div>
