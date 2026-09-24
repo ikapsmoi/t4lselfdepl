@@ -171,7 +171,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 className="relative inline-flex items-center gap-0.5 px-1.5 sm:gap-1 sm:px-3 py-1 sm:py-1.5 bg-gray-900 text-amber-100 text-[8px] sm:text-xs font-bold rounded-full border border-amber-300/70 shadow-sm shadow-amber-900/10 group-hover:bg-gray-800 group-hover:-translate-y-px group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 transition-all duration-200 tracking-wide uppercase whitespace-nowrap"
               >
                 <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse shrink-0"></span>
-                <span>Secret Miles<span className="hidden sm:inline"> Deals</span></span>
+                <span>Secret Miles<span className="hidden sm:inline"> Group</span></span>
               </a>
             </div>
 

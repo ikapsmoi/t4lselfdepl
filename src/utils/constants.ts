@@ -29,6 +29,7 @@ export const DEFAULT_TRIP_EXCLUSIONS = [
   'Airfare from India not included.',
   'Any other meals except breakfast not included.',
   'City tax if applicable.',
+  'All Prices are Per Person on Double sharing occupancy basis.',
   'Visa fees not included.',
 ];
 
