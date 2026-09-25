@@ -28,6 +28,7 @@ const TripSeoPage = lazy(() => import('./pages/TripSeoPage').then(m => ({ defaul
 const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.BlogPage })));
 const ReviewsPage = lazy(() => import('./pages/ReviewsPage').then(m => ({ default: m.ReviewsPage })));
 const StoriesPage = lazy(() => import('./pages/StoriesPage').then(m => ({ default: m.StoriesPage })));
+const PackageCreatorPage = lazy(() => import('./pages/PackageCreatorPage').then(m => ({ default: m.PackageCreatorPage })));
 
 // Loading component for pages
 const PageLoader = () => (
@@ -111,6 +112,9 @@ const AppContent: React.FC = () => {
       case 'stories': return <Suspense fallback={<PageLoader />}><StoriesPage /></Suspense>;
       case 'creator-profile': return <Suspense fallback={<PageLoader />}><CreatorProfilePage /></Suspense>;
       case 'creator-trips': return <Suspense fallback={<PageLoader />}><CreatorTripsPage /></Suspense>;
+      case 'package-creator':
+      case 'admin-package-creator':
+        return <Suspense fallback={<PageLoader />}><PackageCreatorPage /></Suspense>;
       case 'host-dashboard':
         return user?.role === 'host' ? (
           <Suspense fallback={<PageLoader />}><HostDashboard /></Suspense>
