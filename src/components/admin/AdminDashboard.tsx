@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import {
-  Users, Plane, DollarSign, TrendingUp, AlertTriangle, Shield,
-  Calendar, MessageCircle, Star, CreditCard, UserCheck, Globe, Image, Sparkles
+  Users, Plane, DollarSign, TrendingUp, AlertTriangle,
+  Star, CreditCard, UserCheck, Globe, Image, Sparkles, Send
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { AnalyticsReports } from './AnalyticsReports';
 import { GalleryManager } from './GalleryManager';
 import { PackageCreator } from '../package-creator/PackageCreator';
+import { VoucherDispatchCenter } from './VoucherDispatchCenter';
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('overview');
@@ -69,6 +70,7 @@ export const AdminDashboard: React.FC = () => {
     { id: 'trips', label: 'Trips', icon: Plane },
     { id: 'gallery', label: 'Gallery', icon: Image },
     { id: 'package-creator', label: 'Package Creator', icon: Sparkles },
+    { id: 'voucher-dispatch', label: 'Voucher Dispatch', icon: Send },
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'reports', label: 'Reports', icon: AlertTriangle },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
@@ -218,7 +220,11 @@ export const AdminDashboard: React.FC = () => {
         <PackageCreator />
       )}
 
-      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'package-creator' && (
+      {activeTab === 'voucher-dispatch' && (
+        <VoucherDispatchCenter />
+      )}
+
+      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {tabs.find(tab => tab.id === activeTab)?.label} Management

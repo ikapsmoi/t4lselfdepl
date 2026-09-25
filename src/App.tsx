@@ -29,6 +29,7 @@ const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.B
 const ReviewsPage = lazy(() => import('./pages/ReviewsPage').then(m => ({ default: m.ReviewsPage })));
 const StoriesPage = lazy(() => import('./pages/StoriesPage').then(m => ({ default: m.StoriesPage })));
 const PackageCreatorPage = lazy(() => import('./pages/PackageCreatorPage').then(m => ({ default: m.PackageCreatorPage })));
+const VoucherDispatchCenter = lazy(() => import('./components/admin/VoucherDispatchCenter').then(m => ({ default: m.VoucherDispatchCenter })));
 
 // Loading component for pages
 const PageLoader = () => (
@@ -38,7 +39,7 @@ const PageLoader = () => (
 );
 
 const AppContent: React.FC = () => {
-  const { user } = useAuth();
+  const { user, loading, logout } = useAuth();
   const { showExitModal, closeModal } = useExitIntent();
   const { appOpen } = useAnalytics();
   const [currentPage, setCurrentPage] = React.useState('home');
@@ -115,6 +116,31 @@ const AppContent: React.FC = () => {
       case 'package-creator':
       case 'admin-package-creator':
         return <Suspense fallback={<PageLoader />}><PackageCreatorPage /></Suspense>;
+      case 'admin-voucher-dispatch':
+        return loading ? <PageLoader /> : user?.role === 'admin'
+          ? <Suspense fallback={<PageLoader />}><VoucherDispatchCenter /></Suspense>
+          : (
+            <section className="mx-auto my-16 max-w-xl px-6 text-center" aria-labelledby="voucher-access-title">
+              <div className="border border-gray-200 bg-white p-8 shadow-sm">
+                <h1 id="voucher-access-title" className="text-2xl font-bold text-gray-900">Admin access required</h1>
+                <p className="mt-3 text-sm leading-6 text-gray-600">
+                  Voucher Dispatch is an operations tool for Travel4Life administrators. Sign in with an admin account to continue.
+                </p>
+                {user && <p className="mt-2 text-xs text-gray-500">{user.email} is signed in with the {user.role} role. Voucher Dispatch requires the admin role.</p>}
+                <button
+                  type="button"
+                  onClick={async () => {
+                    if (user) await logout();
+                    setAuthMode('login');
+                    setShowAuthModal(true);
+                  }}
+                  className="mt-6 rounded-md bg-gray-900 px-5 py-3 text-sm font-semibold text-white hover:bg-gray-700"
+                >
+                  {user ? 'Switch account' : 'Sign in'}
+                </button>
+              </div>
+            </section>
+          );
       case 'host-dashboard':
         return user?.role === 'host' ? (
           <Suspense fallback={<PageLoader />}><HostDashboard /></Suspense>
@@ -187,7 +213,9 @@ const AppContent: React.FC = () => {
           onSuccess={(user) => {
             setShowAuthModal(false);
             // Redirect based on user role
-            if (user.role === 'host') {
+            if (user.role === 'admin') {
+              window.location.hash = 'admin-voucher-dispatch';
+            } else if (user.role === 'host') {
               window.location.hash = 'host-dashboard';
             } else {
               window.location.hash = 'traveler-dashboard';

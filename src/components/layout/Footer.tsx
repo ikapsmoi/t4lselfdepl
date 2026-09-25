@@ -43,6 +43,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
       { name: 'Terms of Service', onClick: () => { window.location.hash = 'terms'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'Privacy Policy', onClick: () => { window.location.hash = 'privacy'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'Live', onClick: () => { window.location.hash = 'package-creator'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
+      { name: 'Voucher', onClick: () => { window.location.hash = 'admin-voucher-dispatch'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
     ],
   };
 
