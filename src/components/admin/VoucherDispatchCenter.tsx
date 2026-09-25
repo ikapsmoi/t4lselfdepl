@@ -120,7 +120,7 @@ export const VoucherDispatchCenter: React.FC = () => {
       id: createId(), customerName: customer.name, phone: normalizePhoneNumber(customer.phone, customer.countryCode).normalized || customer.phone,
       packageName: customer.packageName, bookingReference: customer.bookingReference,
       voucherNames: vouchers.filter((voucher) => voucher.customerId === customer.id).map((voucher) => voucher.file.name),
-      status, createdAt: new Date().toISOString(), user: user?.name || user?.email || 'Admin', note,
+      status, createdAt: new Date().toISOString(), user: user?.name || user?.email || 'Local user', note,
     };
     setHistory((current) => [entry, ...current].slice(0, 200));
   };

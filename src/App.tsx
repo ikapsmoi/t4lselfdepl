@@ -39,7 +39,7 @@ const PageLoader = () => (
 );
 
 const AppContent: React.FC = () => {
-  const { user, loading, logout } = useAuth();
+  const { user } = useAuth();
   const { showExitModal, closeModal } = useExitIntent();
   const { appOpen } = useAnalytics();
   const [currentPage, setCurrentPage] = React.useState('home');
@@ -117,30 +117,7 @@ const AppContent: React.FC = () => {
       case 'admin-package-creator':
         return <Suspense fallback={<PageLoader />}><PackageCreatorPage /></Suspense>;
       case 'admin-voucher-dispatch':
-        return loading ? <PageLoader /> : user?.role === 'admin'
-          ? <Suspense fallback={<PageLoader />}><VoucherDispatchCenter /></Suspense>
-          : (
-            <section className="mx-auto my-16 max-w-xl px-6 text-center" aria-labelledby="voucher-access-title">
-              <div className="border border-gray-200 bg-white p-8 shadow-sm">
-                <h1 id="voucher-access-title" className="text-2xl font-bold text-gray-900">Admin access required</h1>
-                <p className="mt-3 text-sm leading-6 text-gray-600">
-                  Voucher Dispatch is an operations tool for Travel4Life administrators. Sign in with an admin account to continue.
-                </p>
-                {user && <p className="mt-2 text-xs text-gray-500">{user.email} is signed in with the {user.role} role. Voucher Dispatch requires the admin role.</p>}
-                <button
-                  type="button"
-                  onClick={async () => {
-                    if (user) await logout();
-                    setAuthMode('login');
-                    setShowAuthModal(true);
-                  }}
-                  className="mt-6 rounded-md bg-gray-900 px-5 py-3 text-sm font-semibold text-white hover:bg-gray-700"
-                >
-                  {user ? 'Switch account' : 'Sign in'}
-                </button>
-              </div>
-            </section>
-          );
+        return <Suspense fallback={<PageLoader />}><VoucherDispatchCenter /></Suspense>;
       case 'host-dashboard':
         return user?.role === 'host' ? (
           <Suspense fallback={<PageLoader />}><HostDashboard /></Suspense>
