@@ -309,6 +309,8 @@ export const PackageCreator: React.FC = () => {
       const canvas = await html2canvas(previewRef.current, {
         backgroundColor: '#f7f3ee',
         scale: 2,
+        width: 794,
+        height: 1123,
         useCORS: true,
         allowTaint: true,
         logging: false,
@@ -767,8 +769,18 @@ export const PackageCreator: React.FC = () => {
               )}
             </div>
 
-            <div className="mx-auto max-w-[680px] rounded-[22px] border border-stone-200 bg-[#f7f3ee] p-3 shadow-md">
-              <div ref={previewRef} className="overflow-hidden rounded-[18px] bg-[#f9f5f0] text-stone-800" style={{ fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
+            <div className="mx-auto w-full max-w-[820px] rounded-[22px] border border-stone-200 bg-[#f7f3ee] p-3 shadow-md">
+              <div
+                ref={previewRef}
+                className="overflow-hidden rounded-[18px] bg-[#f9f5f0] text-stone-800"
+                style={{
+                  width: '794px',
+                  minHeight: '1123px',
+                  maxWidth: '100%',
+                  aspectRatio: '210 / 297',
+                  fontFamily: 'Plus Jakarta Sans, sans-serif',
+                }}
+              >
                 <PackageDocument data={packageData} />
               </div>
             </div>
@@ -824,8 +836,8 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data }) => {
   const shareText = generateShare(data);
 
   return (
-    <div className="w-full bg-[#f9f5f0] px-4 py-4 text-stone-800 sm:px-6 sm:py-6">
-      <div className="mx-auto max-w-[820px] overflow-hidden rounded-[16px] border border-[#eae1d4] bg-[#fdfaf7]">
+    <div className="w-full min-h-[1123px] bg-[#f9f5f0] px-4 py-4 text-stone-800 sm:px-6 sm:py-6">
+      <div className="mx-auto h-full w-full overflow-hidden rounded-[16px] border border-[#eae1d4] bg-[#fdfaf7]">
         <header className="border-b border-[#eae1d4] px-6 py-5 sm:px-8">
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
