@@ -41,12 +41,14 @@ export interface PackageCreatorData {
   infantPrice: number;
   template: string;
   outputFormat: OutputFormat;
+  showItinerary: boolean;
   stays: StayItem[];
   inclusions: InclusionItem[];
   exclusions: ExclusionItem[];
   additionalInformation: string;
   itinerary: ItineraryDay[];
   coverImage: string;
+  galleryImages: string[];
   createdAt: string;
 }
 
@@ -54,8 +56,11 @@ export const COMPANY_CONFIG = {
   name: 'TRAVEL4LIFE',
   website: 'https://travel4life.net/',
   websiteDisplay: 'www.travel4life.net',
+  gst: '07AIGPK7468L1ZN',
+  corporateOffice: 'D-36, R.K.PURAM, SECTOR 6, 110022',
   whatsapp: '+91-9511446642',
   email: 'info@travel4life.net',
+  paymentUrl: 'https://razorpay.me/@travel4life',
   logo: '/logo-new.png',
 };
 
@@ -135,7 +140,9 @@ export const buildShareText = (data: PackageCreatorData): string => {
     `${data.days} Days / ${data.nights} Nights`,
     '',
     `Starting from ${formatAmount(data.adultPrice || 0, data.currency)} per adult.`,
-    'Your detailed itinerary, accommodation and package inclusions are included in the attached package.',
+    data.showItinerary === false
+      ? 'Accommodation and package inclusions are included in the attached package.'
+      : 'Your detailed itinerary, accommodation and package inclusions are included in the attached package.',
   ].join('\n');
 
   return header;
@@ -152,6 +159,7 @@ export const getDemoPackageData = (): PackageCreatorData => ({
   infantPrice: 0,
   template: 'TRAVEL4LIFE EDITORIAL',
   outputFormat: 'single',
+  showItinerary: true,
   stays: [
     {
       id: 'stay-1',
@@ -191,7 +199,7 @@ export const getDemoPackageData = (): PackageCreatorData => ({
     { id: 'exc-3', value: 'Personal expenses' },
     { id: 'exc-4', value: 'Travel insurance' },
   ],
-  additionalInformation: 'Booking conditions: Passport valid for minimum 6 months. Visa guidance provided as per destination requirements. Payment terms: 30% advance at confirmation. Cancellation policy: 50% refund if cancelled 30 days before departure; non-refundable within 14 days. Please carry a printout of booking confirmation for transfers and hotel check-ins.',
+  additionalInformation: 'Booking conditions: Passport valid for minimum 6 months. Visa guidance provided as per destination requirements. Please carry a printout of booking confirmation for transfers and hotel check-ins.\n\nBANK ACCOUNT\n50200116350847\n\nIFSC\nHDFC0002076\n\nACCOUNT NAME BRANCH\nTravel4life Global\nBRANCH: MANGAL BAZAAR',
   itinerary: [
     {
       id: 'day-1',
@@ -258,5 +266,6 @@ export const getDemoPackageData = (): PackageCreatorData => ({
     },
   ],
   coverImage: '',
+  galleryImages: [],
   createdAt: new Date().toISOString(),
 });

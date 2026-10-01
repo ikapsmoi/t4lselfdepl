@@ -19,16 +19,7 @@ export const IndiaSpecials: React.FC = () => {
 
 
 
-  // Filter trips to show only Indian specials and other India-related categories
-  const indiaTrips = trips.filter(trip => 
-    trip.type === 'indian_special' || 
-    trip.type === 'spiritual' || 
-    trip.type === 'food' || 
-        trip.type === 'festival' ||
-        trip.type === 'festivals' || 
-    trip.type === 'bollywood' || 
-    trip.type === 'budget'
-  );
+  const indiaTrips = trips.filter(trip => trip.type === 'indian_special');
   const activeIndiaCategories = INDIA_CATEGORIES.filter(category => {
     const tripType = category.value === 'food-trails' ? 'food' : category.value;
     return indiaTrips.some(trip => trip.type === tripType);
@@ -138,7 +129,7 @@ export const IndiaSpecials: React.FC = () => {
         {indiaTrips.length > 0 && (
           <div className="mb-16">
             <TripGrid
-              trips={filteredTrips.slice(0, 6)}
+              trips={filteredTrips}
               title="Featured India Experiences"
               subtitle="Handpicked adventures across the incredible subcontinent"
               loading={loading}
