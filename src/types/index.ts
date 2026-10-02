@@ -33,7 +33,7 @@ export interface Trip {
   description: string;
   destination: string;
   country: string;
-  type: 'adventure' | 'culture' | 'wellness' | 'food' | 'wildlife' | 'spiritual' | 'festival' | 'bollywood' | 'budget' | 'indian_special';
+  type: 'adventure' | 'culture' | 'wellness' | 'food' | 'wildlife' | 'spiritual' | 'festival' | 'europe' | 'bollywood' | 'budget' | 'indian_special';
   price: number;
   currency: string;
   duration: number;

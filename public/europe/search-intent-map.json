@@ -1,0 +1,49 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-02",
+  "evidence": {
+    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-09-23",
+    "finding": "The supplied export contains no Europe destination queries or Europe landing-page rows.",
+    "limitation": "Query families below are intent hypotheses, not measured demand or proof of current product availability.",
+    "pagePolicy": "Use one substantial Europe hub until destination-specific product relevance and differentiated content justify a separate page."
+  },
+  "owners": [
+    {
+      "url": "/europe/",
+      "file": "europe/index.html",
+      "intent": "Europe trip discovery and planning for travellers from India",
+      "primaryQuery": "Europe tour packages from India",
+      "relatedQueries": [
+        "Europe holiday packages from India",
+        "Europe trips from India",
+        "Europe group tours from India",
+        "multi-country Europe itinerary from India",
+        "Europe honeymoon package from India",
+        "Europe family holiday from India",
+        "Europe luxury trip from India",
+        "Europe budget trip from India",
+        "Europe trip cost from India",
+        "Europe 7 day itinerary",
+        "Europe 10 day itinerary",
+        "Europe 14 day itinerary",
+        "Europe hotel and transfer planning",
+        "Europe airport transfer planning",
+        "Europe sightseeing itinerary",
+        "Europe travel quote from India"
+      ],
+      "coverage": "One hub covers related commercial and planning intents; active product listings own exact trip dates, destinations, prices and inclusions.",
+      "missingContent": "Create country or city pages only after live product review and evidence of distinct useful content."
+    },
+    {
+      "url": "/tomorrowland/",
+      "intent": "Tomorrowland destination and festival travel planning",
+      "primaryQuery": "Tomorrowland packages from India",
+      "relatedQueries": [
+        "Tomorrowland Belgium from India",
+        "Tomorrowland Winter travel from India",
+        "Tomorrowland festival trip planning"
+      ],
+      "coverage": "Existing dedicated editorial hub at /tomorrowland/."
+    }
+  ]
+}

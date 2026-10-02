@@ -34,3 +34,9 @@ npm run seo:audit
 `seo:sitemap` includes only active products that pass the shared quality gate: title, category, destination, valid dates, non-negative price, meaningful description, and at least one image. `seo:audit` reports the active product count, SEO-ready count, exclusions by missing field, duplicate titles, category totals, and sitemap coverage. The scripts require `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the environment where they run.
 
 The deployment fallback in `public/_redirects` keeps direct product URLs on the SPA entry point so the client route can load on a fresh request. This fallback makes the route reachable; it does not solve the initial-render limitation above.
+
+## Europe discovery hub
+
+`/europe/` is a crawlable static authority hub for Indian travellers planning Europe trips. It is linked from the site footer and the static sitemap. The page routes visitors to the live trip catalogue using `/trips/?destination=Europe`; that filter matches the country portion of active trip locations instead of claiming fixed package availability.
+
+The supplied Search Console export contains no Europe destination query or landing-page rows, and the product sitemap is not evidence that every European destination has a current offer. For that reason, the first release intentionally creates one useful hub rather than unsupported country/city pages. The page distinguishes planning guidance from confirmed inclusions, prices, dates, hotels, and availability. Add more destination pages only when live product relevance and differentiated content justify them.

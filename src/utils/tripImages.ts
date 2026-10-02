@@ -88,6 +88,11 @@ const titleAliases: Array<readonly [string, string]> = [
   ['jaipur', 'jaipur'],
   ['chennai', 'chennai'],
   ['madurai', 'madurai'],
+  ['netherlands', 'amsterdam'],
+  ['holland', 'amsterdam'],
+  ['france', 'paris'],
+  ['austria', 'salzburg'],
+  ['belgium', 'belgium'],
   ['amsterdam', 'amsterdam'],
   ['paris', 'paris'],
   ['salzburg', 'salzburg'],
@@ -117,6 +122,7 @@ const findCityImage = (title: string, destination: string): ResolvedTripImage | 
   if (match.city === 'kochi') return { src: '/trip-thumbnails/kerala.jpg' };
   if (match.city === 'amsterdam') return { src: '/amster1.jpeg' };
   if (match.city === 'salzburg') return { src: '/salzburg1.jpeg' };
+  if (match.city === 'belgium') return { src: '/trip-thumbnails/belgium.jpg' };
 
   const credit = TRIP_CITY_IMAGE_CREDITS[match.city];
   return credit ? { src: credit.asset, credit } : undefined;
@@ -126,6 +132,20 @@ const isPlaceholderImage = (image: string): boolean =>
   /\/pkg\d+\.png(?:[?#].*)?$/i.test(image)
   || /images\.pexels\.com\/photos\/(?:1371360|8185807)\//i.test(image);
 
+export const resolveTripThumbnail = (
+  title: string,
+  destination: string,
+  category: string,
+  images: string[] | undefined,
+  fallbackImage: string
+): ResolvedTripImage => {
+  if (normalize(category) !== ' europe ') {
+    return resolveTripImage(title, destination, category, images, fallbackImage);
+  }
+
+  return { src: '/pkg1.png' };
+};
+
 export const resolveTripImage = (
   title: string,
   destination: string,
@@ -134,6 +154,9 @@ export const resolveTripImage = (
   fallbackImage: string
 ): ResolvedTripImage => {
   const existingImage = images?.find(Boolean);
+  if (normalize(category) === ' europe ') {
+    return { src: '/pkg1.png' };
+  }
   if (isFestivalSpecial(category)) return { src: existingImage || fallbackImage };
   const normalizedTitle = normalize(title);
   if (normalizedTitle.includes(' kerala ') || normalizedTitle.includes(' kerela ')) {

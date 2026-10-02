@@ -6,9 +6,12 @@ const siteUrl = 'https://travel4life.net';
 const intentMapPath = resolve('public/tomorrowland/search-intent-map.json');
 const intentMap = JSON.parse(await readFile(intentMapPath, 'utf8'));
 const routes = intentMap.owners;
+const europeIntentMap = JSON.parse(await readFile(resolve('public/europe/search-intent-map.json'), 'utf8'));
 const knownInternalRoutes = new Set([
   '/',
   '/trips',
+  '/trips/',
+  '/europe/',
   '/tomorrowland-seo.css',
   ...routes.map(({ url }) => url),
 ]);
@@ -183,10 +186,77 @@ for (const route of routes) {
   }
 }
 
+const europePath = resolve('public/europe/index.html');
+if (!existsSync(europePath)) {
+  failures.push('/europe/: mapped file is missing');
+} else {
+  const html = await readFile(europePath, 'utf8');
+  const title = html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim();
+  const description = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim();
+  const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
+  const robots = html.match(/<meta\s+name="robots"\s+content="([^"]+)"/i)?.[1] || '';
+  const h1Count = (html.match(/<h1\b/gi) || []).length;
+  const jsonLd = [...html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
+  const bodyHtml = html.replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ');
+  const visibleText = bodyHtml.replace(/<[^>]+>/g, ' ').replace(/&(?:nbsp|amp|quot|lt|gt|#\d+);/gi, ' ');
+  const wordCount = visibleText.trim().split(/\s+/).filter(Boolean).length;
+  const internalLinks = [...html.matchAll(/href="(\/[^"#?]*)[^"]*"/gi)].map((match) => match[1]);
+  const europeUrl = `${siteUrl}/europe/`;
+
+  if (!title) failures.push('/europe/: missing title');
+  if (!description) failures.push('/europe/: missing meta description');
+  if (primaryQueries.has(europeIntentMap.owners[0].primaryQuery.toLowerCase())) {
+    failures.push('/europe/: duplicate primary query owner');
+  }
+  if (!canonical || canonical !== europeUrl) failures.push('/europe/: incorrect canonical');
+  if (!/index,\s*follow/i.test(robots)) failures.push('/europe/: expected index, follow robots directive');
+  if (h1Count !== 1) failures.push(`/europe/: expected one H1, found ${h1Count}`);
+  if (wordCount < 500) failures.push(`/europe/: insufficient visible content (${wordCount} words; minimum 500)`);
+  if (!html.includes('href="/trips/?destination=Europe"')) failures.push('/europe/: missing current Europe trip search link');
+  if (!sitemapUrls.includes(europeUrl)) failures.push('/europe/: missing from static sitemap');
+  if (europeIntentMap.owners[0]?.url !== '/europe/' || europeIntentMap.owners[0]?.file !== 'europe/index.html') {
+    failures.push('/europe/: search intent map does not identify the hub page');
+  }
+  if (!europeIntentMap.evidence?.limitation?.trim()) {
+    failures.push('/europe/: search intent map is missing evidence limitations');
+  }
+  if (jsonLd.length === 0) failures.push('/europe/: missing JSON-LD');
+  for (const [index, script] of jsonLd.entries()) {
+    try {
+      const parsed = JSON.parse(script[1]);
+      const nodes = Array.isArray(parsed['@graph']) ? parsed['@graph'] : [parsed];
+      const types = nodes.flatMap((node) => Array.isArray(node['@type']) ? node['@type'] : [node['@type']]);
+      if (index === 0 && !types.includes('CollectionPage')) {
+        failures.push('/europe/: JSON-LD does not include CollectionPage');
+      }
+      if (types.some((type) => ['Product', 'Offer', 'Review', 'AggregateRating'].includes(type))) {
+        failures.push('/europe/: hub contains unsupported product, offer or review schema');
+      }
+    } catch {
+      failures.push(`/europe/: invalid JSON-LD in script ${index + 1}`);
+    }
+  }
+  const imageUrl = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)?.[1];
+  const imageAlt = html.match(/<meta\s+property="og:image:alt"\s+content="([^"]+)"/i)?.[1];
+  if (!imageUrl || !imageUrl.startsWith(`${siteUrl}/`)) {
+    failures.push('/europe/: missing absolute first-party Open Graph image');
+  } else if (!existsSync(resolve('public', imageUrl.slice(siteUrl.length + 1)))) {
+    failures.push(`/europe/: Open Graph image file does not exist (${imageUrl})`);
+  }
+  if (!imageAlt) failures.push('/europe/: missing Open Graph image alt text');
+  if (!html.includes('Availability and pricing:')) failures.push('/europe/: missing availability and pricing caveat');
+  if (!html.includes('Confirm every inclusion in writing')) failures.push('/europe/: missing written-inclusion guidance');
+  for (const link of internalLinks) {
+    if (!knownInternalRoutes.has(link) && !link.startsWith('/#')) {
+      failures.push(`/europe/: unknown internal link ${link}`);
+    }
+  }
+}
+
 if (failures.length > 0) {
   console.error('SEO validation failed:');
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`Validated ${routes.length} mapped Tomorrowland pages: intent ownership, visible content, unique metadata, canonical, schema, image metadata, Home and WhatsApp navigation, internal links, redirects, sitemap index and static sitemap coverage.`);
+  console.log(`Validated ${routes.length} Tomorrowland pages and the Europe hub: intent ownership, visible content, metadata, canonical, schema, internal links, redirects, sitemap coverage and availability caveats.`);
 }

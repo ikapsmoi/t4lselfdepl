@@ -22,7 +22,9 @@ interface SearchBarProps {
 
 export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className = '', navigateOnFilter = false }) => {
   const { searchTrip } = useAnalytics();
-  const [destination, setDestination] = useState('');
+  const [destination, setDestination] = useState(
+    () => new URLSearchParams(window.location.search).get('destination') || ''
+  );
   const [type, setType] = useState('');
   const [priceRange, setPriceRange] = useState('');
   const [duration, setDuration] = useState('');
@@ -121,6 +123,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
           { label: 'Adventure', value: 'adventure' },
           { label: 'India', value: 'indian_special' },
           { label: 'Festivals', value: 'festival' },
+          { label: 'Europe', value: 'europe' },
           { label: 'Budget', value: 'budget' },
         ].map((tab) => (
           <button

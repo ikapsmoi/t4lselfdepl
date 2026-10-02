@@ -8,6 +8,7 @@ import { useDashboard } from '../../hooks/useDashboard';
 import { useAnalytics } from '../../utils/analytics';
 import { TRIP_TYPES, DIFFICULTY_LEVELS, getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
 import { formatCitiesForDisplay } from '../../utils/formatters';
+import { resolveTripThumbnail } from '../../utils/tripImages';
 
 
 interface TripCardProps {
@@ -49,7 +50,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
     : trip.type === 'indian_special'
       ? '/pkg3.png'
       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
-  const tripImage = resolveTripImage(trip.title, trip.destination, trip.type, trip.images, fallbackImage);
+  const tripImage = resolveTripThumbnail(trip.title, trip.destination, trip.type, trip.images, fallbackImage);
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
   const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === trip.difficulty);
   const isAlmostFull = spotsLeft <= 3 && spotsLeft > 0;
@@ -258,7 +259,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           </div>
         </div>
 
-        {isFull && (
+        {isFull && trip.type !== 'europe' && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <span className="bg-white text-gray-900 px-5 py-2 rounded-full text-sm font-bold shadow-lg">Sold Out</span>
           </div>
@@ -331,4 +332,3 @@ export const TripCard: React.FC<TripCardProps> = memo(({
 });
 
 TripCard.displayName = 'TripCard';
-import { resolveTripImage } from '../../utils/tripImages';

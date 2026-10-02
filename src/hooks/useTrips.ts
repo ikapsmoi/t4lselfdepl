@@ -5,6 +5,60 @@ import type { SearchFilters, Trip } from "@/types";
 import { formatCitiesForDisplay, cleanTripTitle } from '../utils/formatters';
 import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
+const EUROPEAN_COUNTRIES = [
+  'Albania',
+  'Andorra',
+  'Armenia',
+  'Austria',
+  'Azerbaijan',
+  'Belarus',
+  'Belgium',
+  'Bosnia and Herzegovina',
+  'Bulgaria',
+  'Croatia',
+  'Cyprus',
+  'Czechia',
+  'Czech Republic',
+  'Denmark',
+  'Estonia',
+  'Finland',
+  'France',
+  'Georgia',
+  'Germany',
+  'Greece',
+  'Hungary',
+  'Iceland',
+  'Ireland',
+  'Italy',
+  'Kosovo',
+  'Latvia',
+  'Liechtenstein',
+  'Lithuania',
+  'Luxembourg',
+  'Malta',
+  'Moldova',
+  'Monaco',
+  'Montenegro',
+  'Netherlands',
+  'North Macedonia',
+  'Norway',
+  'Poland',
+  'Portugal',
+  'Romania',
+  'Russia',
+  'San Marino',
+  'Serbia',
+  'Slovakia',
+  'Slovenia',
+  'Spain',
+  'Sweden',
+  'Switzerland',
+  'Turkey',
+  'Ukraine',
+  'United Kingdom',
+  'Vatican City',
+];
+
 export const useTrips = () => {
   const [trips, setTrips] = useState<Trip[]>([]);
   const [uniqueDestinations, setUniqueDestinations] = useState<string[]>([]);
@@ -21,7 +75,8 @@ export const useTrips = () => {
     if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
       setTrips([]);
       setUniqueDestinations([]);
-      setError(null);
+      setError('Trip listings are unavailable because Supabase is not configured.');
+      setLoading(false);
       return;
     }
 
@@ -43,7 +98,11 @@ export const useTrips = () => {
 
       // Apply search filters
       if (searchFilters?.destination) {
-        query = query.ilike('location', `%${searchFilters.destination}%`);
+        if (searchFilters.destination.trim().toLowerCase() === 'europe') {
+          query = query.or(EUROPEAN_COUNTRIES.map(country => `location.ilike.%${country}%`).join(','));
+        } else {
+          query = query.ilike('location', `%${searchFilters.destination}%`);
+        }
       }
 
       if (searchFilters?.type) {
@@ -192,9 +251,9 @@ export const useTrips = () => {
     fetchTrips(filters);
   }, [fetchTrips, filters]);
 
-  const searchTrips = (searchFilters: SearchFilters) => {
+  const searchTrips = useCallback((searchFilters: SearchFilters) => {
     setFilters(searchFilters);
-  };
+  }, []);
 
   // Refresh trips data
   const refreshTrips = async () => {

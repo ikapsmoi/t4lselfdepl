@@ -5,6 +5,12 @@ interface FooterProps {
   setIsMenuOpen?: (isOpen: boolean) => void;
 }
 
+type FooterLink = {
+  name: string;
+  href?: string;
+  onClick?: () => void;
+};
+
 export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
@@ -21,7 +27,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
     }
   };
 
-  const footerLinks = {
+  const footerLinks: Record<string, FooterLink[]> = {
     company: [
       { name: 'About Us', onClick: () => { window.location.hash = 'about'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'How it Works', onClick: () => { window.location.hash = 'how-it-works'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
@@ -30,6 +36,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
       { name: 'Careers', onClick: () => { window.location.hash = 'careers'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
     ],
     travelers: [
+      { name: 'Europe Travel', href: '/europe/' },
       { name: 'Browse Trips', onClick: () => { window.location.hash = 'trips'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'India Specials', onClick: () => { window.location.hash = 'home'; setTimeout(() => { document.getElementById('india-specials')?.scrollIntoView({ behavior: 'smooth' }); }, 300); setIsMenuOpen?.(false); } },
       { name: 'Reviews', onClick: () => { window.location.hash = 'reviews'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
@@ -142,12 +149,22 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
               <ul className="space-y-2.5">
                 {links.map((link) => (
                   <li key={link.name}>
-                    <button
-                      onClick={link.onClick}
-                      className="text-gray-400 hover:text-white transition-colors duration-200 text-sm text-left"
-                    >
-                      {link.name}
-                    </button>
+                    {link.href ? (
+                      <a
+                        href={link.href}
+                        onClick={() => setIsMenuOpen?.(false)}
+                        className="text-gray-400 hover:text-white transition-colors duration-200 text-sm text-left"
+                      >
+                        {link.name}
+                      </a>
+                    ) : (
+                      <button
+                        onClick={link.onClick}
+                        className="text-gray-400 hover:text-white transition-colors duration-200 text-sm text-left"
+                      >
+                        {link.name}
+                      </button>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -206,4 +223,3 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
     </footer>
   );
 };
-

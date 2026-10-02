@@ -69,10 +69,14 @@ const StorytellingSection: React.FC = () => (
 export const HomePage: React.FC = () => {
   const { trips, loading } = useTrips();
   const [topRatedCategory, setTopRatedCategory] = React.useState('all');
-  const topRatedTrips = trips.filter(trip =>
-    trip.type !== 'indian_special' &&
-    (topRatedCategory === 'all' || trip.type === topRatedCategory)
-  );
+  const topRatedTrips = trips
+    .filter(trip =>
+      trip.type !== 'indian_special' &&
+      (topRatedCategory === 'all' || trip.type === topRatedCategory)
+    )
+    .sort((firstTrip, secondTrip) =>
+      Number(secondTrip.type === 'festival') - Number(firstTrip.type === 'festival')
+    );
   const topRatedCategories = TRIP_TYPES.filter(type =>
     type.value !== 'indian_special' && trips.some(trip => trip.type === type.value)
   );

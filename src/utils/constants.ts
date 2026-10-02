@@ -8,6 +8,7 @@ export const TRIP_TYPES = [
   { value: 'wildlife', label: 'Wildlife', color: 'text-emerald-600', bgColor: 'bg-emerald-100' },
   { value: 'spiritual', label: 'Spiritual Hub', color: 'text-indigo-600', bgColor: 'bg-indigo-100' },
   { value: 'festival', label: 'Festival Specials', color: 'text-pink-600', bgColor: 'bg-pink-100' },
+  { value: 'europe', label: 'Europe', color: 'text-sky-700', bgColor: 'bg-sky-100' },
   { value: 'bollywood', label: 'Bollywood Trips', color: 'text-red-600', bgColor: 'bg-red-100' },
   { value: 'budget', label: 'Budget Backpacking', color: 'text-gray-600', bgColor: 'bg-gray-100' },
   { value: 'indian_special', label: 'Indian Special', color: 'text-orange-600', bgColor: 'bg-orange-100' },
