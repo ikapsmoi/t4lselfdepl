@@ -54,7 +54,17 @@ const toTrip = (row: TripRow): Trip => {
   const duration = itinerary.duration
     ? Number(itinerary.duration)
     : Math.ceil((new Date(row.end_date).getTime() - new Date(row.start_date).getTime()) / (1000 * 60 * 60 * 24));
-  const images = Array.isArray(row.images) && row.images.length > 0 ? row.images : [fallbackImage(row.category)];
+  const existingImages = Array.isArray(row.images) ? row.images : [];
+  const resolvedImage = resolveTripImage(
+    row.title,
+    row.location,
+    row.category,
+    existingImages,
+    fallbackImage(row.category)
+  ).src;
+  const images = existingImages.length > 0
+    ? [resolvedImage, ...existingImages.slice(1)]
+    : [resolvedImage];
   const included = Array.isArray(itinerary.included) ? itinerary.included : [];
   const notIncluded = Array.isArray(itinerary.notIncluded) ? itinerary.notIncluded : [];
   const tags = Array.isArray(itinerary.tags) ? itinerary.tags : [];
@@ -219,3 +229,4 @@ export const TripSeoPage: React.FC = () => {
     </main>
   );
 };
+import { resolveTripImage } from '../utils/tripImages';

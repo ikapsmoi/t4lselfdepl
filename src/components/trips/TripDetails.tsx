@@ -172,10 +172,36 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             <div className="lg:col-span-2 space-y-6 md:space-y-8">
               <div className="space-y-3 md:space-y-4">
                 <img
-                  src={(trip.images && trip.images.length > 0) ? trip.images[selectedImageIndex] : (trip.type === 'budget' ? '/pkg1.png' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg')}
+                  src={resolveTripImage(
+                    trip.title,
+                    trip.destination,
+                    trip.type,
+                    trip.images && trip.images.length > 0
+                      ? [trip.images[selectedImageIndex] || trip.images[0]]
+                      : [],
+                    trip.type === 'budget'
+                      ? '/pkg1.png'
+                      : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'
+                  ).src}
                   alt={trip.title}
                   className="w-full h-48 md:h-96 object-cover rounded-xl"
                 />
+                {(() => {
+                  const credit = resolveTripImage(
+                    trip.title,
+                    trip.destination,
+                    trip.type,
+                    trip.images,
+                    trip.type === 'budget'
+                      ? '/pkg1.png'
+                      : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'
+                  ).credit;
+                  return credit ? (
+                    <a href={credit.source} target="_blank" rel="noreferrer" className="mt-2 inline-flex text-xs text-gray-500 underline underline-offset-2">
+                      Photo by {credit.artist} · {credit.license}
+                    </a>
+                  ) : null;
+                })()}
                 {(trip.images && trip.images.length > 1) && (
                   <div className="flex space-x-2 overflow-x-auto">
                     {trip.images.map((image, index) => (
@@ -486,3 +512,4 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
     </div>
   );
 };
+import { resolveTripImage } from '../../utils/tripImages';

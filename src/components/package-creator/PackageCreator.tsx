@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import html2canvas from 'html2canvas';
 import {
   AlertTriangle,
@@ -15,7 +15,9 @@ import {
   Trash2,
   Upload,
   Wand2,
+  Loader2,
 } from 'lucide-react';
+import { isSupabaseConfigured, supabase } from '../../lib/supabase';
 import {
   buildShareText,
   CURRENCY_OPTIONS,
@@ -27,15 +29,109 @@ import {
   PackageCreatorData,
   sanitizeText,
   TEMPLATE_OPTIONS,
+  type CurrencyCode,
   type InclusionItem,
   type ItineraryDay,
   type OutputFormat,
   type StayItem,
 } from '../../lib/packageCreator';
+import { resolveTripImage } from '../../utils/tripImages';
+import { cleanTripTitle } from '../../utils/formatters';
 
 type ValidationErrors = Partial<Record<string, string>>;
 
+interface PackageTourRecord {
+  id: string;
+  title: string;
+  location: string;
+  category: string;
+  price_per_person: number;
+  currency?: string | null;
+  start_date: string;
+  end_date: string;
+  images?: string[] | null;
+  itinerary?: Record<string, unknown> | null;
+}
+
 const cloneData = (data: PackageCreatorData): PackageCreatorData => JSON.parse(JSON.stringify(data));
+
+const asObject = (value: unknown): Record<string, unknown> | undefined =>
+  value && typeof value === 'object' && !Array.isArray(value) ? value as Record<string, unknown> : undefined;
+
+const asStringArray = (value: unknown): string[] =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : [];
+
+const packageDataFromTour = (tour: PackageTourRecord): PackageCreatorData => {
+  const itinerary = tour.itinerary || {};
+  const itineraryDuration = Number(itinerary.duration);
+  const dateDuration = Math.ceil(
+    (new Date(tour.end_date).getTime() - new Date(tour.start_date).getTime()) / (1000 * 60 * 60 * 24)
+  );
+  const days = Number.isFinite(itineraryDuration) && itineraryDuration > 0
+    ? itineraryDuration
+    : Math.max(dateDuration, 1);
+  const nights = Math.max(days - 1, 0);
+  const currency = CURRENCY_OPTIONS.includes(tour.currency as CurrencyCode)
+    ? tour.currency as CurrencyCode
+    : 'INR';
+  const cityRecords = Array.isArray(itinerary.cities)
+    ? itinerary.cities.map(asObject).filter((city): city is Record<string, unknown> => Boolean(city))
+    : [];
+  const locationNames = tour.location.split(/[,|→]+/).map((city) => city.trim()).filter(Boolean);
+  const staySources = cityRecords.length > 0
+    ? cityRecords
+    : locationNames.map((city_name) => ({ city_name }));
+  const stays: StayItem[] = staySources.map((city, index) => ({
+    id: createId(),
+    city: String(city.city_name || city.city || locationNames[index] || ''),
+    hotel: String(city.hotel || city.hotel_name || city.accommodation || ''),
+    nights: Number(city.nights) || Math.floor(nights / staySources.length) + (index < nights % staySources.length ? 1 : 0),
+    category: String(city.category || city.hotel_category || ''),
+    mealPlan: String(city.mealPlan || city.meal_plan || ''),
+  })).filter((stay) => stay.city || stay.hotel);
+  const itineraryDaysValue = itinerary.dayByDay || itinerary.day_by_day || itinerary.days || itinerary.dailyItinerary;
+  const itineraryDays = Array.isArray(itineraryDaysValue)
+    ? itineraryDaysValue.map(asObject).filter((day): day is Record<string, unknown> => Boolean(day))
+    : [];
+  const imageList = Array.isArray(tour.images) ? tour.images.filter((image): image is string => typeof image === 'string' && image.length > 0) : [];
+  const defaultImage = tour.category === 'budget'
+    ? '/pkg1.png'
+    : tour.category === 'indian_special'
+      ? '/pkg3.png'
+      : '';
+  const resolvedImage = resolveTripImage(tour.title, tour.location, tour.category, imageList, defaultImage);
+  const dayRecords: ItineraryDay[] = itineraryDays.map((day, index) => ({
+    id: createId(),
+    day: Number(day.day || day.day_number) || index + 1,
+    title: String(day.title || day.name || `DAY ${String(index + 1).padStart(2, '0')}`),
+    date: String(day.date || ''),
+    city: String(day.city || day.city_name || ''),
+    description: String(day.description || ''),
+    activities: asStringArray(day.activities),
+  }));
+  const description = typeof itinerary.description === 'string' ? itinerary.description.trim() : '';
+  const defaultData = getDemoPackageData();
+  const festivalTemplate = tour.category.toLowerCase().includes('festival');
+
+  return {
+    ...defaultData,
+    packageTitle: cleanTripTitle(tour.title),
+    packageReference: `T4L-${tour.id.slice(0, 8).toUpperCase()}`,
+    days,
+    nights,
+    currency,
+    adultPrice: Number(tour.price_per_person) || 0,
+    template: festivalTemplate ? 'TRAVEL4LIFE FESTIVAL' : defaultData.template,
+    stays,
+    inclusions: asStringArray(itinerary.included).map((value) => ({ id: createId(), value })),
+    exclusions: asStringArray(itinerary.notIncluded || itinerary.not_included).map((value) => ({ id: createId(), value })),
+    additionalInformation: [description, defaultData.additionalInformation].filter(Boolean).join('\n\n'),
+    itinerary: dayRecords,
+    showItinerary: dayRecords.length > 0,
+    coverImage: resolvedImage.src,
+    galleryImages: imageList.filter((image) => image !== resolvedImage.src),
+  };
+};
 
 const readImageAsDataUrl = (file: File): Promise<string> => new Promise((resolve, reject) => {
   const reader = new FileReader();
@@ -106,11 +202,53 @@ const syncItineraryLength = (days: number, itinerary: ItineraryDay[]): Itinerary
 
 export const PackageCreator: React.FC = () => {
   const [packageData, setPackageData] = useState<PackageCreatorData>(() => cloneData(getDemoPackageData()));
+  const [tours, setTours] = useState<PackageTourRecord[]>([]);
+  const [selectedTourId, setSelectedTourId] = useState('');
+  const [toursLoading, setToursLoading] = useState(true);
+  const [toursError, setToursError] = useState('');
   const [validation, setValidation] = useState<ValidationErrors>({});
   const [status, setStatus] = useState<string>('');
   const [generatedImageUrl, setGeneratedImageUrl] = useState<string | null>(null);
+  const generatedImageDataRef = useRef<PackageCreatorData | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const loadTours = async () => {
+      if (!isSupabaseConfigured) {
+        setToursLoading(false);
+        setToursError('Connect the database to choose from saved tours.');
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from('trips')
+        .select('id, title, location, category, price_per_person, currency, start_date, end_date, images, itinerary')
+        .eq('status', 'active')
+        .order('title');
+
+      if (cancelled) return;
+      if (error) {
+        console.error('Unable to load tours for package creator', error);
+        setToursError('Unable to load tours from the database. Please try again later.');
+      } else {
+        setTours((data || []) as PackageTourRecord[]);
+      }
+      setToursLoading(false);
+    };
+
+    void loadTours();
+    return () => { cancelled = true; };
+  }, []);
+
+  useEffect(() => {
+    if (generatedImageUrl && generatedImageDataRef.current !== packageData) {
+      setGeneratedImageUrl(null);
+      setStatus('Package details changed. Generate the updated image before downloading.');
+    }
+  }, [generatedImageUrl, packageData]);
 
   const stayNightsTotal = useMemo(
     () => packageData.stays.reduce((total, item) => total + Number(item.nights || 0), 0),
@@ -296,8 +434,8 @@ export const PackageCreator: React.FC = () => {
       errors.days = 'Total package days are required.';
     }
 
-    if (!packageData.nights || packageData.nights <= 0) {
-      errors.nights = 'Total package nights are required.';
+    if (!Number.isFinite(packageData.nights) || packageData.nights < 0) {
+      errors.nights = 'Total package nights cannot be negative.';
     }
 
     if (!packageData.stays.length) {
@@ -390,12 +528,42 @@ export const PackageCreator: React.FC = () => {
     try {
       setStatus('Generating A4 package image...');
       const url = await createPackageImage();
+      generatedImageDataRef.current = packageData;
       setGeneratedImageUrl(url);
       setStatus('A4 package image generated successfully.');
     } catch (error) {
       console.error('Package image generation failed', error);
       setStatus('Unable to generate the package image. Your package information has not been lost.');
     }
+  };
+
+  const handleTourSelect = (tourId: string) => {
+    setSelectedTourId(tourId);
+    setGeneratedImageUrl(null);
+    if (!tourId) {
+      setStatus('');
+      return;
+    }
+
+    const tour = tours.find((item) => item.id === tourId);
+    if (!tour) return;
+
+    const selectedPackageData = packageDataFromTour(tour);
+    setPackageData(selectedPackageData);
+    setValidation({});
+    setStatus('Tour details loaded. Preparing your package image...');
+    window.setTimeout(() => {
+      void createPackageImage()
+        .then((url) => {
+          generatedImageDataRef.current = selectedPackageData;
+          setGeneratedImageUrl(url);
+          setStatus('Tour package image is ready to download. You can edit or add details below.');
+        })
+        .catch((error: unknown) => {
+          console.error('Automatic package image generation failed', error);
+          setStatus('Tour details loaded, but the image could not be prepared automatically. Use Generate package to try again.');
+        });
+    }, 0);
   };
 
   const handlePrintPdf = async () => {
@@ -415,6 +583,7 @@ export const PackageCreator: React.FC = () => {
     try {
       setStatus('Preparing A4 PDF print...');
       const imageUrl = await createPackageImage();
+      generatedImageDataRef.current = packageData;
       setGeneratedImageUrl(imageUrl);
       printWindow.document.title = `Travel4Life - ${packageData.packageTitle || 'Package'}`;
       printWindow.document.head.innerHTML = '<style>@page{size:A4 portrait;margin:0}html,body{width:210mm;height:297mm;margin:0;padding:0;background:#f7f3ee}img{display:block;width:210mm;height:297mm;object-fit:contain}@media screen{body{display:grid;place-items:center;background:#e7e5e4}img{width:min(210mm,100vw);height:auto;aspect-ratio:210/297;box-shadow:0 8px 30px #0002}}</style>';
@@ -507,10 +676,29 @@ export const PackageCreator: React.FC = () => {
 
       <div className="grid gap-6 xl:grid-cols-[minmax(0,1.15fr)_minmax(420px,700px)]">
         <div className="space-y-5">
+          <section className="rounded-[24px] border border-[#dfd1c1] bg-gradient-to-br from-[#fffdf9] to-[#f6f0e8] p-5 shadow-sm">
+            <label htmlFor="package-tour-select" className="mb-2 block text-lg font-semibold text-stone-900">Start from a saved tour</label>
+            <p className="mb-3 text-sm text-stone-600">Select an active tour to prefill the package, then edit or add details before downloading.</p>
+            <select
+              id="package-tour-select"
+              value={selectedTourId}
+              onChange={(event) => handleTourSelect(event.target.value)}
+              disabled={toursLoading || tours.length === 0}
+              className="w-full rounded-2xl border border-stone-300 bg-white px-3 py-3 text-stone-900 outline-none focus:border-stone-500 disabled:cursor-wait disabled:bg-stone-100"
+            >
+              <option value="">{toursLoading ? 'Loading tours...' : tours.length ? 'Choose a tour' : 'No active tours available'}</option>
+              {tours.map((tour) => (
+                <option key={tour.id} value={tour.id}>{cleanTripTitle(tour.title)} — {cleanTripTitle(tour.location)}</option>
+              ))}
+            </select>
+            {toursError && <p role="status" className="mt-2 text-sm text-amber-800">{toursError}</p>}
+            {toursLoading && <p className="mt-2 inline-flex items-center gap-2 text-xs text-stone-500"><Loader2 className="h-3.5 w-3.5 animate-spin" /> Loading saved tours</p>}
+          </section>
+
           <section className="rounded-[24px] border border-stone-200 bg-white p-5 shadow-sm">
             <div className="mb-5 flex items-center justify-between">
               <h2 className="text-lg font-semibold text-stone-900">Package basics</h2>
-              <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-600">Demo data</span>
+              <span className="rounded-full bg-stone-100 px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-600">{selectedTourId ? 'Selected tour' : 'Demo data'}</span>
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
@@ -901,7 +1089,7 @@ export const PackageCreator: React.FC = () => {
                 <h3 className="mt-1 text-lg font-semibold text-stone-900">Package document</h3>
               </div>
               <div className="flex gap-2">
-                <button type="button" onClick={downloadImage} className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-medium text-stone-700 hover:border-stone-500">
+                <button type="button" onClick={downloadImage} disabled={!generatedImageUrl} className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-2 text-xs font-medium text-stone-700 hover:border-stone-500 disabled:cursor-not-allowed disabled:opacity-50">
                   <Download className="h-3.5 w-3.5" />
                   Download PNG
                 </button>
@@ -946,7 +1134,7 @@ export const PackageCreator: React.FC = () => {
           <div className="rounded-[24px] border border-stone-200 bg-white p-4 shadow-sm">
             <h3 className="mb-3 text-lg font-semibold text-stone-900">Share actions</h3>
             <div className="grid gap-2 sm:grid-cols-2">
-              <button type="button" onClick={downloadImage} className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 hover:border-stone-500">
+              <button type="button" onClick={downloadImage} disabled={!generatedImageUrl} className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 hover:border-stone-500 disabled:cursor-not-allowed disabled:opacity-50">
                 <Download className="h-4 w-4" /> Download PNG
               </button>
               <button type="button" onClick={handlePrintPdf} className="inline-flex items-center justify-center gap-2 rounded-full border border-stone-300 bg-white px-3 py-2 text-sm font-medium text-stone-700 hover:border-stone-500">
@@ -1000,9 +1188,9 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
   const shareText = generateShare(data);
 
   return (
-    <div className={`w-full bg-[#f9f5f0] text-stone-800 ${compact ? 'px-3 py-3' : 'px-4 py-4 sm:px-6 sm:py-6'}`}>
-      <div className="mx-auto h-full w-full overflow-visible rounded-[16px] border border-[#eae1d4] bg-[#fdfaf7]">
-        <header className={`border-b border-[#eae1d4] ${compact ? 'px-5 py-3' : 'px-6 py-5 sm:px-8'}`}>
+    <div className={`w-full bg-[#eee6dc] text-stone-800 ${compact ? 'px-3 py-3' : 'px-4 py-4 sm:px-6 sm:py-6'}`}>
+      <div className="mx-auto h-full w-full overflow-hidden rounded-[18px] border border-[#dfd1c1] border-t-4 border-t-[#a8794c] bg-[#fffdf9] shadow-[0_18px_50px_rgba(67,48,29,0.12)]">
+        <header className={`border-b border-[#e8ddd0] bg-gradient-to-r from-[#f3e9dc] via-[#fffaf3] to-[#f3e9dc] ${compact ? 'px-5 py-3' : 'px-6 py-5 sm:px-8'}`}>
           <div className="flex items-center justify-between gap-3">
             <div className="flex items-center gap-3">
               <img src={COMPANY_CONFIG.logo} alt="Travel4life logo" className="h-10 w-10 object-contain" />
@@ -1011,7 +1199,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[9px] font-semibold tracking-[0.16em] text-stone-500">Cash | Card | Bank |</p>
+              <p className="rounded-full border border-[#dfd1c1] bg-white/80 px-3 py-1.5 text-[9px] font-bold tracking-[0.16em] text-[#72543a] shadow-sm">Cash | Card | Bank |</p>
             </div>
           </div>
         </header>
@@ -1025,7 +1213,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
 
           <div className={`flex items-start justify-between gap-4 border-b border-[#eae1d4] ${compact ? 'mb-3 pb-3' : 'mb-7 pb-5'}`}>
             <div>
-              <p className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px]' : 'mb-2 text-[10px]'} tracking-[0.2em]`}>Package proposal</p>
+              <p className={`font-bold uppercase text-[#96724e] ${compact ? 'mb-1 text-[9px]' : 'mb-2 text-[10px]'} tracking-[0.2em]`}>Package proposal</p>
               <h1 className={`max-w-[520px] font-black text-stone-900 ${compact ? 'text-xl' : 'text-3xl sm:text-4xl'} tracking-[-0.05em]`}>{data.packageTitle.toUpperCase()}</h1>
               <div className={`mt-2 flex flex-wrap items-center gap-2 font-semibold uppercase text-stone-500 ${compact ? 'text-[9px]' : 'mt-3 text-[11px]'} tracking-[0.15em]`}>
                 <span>{data.days} DAYS</span>
@@ -1040,11 +1228,11 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </div>
             </div>
             {data.outputFormat === 'multi-page' && (
-              <div className="rounded-full border border-[#eae1d4] bg-[#f3ede5] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-700">MULTI-PAGE</div>
+              <div className="rounded-full border border-[#dfd1c1] bg-[#f3ede5] px-3 py-2 text-[10px] font-semibold uppercase tracking-[0.22em] text-stone-700 shadow-sm">MULTI-PAGE</div>
             )}
           </div>
 
-          <section className={`grid grid-cols-4 border-b border-[#eae1d4] ${compact ? 'mb-3 gap-2 pb-3' : 'mb-8 gap-4 pb-6'}`}>
+          <section className={`grid grid-cols-4 rounded-xl border border-[#e5d8c9] bg-[#f6f0e8] shadow-sm ${compact ? 'mb-3 gap-2 p-3' : 'mb-8 gap-4 p-5'}`}>
             <div>
               <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-stone-500">Destinations</p>
               <p className={`mt-1 font-semibold text-stone-900 ${compact ? 'text-xs' : 'text-base'}`}>{validStays.length ? validStays.map((stay) => stay.city).join(' • ') : 'Curated destinations'}</p>
@@ -1068,7 +1256,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-2 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Stay details</h2>
               <div className={compact ? 'space-y-1.5' : 'space-y-3'}>
                 {validStays.map((stay) => (
-                  <div key={stay.id} className={`rounded-[10px] border border-[#eae1d4] bg-[#f5efe9] ${compact ? 'px-3 py-2' : 'rounded-[14px] px-4 py-3'}`}>
+                  <div key={stay.id} className={`rounded-[10px] border border-[#e5d8c9] bg-gradient-to-br from-[#f8f2ea] to-[#f1e8dd] shadow-sm ${compact ? 'px-3 py-2' : 'rounded-[14px] px-4 py-3'}`}>
                     <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
                       <p className={`font-semibold text-stone-900 ${compact ? 'text-sm' : 'text-lg'}`}>{stay.city}</p>
                       <span className="text-[10px] font-semibold uppercase tracking-[0.2em] text-stone-500">{stay.nights} Nights</span>
@@ -1087,7 +1275,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-2 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Itinerary</h2>
               <div className={compact ? 'space-y-1.5' : 'space-y-4'}>
                 {validItinerary.map((day) => (
-                  <div key={day.id} className={`rounded-[10px] border border-[#eae1d4] bg-white ${compact ? 'p-2' : 'rounded-[14px] p-4'}`}>
+                  <div key={day.id} className={`rounded-[10px] border border-[#e8ddd0] bg-white shadow-sm ${compact ? 'p-2' : 'rounded-[14px] p-4'}`}>
                     <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between ${compact ? 'mb-1 gap-1' : 'mb-2 gap-2'}`}>
                       <p className={`font-semibold uppercase text-stone-500 ${compact ? 'text-[9px] tracking-[0.15em]' : 'text-[10px] tracking-[0.24em]'}`}>{day.title || `DAY ${String(day.day).padStart(2, '0')}`}</p>
                       {day.date && <span className="text-[10px] font-medium uppercase tracking-[0.15em] text-stone-600">{day.date}</span>}
@@ -1135,8 +1323,8 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </div>
             </section>
 
-            <section className={`rounded-[10px] border border-[#eae1d4] bg-[#f5efe9] ${compact ? 'p-2' : 'rounded-[14px] p-4'}`}>
-              <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-2 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Pricing</h2>
+            <section className={`rounded-[10px] border border-[#d8c2a7] bg-gradient-to-br from-[#f3e8da] to-[#eaddce] shadow-sm ${compact ? 'p-2' : 'rounded-[14px] p-4'}`}>
+              <h2 className={`font-semibold uppercase text-[#76583c] ${compact ? 'mb-2 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Pricing</h2>
               <div className={`grid sm:grid-cols-3 ${compact ? 'gap-2' : 'gap-3'}`}>
                 <div>
                   <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-stone-500">Adult</p>
@@ -1156,10 +1344,12 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
             {data.additionalInformation && (
               <section>
                 <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Important information</h2>
-                <div className={`rounded-[10px] border border-[#eae1d4] bg-white text-stone-700 whitespace-pre-wrap ${compact ? 'p-2 text-[10px] leading-[1.35]' : 'rounded-[14px] p-4 text-sm leading-7'}`}>
+                <div className={`rounded-[10px] border border-[#e5d8c9] bg-[#fbf8f3] text-stone-700 whitespace-pre-wrap shadow-sm ${compact ? 'p-2 text-[10px] leading-[1.45]' : 'rounded-[14px] p-4 text-sm leading-7'}`}>
                   {informationLines.map((line, index) => (
                     <React.Fragment key={`${index}-${line}`}>
-                      {['BANK ACCOUNT', 'IFSC', 'ACCOUNT NAME BRANCH'].includes(line.trim()) ? <strong>{line}</strong> : line}
+                      {['BANK ACCOUNT', 'IFSC', 'ACCOUNT NAME BRANCH', 'CANCELLATION POLICY'].includes(line.trim())
+                        ? <strong className={line.trim() === 'CANCELLATION POLICY' ? 'text-[#76583c]' : ''}>{line}</strong>
+                        : line}
                       {index < informationLines.length - 1 && <br />}
                     </React.Fragment>
                   ))}
@@ -1167,7 +1357,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </section>
             )}
 
-            <section className={`rounded-[10px] border border-[#eae1d4] bg-white ${compact ? 'p-2' : 'p-4'}`}>
+            <section className={`rounded-[10px] border border-[#e5d8c9] bg-white shadow-sm ${compact ? 'p-2' : 'p-4'}`}>
               <a href={COMPANY_CONFIG.paymentUrl} target="_blank" rel="noreferrer" className="font-semibold text-stone-900 underline underline-offset-2">
                 Pay by card or UPI
               </a>
@@ -1194,7 +1384,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
           </div>
         </main>
 
-        <footer className={`border-t border-[#eae1d4] bg-[#f3ede5] text-center ${compact ? 'px-5 py-3' : 'px-6 py-5 sm:px-8'}`}>
+        <footer className={`border-t border-[#dfd1c1] bg-gradient-to-b from-[#f3ede5] to-[#ebe0d3] text-center ${compact ? 'px-5 py-3' : 'px-6 py-5 sm:px-8'}`}>
           <div className={`flex justify-center ${compact ? 'mb-1' : 'mb-3'}`}>
             <img src={COMPANY_CONFIG.logo} alt="Travel4life logo" className="h-8 w-8 object-contain" />
           </div>

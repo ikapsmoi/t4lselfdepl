@@ -49,6 +49,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
     : trip.type === 'indian_special'
       ? '/pkg3.png'
       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
+  const tripImage = resolveTripImage(trip.title, trip.destination, trip.type, trip.images, fallbackImage);
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
   const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === trip.difficulty);
   const isAlmostFull = spotsLeft <= 3 && spotsLeft > 0;
@@ -116,10 +117,22 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       >
         <div className="relative h-44 overflow-hidden">
           <img
-            src={trip.images?.[0] || fallbackImage}
+            src={tripImage.src}
             alt={trip.title}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
           />
+          {tripImage.credit && (
+            <a
+              href={tripImage.credit.source}
+              target="_blank"
+              rel="noreferrer"
+              onClick={(event) => event.stopPropagation()}
+              title={`Photo by ${tripImage.credit.artist} · ${tripImage.credit.license}`}
+              className="absolute left-3 top-12 z-10 max-w-[72%] rounded bg-black/60 px-1.5 py-1 text-[8px] leading-tight text-white"
+            >
+              Photo: {tripImage.credit.artist} · {tripImage.credit.license}
+            </a>
+          )}
           {trip.featured && (
             <div className="absolute top-3 left-3 z-10">
               <span className="bg-amber-400 text-amber-900 text-xs font-semibold px-2.5 py-1 rounded-full">Featured</span>
@@ -181,10 +194,22 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       {/* Image takes 65% of card height */}
       <div className="relative h-60 md:h-64 overflow-hidden">
         <img
-          src={trip.images && trip.images.length > 0 ? trip.images[0] : fallbackImage}
+          src={tripImage.src}
           alt={trip.title}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
         />
+        {tripImage.credit && (
+          <a
+            href={tripImage.credit.source}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(event) => event.stopPropagation()}
+            title={`Photo by ${tripImage.credit.artist} · ${tripImage.credit.license}`}
+            className="absolute left-4 top-14 z-10 max-w-[72%] rounded bg-black/60 px-1.5 py-1 text-[8px] leading-tight text-white"
+          >
+            Photo: {tripImage.credit.artist} · {tripImage.credit.license}
+          </a>
+        )}
 
         {/* Subtle gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
@@ -306,3 +331,4 @@ export const TripCard: React.FC<TripCardProps> = memo(({
 });
 
 TripCard.displayName = 'TripCard';
+import { resolveTripImage } from '../../utils/tripImages';
