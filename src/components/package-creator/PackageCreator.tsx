@@ -714,7 +714,7 @@ export const PackageCreator: React.FC = () => {
                 <input
                   type="number"
                   min={0}
-                  value={packageData.infantPrice}
+                  value={packageData.infantPrice || ''}
                   onChange={(event) => updateField('infantPrice', Number(event.target.value) || 0)}
                   className="w-full rounded-2xl border border-stone-300 bg-stone-50 px-3 py-3 text-stone-900 outline-none focus:border-stone-500"
                 />
@@ -808,7 +808,7 @@ export const PackageCreator: React.FC = () => {
                 onChange={(event) => updateField('showItinerary', event.target.checked)}
                 className="h-4 w-4 rounded border-stone-300 accent-stone-900"
               />
-              Include day-by-day itinerary in the package
+              Show day-by-day itinerary in the package
             </label>
 
             {packageData.showItinerary !== false && validation.itinerary && <p className="mb-3 text-xs text-red-600">{validation.itinerary}</p>}
@@ -994,6 +994,8 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
   const validIncludes = data.inclusions.filter((item) => item.value.trim());
   const validExclusions = data.exclusions.filter((item) => item.value.trim());
   const validItinerary = data.itinerary.filter((day) => day.title || day.description || day.city || day.date);
+  const galleryImages = (data.galleryImages || []).slice(0, 6);
+  const additionalGalleryImageCount = (data.galleryImages || []).length - galleryImages.length;
   const informationLines = data.additionalInformation.split('\n');
   const shareText = generateShare(data);
 
@@ -1009,7 +1011,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </div>
             </div>
             <div className="text-right">
-              <p className="text-[9px] font-semibold uppercase tracking-[0.28em] text-stone-500">{data.template}</p>
+              <p className="text-[9px] font-semibold tracking-[0.16em] text-stone-500">Cash | Card | Bank |</p>
             </div>
           </div>
         </header>
@@ -1146,7 +1148,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
                 </div>
                 <div>
                   <p className="text-[9px] font-semibold uppercase tracking-[0.15em] text-stone-500">Infant</p>
-                  <p className={`mt-1 font-bold text-stone-900 ${compact ? 'text-base' : 'text-2xl'}`}>{data.infantPrice ? formatAmount(data.infantPrice, data.currency) : '—'}</p>
+                  <p className={`mt-1 font-bold text-stone-900 ${compact ? 'text-base' : 'text-2xl'}`}>{data.infantPrice > 0 ? formatAmount(data.infantPrice, data.currency) : ''}</p>
                 </div>
               </div>
             </section>
@@ -1165,23 +1167,30 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </section>
             )}
 
-            {(data.galleryImages || []).length > 0 && (
-              <section>
-                <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Package photos</h2>
-                <div className={compact ? 'space-y-2' : 'space-y-4'}>
-                  {(data.galleryImages || []).map((image, index) => (
-                    <img key={`${index}-${image.slice(0, 24)}`} src={image} alt={`${data.packageTitle} photo ${index + 1}`} className={`mx-auto block h-auto w-auto max-w-full rounded-[10px] border border-[#eae1d4] bg-white object-contain ${compact ? 'max-h-48' : 'max-h-[420px]'}`} />
-                  ))}
-                </div>
-              </section>
-            )}
-
             <section className={`rounded-[10px] border border-[#eae1d4] bg-white ${compact ? 'p-2' : 'p-4'}`}>
               <a href={COMPANY_CONFIG.paymentUrl} target="_blank" rel="noreferrer" className="font-semibold text-stone-900 underline underline-offset-2">
                 Pay by card or UPI
               </a>
               <p className="mt-1 break-all text-xs text-stone-600">{COMPANY_CONFIG.paymentUrl}</p>
             </section>
+
+            {galleryImages.length > 0 && (
+              <section>
+                <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Package photos</h2>
+                <div className={`grid max-w-md grid-cols-3 ${compact ? 'gap-1.5' : 'gap-2'}`}>
+                  {galleryImages.map((image, index) => (
+                    <div key={`${index}-${image.slice(0, 24)}`} className="relative aspect-[4/3] overflow-hidden rounded-[8px] border border-[#eae1d4] bg-white">
+                      <img src={image} alt={`${data.packageTitle} photo ${index + 1}`} className="h-full w-full object-cover" />
+                      {index === galleryImages.length - 1 && additionalGalleryImageCount > 0 && (
+                        <div className="absolute inset-0 flex items-center justify-center bg-stone-900/60 text-sm font-semibold text-white">
+                          +{additionalGalleryImageCount} more
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </main>
 
@@ -1193,9 +1202,13 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
           <div className={`space-y-1 text-stone-600 ${compact ? 'mt-1 text-[10px]' : 'mt-3 text-sm'}`}>
             <p>{COMPANY_CONFIG.websiteDisplay}</p>
             <p>{COMPANY_CONFIG.whatsapp}</p>
-            <p><strong>GST:</strong> <strong>{COMPANY_CONFIG.gst}</strong></p>
-            <p><strong>Corporate Office:</strong> {COMPANY_CONFIG.corporateOffice}</p>
-            <p><strong>Email:</strong> <strong>{COMPANY_CONFIG.email}</strong></p>
+            <div className="flex flex-wrap justify-center gap-x-2">
+              <span><strong>GST:</strong> <strong>{COMPANY_CONFIG.gst}</strong></span>
+              <span aria-hidden="true">|</span>
+              <span><strong>Corporate Office:</strong> {COMPANY_CONFIG.corporateOffice}</span>
+              <span aria-hidden="true">|</span>
+              <span><strong>Email:</strong> <strong>{COMPANY_CONFIG.email}</strong></span>
+            </div>
           </div>
           <p className={`uppercase text-stone-500 ${compact ? 'mt-2 text-[8px] tracking-[0.15em]' : 'mt-4 text-[10px] tracking-[0.25em]'}`}>Premium travel proposal</p>
           {!compact && <p className="mt-2 text-[10px] uppercase tracking-[0.2em] text-stone-400">{shareText}</p>}

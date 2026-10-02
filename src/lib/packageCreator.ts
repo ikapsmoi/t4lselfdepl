@@ -155,7 +155,7 @@ export const getDemoPackageData = (): PackageCreatorData => ({
   nights: 6,
   currency: 'INR',
   adultPrice: 149999,
-  childPrice: 99999,
+  childPrice: 0,
   infantPrice: 0,
   template: 'TRAVEL4LIFE EDITORIAL',
   outputFormat: 'single',
