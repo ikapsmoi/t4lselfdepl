@@ -7,6 +7,7 @@ import {
   CheckCircle2,
   Copy,
   Download,
+  FileText,
   Mail,
   Plus,
   Printer,
@@ -38,6 +39,7 @@ import {
 import { resolveTripImage } from '../../utils/tripImages';
 import { cleanTripTitle } from '../../utils/formatters';
 import { DEFAULT_TRIP_EXCLUSIONS, DEFAULT_TRIP_INCLUSIONS } from '../../utils/constants';
+import { InvoiceModal } from '../trips/InvoiceModal';
 
 type ValidationErrors = Partial<Record<string, string>>;
 
@@ -211,6 +213,7 @@ export const PackageCreator: React.FC = () => {
   const [packageData, setPackageData] = useState<PackageCreatorData>(() => cloneData(getDemoPackageData()));
   const [tours, setTours] = useState<PackageTourRecord[]>([]);
   const [selectedTourId, setSelectedTourId] = useState('');
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [toursLoading, setToursLoading] = useState(true);
   const [toursError, setToursError] = useState('');
   const [validation, setValidation] = useState<ValidationErrors>({});
@@ -219,6 +222,18 @@ export const PackageCreator: React.FC = () => {
   const generatedImageDataRef = useRef<PackageCreatorData | null>(null);
   const previewRef = useRef<HTMLDivElement>(null);
   const exportRef = useRef<HTMLDivElement>(null);
+  const selectedTour = useMemo(
+    () => tours.find((tour) => tour.id === selectedTourId),
+    [selectedTourId, tours]
+  );
+  const invoiceCurrencySymbol = useMemo(
+    () => new Intl.NumberFormat('en', {
+      style: 'currency',
+      currency: packageData.currency,
+      currencyDisplay: 'narrowSymbol',
+    }).formatToParts(0).find((part) => part.type === 'currency')?.value || packageData.currency,
+    [packageData.currency]
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -662,6 +677,14 @@ export const PackageCreator: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => setShowInvoiceModal(true)}
+            className="inline-flex items-center gap-2 rounded-full border border-stone-300 bg-white px-4 py-2 text-sm font-medium text-stone-700 transition hover:border-stone-500 hover:text-stone-900"
+          >
+            <FileText className="h-4 w-4" />
+            Create Invoice
+          </button>
           <button
             type="button"
             onClick={handleSavePackage}
@@ -1175,6 +1198,21 @@ export const PackageCreator: React.FC = () => {
           )}
         </aside>
       </div>
+      <InvoiceModal
+        isOpen={showInvoiceModal}
+        onClose={() => setShowInvoiceModal(false)}
+        packageDetails={{
+          id: packageData.packageReference || 'PACKAGE',
+          title: packageData.packageTitle,
+          destination: packageData.stays.map((stay) => stay.city).filter(Boolean).join(' / ') || 'To be confirmed',
+          duration: packageData.days,
+          startDate: selectedTour?.start_date || 'To be confirmed',
+          endDate: selectedTour?.end_date || 'To be confirmed',
+          adultPrice: packageData.adultPrice,
+          childPrice: packageData.childPrice,
+          currencySymbol: invoiceCurrencySymbol,
+        }}
+      />
     </div>
   );
 };
