@@ -37,6 +37,7 @@ import {
 } from '../../lib/packageCreator';
 import { resolveTripImage } from '../../utils/tripImages';
 import { cleanTripTitle } from '../../utils/formatters';
+import { DEFAULT_TRIP_EXCLUSIONS, DEFAULT_TRIP_INCLUSIONS } from '../../utils/constants';
 
 type ValidationErrors = Partial<Record<string, string>>;
 
@@ -112,6 +113,10 @@ const packageDataFromTour = (tour: PackageTourRecord): PackageCreatorData => {
   const description = typeof itinerary.description === 'string' ? itinerary.description.trim() : '';
   const defaultData = getDemoPackageData();
   const festivalTemplate = tour.category.toLowerCase().includes('festival');
+  const tripInclusions = asStringArray(itinerary.included);
+  const tripExclusions = asStringArray(itinerary.notIncluded).length
+    ? asStringArray(itinerary.notIncluded)
+    : asStringArray(itinerary.not_included);
 
   return {
     ...defaultData,
@@ -123,8 +128,10 @@ const packageDataFromTour = (tour: PackageTourRecord): PackageCreatorData => {
     adultPrice: Number(tour.price_per_person) || 0,
     template: festivalTemplate ? 'TRAVEL4LIFE FESTIVAL' : defaultData.template,
     stays,
-    inclusions: asStringArray(itinerary.included).map((value) => ({ id: createId(), value })),
-    exclusions: asStringArray(itinerary.notIncluded || itinerary.not_included).map((value) => ({ id: createId(), value })),
+    inclusions: (tripInclusions.length ? tripInclusions : DEFAULT_TRIP_INCLUSIONS).map((value) => ({ id: createId(), value })),
+    exclusions: (tripExclusions.length ? tripExclusions : DEFAULT_TRIP_EXCLUSIONS)
+      .filter((value) => tour.category !== 'indian_special' || (value !== 'City tax if applicable.' && value !== 'Visa fees not included.'))
+      .map((value) => ({ id: createId(), value })),
     additionalInformation: [description, defaultData.additionalInformation].filter(Boolean).join('\n\n'),
     itinerary: dayRecords,
     showItinerary: dayRecords.length > 0,
@@ -1299,7 +1306,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
 
             <section className={`grid md:grid-cols-2 ${compact ? 'gap-3' : 'gap-6'}`}>
               <div>
-                <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Package includes</h2>
+                <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>What's included</h2>
                 <ul className={`text-stone-700 ${compact ? 'space-y-0.5 text-[10px]' : 'space-y-2 text-sm'}`}>
                   {validIncludes.map((item) => (
                     <li key={item.id} className="flex gap-2">
@@ -1311,7 +1318,7 @@ const PackageDocument: React.FC<PackageDocumentProps> = ({ data, compact = false
               </div>
 
               <div>
-                <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Package excludes</h2>
+                <h2 className={`font-semibold uppercase text-stone-500 ${compact ? 'mb-1 text-[9px] tracking-[0.2em]' : 'mb-4 text-[11px] tracking-[0.32em]'}`}>Not included</h2>
                 <ul className={`text-stone-700 ${compact ? 'space-y-0.5 text-[10px]' : 'space-y-2 text-sm'}`}>
                   {validExclusions.map((item) => (
                     <li key={item.id} className="flex gap-2">
