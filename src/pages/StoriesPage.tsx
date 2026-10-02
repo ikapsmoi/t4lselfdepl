@@ -206,7 +206,7 @@ function StoryDetail({ story, onBack }: { story: Story; onBack: () => void }) {
           <p className="mt-8 text-sm text-gray-600">
             Planning from India? Read our{' '}
             <a
-              href="/tomorrowland-india.html"
+              href="/tomorrowland/from-india/"
               className="font-semibold text-sky-700 hover:text-sky-900 underline"
             >
               Tomorrowland travel guide for Indian travelers

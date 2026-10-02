@@ -1,0 +1,139 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-02",
+  "evidence": {
+    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-09-23",
+    "finding": "No Tomorrowland query rows were present in Queries.csv and no Tomorrowland landing-page rows were present in Pages.csv in the supplied export.",
+    "limitation": "The supplied CSV export does not establish demand, rankings, or query volume for Tomorrowland topics. Treat the mapped query families as intent hypotheses, not measured opportunities.",
+    "originCityDecision": "Do not publish Delhi, Mumbai, Bengaluru, or other origin-city landing pages without query evidence and genuinely differentiated departure or product information."
+  },
+  "owners": [
+    {
+      "url": "/tomorrowland/",
+      "file": "tomorrowland/index.html",
+      "schemaType": "CollectionPage",
+      "intent": "India-first discovery and overview",
+      "primaryQuery": "Tomorrowland packages from India",
+      "relatedQueries": ["Tomorrowland India travel", "Tomorrowland trip from India", "Tomorrowland destinations"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/welcome/"]
+    },
+    {
+      "url": "/tomorrowland/belgium/",
+      "file": "tomorrowland/belgium/index.html",
+      "schemaType": "Article",
+      "intent": "Belgium destination and travel planning",
+      "primaryQuery": "Tomorrowland Belgium from India",
+      "relatedQueries": ["Tomorrowland Belgium travel guide", "Boom Belgium Tomorrowland travel", "Tomorrowland Belgium tickets and travel"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://belgium.tomorrowland.com/en/sales-info/"]
+    },
+    {
+      "url": "/tomorrowland/belgium/packages/",
+      "file": "tomorrowland/belgium/packages/index.html",
+      "schemaType": "WebPage",
+      "intent": "Commercial investigation and package due diligence",
+      "primaryQuery": "Tomorrowland Belgium travel package from India",
+      "relatedQueries": ["Tomorrowland Belgium package inclusions", "Tomorrowland Belgium group trip", "Tomorrowland package booking checklist"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/sales-info/"]
+    },
+    {
+      "url": "/tomorrowland/winter/",
+      "file": "tomorrowland/winter/index.html",
+      "schemaType": "Article",
+      "intent": "Winter destination and Alps travel planning",
+      "primaryQuery": "Tomorrowland Winter from India",
+      "relatedQueries": ["Tomorrowland Winter travel guide", "Alpe d'Huez festival travel", "Tomorrowland Winter ticket inclusions"],
+      "officialSources": ["https://winter.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/tickets/festival-ticket"]
+    },
+    {
+      "url": "/tomorrowland/thailand/",
+      "file": "tomorrowland/thailand/index.html",
+      "schemaType": "Article",
+      "intent": "Thailand destination and festival travel planning",
+      "primaryQuery": "Tomorrowland Thailand from India",
+      "relatedQueries": ["Tomorrowland Thailand travel guide", "Tomorrowland Thailand pass types", "Thailand festival hotel travel"],
+      "officialSources": ["https://thailand.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/passes-packages/festival-passes", "https://thailand.tomorrowland.com/en/passes-packages/hotel-packages"]
+    },
+    {
+      "url": "/tomorrowland/cost-from-india/",
+      "file": "tomorrowland/cost-from-india/index.html",
+      "schemaType": "Article",
+      "intent": "Cost research and budget methodology",
+      "primaryQuery": "Tomorrowland trip cost from India",
+      "relatedQueries": ["Tomorrowland India trip budget", "Tomorrowland travel cost breakdown", "festival package versus separate costs"],
+      "officialSources": []
+    },
+    {
+      "url": "/tomorrowland/from-india/",
+      "file": "tomorrowland/from-india/index.html",
+      "schemaType": "Article",
+      "intent": "India departure logistics and trip planning",
+      "primaryQuery": "How to go to Tomorrowland from India",
+      "relatedQueries": ["Tomorrowland travel from India", "India to Tomorrowland trip planning", "Tomorrowland international travel checklist"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/practical/", "https://winter.tomorrowland.com/en/practical/"]
+    },
+    {
+      "url": "/tomorrowland/compare/",
+      "file": "tomorrowland/compare/index.html",
+      "schemaType": "Article",
+      "intent": "Destination comparison",
+      "primaryQuery": "Tomorrowland Belgium vs Winter vs Thailand",
+      "relatedQueries": ["Tomorrowland destinations compared", "Belgium or Winter Tomorrowland", "Tomorrowland destination choice"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/welcome/"]
+    },
+    {
+      "url": "/tomorrowland/accommodation/",
+      "file": "tomorrowland/accommodation/index.html",
+      "schemaType": "Article",
+      "intent": "Accommodation and stay planning",
+      "primaryQuery": "Tomorrowland accommodation planning",
+      "relatedQueries": ["Tomorrowland stay and transport", "DreamVille accommodation planning", "Tomorrowland hotel package checklist"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/tickets"]
+    },
+    {
+      "url": "/tomorrowland/group-travel/",
+      "file": "tomorrowland/group-travel/index.html",
+      "schemaType": "Article",
+      "intent": "Group coordination and shared travel",
+      "primaryQuery": "Tomorrowland group travel from India",
+      "relatedQueries": ["Tomorrowland group trip planning", "festival group travel checklist", "Tomorrowland travel group coordination"],
+      "officialSources": []
+    },
+    {
+      "url": "/tomorrowland/flights-from-india/",
+      "file": "tomorrowland/flights-from-india/index.html",
+      "schemaType": "Article",
+      "intent": "Flight planning and routing",
+      "primaryQuery": "Flights from India to Tomorrowland",
+      "relatedQueries": ["India to Boom Belgium flights", "India to Alpe d'Huez travel", "India to Thailand festival flights"],
+      "officialSources": []
+    },
+    {
+      "url": "/tomorrowland/visa-documents/",
+      "file": "tomorrowland/visa-documents/index.html",
+      "schemaType": "Article",
+      "intent": "Visa and travel-document preparation",
+      "primaryQuery": "Tomorrowland visa and documents for Indians",
+      "relatedQueries": ["Belgium travel documents from India", "festival travel insurance checklist", "Tomorrowland passport checklist"],
+      "officialSources": ["https://www.mea.gov.in/"]
+    },
+    {
+      "url": "/tomorrowland/package-vs-independent/",
+      "file": "tomorrowland/package-vs-independent/index.html",
+      "schemaType": "Article",
+      "intent": "Package-versus-independent decision support",
+      "primaryQuery": "Tomorrowland package vs independent travel",
+      "relatedQueries": ["Tomorrowland group package comparison", "festival package inclusions checklist", "independent Tomorrowland trip planning"],
+      "officialSources": []
+    }
+  ],
+  "excludedIntents": [
+    {
+      "intent": "Tomorrowland travel from a specific Indian city",
+      "decision": "No city landing pages until Search Console evidence and distinct current route or product data justify them."
+    },
+    {
+      "intent": "Tomorrowland 2027 Winter ticket prices and edition dates",
+      "decision": "No separate edition page until the official source exposes verifiable edition-specific details; consolidate to the evergreen Winter guide."
+    }
+  ]
+}

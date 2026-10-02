@@ -1,168 +1,132 @@
 # Travel4life Tomorrowland SEO Architecture
 
-## Scope and guardrails
+## Purpose and guardrails
 
-This implementation improves crawlable Tomorrowland coverage for Indian travellers without claiming official Tomorrowland status, partnership, ticket availability, or rankings. Travel4life is represented as a travel and group-trip provider; Tomorrowland remains the independent festival brand.
+This is an independent, India-focused travel-planning cluster. Travel4life is not presented as the festival organiser, an authorised ticket seller, or an official partner. Editorial pages do not promise rankings, invent product inventory, or publish unverified ticket prices, event dates, review scores, or availability.
 
-The local repository did not expose `VITE_SUPABASE_URL` or `VITE_SUPABASE_ANON_KEY`, so no live Tomorrowland product could be verified. No fictional product, price, Offer, review, scarcity signal, or availability statement was created.
+Reviewed on **2 October 2026**. The supplied Search Console export is labelled `travel4life.net-Performance-on-Search-2026-09-23`. No Tomorrowland query row appeared in `Queries.csv`, and no Tomorrowland landing-page row appeared in `Pages.csv`. These exports therefore do not establish Tomorrowland demand or validate a city-specific page opportunity.
 
-## A. Website architecture
+## URL ownership
 
-### Before
+One primary search-intent owner is recorded per indexable page in [`public/tomorrowland/search-intent-map.json`](../public/tomorrowland/search-intent-map.json). Its query families are editorial hypotheses, not Search Console volume or ranking data.
 
-- Vite + React 18 client-rendered application.
-- Manual hash routing in `src/App.tsx`.
-- Crawlable product path: `/trips/:id`, backed by active Supabase records.
-- Static Tomorrowland editorial page: `/tomorrowland-india.html`.
-- Hash pages receive shared metadata and are intentionally not treated as separate indexable documents.
-- Static and product sitemap index already existed.
-
-### After
-
-- Added static, crawlable Tomorrowland hub and guide routes under `/tomorrowland/`.
-- Added a native Stories-page planning strip linking to comparison, accommodation, group, flights, documents and package-choice guides.
-- Added a factual Winter 2027 edition page because the official source publishes that edition; speculative edition pages remain excluded.
-- Added shared static presentation in `/tomorrowland-seo.css`.
-- Added visible breadcrumbs and BreadcrumbList JSON-LD to each POC page.
-- Added a controlled Belgium package-enquiry page that does not pretend to be a live product.
-- Added the `/trips` pathname mapping so existing product breadcrumbs resolve to `TripsPage`.
-- Added `npm run seo:validate` for metadata, canonical, H1, JSON-LD, sitemap and internal-link checks.
-
-## B. Tomorrowland URL map
-
-| URL | Purpose | Indexability |
+| Canonical URL | Search intent owner | Status |
 | --- | --- | --- |
-| `/tomorrowland/` | India master hub | Indexable |
-| `/tomorrowland/belgium/` | Belgium authority guide | Indexable |
-| `/tomorrowland/belgium/packages/` | Package enquiry and product-readiness guide | Indexable, not a live offer |
-| `/tomorrowland/winter/` | Winter authority guide | Indexable |
-| `/tomorrowland/thailand/` | Thailand authority guide | Indexable |
-| `/tomorrowland/cost-from-india/` | Cost methodology guide | Indexable |
-| `/tomorrowland/from-india/` | India travel logistics guide | Indexable |
-| `/tomorrowland/compare/` | Belgium vs Winter vs Thailand comparison | Indexable |
-| `/tomorrowland/accommodation/` | Accommodation guide | Indexable |
-| `/tomorrowland/group-travel/` | Group travel guide | Indexable |
-| `/tomorrowland/flights-from-india/` | India flight planning guide | Indexable |
-| `/tomorrowland/visa-documents/` | Visa and document planning guide | Indexable |
-| `/tomorrowland/package-vs-independent/` | Package comparison guide | Indexable |
-| `/tomorrowland/winter/2027/` | Officially published edition context | Indexable |
-| `/tomorrowland-india.html` | Existing editorial guide | Indexable |
-| `/trips/:id` | Existing active product route | Indexable only when active and quality-gated |
+| `/tomorrowland/` | Broad India-first discovery and destination selection | Indexable hub |
+| `/tomorrowland/belgium/` | Belgium destination planning from India | Indexable guide |
+| `/tomorrowland/belgium/packages/` | Package enquiry and due-diligence checklist | Indexable; not a live offer |
+| `/tomorrowland/winter/` | Winter destination and Alps travel planning | Indexable evergreen guide |
+| `/tomorrowland/thailand/` | Thailand destination and travel planning | Indexable guide; official site currently describes the 2026 edition |
+| `/tomorrowland/cost-from-india/` | Cost methodology and budget research | Indexable guide; no fixed quote |
+| `/tomorrowland/from-india/` | India departure logistics and trip planning | Indexable guide |
+| `/tomorrowland/compare/` | Destination comparison | Indexable guide |
+| `/tomorrowland/accommodation/` | Accommodation and stay planning | Indexable guide |
+| `/tomorrowland/group-travel/` | Group coordination | Indexable guide |
+| `/tomorrowland/flights-from-india/` | Flight and routing research | Indexable guide |
+| `/tomorrowland/visa-documents/` | Document preparation | Indexable checklist, not legal advice |
+| `/tomorrowland/package-vs-independent/` | Package-versus-independent planning | Indexable guide |
 
-Future product URLs should remain `/trips/:id` until the database has a trustworthy persisted slug field and migration plan.
+### Consolidated URLs
 
-## C. Search-intent matrix
+- `/tomorrowland-india.html` permanently redirects to `/tomorrowland/from-india/`.
+- `/tomorrowland/winter/2027/` permanently redirects to `/tomorrowland/winter/`. The year-specific page was consolidated because the current official page response available for review did not expose verifiable edition dates or prices.
+- Both legacy documents remain minimal `noindex` fallbacks for hosts that do not process the repository's Netlify `_redirects` file. They use the destination canonical and redirect the browser.
+- Neither redirected URL appears in the static sitemap or internal editorial links.
 
-| Query family | Intent | Current page | Priority |
-| --- | --- | --- | --- |
-| Tomorrowland India, Tomorrowland package India | Broad/commercial | `/tomorrowland/` | High |
-| Tomorrowland Belgium package India, travel from India | Destination/commercial | `/tomorrowland/belgium/` | High |
-| Tomorrowland Winter package India | Destination/commercial | `/tomorrowland/winter/` | High |
-| Tomorrowland Thailand package India | Destination/commercial | `/tomorrowland/thailand/` | High |
-| Tomorrowland cost from India, trip cost | Cost research | `/tomorrowland/cost-from-india/` | High |
-| How to go to Tomorrowland from India | Travel research | `/tomorrowland/from-india/` | High |
-| Tomorrowland Belgium package details | Product/enquiry | `/tomorrowland/belgium/packages/` plus verified `/trips/:id` products | High |
-| Tomorrowland from Mumbai/Delhi/Bengaluru | Origin research | Not yet published; create only with differentiated flight and product data | Medium |
-| Tomorrowland Belgium 2027 package | Edition/product | Requires a real active edition/product record | High when inventory exists |
-| Belgium vs Winter vs Thailand | Comparison | Not yet published | Medium |
+Do not publish Indian origin-city pages (Delhi, Mumbai, Bengaluru, or others) without Search Console evidence and distinct, current route or product information. A city name alone is not a meaningful page distinction.
 
-## D. Product SEO matrix
+## Current official-source review
 
-No Tomorrowland product record was verified locally. The existing product engine remains the correct implementation surface:
+Official source pages were checked on 2 October 2026:
 
-- URL: `/trips/:id`
-- Title: generated from the real trip title
-- H1: generated from the real trip title
-- Schema: `Product`, `Offer`, `BreadcrumbList`, related `ItemList`
-- Canonical: `https://travel4life.net/trips/<id>`
-- Indexability: active, quality-gated records only
-- Required next improvement: add festival/destination/edition fields to the real product schema when those fields exist in the database
+- [Tomorrowland Belgium welcome](https://belgium.tomorrowland.com/en/welcome/) and [sales information](https://belgium.tomorrowland.com/en/sales-info/). The accessible sales page says sale timing and offered pass/package types depend on the sale. No stable price was verified.
+- [Tomorrowland Winter welcome](https://winter.tomorrowland.com/en/welcome/) and [festival-ticket information](https://winter.tomorrowland.com/en/tickets/festival-ticket). The accessible ticket page describes regular and Comfort tickets and says the Comfort Festival Ticket includes general access and a lift and ski pass. No current edition dates or prices were verified from the pages retrieved.
+- [Tomorrowland Thailand welcome](https://thailand.tomorrowland.com/en/welcome/) describes the announced 2026 event at Wisdom Valley. The [festival-pass page](https://thailand.tomorrowland.com/en/passes-packages/festival-passes) exposes pass information but did not provide verifiable numeric prices or sales status in the retrieved content. The [hotel-package page](https://thailand.tomorrowland.com/en/passes-packages/hotel-packages) is linked for current package terms.
 
-The Belgium package page intentionally links to the product flow without inventing a product.
+Accordingly, the Belgium, Winter and Thailand guides link to official sources and tell readers to re-check current edition and sale information. Unverified 2026 Thailand prices/sold-out status and 2027 Winter dates/prices were removed. No source-free “current” price, currency conversion, or inventory claim should be reintroduced.
 
-## E. Content cluster map
+## Forty-point implementation and coverage checklist
+
+This checklist describes the implemented page system and its limits; it is not a claim that every search query is already ranking.
+
+| # | Area | Result |
+| ---: | --- | --- |
+| 1 | India-first Tomorrowland hub | Implemented |
+| 2 | Belgium travel guide | Implemented; no unverified edition pricing |
+| 3 | Winter travel guide | Implemented as evergreen; edition data deferred |
+| 4 | Thailand travel guide | Implemented; links to current official pass/package pages |
+| 5 | India trip-cost methodology | Implemented as components, not a fabricated quote |
+| 6 | India travel-planning guide | Implemented |
+| 7 | Flight-planning guide | Implemented; no invented routes or fares |
+| 8 | Visa/document checklist | Implemented; directs travellers to official authorities |
+| 9 | Accommodation guide | Implemented as a due-diligence checklist |
+| 10 | Group-travel guide | Implemented |
+| 11 | Destination comparison | Implemented; readers are sent to official destination sources |
+| 12 | Package-versus-independent decision support | Implemented |
+| 13 | Belgium package enquiry checklist | Implemented; clearly not a live offer |
+| 14 | One primary intent owner per page | Recorded in the machine-readable intent map |
+| 15 | Related query families | Recorded as hypotheses without volume claims |
+| 16 | URL-to-canonical consistency | Enforced by `npm run seo:validate` |
+| 17 | Duplicate India-guide consolidation | `/tomorrowland-india.html` redirects to `/from-india/` |
+| 18 | Year-specific Winter consolidation | Unverified `/winter/2027/` redirects to `/winter/` |
+| 19 | Origin-city landing pages | Deliberately not created; no GSC evidence or differentiated route data |
+| 20 | Search Console query evidence | Supplied exports contain no matching Tomorrowland rows |
+| 21 | Search volume and ranking statements | None invented or inferred from missing rows |
+| 22 | Ticket prices | Unverified amounts removed; official sale links provided |
+| 23 | Ticket availability and sold-out claims | Unverified statements removed |
+| 24 | Edition dates | Not asserted where the current official source could not verify them |
+| 25 | Package prices and live inventory | Not invented; requires a real, active product record |
+| 26 | Official partnership and reseller claims | Explicitly disclaimed; no affiliation claimed |
+| 27 | Scarcity and countdowns | Not used |
+| 28 | Editorial reviews and ratings | No fabricated review/rating structured data |
+| 29 | Event, Offer and Product schema on guides | Excluded from editorial pages |
+| 30 | Visible content and schema type | Checked against the mapped Article/WebPage/CollectionPage type |
+| 31 | Unique title and description | Validated for all mapped routes |
+| 32 | One H1 and content depth | Validated; minimum 150 visible words per mapped route |
+| 33 | Open Graph social card | Uses a first-party, original 1200×630 PNG with alt text |
+| 34 | Twitter large-image metadata | Uses the same first-party image; unverified account handles removed from root metadata |
+| 35 | Festival-photo rights | No unverified Tomorrowland event photo is used by the editorial social cards |
+| 36 | Image attribution status | The new planning illustration is original; no external photo attribution is implied |
+| 37 | Static sitemap ownership | Includes the canonical guide routes; excludes redirects |
+| 38 | Sitemap index and robots discovery | Sitemap index points to static/product sitemaps; `robots.txt` references the index |
+| 39 | Internal route/link integrity | Checked by `npm run seo:validate` |
+| 40 | Product rendering and live SEO evidence | Not fully verified: product metadata is set client-side and requires production-like rendering checks |
+
+## Internal topical-readiness scorecard
+
+The score is an internal implementation heuristic only. It is not a Google metric, ranking estimate, traffic forecast, or quality rating by a search engine. Scale: **0** = missing; **1** = partial or externally unverifiable; **2** = implemented and locally verifiable.
+
+| Dimension | Score / 2 | Evidence and remaining work |
+| --- | ---: | --- |
+| Query ownership and page separation | 2 | Thirteen canonical editorial routes have distinct primary intents in the JSON map. |
+| Topic coverage for India-first planning | 2 | Destination, cost, logistics, flights, documents, accommodation, group and package-choice guides exist. |
+| Cannibalisation and redirects | 2 | Duplicate India URL and unverified year route are consolidated and excluded from the sitemap. |
+| Static technical SEO | 2 | Automated checks cover canonical, metadata, content, schema, image metadata, links and sitemap membership. |
+| Claim/source freshness | 1 | Current official links are present; dynamic sales details cannot be verified from the retrieved official pages. |
+| Search Console demand validation | 1 | The supplied export has no Tomorrowland rows; no demand conclusion can be drawn. |
+| Live Tomorrowland product evidence | 1 | No active Tomorrowland product could be verified from local data without production Supabase access. |
+| Brand and structured-data integrity | 2 | Editorial pages avoid unsupported Product/Offer/Event/Review markup and disavow official affiliation. |
+| Image and social sharing readiness | 2 | Original first-party PNG, Open Graph dimensions/alt text and matching Twitter card metadata are checked locally. |
+| Production rendering and monitoring | 1 | Static build/preview can be checked locally; production redirect behavior, product rendering and Search Console coverage remain deployment checks. |
+| **Total** | **16 / 20** | **Internal implementation-readiness score only; not a ranking signal.** |
+
+## Technical and product SEO boundaries
+
+- `public/sitemap.xml` is the index; `public/sitemap-static.xml` contains editorial canonicals; `public/sitemap-products.xml` is produced from quality-gated active trip records.
+- `scripts/seo-validate.mjs` does not read environment files or require Supabase credentials. `npm run seo:sitemap` and `npm run seo:audit` do require production Supabase settings and were not run.
+- No Tomorrowland database product was verified in this task. Do not add a product CTA that implies availability until an active record's dates, price, destination, inclusions and status have been checked.
+- `TripSeoPage` currently fetches trip data in the browser and updates title, canonical and JSON-LD after the request. Search engines that do not execute the application may see only the SPA shell's initial metadata. Pre-rendering or server rendering real active product details remains a separate deployment/data task.
+- The repository's `_redirects` rules provide HTTP 301s on hosts that support the Netlify format. Verify production status codes and canonical selection after deployment.
+
+## Validation
+
+Run:
 
 ```text
-Tomorrowland India hub
-├── Belgium guide
-│   └── Belgium package enquiry
-├── Winter guide
-│   └── Winter 2027 edition context
-├── Thailand guide
-├── Cost from India guide
-├── Travel from India guide
-├── Belgium vs Winter vs Thailand comparison
-├── Accommodation guide
-├── Group travel guide
-├── Flights from India guide
-├── Visa and document guide
-└── Package versus independent guide
-    └── Existing Tomorrowland India editorial guide
-    └── Verified active Travel4life product pages when available
+npm run seo:validate
+npm run build
 ```
 
-## F. Technical SEO report
+The validator checks all thirteen map-owned editorial documents, unique metadata, canonical and robots directives, minimum visible text, JSON-LD parsing/types, official-source links declared by the intent map, social image and alt metadata, local routes, redirects, sitemap index references and static sitemap membership.
 
-| Area | Before | After |
-| --- | --- | --- |
-| Crawlable Tomorrowland hubs | One static guide | Seven new static POC pages plus existing guide |
-| Metadata | Existing guide and client product metadata | Unique title, description, OG and canonical on each POC |
-| Canonicals | Existing static/product controls | Added explicit canonical for every POC |
-| Structured data | Article on existing guide; Product engine | Added Article/WebPage and BreadcrumbList JSON-LD to POCs |
-| Sitemap | Static guide plus products | Added seven POC routes to static sitemap |
-| Routing | `/trips` breadcrumb target fell back to home | `/trips` and `/trips/` render the Trips page |
-| Automated SEO checks | No dedicated POC validator | `npm run seo:validate` |
-| Rendering | Main app remains CSR | SEO POCs are static HTML and do not depend on React hydration |
-
-Remaining technical risks include client-rendered product metadata, SPA fallback behavior on non-Netlify hosts, and the lack of a deployment-time sitemap generation step.
-
-## G. Structured data report
-
-- `CollectionPage`: Tomorrowland master hub.
-- `Article`: Belgium, Winter, Thailand, cost and India travel guides.
-- `WebPage`: Belgium package-enquiry page.
-- `BreadcrumbList`: every new POC page.
-- Existing `Organization`/`TravelAgency` and `WebSite`: root `index.html`.
-- Existing `Product`/`Offer`/`ItemList`: verified active trip pages only.
-- No `Event` schema was added because Travel4life is not the organiser and no specific event product was verified.
-- No `FAQPage` schema was added to avoid marking generic editorial questions without a validated FAQ publishing workflow.
-
-## H. Internal linking report
-
-The hub links to all destination guides, cost, travel and package pages. Each destination guide links back to the hub, cost/travel guides and official festival sources. The package page links to the Belgium guide, cost guide, travel guide, official sales information and the existing trip discovery flow. The validator checks these internal paths and reports unknown routes.
-
-## I. Indexability report
-
-- POC pages: `index, follow`, self-canonical, static sitemap inclusion, HTTP 200 locally.
-- Supporting guides are also exposed in the native Stories page through crawlable `<a>` links and the existing Travel4life card language.
-- Existing `/tomorrowland-india.html`: retained as indexable and sitemap-listed.
-- Existing hash routes: unchanged and still not treated as standalone indexable pages.
-- Existing `/trips/:id`: active product and quality-gated sitemap behavior retained.
-- `/trips`: now resolves to the Trips page; it is still part of the SPA metadata model rather than a newly published SEO landing page.
-
-## J. Mobile conversion report
-
-- Static pages use a responsive single-column layout below 800px.
-- Primary actions appear near the hero: planning, cost, active trips or WhatsApp enquiry.
-- Secondary links preserve research flow between destination, cost and India logistics pages.
-- Package pages use a factual enquiry CTA and do not use fake scarcity or countdowns.
-
-## K. Remaining SEO opportunities
-
-1. Run `npm run seo:sitemap` and `npm run seo:audit` in deployment with production Supabase credentials.
-2. Add a real Tomorrowland product taxonomy to the trip data model: festival, destination, edition, weekend, package type and access inclusion.
-3. Add stable slugs only after a migration and redirect strategy exists for existing UUID URLs.
-4. Connect verified active Tomorrowland products to the hub and package page.
-5. Add differentiated origin pages only when real departure and product data supports them.
-6. Add comparison and accommodation guides only when they contain original, current information.
-7. Add rendered-page checks for product metadata and JSON-LD after Supabase responses resolve.
-8. Add deployment checks for 200 status, canonical, sitemap inclusion and broken links on the production preview.
-9. Confirm official Travel4life social profiles before expanding `sameAs` values.
-10. Submit the sitemap index and monitor Search Console coverage, canonical selection, CWV and query-level performance after deployment.
-
-## Validation evidence
-
-- `npm run seo:validate`: passed for 14 Tomorrowland pages.
-- `npm run build`: passed.
-- Local HTTP probes: all new routes returned HTTP 200; explicit static `index.html` requests returned the intended canonical pages. Directory-index pretty URLs should be checked again on the deployed host because Vite's local fallback serves the SPA shell for some trailing-slash requests.
-- Official source review: Belgium, Winter and Thailand terminology was checked against the official source pages supplied in the brief; copy remains original.
+After deployment, verify the two permanent redirects, submit `https://travel4life.net/sitemap.xml` in Search Console, inspect representative static and active-product URLs, and compare actual query/page rows over a sufficiently long period. Do not treat a technical pass or this internal score as a ranking guarantee.

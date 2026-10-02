@@ -51,11 +51,7 @@ export const getTripJsonLd = (trip: Trip, relatedTrips: Trip[]) => {
         '@type': 'Offer',
         price: trip.price,
         priceCurrency: trip.currency,
-        availability: trip.max_capacity > trip.current_bookings
-          ? 'https://schema.org/InStock'
-          : 'https://schema.org/OutOfStock',
         url: canonicalUrl,
-        validFrom: trip.created_at,
       },
     },
     {
