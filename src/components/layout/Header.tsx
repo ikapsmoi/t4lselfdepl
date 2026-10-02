@@ -164,14 +164,14 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             <div className="relative inline-flex items-center ml-auto mr-2 sm:ml-3 sm:mr-0 group">
               <div className="absolute -inset-px rounded-full bg-amber-400/60 opacity-70 group-hover:opacity-100 transition-opacity duration-200"></div>
               <a
-                href="https://t.me/secret_miles_channel"
+                href="https://chat.whatsapp.com/IFy99NyGI38JgcTHtsvxlI"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Open Secret Miles Deals on Telegram"
+                aria-label="Join the Secret Miles WhatsApp group"
                 className="relative inline-flex items-center gap-0.5 px-1.5 sm:gap-1 sm:px-3 py-1 sm:py-1.5 bg-gray-900 text-amber-100 text-[8px] sm:text-xs font-bold rounded-full border border-amber-300/70 shadow-sm shadow-amber-900/10 group-hover:bg-gray-800 group-hover:-translate-y-px group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 transition-all duration-200 tracking-wide uppercase whitespace-nowrap"
               >
                 <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse shrink-0"></span>
-                <span>Secret Miles<span className="hidden sm:inline"> Group</span></span>
+                <span>Join Secret Miles</span>
               </a>
             </div>
 

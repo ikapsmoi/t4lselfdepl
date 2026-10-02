@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Star, ThumbsUp, Filter, Search, ChevronDown, User } from 'lucide-react';
+import { Star, ThumbsUp, Search, User, Facebook, Instagram, ExternalLink } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Input } from '../components/ui/Input';
 import { Select } from '../components/ui/Select';
 import { useReviews } from '../hooks/useReviews';
-import { useAuth } from '../hooks/useAuth';
 import { Review } from '../types';
 
 export const ReviewsPage: React.FC = () => {
   const { reviews, loading, markHelpful } = useReviews();
-  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [ratingFilter, setRatingFilter] = useState('all');
   const [sortBy, setSortBy] = useState<'recent' | 'helpful' | 'rating'>('recent');
@@ -130,6 +128,100 @@ export const ReviewsPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Independent review and social pages */}
+        <section
+          aria-labelledby="external-reviews-heading"
+          className="mb-8 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-sky-50 shadow-sm"
+        >
+          <div className="p-6 sm:p-8">
+            <div className="mb-6 flex items-start gap-4">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#1877F2] text-white shadow-sm">
+                <Facebook className="h-6 w-6" fill="currentColor" aria-hidden="true" />
+              </div>
+              <div>
+                <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-blue-700">
+                  Independent reviews and social updates
+                </p>
+                <h2 id="external-reviews-heading" className="text-2xl font-bold text-gray-900">
+                  Explore Travel4Life beyond this page
+                </h2>
+                <p className="mt-2 max-w-3xl text-gray-600">
+                  Read feedback on Google and Facebook, or follow our Instagram for more travel
+                  inspiration. Each link takes you to the original page.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                {
+                  name: 'Travel Life',
+                  href: 'https://www.facebook.com/travellife2/reviews',
+                  platform: 'Facebook',
+                  description: 'Travel experiences and feedback from the Travel Life community.',
+                  action: 'Read reviews on Facebook',
+                },
+                {
+                  name: 'The Travellers Store',
+                  href: 'https://www.facebook.com/thetravellersstore/reviews',
+                  platform: 'Facebook',
+                  description: 'Browse customer reviews on The Travellers Store Facebook page.',
+                  action: 'Read reviews on Facebook',
+                },
+                {
+                  name: 'Travel4Life',
+                  href: 'https://share.google/A8SbO5BriJrmdT7Zl',
+                  platform: 'Google',
+                  description: 'See customer feedback on our Google business profile.',
+                  action: 'Read Google reviews',
+                },
+                {
+                  name: '@travel4life_net',
+                  href: 'https://www.instagram.com/travel4life_net/',
+                  platform: 'Instagram',
+                  description: 'Follow along for trip highlights, travel inspiration, and updates.',
+                  action: 'Visit our Instagram',
+                },
+              ].map((page) => (
+                <a
+                  key={page.href}
+                  href={page.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex min-h-36 items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                >
+                  <div>
+                    <div className="mb-2 flex items-center gap-2">
+                      {page.platform === 'Facebook' ? (
+                        <Facebook className="h-4 w-4 text-[#1877F2]" fill="currentColor" aria-hidden="true" />
+                      ) : page.platform === 'Instagram' ? (
+                        <Instagram className="h-4 w-4 text-[#C13584]" aria-hidden="true" />
+                      ) : (
+                        <span aria-hidden="true" className="text-base font-extrabold text-[#4285F4]">G</span>
+                      )}
+                      <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                        {page.platform}
+                      </span>
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-700">
+                      {page.name}
+                    </h3>
+                    <p className="mt-1 text-sm leading-relaxed text-gray-600">{page.description}</p>
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-700">
+                      {page.action}
+                      <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                    </span>
+                  </div>
+                </a>
+              ))}
+            </div>
+            <p className="mt-4 text-xs text-gray-500">
+              Google, Facebook, and Instagram are independent platforms. You may need to sign in to
+              view some content.
+            </p>
+          </div>
+        </section>
 
         {/* Filters and Search */}
         <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
