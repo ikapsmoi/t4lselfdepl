@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  Star, Users, Calendar, MapPin, Clock, Shield, Heart, Share2, X,
+  Star, Users, Calendar, MapPin, Clock, Shield, Heart, Share2, X, Home,
   CheckCircle, XCircle, AlertTriangle, Camera, MessageCircle, Eye 
 } from 'lucide-react';
 import { Trip, User, Booking } from '../../types';
@@ -15,7 +15,6 @@ import { VRPreview } from '../vr/VRPreview';
 import { InquireNowModal } from './InquireNowModal';
 import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
-import { InvoiceModal } from './InvoiceModal';
 import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS, DEFAULT_TRIP_EXCLUSIONS } from '../../utils/constants';
 import { DEFAULT_TRIP_REVIEWS } from '../../utils/defaultReviews';
 import { getCurrencySymbol } from '../../utils/constants';
@@ -39,7 +38,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   const [isSaved, setIsSaved] = useState(false);
   const [showPromoteModal, setShowPromoteModal] = useState(false);
   const [showExistingBookingConfirmationModal, setShowExistingBookingConfirmationModal] = useState(false);
-  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
   const [userBookingForThisTrip, setUserBookingForThisTrip] = useState<Booking | null>(null);
 
   // Track trip view event
@@ -140,13 +138,23 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             <div className="flex items-center">
               <h1 className="text-sm font-semibold text-gray-900 md:text-lg">Trip Details</h1>
             </div>
-            <button 
-              onClick={onClose} 
-              aria-label="Close trip details"
-              className="p-1.5 md:p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all duration-200"
-            >
-              <X className="w-4 h-4 md:w-6 md:h-6" />
-            </button>
+            <div className="flex items-center gap-2">
+              <a
+                href="/#home"
+                onClick={onClose}
+                className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-gray-300 px-3 text-xs font-semibold text-gray-700 transition hover:border-sky-600 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2 md:text-sm"
+              >
+                <Home className="h-4 w-4" aria-hidden="true" />
+                Home
+              </a>
+              <button
+                onClick={onClose}
+                aria-label="Close trip details"
+                className="p-1.5 md:p-2 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-900 transition-all duration-200"
+              >
+                <X className="w-4 h-4 md:w-6 md:h-6" />
+              </button>
+            </div>
           </div>
           <div className="flex items-center justify-center space-x-1.5 md:space-x-2 mt-2 md:mt-3 max-w-7xl mx-auto">
               <Button variant="ghost" size="sm" onClick={handleShare} icon={Share2} className="text-[10px] px-2 py-1 md:text-sm">
@@ -424,14 +432,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   </div>
                 )}
 
-                <Button
-                  variant="outline"
-                  className="mt-2 w-full text-[10px] md:mt-3 md:text-sm"
-                  onClick={() => setShowInvoiceModal(true)}
-                >
-                  Create Invoice
-                </Button>
-
                 {isAlmostFull && (
                   <div className="mt-3 md:mt-4 p-2 md:p-3 bg-orange-50 border border-orange-200 rounded-lg">
                     <div className="flex items-center text-orange-800 text-[10px] md:text-sm">
@@ -471,13 +471,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
         isOpen={showBookingModal}
         onClose={() => setShowBookingModal(false)}
         trip={trip}
-      />
-
-      <InvoiceModal
-        isOpen={showInvoiceModal}
-        onClose={() => setShowInvoiceModal(false)}
-        trip={trip}
-        currencySymbol={displayCurrencySymbol}
       />
 
       <InquireNowModal

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Calendar, CheckCircle, MapPin, Users } from 'lucide-react';
+import { Calendar, CheckCircle, Home, MapPin, Users } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Trip } from '../types';
 import { TripDetails } from '../components/trips/TripDetails';
@@ -13,6 +13,16 @@ const fallbackImage = (category: string): string => {
   if (category === 'indian_special') return '/pkg3.png';
   return 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg';
 };
+
+const HomeNavigation: React.FC = () => (
+  <a
+    href="/#home"
+    className="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 font-semibold text-gray-700 transition hover:border-sky-600 hover:text-sky-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
+  >
+    <Home className="h-4 w-4" aria-hidden="true" />
+    Back to Home
+  </a>
+);
 
 type TripRow = {
   id: string;
@@ -178,16 +188,19 @@ export const TripSeoPage: React.FC = () => {
   }, [tripId]);
 
   if (loading) {
-    return <main className="min-h-screen flex items-center justify-center"><p>Loading trip details...</p></main>;
+    return <main className="min-h-screen flex items-center justify-center"><div className="text-center"><HomeNavigation /><p className="mt-4">Loading trip details...</p></div></main>;
   }
 
   if (notFound || !trip) {
-    return <main className="min-h-screen flex items-center justify-center"><div className="text-center"><h1 className="text-3xl font-bold">Trip not found</h1><p className="mt-2 text-gray-600">This active trip is not available.</p></div></main>;
+    return <main className="min-h-screen flex items-center justify-center"><div className="text-center"><HomeNavigation /><h1 className="mt-6 text-3xl font-bold">Trip not found</h1><p className="mt-2 text-gray-600">This active trip is not available.</p></div></main>;
   }
 
   return (
     <main className="min-h-screen bg-white">
       <div className="max-w-6xl mx-auto px-4 py-8 md:py-12">
+        <div className="mb-6">
+          <HomeNavigation />
+        </div>
         <nav aria-label="Breadcrumb" className="text-sm text-gray-500 mb-6">
           <a href="/#home" className="hover:text-sky-700">Home</a><span className="mx-2">/</span>
           <a href="/trips" className="hover:text-sky-700">Trips</a><span className="mx-2">/</span>
