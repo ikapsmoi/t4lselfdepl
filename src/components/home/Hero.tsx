@@ -18,64 +18,54 @@ const Hero: React.FC = memo(() => {
   const [currentTripIndex, setCurrentTripIndex] = useState(0);
   const [showFeaturedTrip, setShowFeaturedTrip] = useState(false);
 
-  const [currentWordInSetIndex, setCurrentWordInSetIndex] = useState(0);
   const [isTextVisible, setIsTextVisible] = useState(true);
 
   // Independent review rotation index
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
 
-  // Initialize with mock data, but expect to be overwritten by fetched data
   interface ReviewData {
     reviewerName: string;
     reviewComment: string;
     tripTitle: string;
   }
 
-  const [reviewsData, setReviewsData] = useState<ReviewData[]>([
-    { reviewerName: 'Sarah', reviewComment: 'Amazing experience! Would definitely recommend...', tripTitle: 'Epic Iceland Adventure' },
-    { reviewerName: 'Mike', reviewComment: 'Best trip ever! The group was fantastic and...', tripTitle: 'Cultural Japan Journey' },
-    { reviewerName: 'Emma', reviewComment: 'Incredible adventure! Everything was perfectly...', tripTitle: 'Costa Rica Wildlife' },
-    { reviewerName: 'Alex', reviewComment: 'Unforgettable journey! The host was amazing...', tripTitle: 'Swiss Alps Hiking' },
-    { reviewerName: 'Lisa', reviewComment: 'Life-changing experience! I loved every moment...', tripTitle: 'Bali Spiritual Retreat' }
-  ]);
+  const [reviewsData, setReviewsData] = useState<ReviewData[]>([]);
 
   const featuredTrips = getFeaturedTripsArray;
 
-  // Five sets of three words, one for each background image
-  const fadingWordSets = [
-    ['Festival trips worth travelling for'],
-    ['Tomorrowland, Ultra and Coachella'],
-    ['Curated group adventures'],
-    ['Verified hosts and real experiences'],
-    ['Stories you bring home']
+  const heroHeadlines = [
+    'Find Your Travel Crew',
+    'Festivals Hit Different Together',
+    'Curated Group Adventures',
+    'Make New Memories',
+    'Go Further Together'
   ];
 
-  // Dynamic background images for Gen Z travel vibes
   const heroBackgrounds = React.useMemo(() => [
     {
       url: '/ChatGPT Image Mar 18, 2026, 06_04_06 PM.png',
-      title: 'Beach Adventures',
-      vibe: 'You Travel'
+      title: 'A group relaxing by the sea',
+      vibe: 'Beach trip'
     },
     {
       url: '/ChatGPT Image Mar 18, 2026, 05_59_31 PM.png',
-      title: 'Mountain Escapes',
-     vibe: 'For Free'
+      title: 'Travellers exploring the mountains',
+      vibe: 'Mountain trip'
     },
     {
       url: '/ChatGPT Image Mar 18, 2026, 05_31_27 PM.png',
-      title: 'City Exploration',
-     vibe: 'To Places'
+      title: 'A group discovering a new city',
+      vibe: 'City trip'
     },
     {
       url: 'https://images.pexels.com/photos/34030625/pexels-photo-34030625.jpeg',
-      title: 'Cultural Immersion',
-     vibe: 'on Everyones'
+      title: 'Travellers experiencing local culture',
+      vibe: 'Cultural trip'
     },
     {
       url: '/ChatGPT Image Mar 18, 2026, 05_30_22 PM.png',
-      title: 'Wildlife Adventures',
-      vibe: 'Bucket List'
+      title: 'Travellers spotting wildlife',
+      vibe: 'Wildlife trip'
     }
   ], []);
 
@@ -113,8 +103,7 @@ const Hero: React.FC = memo(() => {
             tripTitle: review.trips?.title || 'Amazing Trip'
           }));
           setReviewsData(formattedReviews);
-        } else {
-          // Use mock data silently
+          setCurrentReviewIndex(0);
         }
       } catch (e) {
         console.error('Exception fetching reviews:', e);
@@ -126,17 +115,16 @@ const Hero: React.FC = memo(() => {
     const interval = setInterval(() => {
       setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
 
-      // Reset to first word of new set when background changes
       setIsTextVisible(false);
       setTimeout(() => {
-        setCurrentWordInSetIndex(0);
         setIsTextVisible(true);
       }, 300);
     }, 4000);
 
-    // Independent review rotation - cycles through all reviews every 3 seconds
     const reviewInterval = setInterval(() => {
-      setCurrentReviewIndex((prev) => (prev + 1) % reviewsData.length);
+      if (reviewsData.length > 1) {
+        setCurrentReviewIndex((prev) => (prev + 1) % reviewsData.length);
+      }
     }, 3000);
 
     // Featured trips carousel
@@ -242,18 +230,14 @@ const Hero: React.FC = memo(() => {
               {/* Label */}
               <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.1 mb-6">
                 <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
-                <span className="text-xs font-semibold text-white/90 tracking-widest uppercase">Festival & Group Travel</span>
+                <span className="text-xs font-semibold text-white/90 tracking-widest uppercase">Group or Customised Tours</span>
               </div>
 
               <h1 className={`text-4xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.08] mb-5 text-white transition-opacity duration-300 ${
                 isTextVisible ? 'opacity-100' : 'opacity-0'
               }`}>
-                {fadingWordSets[currentBgIndex][currentWordInSetIndex]}
+                {heroHeadlines[currentBgIndex]}
               </h1>
-
-              <p className="text-base md:text-xl font-body font-normal text-white/80 mb-8 max-w-2xl mx-auto leading-relaxed">
-                Discover festival trips and curated group adventures with clear details, trusted hosts, and support when you need it.
-              </p>
 
               {/* Floating glass search card */}
               <div className="max-w-2xl mx-auto">
@@ -268,19 +252,16 @@ const Hero: React.FC = memo(() => {
                     }}
                     className="flex-1 py-2.5 px-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg text-xs sm:text-sm"
                   >
-                    Explore Festival Trips
+                    Explore trips
                   </button>
                   <button
                     onClick={() => {
-                      window.dispatchEvent(new CustomEvent("triggerSignup"));
-                      setTimeout(() => {
-                        const bottomEl = document.getElementById("modal-bottom");
-                        if (bottomEl) bottomEl.scrollIntoView({ behavior: "smooth" });
-                      }, 1);
+                      window.location.hash = 'how-it-works';
+                      window.scrollTo(0, 0);
                     }}
                     className="flex-1 py-2.5 px-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/30 hover:bg-white/20 transition-all duration-200 text-xs sm:text-sm"
                   >
-                    Become a Host
+                    How it works
                   </button>
                 </div>
 
@@ -289,23 +270,12 @@ const Hero: React.FC = memo(() => {
                   <SearchBar onSearch={searchTrips} className="" navigateOnFilter={true} />
                 </div>
 
-                {/* Live metrics */}
                 <div className="flex items-center justify-center gap-6 mt-5">
-                  <div className="flex items-center gap-1.5 text-white/80">
-                    <div className="flex -space-x-1">
-                      {[1,2,3].map(i => (
-                        <div key={i} className="w-5 h-5 rounded-full bg-gradient-to-br from-sky-400 to-teal-500 border-2 border-white/30"></div>
-                      ))}
-                    </div>
-                    <span className="text-xs font-medium">12K+ travelers</span>
-                  </div>
-                  <div className="w-px h-3 bg-white/30"></div>
-                  <div className="flex items-center gap-1 text-white/80">
-                    <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                    <span className="text-xs font-medium">4.65 rating</span>
-                  </div>
-                  <div className="w-px h-3 bg-white/30"></div>
-                  <span className="text-xs font-medium text-white/80">60+ destinations</span>
+                  <span className="text-xs font-medium text-white/90">Clear trip details</span>
+                  <span className="w-px h-3 bg-white/50" aria-hidden="true"></span>
+                  <span className="text-xs font-medium text-white/90">Curated group experiences</span>
+                  <span className="w-px h-3 bg-white/50" aria-hidden="true"></span>
+                  <span className="text-xs font-medium text-white/90">Help when you need it</span>
                 </div>
               </div>
             </div>
@@ -325,7 +295,7 @@ const Hero: React.FC = memo(() => {
         >
           <MessageCircle className="w-5 h-5" />
           <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-2.5 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-            Plan Trip in 5 Minutes
+            Need help choosing a trip?
           </div>
         </button>
       </div>
