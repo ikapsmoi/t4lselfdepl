@@ -582,7 +582,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
       if (existingBookings && existingBookings.length > 0) {
         return { 
           success: false, 
-          error: 'Trip has existing bookings. Please contact support@travel4life.net to proceed with deletion.'
+          error: 'Trip has existing bookings. Please contact info@travel4life.net to proceed with deletion.'
         };
       }
 

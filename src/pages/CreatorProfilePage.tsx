@@ -318,7 +318,7 @@ export const CreatorProfilePage: React.FC = () => {
                       // Create mailto link for contacting creator
                       const subject = `Message from Travel4life - Interest in your trips`;
                       const body = `Hi ${creator.name},\n\nI'm interested in learning more about your travel experiences and trips.\n\nBest regards,\nA Travel4life User`;
-                      const mailtoLink = `mailto:${creator.email || 'support@travel4life.net'}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+                      const mailtoLink = `mailto:${creator.email || 'info@travel4life.net'}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
                       window.open(mailtoLink, '_blank');
                     }}
                   >

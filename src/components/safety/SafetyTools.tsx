@@ -178,7 +178,7 @@ The user has initiated an auto check-in request for safety monitoring.
 
 Please set up the auto check-in system for this user.`;
               
-              const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+              const mailtoLink = `mailto:info@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
               window.open(mailtoLink, '_blank');
               
               alert('Check-in request initiated! An email has been sent to admin and your emergency contacts will be notified.');

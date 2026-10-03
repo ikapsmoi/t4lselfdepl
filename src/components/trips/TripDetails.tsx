@@ -442,12 +442,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 )}
 
                 <div className="mt-4 md:mt-6 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-blue-900 md:p-4 md:text-sm">
-                  <strong>What happens next?</strong> Choose your travelers, review inclusions and add-ons, then confirm your booking. You will receive a booking reference before completing payment.
-                </div>
-
-                <div className="mt-4 md:mt-6 p-3 md:p-4 bg-gray-50 rounded-lg">
-                  <h4 className="font-medium text-gray-900 mb-1 md:mb-2 text-xs md:text-sm">Cancellation Policy</h4>
-                  <p className="text-xs text-gray-600 md:text-sm">{trip.cancellation_policy}</p>
+                  <strong>What happens next?</strong> Choose your travelers, review inclusions and add-ons, then confirm your booking. You will be logged in and see your booking confirmation to proceed with payment. If you are already logged in, you will be directed to the payment gateway. Once paid, your booking will be vouchered and confirmation shared within 24 hours.
                 </div>
 
                 {trip.group_discount > 0 && (

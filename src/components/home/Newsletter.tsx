@@ -15,7 +15,7 @@ export const Newsletter: React.FC = () => {
       // Track newsletter signup
       newsletterSignup(email);
       
-      // Send email to support@travel4life.net
+      // Send email to info@travel4life.net
       const subject = 'New Newsletter Subscription - Travel4life';
       const body = `New newsletter subscription request:
       
@@ -25,7 +25,7 @@ Source: Travel4life Newsletter Signup
 
 Please add this email to the newsletter list.`;
       
-      const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:info@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       window.open(mailtoLink, '_blank');
       
       setSubscribed(true);

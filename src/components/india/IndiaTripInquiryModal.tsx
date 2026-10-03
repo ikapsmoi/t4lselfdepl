@@ -84,7 +84,7 @@ Best regards,
 Travel4life Team`;
 
       // Create mailto link
-      const mailtoLink = `mailto:support@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+      const mailtoLink = `mailto:info@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
       
       // Open email client
       window.open(mailtoLink, '_blank');
