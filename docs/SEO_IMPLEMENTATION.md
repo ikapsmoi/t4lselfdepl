@@ -48,3 +48,31 @@ The deployment fallback in `public/_redirects` keeps direct product URLs on the 
 `/europe/` is a static authority hub for Indian travellers planning Europe trips. The SEO deployment build keeps Europe pages in the sitemap and marks them indexable only when matching live trip inventory passes the product quality gate. The page routes visitors to the live trip catalogue using `/trips/?destination=Europe`; that filter matches the country portion of active trip locations instead of claiming fixed package availability.
 
 The supplied Search Console export contains no Europe destination query or landing-page rows, and the product sitemap is not evidence that every European destination has a current offer. For that reason, the first release intentionally creates one useful hub rather than unsupported country/city pages. The page distinguishes planning guidance from confirmed inclusions, prices, dates, hotels, and availability. Add more destination pages only when live product relevance and differentiated content justify them.
+
+## Jim Corbett first-wave guide
+
+The Corbett launch adds five static, crawlable routes:
+
+- `/jim-corbett/` — the destination planning hub.
+- `/jim-corbett/resorts/` — a searchable directory of 100 names and seasonal rate figures imported from the supplied workbook.
+- `/jim-corbett/weddings/` — an event brief and wedding-planning enquiry page.
+- `/jim-corbett/mice/` — a corporate offsite/MICE brief and enquiry page.
+- `/jim-corbett/travel4life/` — a factual explanation of Travel4life's planning and verification process.
+
+The source workbook contains names, broad categories and season, discounted-season and off-season figures per night. It has no rate-validity dates, room/occupancy definitions, meals, tax treatment, locality, property facilities, event capacity, images or availability confirmation. All imported records therefore remain `NEEDS_VERIFICATION`; the claimed Travel4life discount column is not published. Rate figures are explicitly identified as workbook references and not live prices. The resort directory is the only resort-intent landing page: individual property pages, venue-capacity claims, location/facility filters, package pages and locality pages are withheld until verified data and differentiated content support them.
+
+`public/jim-corbett/page-registry.json` owns the page routes and intent. `scripts/corbett-enrichment.mjs` normalizes every workbook record and produces an enrichment queue with explicit unknowns, evidence state, completeness score, page readiness and separate property-existence/availability states. The 75-point score is only a completeness threshold; it does not verify facts or auto-publish resort pages. `scripts/generate-corbett-pages.mjs` builds static resort cards, `ItemList`/`CollectionPage` structured data, readiness scores and `dist/sitemap-corbett.xml`. A route enters the sitemap only if it remains editorially approved and scores at least 75; otherwise its HTML is marked `noindex, follow`. The registry receives the same score and gate state.
+
+The admin-only Corbett SEO tab is available at `#corbett-authority`. It provides an evidence worksheet and queue, plus a Google Search Console CSV analysis dashboard. Resort-field imports require an HTTPS source URL, verification date and named verifier, and only update existing source-list entities. Individual property pages remain a human decision. Search Console snapshots are stored in the current administrator's browser local storage and are append-only; export backups before changing browsers or devices. Opportunity and CTR indicators are explicitly heuristic. No Search Console data is fabricated, no metadata changes automatically, and the dashboard does not guarantee rankings.
+
+Refresh the normalized queue with `npm run corbett:enrichment:refresh`; import verified field updates with `npm run corbett:enrichment:import -- <file.csv>`. Both `npm run build:app` and `npm run build` refresh the queue before copying static assets. Validate page and registry gates with `npm run corbett:seo:validate`; test scoring, date/CSV parsing, ranking buckets, ownership, and opportunity signals with `npm run test:seo`.
+
+Build the public app shell and Corbett SEO assets with `npm run build:app`, or use the production SEO build when Supabase credentials are available. Validate the generated Corbett routes with `npm run corbett:seo:validate`; workbook normalization is covered by `npm run test:seo`.
+
+## Global contact and conversion layer
+
+`src/config/travel4life-contact.json` is the single source for the phone, WhatsApp number, and email used by the React app and crawlable HTML. `src/utils/travel4lifeContact.js` builds page-specific WhatsApp messages and maps enquiry actions to conversion events. Contact actions appear in the existing site footer, the lower-right floating WhatsApp trip enquiry form, and contextual mid-page and final CTAs on static Europe, Tomorrowland, and inventory-backed product pages. The form collects a traveller's name, party size, travel date, nights, and destination, then opens WhatsApp with those details prefilled; form details are not stored by the site. The contact layer does not add header contact buttons, a hero panel, or a fixed/mobile contact footer bar.
+
+Contact clicks are recorded in `analytics_events` with the event name, page path, relevant page and destination context, and a coarse traffic-source label. Contact tracking does not include IP addresses or user-agent strings. The static-page analytics handler uses the configured Supabase project URL and public anon key supplied to the production build.
+
+Run `npm run test:seo` and `npm run seo:validate` to check contextual contact links and their coverage on static SEO pages. The production `npm run build` runs the injection after generating product pages.

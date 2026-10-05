@@ -1,18 +1,16 @@
 import React, { useState, useEffect, memo } from 'react';
-import { Star } from 'lucide-react';
+import { BadgePercent, Star, Users } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { FeaturedTrip } from '../trips/FeaturedTrip';
 import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
 import { NewUsersTicker } from '../common/NewUsersTicker';
 import { useTrips } from '../../hooks/useTrips';
-import { useAnalytics } from '../../utils/analytics';
 import { supabase } from '../../lib/supabase';
-import { MessageCircle } from 'lucide-react';
+import { FloatingWhatsAppEnquiry } from '../common/FloatingWhatsAppEnquiry';
 
 const Hero: React.FC = memo(() => {
   const { getFeaturedTripsArray, searchTrips } = useTrips();
-  const { whatsappClick } = useAnalytics();
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [currentTripIndex, setCurrentTripIndex] = useState(0);
@@ -270,12 +268,19 @@ const Hero: React.FC = memo(() => {
                   <SearchBar onSearch={searchTrips} className="" navigateOnFilter={true} />
                 </div>
 
-                <div className="flex items-center justify-center gap-6 mt-5">
-                  <span className="text-xs font-medium text-white/90">Clear trip details</span>
-                  <span className="w-px h-3 bg-white/50" aria-hidden="true"></span>
-                  <span className="text-xs font-medium text-white/90">Curated group experiences</span>
-                  <span className="w-px h-3 bg-white/50" aria-hidden="true"></span>
-                  <span className="text-xs font-medium text-white/90">Help when you need it</span>
+                <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
+                    <Star className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
+                    4.9 rating
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
+                    <Users className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
+                    12000 plus travelers
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
+                    <BadgePercent className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
+                    Pre Purchaser Rates
+                  </span>
                 </div>
               </div>
             </div>
@@ -283,22 +288,7 @@ const Hero: React.FC = memo(() => {
         </div>
       </section>
 
-      {/* WhatsApp Support Button */}
-      <div className="fixed bottom-6 right-6 z-40">
-        <button
-          onClick={() => {
-            whatsappClick('homepage_support');
-            window.open('https://wa.link/ghfcus', '_blank');
-          }}
-          className="bg-green-500 hover:bg-green-600 text-white p-3.5 rounded-full shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-110 group"
-          aria-label="Contact support via WhatsApp"
-        >
-          <MessageCircle className="w-5 h-5" />
-          <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white text-xs px-2.5 py-1 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200 whitespace-nowrap">
-            Need help choosing a trip?
-          </div>
-        </button>
-      </div>
+      <FloatingWhatsAppEnquiry />
 
       {/* Trip Details Modal */}
       {selectedTrip && (

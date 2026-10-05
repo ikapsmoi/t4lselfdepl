@@ -109,7 +109,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
     return (
       <div
         className={`bg-white rounded-[20px] overflow-hidden shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.14)] transition-all duration-400 hover:-translate-y-1 cursor-pointer group ${
-          isMobileCarouselItem ? 'w-[calc(100vw-2rem)] flex-shrink-0 snap-start' : ''
+          isMobileCarouselItem ? 'w-[calc(100vw-2rem)] max-w-full flex-shrink-0 snap-start' : ''
         }`}
         onClick={() => {
           clickTripCard(trip.id);
@@ -185,7 +185,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   return (
     <div
       className={`bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-400 hover:-translate-y-2 cursor-pointer group md:w-auto md:flex-shrink md:snap-none border border-gray-100/80 ${
-        isMobileCarouselItem ? 'w-[calc(100vw-2rem)] flex-shrink-0 snap-start' : ''
+        isMobileCarouselItem ? 'w-[calc(100vw-2rem)] max-w-full flex-shrink-0 snap-start' : ''
       }`}
       onClick={() => {
         clickTripCard(trip.id);
@@ -193,7 +193,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       }}
     >
       {/* Image takes 65% of card height */}
-      <div className="relative h-60 md:h-64 overflow-hidden">
+      <div className="relative h-52 overflow-hidden sm:h-60 md:h-64">
         <img
           src={tripImage.src}
           alt={trip.title}
@@ -246,7 +246,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
         </div>
 
         {/* Price and rating overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-5">
+        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
           <div className="flex items-end justify-between text-white">
             <div className="flex items-center gap-1.5">
               <Star className="w-4 h-4 text-amber-400 fill-current" />
@@ -254,7 +254,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               <span className="text-xs text-white/60 ml-1">{trip.duration} days</span>
             </div>
             <div className="text-right">
-              <div className="text-2xl font-extrabold tracking-tight">{displayCurrencySymbol}{trip.price}</div>
+              <div className="text-xl font-extrabold tracking-tight sm:text-2xl">{displayCurrencySymbol}{trip.price}</div>
             </div>
           </div>
         </div>
@@ -267,7 +267,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       </div>
 
       {/* Content area */}
-      <div className="p-5">
+      <div className="p-4 sm:p-5">
         <h3 className="tour-title text-gray-900 line-clamp-2 mb-3">{trip.title}</h3>
 
         {/* Host Info */}
@@ -298,12 +298,12 @@ export const TripCard: React.FC<TripCardProps> = memo(({
         )}
 
         {/* Location + View Details */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-gray-400">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex max-w-full items-center text-gray-400 sm:max-w-[140px]">
             <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
             <span className="text-sm truncate max-w-[140px]">{formatCitiesForDisplay(trip.itinerary?.cities) || trip.destination}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex max-w-full flex-wrap items-center gap-1.5 sm:gap-2">
             {isAlmostFull && !isFull && (
               <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full">
                 {spotsLeft} left

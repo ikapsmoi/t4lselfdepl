@@ -53,12 +53,12 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
 
   if (loading) {
     return (
-      <div className="space-y-6">
+      <div className="space-y-5 sm:space-y-6">
         <div>
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">{title}</h2>
-          {subtitle && <p className="text-gray-500 mt-2 text-base">{subtitle}</p>}
+          <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">{title}</h2>
+          {subtitle && <p className="mt-1.5 text-sm text-gray-500 sm:mt-2 sm:text-base">{subtitle}</p>}
         </div>
-        <div className={`grid gap-5 md:gap-6 ${
+        <div className={`grid gap-4 sm:gap-5 md:gap-6 ${
           variant === 'compact'
             ? 'grid-cols-1 md:grid-cols-2'
             : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
@@ -73,11 +73,11 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
 
   return (
     <>
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
+      <div className="min-w-0 space-y-5 sm:space-y-6">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
           <div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 tracking-tight">{title}</h2>
-            {subtitle && <p className="text-gray-500 mt-2 text-base">{subtitle}</p>}
+            <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">{title}</h2>
+            {subtitle && <p className="mt-1.5 text-sm text-gray-500 sm:mt-2 sm:text-base">{subtitle}</p>}
           </div>
           {showViewAll && trips.length > 6 && (
             <Button 
@@ -90,15 +90,15 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
         </div>
         
         {trips.length === 0 ? (
-          <div className="text-center py-16 bg-gray-50 rounded-[20px]">
-            <div className="text-gray-400 text-lg mb-2">No trips found</div>
+          <div className="rounded-2xl bg-gray-50 px-5 py-12 text-center sm:rounded-[20px] sm:py-16">
+            <div className="mb-2 text-base text-gray-400 sm:text-lg">No trips found</div>
             <p className="text-gray-500 text-sm">Try adjusting your search filters or explore different destinations</p>
           </div>
         ) : (
-          <div className={`gap-5 md:gap-6 ${
+          <div className={`min-w-0 gap-4 sm:gap-5 md:gap-6 ${
             mobileCarousel
-              ? 'flex overflow-x-scroll snap-x-mandatory scroll-pl-4 pb-4 md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible md:snap-none md:pb-0'
-              : `grid gap-5 md:gap-6 ${
+              ? 'flex snap-x snap-mandatory overscroll-x-contain overflow-x-auto scroll-pl-4 pb-4 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible md:snap-none md:pb-0'
+              : `grid ${
                   variant === 'compact'
                     ? 'grid-cols-1 md:grid-cols-2'
                     : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
@@ -107,8 +107,8 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
             {prominentFirst && firstTrip ? (
               <>
                 {/* Prominent First Trip */}
-                <div className="md:col-span-2 lg:col-span-3 mb-4">
-                  <div className="relative h-64 md:h-80 rounded-[20px] overflow-hidden shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] border border-gray-100">
+                <div className="mb-3 sm:mb-4 md:col-span-2 lg:col-span-3">
+                  <div className="relative h-56 overflow-hidden rounded-2xl border border-gray-100 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] sm:h-64 sm:rounded-[20px] md:h-80">
                     <img
                       src={firstTrip.images?.[0] || (firstTrip.type === 'budget' ? '/pkg1.png' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg')}
                       alt={firstTrip.title}
@@ -120,7 +120,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
                       {!hideCity && (
                         <p className="text-sm md:text-base text-white/80 mb-3">{formatCitiesForDisplay(firstTrip.itinerary?.cities) || firstTrip.destination} • {firstTrip.duration} days</p>
                       )}
-                      <div className="flex items-center justify-between">
+                      <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center space-x-3">
                           <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-2.5 py-1">
                             <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />

@@ -1,4 +1,6 @@
 ﻿import React, { useState } from 'react';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
+import { trackContactEvent } from '../../utils/analytics';
 import { ChevronDown, HelpCircle, Users, CreditCard, Shield, Home } from 'lucide-react';
 
 export const FAQ: React.FC = () => {
@@ -145,15 +147,17 @@ export const FAQ: React.FC = () => {
 
         <div className="text-center mt-10">
           <p className="text-gray-500 text-sm mb-4">Still have questions?</p>
-          <button
-            onClick={() => window.open('https://wa.link/ghfcus', '_blank')}
+          <a
+            href={getTravel4LifeWhatsAppUrl(getTravel4LifeContactContext())}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => void trackContactEvent('contact_whatsapp_click')}
             className="inline-flex items-center gap-2 px-6 py-3 bg-gray-900 text-white text-sm font-semibold rounded-xl hover:bg-gray-700 transition-all duration-200 shadow-sm"
           >
             Contact Support
-          </button>
+          </a>
         </div>
       </div>
     </section>
   );
 };
-

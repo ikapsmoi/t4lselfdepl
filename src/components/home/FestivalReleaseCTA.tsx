@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { ArrowRight, MessageCircle, X, Zap } from 'lucide-react';
 import { Modal } from '../ui/Modal';
-
-const WHATSAPP_URL = 'https://wa.link/ghfcus';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
+import { trackContactEvent } from '../../utils/analytics';
 
 export const FestivalReleaseCTA: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
@@ -37,8 +37,10 @@ export const FestivalReleaseCTA: React.FC = () => {
       'Please share the available package details and next steps.'
     ].join('\n');
 
-    const personalizedUrl = `https://wa.me/919871621921?text=${encodeURIComponent(message)}`;
+    const context = getTravel4LifeContactContext({ pageType: 'festival', eventType: festival, tripType: 'festival travel', destination: festival });
+    const personalizedUrl = getTravel4LifeWhatsAppUrl(context, message);
     window.open(personalizedUrl, '_blank', 'noopener,noreferrer');
+    void trackContactEvent('contact_whatsapp_click', context);
     setIsOpen(false);
   };
 
@@ -75,9 +77,10 @@ export const FestivalReleaseCTA: React.FC = () => {
             <ArrowRight className="h-3.5 w-3.5" />
           </button>
           <a
-            href={WHATSAPP_URL}
+            href={getTravel4LifeWhatsAppUrl(getTravel4LifeContactContext({ pageType: 'festival', eventType: festival, tripType: 'festival travel', destination: festival }))}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={() => void trackContactEvent('contact_whatsapp_click', getTravel4LifeContactContext({ pageType: 'festival', eventType: festival, tripType: 'festival travel', destination: festival }))}
             className="mt-2 flex items-center justify-center gap-1.5 text-[11px] font-semibold text-green-700 hover:text-green-800"
           >
             <MessageCircle className="h-3.5 w-3.5" />

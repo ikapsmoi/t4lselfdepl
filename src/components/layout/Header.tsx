@@ -168,7 +168,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Join the Secret Miles WhatsApp group"
-                className="relative inline-flex items-center gap-0.5 px-1.5 sm:gap-1 sm:px-3 py-1 sm:py-1.5 bg-gray-900 text-amber-100 text-[8px] sm:text-xs font-bold rounded-full border border-amber-300/70 shadow-sm shadow-amber-900/10 group-hover:bg-gray-800 group-hover:-translate-y-px group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 transition-all duration-200 tracking-wide uppercase whitespace-nowrap"
+                className="relative inline-flex min-h-9 items-center gap-1 px-2 sm:px-3 py-1.5 bg-gray-900 text-amber-100 text-[9px] sm:text-xs font-bold rounded-full border border-amber-300/70 shadow-sm shadow-amber-900/10 group-hover:bg-gray-800 group-hover:-translate-y-px group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 transition-all duration-200 tracking-wide uppercase whitespace-nowrap"
               >
                 <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse shrink-0"></span>
                 <span>Join Secret Miles</span>
@@ -370,10 +370,10 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
             {/* Mobile Menu Button */}
             <button
               aria-label={isMenuOpen ? 'Close menu' : 'Open menu'}
-              className="lg:hidden p-3 rounded-xl hover:bg-gray-100 transition-colors"
+              className="lg:hidden flex min-h-11 min-w-11 items-center justify-center rounded-xl p-2.5 hover:bg-gray-100 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
-              {isMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
+              {isMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
           </div>
 

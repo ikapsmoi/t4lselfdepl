@@ -23,6 +23,8 @@ import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import { useBookings } from '../../hooks/useBookings';
 import { INDIA_CATEGORIES } from '../../utils/constants';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
+import { trackContactEvent } from '../../utils/analytics';
 interface TripDetailsProps {
   trip: Trip;
   onClose: () => void;
@@ -114,8 +116,17 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
 
   const handleWhatsAppClick = () => {
     const message = `Hi Travel4life! I would like to check availability for "${trip.title}" in ${trip.destination}. Dates: ${formatDate(trip.start_date)} - ${formatDate(trip.end_date)}. Please share the package details and next steps.`;
-    window.open(`https://wa.me/919871621921?text=${encodeURIComponent(message)}`, '_blank', 'noopener,noreferrer');
+    const context = getTravel4LifeContactContext({
+      pageType: 'package',
+      destination: trip.destination,
+      package: trip.title,
+      tripType: trip.type,
+      entity: trip.title,
+    });
+    window.open(getTravel4LifeWhatsAppUrl(context, message), '_blank', 'noopener,noreferrer');
     whatsappClick('trip_details', trip.id);
+    void trackContactEvent('contact_whatsapp_click', context);
+    void trackContactEvent('package_enquiry', context);
   };
 
   const handleShare = () => {

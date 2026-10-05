@@ -31,7 +31,6 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
   const [groupSize, setGroupSize] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [rating, setRating] = useState('');
-  const [showFilters, setShowFilters] = useState(true);
   const [filtersMinimized, setFiltersMinimized] = useState(true);
 
   // ✅ Pull trips directly
@@ -116,9 +115,9 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
   }, [trips]);
 
   return (
-    <div className={`w-full rounded-[20px] p-5 ${className}`}>
+    <div className={`w-full min-w-0 rounded-2xl p-3 sm:rounded-[20px] sm:p-5 ${className}`}>
       {/* Experience tabs */}
-      <div className="flex items-center gap-1 mb-4 overflow-x-auto pb-1">
+      <div className="-mx-1 mb-3 flex items-center gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide sm:mb-4 sm:gap-1">
         {[
           { label: 'Adventure', value: 'adventure' },
           { label: 'India', value: 'indian_special' },
@@ -136,7 +135,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
                 onSearch({ type: tab.value });
               }
             }}
-            className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition-all duration-200 ${
+            className={`min-h-10 shrink-0 rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-200 sm:px-4 sm:text-sm ${
               type === tab.value
                 ? 'bg-gray-900 text-white shadow-sm'
                 : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
@@ -148,9 +147,9 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
       </div>
 
       {/* Main Search */}
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="flex-1 relative w-full">
-          <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+      <div className="flex min-w-0 flex-col gap-2.5 sm:flex-row sm:gap-3">
+        <div className="relative w-full min-w-0 flex-1">
+          <MapPin className="absolute left-3.5 top-1/2 h-5 w-5 -translate-y-1/2 text-gray-400 sm:left-4" />
           <input
             type="text"
             placeholder={tripsLoading ? 'Loading trips...' : 'Where do you want to go?'}
@@ -163,11 +162,22 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
                 handleSearch();
               }
             }}
-            className="w-full pl-12 pr-24 py-3.5 text-sm border border-gray-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-sky-200 focus:border-sky-400 transition-all duration-200 bg-white text-gray-900 placeholder-gray-400"
+            className="min-h-12 w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 sm:rounded-2xl sm:py-3.5 sm:pl-12 sm:pr-24"
             list="trip-titles"
           />
+          {destination && (
+            <button
+              type="button"
+              onClick={() => setDestination('')}
+              aria-label="Clear selected package"
+              title="Clear selected package"
+              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 sm:hidden"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
           {/* Social icons inside search input */}
-          <div className="absolute right-4 top-1/2 transform -translate-y-1/2 flex items-center gap-1.5">
+          <div className="absolute right-4 top-1/2 hidden -translate-y-1/2 items-center gap-1.5 sm:flex">
             {destination && (
               <button
                 type="button"
@@ -199,30 +209,31 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
           </datalist>
         </div>
 
-        <div className="flex gap-2 flex-shrink-0 w-full sm:w-auto">
+        <div className="flex w-full min-w-0 gap-2 sm:w-auto sm:flex-shrink-0">
           <Button
+            type="button"
             variant="outline"
             onClick={() => setFiltersMinimized(!filtersMinimized)}
             ariaLabel={filtersMinimized ? 'Show search filters' : 'Hide search filters'}
+            aria-expanded={!filtersMinimized}
             icon={filtersMinimized ? ChevronDown : ChevronUp}
             size="md"
-            className="bg-gray-50 border border-gray-200 text-gray-600 hover:bg-gray-100 px-4 py-3 rounded-2xl min-w-[120px]"
+            className="relative min-w-0 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-2.5 py-2.5 text-gray-600 hover:bg-gray-100 sm:w-auto sm:flex-none sm:min-w-[120px] sm:rounded-2xl sm:px-4 sm:py-3"
           >
             {filtersMinimized ? 'Filters' : 'Hide'}
             {hasActiveFilters && (
-              <span className="absolute -top-1 -right-1 bg-sky-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold">
-                !
-              </span>
+              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-sky-500 sm:-right-1 sm:-top-1 sm:h-3 sm:w-3" />
             )}
           </Button>
 
           <Button
+            type="button"
             onClick={handleSearch}
             ariaLabel="Search for trips"
             icon={Search}
             variant="primary"
             size="md"
-            className="bg-gray-900 hover:bg-gray-700 text-white px-6 py-3 rounded-2xl min-w-[110px]"
+            className="min-w-0 flex-[1.2] rounded-xl bg-gray-900 px-2.5 py-2.5 text-white hover:bg-gray-700 sm:w-auto sm:flex-none sm:min-w-[110px] sm:rounded-2xl sm:px-6 sm:py-3"
           >
             Search
           </Button>
@@ -230,9 +241,9 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
       </div>
 
       {/* Advanced Filters */}
-      {showFilters && !filtersMinimized && (
-        <div className="border-t border-gray-100 mt-4 pt-4 space-y-4">
-          <div className="flex items-center justify-between mb-4">
+      {!filtersMinimized && (
+        <div className="mt-4 space-y-4 border-t border-gray-100 pt-4 sm:mt-5 sm:pt-5">
+          <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <h3 className="text-sm font-semibold text-gray-700">Refine your search</h3>
             {hasActiveFilters && (
               <Button variant="outline" size="sm" onClick={clearFilters} icon={X}>
@@ -241,7 +252,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
             )}
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-3 text-gray-900">
+          <div className="grid grid-cols-1 gap-3 text-gray-900 min-[360px]:grid-cols-2 sm:grid-cols-3 xl:grid-cols-6">
             <Select
               label="Trip Type"
               placeholder="Any type"

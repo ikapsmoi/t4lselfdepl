@@ -1,8 +1,11 @@
 ﻿import React, { useState } from 'react';
-import { Instagram, Facebook, Mail, Phone, MapPin, Send, Star, Shield } from 'lucide-react';
+import { Instagram, Facebook, Mail, Phone, MapPin, Send, Star, Shield, MessageCircle } from 'lucide-react';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl, TRAVEL4LIFE_CONTACT, type Travel4LifeContactContext } from '../../utils/travel4lifeContact.js';
+import { trackContactEvent } from '../../utils/analytics';
 
 interface FooterProps {
   setIsMenuOpen?: (isOpen: boolean) => void;
+  contactContext?: Travel4LifeContactContext;
 }
 
 type FooterLink = {
@@ -11,16 +14,17 @@ type FooterLink = {
   onClick?: () => void;
 };
 
-export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
+export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext }) => {
   const [email, setEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const contact = contactContext || getTravel4LifeContactContext();
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (email) {
       const subject = 'Newsletter Signup';
       const body = `Email: ${email}\nDate: ${new Date().toLocaleString()}`;
-      window.open(`mailto:info@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
+      window.open(`mailto:${TRAVEL4LIFE_CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
       setSubscribed(true);
       setEmail('');
       setTimeout(() => setSubscribed(false), 4000);
@@ -36,6 +40,8 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
       { name: 'Careers', onClick: () => { window.location.hash = 'careers'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
     ],
     travelers: [
+      { name: 'Jim Corbett Guide', href: '/jim-corbett/' },
+      { name: 'Corbett Resorts', href: '/jim-corbett/resorts/' },
       { name: 'Europe Travel', href: '/europe/' },
       { name: 'Browse Trips', onClick: () => { window.location.hash = 'trips'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'India Specials', onClick: () => { window.location.hash = 'home'; setTimeout(() => { document.getElementById('india-specials')?.scrollIntoView({ behavior: 'smooth' }); }, 300); setIsMenuOpen?.(false); } },
@@ -67,18 +73,18 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
             {subscribed ? (
               <div className="text-teal-400 font-semibold text-sm">Welcome to the Travel4life community!</div>
             ) : (
-              <form onSubmit={handleNewsletterSubmit} className="flex w-full max-w-md">
+              <form onSubmit={handleNewsletterSubmit} className="flex w-full min-w-0 max-w-md flex-col gap-2 sm:flex-row">
                 <input
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Your email address"
                   required
-                  className="flex-1 px-5 py-3.5 bg-white/5 border border-white/10 rounded-l-2xl text-white placeholder-gray-500 text-sm focus:outline-none focus:border-white/30 transition-colors"
+                  className="min-h-12 w-full min-w-0 flex-1 rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white placeholder-gray-500 transition-colors focus:border-white/30 focus:outline-none sm:rounded-l-2xl sm:rounded-r-none sm:px-5 sm:py-3.5"
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3.5 bg-white text-gray-900 font-semibold text-sm rounded-r-2xl hover:bg-gray-100 transition-colors flex items-center gap-2"
+                  className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-100 sm:w-auto sm:rounded-l-none sm:rounded-r-2xl sm:px-6 sm:py-3.5"
                 >
                   <Send className="w-4 h-4" />
                   Subscribe
@@ -104,14 +110,18 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen }) => {
 
             {/* Contact */}
             <div className="space-y-2.5 mb-6">
-              <div className="flex items-start gap-2.5 text-gray-400">
+              <a href={`mailto:${TRAVEL4LIFE_CONTACT.email}`} onClick={() => void trackContactEvent('contact_email_click', contact)} className="flex items-start gap-2.5 text-gray-400 hover:text-white">
                 <Mail className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />
-                <span className="text-sm">info@travel4life.net</span>
-              </div>
-              <div className="flex items-start gap-2.5 text-gray-400">
+                <span className="text-sm">{TRAVEL4LIFE_CONTACT.email}</span>
+              </a>
+              <a href={`tel:${TRAVEL4LIFE_CONTACT.phoneHref}`} onClick={() => void trackContactEvent('contact_phone_click', contact)} className="flex items-start gap-2.5 text-gray-400 hover:text-white">
                 <Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />
-                <span className="text-sm">+91 9871-621-921</span>
-              </div>
+                <span className="text-sm">{TRAVEL4LIFE_CONTACT.phone}</span>
+              </a>
+              <a href={getTravel4LifeWhatsAppUrl(contact)} target="_blank" rel="noopener noreferrer" onClick={() => void trackContactEvent('contact_whatsapp_click', contact)} className="flex items-start gap-2.5 text-gray-400 hover:text-white">
+                <MessageCircle className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />
+                <span className="text-sm">WhatsApp Us</span>
+              </a>
               <div className="flex items-start gap-2.5 text-gray-400">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0 text-gray-500" />
                 <span className="text-sm">New Delhi, India</span>

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Users, Plane, DollarSign, TrendingUp, AlertTriangle,
-  Star, CreditCard, UserCheck, Globe, Image, Sparkles, Send
+  Star, CreditCard, UserCheck, Globe, Image, Sparkles, Send, Database
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -9,9 +9,12 @@ import { AnalyticsReports } from './AnalyticsReports';
 import { GalleryManager } from './GalleryManager';
 import { PackageCreator } from '../package-creator/PackageCreator';
 import { VoucherDispatchCenter } from './VoucherDispatchCenter';
+import { CorbettAuthorityCenter } from './CorbettAuthorityCenter';
 
 export const AdminDashboard: React.FC = () => {
-  const [activeTab, setActiveTab] = useState('overview');
+  const [activeTab, setActiveTab] = useState(
+    () => window.location.hash === '#corbett-authority' ? 'corbett-authority' : 'overview',
+  );
 
   const stats = [
     { label: 'Total Users', value: '12,450', change: '+8.2%', icon: Users, color: 'text-blue-600' },
@@ -74,6 +77,7 @@ export const AdminDashboard: React.FC = () => {
     { id: 'payments', label: 'Payments', icon: CreditCard },
     { id: 'reports', label: 'Reports', icon: AlertTriangle },
     { id: 'analytics', label: 'Analytics', icon: TrendingUp },
+    { id: 'corbett-authority', label: 'Corbett SEO', icon: Database },
   ];
 
   return (
@@ -85,11 +89,14 @@ export const AdminDashboard: React.FC = () => {
 
       {/* Navigation Tabs */}
       <div className="border-b border-gray-200 mb-8">
-        <nav className="flex space-x-8">
+        <nav className="flex min-w-max space-x-8">
           {tabs.map((tab) => (
             <button
               key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
+              onClick={() => {
+                setActiveTab(tab.id);
+                window.location.hash = tab.id === 'corbett-authority' ? 'corbett-authority' : 'admin-dashboard';
+              }}
               className={`flex items-center py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
                 activeTab === tab.id
                   ? 'border-yellow-500 text-yellow-600'
@@ -224,7 +231,11 @@ export const AdminDashboard: React.FC = () => {
         <VoucherDispatchCenter />
       )}
 
-      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && (
+      {activeTab === 'corbett-authority' && (
+        <CorbettAuthorityCenter />
+      )}
+
+      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && activeTab !== 'corbett-authority' && (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {tabs.find(tab => tab.id === activeTab)?.label} Management

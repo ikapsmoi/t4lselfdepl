@@ -8,6 +8,8 @@ import { useExitIntent } from './hooks/useExitIntent';
 import { useAnalytics } from './utils/analytics';
 import { EnhancedAuthModal } from './components/auth/EnhancedAuthModal';
 import { updateSeoForPage } from './utils/seo';
+import { Travel4LifeGlobalContactLayer } from './components/common/Travel4LifeContactCTA';
+import { getTravel4LifeContactContextFromLocation, type Travel4LifeContactContext } from './utils/travel4lifeContact.js';
 
 // Lazy load all page components
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -46,6 +48,9 @@ const AppContent: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const [authMode, setAuthMode] = React.useState<'login' | 'signup' | 'forgot'>('login');
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [contactContext, setContactContext] = React.useState<Travel4LifeContactContext>(
+    () => getTravel4LifeContactContextFromLocation(window.location.pathname, document.title),
+  );
 
   // Track app open event
   React.useEffect(() => {
@@ -71,6 +76,7 @@ const AppContent: React.FC = () => {
         ? 'trips'
         : '';
       setCurrentPage(hash || pathnamePage || 'home');
+      setContactContext(getTravel4LifeContactContextFromLocation(window.location.pathname, document.title));
       if (!/^\/trips\/[^/]+\/?$/.test(window.location.pathname)) {
         updateSeoForPage(hash || 'home');
       }
@@ -81,6 +87,17 @@ const AppContent: React.FC = () => {
     handleHashChange(); // Set initial page
 
     return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  React.useEffect(() => {
+    const updateContactContext = (event: Event) => {
+      const contextEvent = event as CustomEvent<Travel4LifeContactContext>;
+      if (contextEvent.detail && typeof contextEvent.detail === 'object') {
+        setContactContext(contextEvent.detail);
+      }
+    };
+    window.addEventListener('travel4life:contact-context', updateContactContext);
+    return () => window.removeEventListener('travel4life:contact-context', updateContactContext);
   }, []);
 
   // Simple routing based on user role and current view
@@ -136,6 +153,12 @@ const AppContent: React.FC = () => {
         ) : (
           <Suspense fallback={<PageLoader />}><HomePage /></Suspense>
         );
+      case 'corbett-authority':
+        return user?.role === 'admin' ? (
+          <Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>
+        ) : (
+          <Suspense fallback={<PageLoader />}><HomePage /></Suspense>
+        );
       default:
         // If no specific page is requested and user is logged in, default to their dashboard
         if (user) {
@@ -162,7 +185,10 @@ const AppContent: React.FC = () => {
       <div className="min-h-screen bg-gray-50">
         <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <main>{getCurrentView()}</main>
-        <Footer setIsMenuOpen={setIsMenuOpen} />
+        <Travel4LifeGlobalContactLayer
+          context={contactContext}
+        />
+        <Footer setIsMenuOpen={setIsMenuOpen} contactContext={contactContext} />
       </div>
       
       {/* Exit Intent Modal */}

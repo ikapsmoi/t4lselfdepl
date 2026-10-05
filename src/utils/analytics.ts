@@ -1,4 +1,5 @@
 import { supabase } from '../lib/supabase';
+import type { Travel4LifeContactContext } from './travel4lifeContact.js';
 
 // Generate a session ID for tracking user sessions
 const generateSessionId = (): string => {
@@ -18,6 +19,55 @@ const getClientIP = async (): Promise<string | null> => {
     return data.ip;
   } catch {
     return null;
+  }
+};
+
+const getOrganicSource = (referrer: string): string => {
+  if (!referrer) return 'direct';
+
+  try {
+    const hostname = new URL(referrer).hostname.toLowerCase();
+    return /(^|\.)google\./.test(hostname) || /(^|\.)bing\.com$/.test(hostname)
+      || /(^|\.)search\.yahoo\.com$/.test(hostname) || /(^|\.)duckduckgo\.com$/.test(hostname)
+      ? 'organic'
+      : 'referral';
+  } catch {
+    return 'direct';
+  }
+};
+
+export const trackContactEvent = async (eventName: string, context: Travel4LifeContactContext = {}) => {
+  const pageUrl = `${window.location.origin}${window.location.pathname}`;
+  const metadata = {
+    page_url: pageUrl,
+    page_type: context.pageType || 'travel',
+    destination: context.destination || '',
+    city: context.city || '',
+    country: context.country || '',
+    entity: context.entity || context.package || context.resort || context.destination || '',
+    resort: context.resort || '',
+    package: context.package || '',
+    event_type: context.eventType || '',
+    trip_type: context.tripType || '',
+    origin: context.origin || '',
+    source: getOrganicSource(document.referrer),
+  };
+  let sessionId = sessionStorage.getItem('traveltag_session_id');
+  if (!sessionId) {
+    sessionId = `session_${Date.now()}_${Math.random().toString(36).slice(2, 11)}`;
+    sessionStorage.setItem('traveltag_session_id', sessionId);
+  }
+
+  try {
+    const { error } = await supabase.from('analytics_events').insert([{
+      event_name: eventName,
+      user_id: null,
+      session_id: sessionId,
+      metadata,
+    }]);
+    if (error) console.error('Contact analytics tracking error:', error);
+  } catch (error) {
+    console.error('Contact analytics tracking failed:', error);
   }
 };
 

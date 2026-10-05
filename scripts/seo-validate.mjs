@@ -1,6 +1,8 @@
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { TRAVEL4LIFE_CONTACT, getTravel4LifeContactContextFromLocation, getTravel4LifeWhatsAppUrl } from '../src/utils/travel4lifeContact.js';
+import { injectContactLayerHtml } from './contact-layer-markup.mjs';
 
 const siteUrl = 'https://travel4life.net';
 const intentMapPath = resolve('public/tomorrowland/search-intent-map.json');
@@ -13,6 +15,7 @@ const knownInternalRoutes = new Set([
   '/trips/',
   '/europe/',
   '/tomorrowland-seo.css',
+  '/travel4life-contact.css',
   ...routes.map(({ url }) => url),
 ]);
 const failures = [];
@@ -28,6 +31,10 @@ const sitemap = await readFile(sitemapPath, 'utf8');
 const sitemapIndex = await readFile(sitemapIndexPath, 'utf8');
 const redirects = await readFile(redirectsPath, 'utf8');
 const styles = await readFile(stylesPath, 'utf8');
+const contactStyles = await readFile(resolve('src/contact-layer.css'), 'utf8');
+const contactAnalytics = { url: 'https://example.supabase.co', anonKey: 'public-anon-key-placeholder' };
+const contactAnalyticsScript = await readFile(resolve('public/travel4life-contact-analytics.js'), 'utf8');
+const validatedContactPages = new Set();
 const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((match) => match[1]);
 const sitemapIndexUrls = [...sitemapIndex.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((match) => match[1]);
 const redirectedPaths = [
@@ -39,6 +46,25 @@ const legacyFallbacks = [
   ['tomorrowland-india.html', '/tomorrowland/from-india/'],
   ['tomorrowland/winter/2027/index.html', '/tomorrowland/winter/'],
 ];
+
+const validateContactLayer = (route, html) => {
+  validatedContactPages.add(route);
+  if (!html.includes(`tel:${TRAVEL4LIFE_CONTACT.phoneHref}`)) failures.push(`${route}: missing clickable phone CTA`);
+  if (!html.includes(`mailto:${TRAVEL4LIFE_CONTACT.email}`)) failures.push(`${route}: missing clickable email CTA`);
+  if (!html.includes(`https://wa.me/${TRAVEL4LIFE_CONTACT.whatsappNumber}?text=`)) failures.push(`${route}: missing configured WhatsApp CTA`);
+  if (html.includes('t4l-contact-panel--hero')) failures.push(`${route}: unexpected contact panel in hero`);
+  if (!html.includes('t4l-contact-panel--final')) failures.push(`${route}: missing final contact CTA`);
+  if (html.includes('t4l-contact-sticky') || html.includes('t4l-global-footer')) failures.push(`${route}: unexpected added contact footer bar`);
+  if (html.includes('t4l-contact-header')) failures.push(`${route}: unexpected extra contact button in header`);
+  if (!html.includes('data-contact-page-type=') || !html.includes('data-contact-event=')) failures.push(`${route}: contact links are missing context or analytics event attributes`);
+  if (!html.includes('/travel4life-contact-analytics.js')) failures.push(`${route}: missing contact conversion analytics script`);
+  if (!contactAnalyticsScript.includes("analytics_events")) failures.push(`${route}: contact analytics does not submit conversion events`);
+  if (!contactAnalyticsScript.includes('contactSecondaryEvent') || !contactAnalyticsScript.includes('contactExtraEvent')) failures.push(`${route}: contact analytics omits contextual quote events`);
+  if (!contactStyles.includes('min-height: 48px')) failures.push(`${route}: contact touch targets are below 44px`);
+  const context = getTravel4LifeContactContextFromLocation(route, html.match(/<title>([^<]+)<\/title>/i)?.[1] || '');
+  const expectedMessageUrl = getTravel4LifeWhatsAppUrl(context).replaceAll('&', '&amp;');
+  if (!html.includes(expectedMessageUrl)) failures.push(`${route}: WhatsApp message is not contextual to the landing page`);
+};
 
 if (new Set(sitemapUrls).size !== sitemapUrls.length) {
   failures.push('sitemap-static.xml: duplicate URLs');
@@ -94,15 +120,19 @@ for (const route of routes) {
     continue;
   }
 
-  const html = await readFile(filePath, 'utf8');
+  const sourceHtml = await readFile(filePath, 'utf8');
+  const html = injectContactLayerHtml(
+    sourceHtml,
+    getTravel4LifeContactContextFromLocation(route.url, sourceHtml.match(/<title>([^<]+)<\/title>/i)?.[1] || ''),
+    contactAnalytics,
+  );
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim();
   const description = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim();
   const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
   const robots = html.match(/<meta\s+name="robots"\s+content="([^"]+)"/i)?.[1] || '';
   const homeLink = html.match(/<a\s+class="home-link"\s+href="\/">Home<\/a>/i);
   const guideLink = html.match(/<a\s+class="guides-link"\s+href="\/tomorrowland\/">Festival guides<\/a>/i);
-  const headerWhatsapp = html.match(/<a\s+class="whatsapp-button"\s+href="(https:\/\/wa\.me\/919871621921[^"]*)"[^>]*aria-label="Chat with Travel4life on WhatsApp"/i)?.[1];
-  const floatingWhatsapp = html.match(/<a\s+class="floating-whatsapp"\s+href="(https:\/\/wa\.me\/919871621921[^"]*)"[^>]*aria-label="Chat with Travel4life on WhatsApp"/i)?.[1];
+  const headerWhatsapp = html.match(new RegExp(`<a\\s+class="whatsapp-button"\\s+href="(https:\\/\\/wa\\.me\\/${TRAVEL4LIFE_CONTACT.whatsappNumber}[^"]*)"[^>]*aria-label="Chat with Travel4life on WhatsApp"`, 'i'))?.[1];
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const jsonLd = [...html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
   const imageUrl = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)?.[1];
@@ -133,8 +163,7 @@ for (const route of routes) {
   if (!homeLink) failures.push(`${route.url}: missing visible Home navigation link`);
   if (!guideLink) failures.push(`${route.url}: missing visible Tomorrowland guides navigation link`);
   if (!headerWhatsapp) failures.push(`${route.url}: missing accessible header WhatsApp action`);
-  if (!floatingWhatsapp) failures.push(`${route.url}: missing persistent WhatsApp action`);
-  if (headerWhatsapp && floatingWhatsapp !== headerWhatsapp) failures.push(`${route.url}: header and floating WhatsApp links do not match`);
+  validateContactLayer(route.url, html);
   if (h1Count !== 1) failures.push(`${route.url}: expected one H1, found ${h1Count}`);
   if (wordCount < 150) failures.push(`${route.url}: thin visible content (${wordCount} words; minimum 150)`);
   if (jsonLd.length === 0) failures.push(`${route.url}: missing JSON-LD`);
@@ -186,11 +215,34 @@ for (const route of routes) {
   }
 }
 
+for (const sitemapUrl of sitemapUrls) {
+  const pageUrl = new URL(sitemapUrl);
+  if (!pageUrl.pathname.startsWith('/europe/') && !pageUrl.pathname.startsWith('/tomorrowland/')) continue;
+  const pagePath = resolve('public', ...pageUrl.pathname.split('/').filter(Boolean), 'index.html');
+  if (!existsSync(pagePath)) {
+    failures.push(`${pageUrl.pathname}: missing static SEO page for global contact validation`);
+    continue;
+  }
+  if (validatedContactPages.has(pageUrl.pathname)) continue;
+  const sourceHtml = await readFile(pagePath, 'utf8');
+  const contactHtml = injectContactLayerHtml(
+    sourceHtml,
+    getTravel4LifeContactContextFromLocation(pageUrl.pathname, sourceHtml.match(/<title>([^<]+)<\/title>/i)?.[1] || ''),
+    contactAnalytics,
+  );
+  validateContactLayer(pageUrl.pathname, contactHtml);
+}
+
 const europePath = resolve('public/europe/index.html');
 if (!existsSync(europePath)) {
   failures.push('/europe/: mapped file is missing');
 } else {
-  const html = await readFile(europePath, 'utf8');
+  const sourceHtml = await readFile(europePath, 'utf8');
+  const html = injectContactLayerHtml(
+    sourceHtml,
+    getTravel4LifeContactContextFromLocation('/europe/', sourceHtml.match(/<title>([^<]+)<\/title>/i)?.[1] || ''),
+    contactAnalytics,
+  );
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1]?.trim();
   const description = html.match(/<meta\s+name="description"\s+content="([^"]+)"/i)?.[1]?.trim();
   const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/i)?.[1];
@@ -203,6 +255,7 @@ if (!existsSync(europePath)) {
   const internalLinks = [...html.matchAll(/href="(\/[^"#?]*)[^"]*"/gi)].map((match) => match[1]);
   const europeUrl = `${siteUrl}/europe/`;
 
+  validateContactLayer('/europe/', html);
   if (!title) failures.push('/europe/: missing title');
   if (!description) failures.push('/europe/: missing meta description');
   if (primaryQueries.has(europeIntentMap.owners[0].primaryQuery.toLowerCase())) {
@@ -259,4 +312,5 @@ if (failures.length > 0) {
   process.exitCode = 1;
 } else {
   console.log(`Validated ${routes.length} Tomorrowland pages and the Europe hub: intent ownership, visible content, metadata, canonical, schema, internal links, redirects, sitemap coverage and availability caveats.`);
+  console.log(`Travel4Life Contact Layer: validated ${validatedContactPages.size} SEO landing pages for clickable phone, WhatsApp and email, no added hero or footer bars, final CTAs, contextual messages, and analytics event wiring.`);
 }

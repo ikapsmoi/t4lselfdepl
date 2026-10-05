@@ -5,6 +5,8 @@ import { TripGrid } from '../components/trips/TripGrid';
 import { useTrips } from '../hooks/useTrips';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../ui/Badge';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../utils/travel4lifeContact.js';
+import { trackContactEvent } from '../utils/analytics';
 
 export const TripsPage: React.FC = () => {
   const { trips, loading, error, searchTrips, refreshTrips, getTrendingTrips } = useTrips();
@@ -31,19 +33,19 @@ export const TripsPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-gray-900 mb-4 tracking-tight">
+        <div className="mb-8 text-center sm:mb-12">
+          <h1 className="mb-3 text-3xl font-display font-bold tracking-tight text-gray-900 sm:mb-4 sm:text-4xl md:text-5xl">
             Discover Amazing Adventures
           </h1>
-          <p className="text-xl text-gray-600 font-body max-w-3xl mx-auto leading-relaxed">
+          <p className="mx-auto max-w-3xl text-base leading-relaxed text-gray-600 font-body sm:text-xl">
             Browse through hundreds of unique travel experiences created by passionate hosts worldwide.
           </p>
         </div>
 
         {/* Search Section */}
-        <div className="mb-16">
+        <div className="mb-10 sm:mb-16">
           <SearchBar onSearch={searchTrips} />
         </div>
 
@@ -72,16 +74,17 @@ export const TripsPage: React.FC = () => {
 
           {trips.length === 0 && !loading && !error && (
             isEuropeSearch ? (
-              <section className="rounded-2xl border border-sky-100 bg-white p-8 text-center shadow-sm">
-                <h2 className="text-2xl font-bold text-gray-900">No active Europe trips are listed right now</h2>
-                <p className="mx-auto mt-3 max-w-2xl text-gray-600">
+              <section className="rounded-2xl border border-sky-100 bg-white p-5 text-center shadow-sm sm:p-8">
+                <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">No active Europe trips are listed right now</h2>
+                <p className="mx-auto mt-3 max-w-2xl text-sm text-gray-600 sm:text-base">
                   Trip dates and availability change. Contact Travel4life to ask about current plans or a
                   custom Europe itinerary; we will confirm what is actually available.
                 </p>
                 <a
-                  href="https://wa.me/919871621921?text=Hi%20Travel4life%2C%20I%27m%20interested%20in%20Europe%20travel%20from%20India."
+                  href={getTravel4LifeWhatsAppUrl(getTravel4LifeContactContext({ pageType: 'europe', destination: 'Europe' }))}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={() => void trackContactEvent('contact_whatsapp_click', getTravel4LifeContactContext({ pageType: 'europe', destination: 'Europe' }))}
                   className="mt-5 inline-flex rounded-xl bg-gray-900 px-5 py-3 font-semibold text-white transition hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
                 >
                   Ask about Europe travel

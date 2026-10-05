@@ -7,6 +7,7 @@ import { cleanTripTitle, stripSourceNotes } from '../utils/formatters';
 import { getTripCanonicalUrl, getTripJsonLd, getTripPath, getTripSeoDescription, getTripSeoTitle } from '../utils/tripSeo';
 import { updateSeoForTrip } from '../utils/seo';
 import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
+import { Travel4LifeContactCTA } from '../components/common/Travel4LifeContactCTA';
 
 const fallbackImage = (category: string): string => {
   if (category === 'budget') return '/pkg1.png';
@@ -168,6 +169,15 @@ export const TripSeoPage: React.FC = () => {
 
       const loadedRelatedTrips = (relatedData || []).map(toTrip);
       setTrip(loadedTrip);
+      window.dispatchEvent(new CustomEvent('travel4life:contact-context', {
+        detail: {
+          pageType: 'package',
+          destination: loadedTrip.destination,
+          package: loadedTrip.title,
+          tripType: loadedTrip.type,
+          entity: loadedTrip.title,
+        },
+      }));
       setRelatedTrips(loadedRelatedTrips);
       setLoading(false);
 
@@ -224,6 +234,17 @@ export const TripSeoPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        <Travel4LifeContactCTA
+          variant="inline"
+          context={{
+            pageType: 'package',
+            destination: trip.destination,
+            package: trip.title,
+            tripType: trip.type,
+            entity: trip.title,
+          }}
+        />
 
         <section className="mt-12 grid gap-8 md:grid-cols-2">
           <div>

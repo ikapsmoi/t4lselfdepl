@@ -6,4 +6,7 @@
   <sitemap>
     <loc>https://travel4life.net/sitemap-products.xml</loc>
   </sitemap>
+  <sitemap>
+    <loc>https://travel4life.net/sitemap-corbett.xml</loc>
+  </sitemap>
 </sitemapindex>
