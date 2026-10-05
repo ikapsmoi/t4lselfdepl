@@ -18,7 +18,7 @@ The UUID is used because the current `trips` schema has no persisted slug field.
 
 ### Rendering limitation
 
-Product metadata and content are client-rendered. A fresh HTTP response initially serves the SPA shell, so crawlers or social preview clients that do not execute JavaScript may not receive the trip-specific title, canonical, JSON-LD, or visible product content. The sitemap's inclusion of a trip URL is not proof that every crawler can render its product page. Server rendering or pre-rendering from verified active trip records, followed by deployment-level crawler tests, remains necessary to close this gap.
+The `npm run build:app` command produces only the SPA shell; trip metadata and content are populated client-side. The production `npm run build` command also generates static trip pages so crawlers and social preview clients receive trip content and metadata in the initial response.
 
 ## Sitemap and audit
 
@@ -33,10 +33,18 @@ npm run seo:audit
 
 `seo:sitemap` includes only active products that pass the shared quality gate: title, category, destination, valid dates, non-negative price, meaningful description, and at least one image. `seo:audit` reports the active product count, SEO-ready count, exclusions by missing field, duplicate titles, category totals, and sitemap coverage. The scripts require `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` in the environment where they run.
 
-The deployment fallback in `public/_redirects` keeps direct product URLs on the SPA entry point so the client route can load on a fresh request. This fallback makes the route reachable; it does not solve the initial-render limitation above.
+### Crawlable inventory-backed product pages
+
+`npm run build` builds the app, fetches active listings from Supabase, and writes a static HTML snapshot for each future, SEO-ready trip to `dist/trips/<trip-id>/index.html`. Each snapshot includes that trip's title, description, destination, dates, price, image, canonical, Product/Offer and breadcrumb JSON-LD, plus links to related eligible trips. The product sitemap in `dist` is generated from the same eligible listings. `npm run build:seo` is an explicit alias for the production build.
+
+The eligibility gate rejects malformed trip IDs, expired or inconsistent dates, missing product fields and unsafe/missing images. Europe landing pages are included in the deployed static sitemap and marked indexable only when matching, future, quality-checked inventory exists; otherwise they remain directly accessible as `noindex, follow` planning guides. Country, route, traveller-type and budget pages each require matching destinations or trip details.
+
+The production build requires `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY` (loaded from Vite environment files such as `.env.local` or supplied by the deployment environment) and a successful Supabase request. It fails rather than silently producing incomplete crawlable pages. Configure the hosting provider to deploy `dist` from `npm run build`, and rebuild when active trip inventory changes so the HTML snapshots and product sitemap stay current. Use `npm run build:app` for local/offline SPA-only builds.
+
+The deployment fallback in `public/_redirects` keeps direct product URLs on the SPA entry point so the client route can load on a fresh request. The static snapshots emitted by `build:seo` provide the initial trip content and metadata; the client application still loads afterward to preserve the existing booking experience.
 
 ## Europe discovery hub
 
-`/europe/` is a crawlable static authority hub for Indian travellers planning Europe trips. It is linked from the site footer and the static sitemap. The page routes visitors to the live trip catalogue using `/trips/?destination=Europe`; that filter matches the country portion of active trip locations instead of claiming fixed package availability.
+`/europe/` is a static authority hub for Indian travellers planning Europe trips. The SEO deployment build keeps Europe pages in the sitemap and marks them indexable only when matching live trip inventory passes the product quality gate. The page routes visitors to the live trip catalogue using `/trips/?destination=Europe`; that filter matches the country portion of active trip locations instead of claiming fixed package availability.
 
 The supplied Search Console export contains no Europe destination query or landing-page rows, and the product sitemap is not evidence that every European destination has a current offer. For that reason, the first release intentionally creates one useful hub rather than unsupported country/city pages. The page distinguishes planning guidance from confirmed inclusions, prices, dates, hotels, and availability. Add more destination pages only when live product relevance and differentiated content justify them.

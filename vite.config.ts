@@ -33,6 +33,16 @@ const servePublicDirectoryIndexes = (root: string) => ({
       }
 
       const requestUrl = new URL(req.url, 'http://localhost');
+      const productRoute = requestUrl.pathname.match(/^\/trips\/([\da-f]{8}(?:-[\da-f]{4}){3}-[\da-f]{12})\/?$/i);
+      if (productRoute) {
+        const productIndexPath = path.resolve(process.cwd(), 'dist', 'trips', productRoute[1], 'index.html');
+        if (fs.existsSync(productIndexPath)) {
+          req.url = `/trips/${productRoute[1]}/index.html${requestUrl.search}`;
+          next();
+          return;
+        }
+      }
+
       if (!requestUrl.pathname.endsWith('/') || requestUrl.pathname === '/') {
         next();
         return;

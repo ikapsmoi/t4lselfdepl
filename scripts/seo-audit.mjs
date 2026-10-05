@@ -1,23 +1,8 @@
 import { getProductQuality, productPath } from './seo-quality.mjs';
+import { fetchActiveTrips } from './supabase-seo-data.mjs';
 
 const siteUrl = (process.env.SITE_URL || 'https://travel4life.net').replace(/\/$/, '');
-const supabaseUrl = process.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = process.env.VITE_SUPABASE_ANON_KEY;
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are required to run the SEO audit.');
-}
-
-const endpoint = `${supabaseUrl.replace(/\/$/, '')}/rest/v1/trips?select=id,title,category,location,start_date,end_date,price_per_person,images,itinerary,status&status=eq.active&order=created_at.desc`;
-const response = await fetch(endpoint, {
-  headers: { apikey: supabaseAnonKey, Authorization: `Bearer ${supabaseAnonKey}` },
-});
-
-if (!response.ok) {
-  throw new Error(`Supabase SEO audit query failed with HTTP ${response.status}: ${await response.text()}`);
-}
-
-const trips = await response.json();
+const trips = await fetchActiveTrips();
 const qualityResults = trips.map((trip) => ({ trip, quality: getProductQuality(trip) }));
 const eligible = qualityResults.filter(({ quality }) => quality.eligible).map(({ trip }) => trip);
 const excluded = qualityResults.filter(({ quality }) => !quality.eligible);

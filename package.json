@@ -5,12 +5,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/generate-product-pages.mjs",
+    "build:app": "vite build",
+    "build:seo": "npm run build",
     "lint": "eslint .",
     "preview": "vite preview",
     "seo:sitemap": "node scripts/generate-sitemap.mjs",
     "seo:audit": "node scripts/seo-audit.mjs",
-    "seo:validate": "node scripts/seo-validate.mjs"
+    "seo:validate": "node scripts/seo-validate.mjs",
+    "test:seo": "node --test scripts/seo-quality.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
