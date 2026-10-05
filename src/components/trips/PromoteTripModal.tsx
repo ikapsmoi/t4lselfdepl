@@ -4,6 +4,7 @@ import { Button } from '../ui/Button';
 import { Trip } from '../../types';
 import { Instagram, Share2, Copy, Download, CheckCircle, Smartphone, Camera } from 'lucide-react';
 import { useAnalytics } from '../../utils/analytics';
+import { stripSourceNotes } from '../../utils/formatters';
 
 interface PromoteTripModalProps {
   isOpen: boolean;
@@ -27,6 +28,8 @@ export const PromoteTripModal: React.FC<PromoteTripModalProps> = ({
       `#${trip.type}Travel`, '#Wanderlust', '#TravelGram'
     ].join(' ');
 
+    const cleanedDescription = stripSourceNotes(trip.description);
+
     return `🌟 Just discovered this amazing trip: ${trip.title}!
 
 📍 ${trip.destination}
@@ -34,7 +37,7 @@ export const PromoteTripModal: React.FC<PromoteTripModalProps> = ({
 💰 Starting from $${trip.price} per person
 ⭐ ${trip.rating}/5 rating from fellow travelers
 
-${trip.description}
+${cleanedDescription}
 
 Who's ready to join me on this incredible journey? 🚀
 

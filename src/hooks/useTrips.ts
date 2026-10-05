@@ -2,7 +2,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SearchFilters, Trip } from "@/types";
-import { formatCitiesForDisplay, cleanTripTitle } from '../utils/formatters';
+import { formatCitiesForDisplay, cleanTripTitle, stripSourceNotes } from '../utils/formatters';
 import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
 const EUROPEAN_COUNTRIES = [
@@ -176,7 +176,7 @@ export const useTrips = () => {
         let transformedTrips: Trip[] = filteredData.map(trip => ({
           id: trip.id,
           title: cleanTripTitle(trip.title),
-          description: trip.itinerary?.description || 'Amazing travel experience awaits you on this incredible journey.',
+          description: stripSourceNotes(trip.itinerary?.description) || 'Amazing travel experience awaits you on this incredible journey.',
           destination: trip.location,
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
           type: trip.category,

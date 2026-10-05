@@ -3,7 +3,7 @@ import { Calendar, CheckCircle, Home, MapPin, Users } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Trip } from '../types';
 import { TripDetails } from '../components/trips/TripDetails';
-import { cleanTripTitle } from '../utils/formatters';
+import { cleanTripTitle, stripSourceNotes } from '../utils/formatters';
 import { getTripCanonicalUrl, getTripJsonLd, getTripPath, getTripSeoDescription, getTripSeoTitle } from '../utils/tripSeo';
 import { updateSeoForTrip } from '../utils/seo';
 import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
@@ -82,7 +82,7 @@ const toTrip = (row: TripRow): Trip => {
   return {
     id: row.id,
     title: cleanTripTitle(row.title),
-    description: itinerary.description || 'Explore this Travel4life group travel experience.',
+    description: stripSourceNotes(itinerary.description) || 'Explore this Travel4life group travel experience.',
     destination: row.location,
     country: row.location?.split(',').pop()?.trim() || 'Unknown',
     type: row.category,

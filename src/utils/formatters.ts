@@ -30,3 +30,17 @@ export const cleanTripTitle = (title: string | undefined): string => {
 
   return cleanedTitle || 'Untitled trip';
 };
+
+export const stripSourceNotes = (value?: string | null): string => {
+  if (!value) return '';
+
+  let cleaned = value
+    .replace(/\s*Source notes\s*:\s*.*?(?=\s*(?:Arbitrage note\s*:|$))/gis, '')
+    .replace(/\s*Arbitrage note\s*:\s*.*$/gis, '')
+    .replace(/\s*Published starting package\.?\s*/gi, '')
+    .replace(/\s*Look for local DMC net rate\.?\s*/gi, '')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+
+  return cleaned;
+};

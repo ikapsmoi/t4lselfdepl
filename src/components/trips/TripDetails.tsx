@@ -18,6 +18,7 @@ import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayMod
 import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS, DEFAULT_TRIP_EXCLUSIONS } from '../../utils/constants';
 import { DEFAULT_TRIP_REVIEWS } from '../../utils/defaultReviews';
 import { getCurrencySymbol } from '../../utils/constants';
+import { stripSourceNotes } from '../../utils/formatters';
 import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import { useBookings } from '../../hooks/useBookings';
@@ -92,6 +93,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
     }
     return getCurrencySymbol(trip.currency || 'INR'); // Fallback to existing logic
   }, [trip.type, trip.currency]);
+  const sanitizedDescription = stripSourceNotes(trip.description);
   const includedItems = trip.included?.some(item => item.trim())
     ? trip.included
     : DEFAULT_TRIP_INCLUSIONS;
@@ -267,7 +269,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   />
                 </div>
 
-                <p className="tour-description text-gray-700 mb-4 md:mb-6 whitespace-pre-wrap">{trip.description}</p>
+                <p className="tour-description text-gray-700 mb-4 md:mb-6 whitespace-pre-wrap">{sanitizedDescription}</p>
 
                 <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
                   {trip.tags.map((tag) => (
