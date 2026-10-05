@@ -20,6 +20,16 @@ const trips = await fetchActiveTrips();
 const eligibleTrips = trips.filter((trip) => getProductQuality(trip).eligible);
 const gatedEuropePages = await gateEuropePages(eligibleTrips, outputDirectory);
 const pageDirectory = resolve(outputDirectory, 'trips');
+await writeFile(resolve(outputDirectory, 'seo-product-page-candidates.json'), `${JSON.stringify({
+  schemaVersion: 1,
+  pages: eligibleTrips.map((trip) => ({
+    url: productPath(trip.id),
+    entityId: trip.id,
+    primaryKeyword: trip.title,
+    searchIntent: 'Inventory-backed travel product discovery and enquiry',
+    lastModified: trip.updated_at || null,
+  })),
+}, null, 2)}\n`, 'utf8');
 const sitemapEntries = await Promise.all(eligibleTrips.map(async (trip) => {
   const tripPath = productPath(trip.id);
   const pagePath = resolve(pageDirectory, trip.id, 'index.html');

@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node scripts/corbett-enrichment.mjs && vite build && node scripts/generate-corbett-pages.mjs && node scripts/generate-product-pages.mjs && node scripts/inject-seo-contact-layer.mjs",
+    "build": "node scripts/corbett-enrichment.mjs && vite build && node scripts/generate-corbett-pages.mjs && node scripts/generate-product-pages.mjs && node scripts/inject-seo-contact-layer.mjs && node scripts/generate-seo-sitemaps.mjs",
     "build:app": "node scripts/corbett-enrichment.mjs && vite build && node scripts/generate-corbett-pages.mjs",
     "build:seo": "npm run build",
     "lint": "eslint .",
@@ -13,10 +13,13 @@
     "seo:sitemap": "node scripts/generate-sitemap.mjs",
     "seo:audit": "node scripts/seo-audit.mjs",
     "seo:validate": "node scripts/seo-validate.mjs",
+    "seo:sitemaps:generate": "node scripts/generate-seo-sitemaps.mjs",
+    "seo:validate:sitemaps": "node scripts/seo-sitemap-artifact-validate.mjs",
+    "seo:validate:production": "node scripts/seo-production-validate.mjs",
     "corbett:seo:validate": "node scripts/corbett-seo-validate.mjs",
     "corbett:enrichment:refresh": "node scripts/corbett-enrichment.mjs",
     "corbett:enrichment:import": "node scripts/corbett-enrichment.mjs --import",
-    "test:seo": "node --test scripts/seo-quality.test.mjs scripts/corbett-data.test.mjs scripts/corbett-authority.test.mjs scripts/corbett-enrichment.test.mjs"
+    "test:seo": "node --test scripts/seo-quality.test.mjs scripts/corbett-data.test.mjs scripts/corbett-authority.test.mjs scripts/corbett-enrichment.test.mjs scripts/seo-sitemap-engine.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",

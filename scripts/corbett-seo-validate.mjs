@@ -6,6 +6,12 @@ const siteUrl = 'https://travel4life.net';
 const registry = JSON.parse(await readFile(resolve('dist/jim-corbett/page-registry.json'), 'utf8'));
 const dataset = JSON.parse(await readFile(resolve('dist/jim-corbett/resorts.json'), 'utf8'));
 const sitemap = await readFile(resolve('dist/sitemap-corbett.xml'), 'utf8');
+const rootSitemap = await readFile(resolve('dist/sitemap.xml'), 'utf8');
+const seoRegistry = JSON.parse(await readFile(resolve('dist/seo-page-registry.json'), 'utf8'));
+const robotsTxt = await readFile(resolve('dist/robots.txt'), 'utf8');
+const redirects = await readFile(resolve('public/_redirects'), 'utf8');
+const notFound = await readFile(resolve('dist/404.html'), 'utf8');
+const resortScript = await readFile(resolve('dist/jim-corbett/corbett.js'), 'utf8');
 const errors = [];
 const warnings = [];
 const htmlByUrl = new Map();
@@ -35,11 +41,21 @@ const collectSchemaTypes = (value, types = []) => {
 
 expect(new Set(urls).size === urls.length, 'Registry contains duplicate URLs.');
 expect(new Set(primaryQueries).size === primaryQueries.length, 'Registry contains duplicate primary queries.');
-expect(registry.pages.length === 5, `Expected five approved Corbett routes, found ${registry.pages.length}.`);
+expect(registry.pages.length === 5, `Expected five Corbett routes, found ${registry.pages.length}.`);
 expect(dataset.properties.length === 100, `Expected 100 imported properties, found ${dataset.properties.length}.`);
 expect(dataset.schemaVersion === 2, 'Dataset has not been normalized for resort verification tracking.');
 expect(dataset.source.importedRows === dataset.properties.length, 'Dataset import count does not match its metadata.');
 expect(registry.enrichmentSummary?.total === dataset.properties.length, 'Registry enrichment summary does not match the normalized dataset.');
+expect(registry.page1Readiness?.overallScore === 55 && registry.page1Readiness.status === 'AMBER', 'Page-1 readiness score/status is missing or not aligned with the current lock assessment.');
+expect(robotsTxt.includes('Allow: /') && robotsTxt.includes('https://travel4life.net/sitemap.xml'), 'Robots rules must allow the site and reference the root sitemap index.');
+expect(rootSitemap.includes('https://travel4life.net/sitemaps/jim-corbett.xml'), 'Root sitemap index must reference the non-empty Corbett sitemap group.');
+expect(seoRegistry.pages.some((page) => page.url === '/jim-corbett/resorts/' && !page.indexable && page.quality_status !== 'approved'), 'Universal registry must preserve the RED/noindex resort decision.');
+expect(seoRegistry.sitemap_groups['jim-corbett']?.includes('/jim-corbett/'), 'Universal sitemap registry must own the Corbett hub URL.');
+const corbett404Rule = redirects.match(/^\/jim-corbett\/\*\s+\/404\.html\s+404!?$/m);
+const spaFallbackRule = redirects.match(/^\/\*\s+\/index\.html\s+200!?$/m);
+expect(Boolean(corbett404Rule && spaFallbackRule && corbett404Rule.index < spaFallbackRule.index), 'Corbett 404 route rule must appear before the generic SPA fallback.');
+expect(/<meta\s+name="robots"\s+content="noindex,\s*follow"/i.test(notFound), 'Corbett 404 document must be noindex, follow.');
+expect(!/history\.(?:pushState|replaceState)|location\.(?:search|hash)\s*=/i.test(resortScript), 'Resort filters must not generate crawlable URL variants.');
 
 const names = new Set();
 const slugs = new Set();
@@ -72,8 +88,14 @@ for (const property of dataset.properties) {
 errors.push(...rateErrors);
 
 for (const page of registry.pages) {
-  expect(page.qualityStatus === 'approved' && page.indexable, `${page.url}: only approved indexable pages should appear in the first-wave registry.`);
-  expect(Number.isFinite(page.readinessScore) && page.readinessScore >= 75, `${page.url}: page quality score must be at least 75 before indexing.`);
+  expect(['GREEN', 'AMBER', 'RED'].includes(page.page1Status), `${page.url}: missing a GREEN/AMBER/RED Page-1 status.`);
+  expect(Array.isArray(page.page1Reasons) && page.page1Reasons.length > 0, `${page.url}: Page-1 status needs evidence-based reasons.`);
+  if (page.page1Status === 'RED') {
+    expect(page.indexable === false && page.qualityStatus !== 'approved', `${page.url}: RED pages must not be indexable or approved.`);
+  } else {
+    expect(page.qualityStatus === 'approved' && page.indexable, `${page.url}: non-RED route should remain approved for indexation.`);
+  }
+  expect(Number.isFinite(page.technicalScore) && page.technicalScore >= 75, `${page.url}: technical route-quality score must be at least 75.`);
   expect(page.canonicalUrl === `${siteUrl}${page.url}`, `${page.url}: registry canonical does not match its route.`);
   expect(Boolean(page.entityType) && Boolean(page.parentUrl) && Boolean(page.searchIntent), `${page.url}: registry is missing entity, parent or intent metadata.`);
   expect(page.lastVerified === null, `${page.url}: unverified destination information is marked as verified.`);
@@ -99,7 +121,10 @@ for (const page of registry.pages) {
   expect(Boolean(title), `${page.url}: missing title.`);
   expect(Boolean(description), `${page.url}: missing description.`);
   expect(canonical === url, `${page.url}: canonical URL is missing or incorrect.`);
-  expect(/index,\s*follow/i.test(robots), `${page.url}: expected index, follow robots metadata.`);
+  expect(
+    page.indexable ? /index,\s*follow/i.test(robots) : /noindex,\s*follow/i.test(robots),
+    `${page.url}: robots metadata does not match its indexation decision.`,
+  );
   expect(h1Count === 1, `${page.url}: expected exactly one H1; found ${h1Count}.`);
   expect(wordCount >= minimumWords, `${page.url}: insufficient visible content (${wordCount} words; expected ${minimumWords}+).`);
   expect(html.includes('data-t4l-contact-layer'), `${page.url}: missing contact-layer configuration marker.`);
@@ -113,7 +138,14 @@ for (const page of registry.pages) {
   expect(html.includes('data-contact-event='), `${page.url}: contact links have no analytics event attributes.`);
   expect(html.includes(`/jim-corbett/corbett.css`), `${page.url}: missing shared Corbett responsive stylesheet.`);
   expect(html.includes('/jim-corbett/'), `${page.url}: missing links to the Corbett hub.`);
-  expect(sitemap.includes(`<loc>${url}</loc>`), `${page.url}: missing from the Corbett sitemap.`);
+  const sitemapEligible = page.indexable
+    && page.qualityStatus === 'approved'
+    && page.technicalScore >= 75
+    && page.page1Status !== 'RED';
+  expect(
+    sitemap.includes(`<loc>${url}</loc>`) === sitemapEligible,
+    `${page.url}: sitemap inclusion does not match its indexation and quality status.`,
+  );
   expect(!/lowest price guaranteed|best rates guaranteed|official booking authority|#1 in jim corbett/i.test(html), `${page.url}: contains an unsupported market claim.`);
 
   const jsonLdScripts = [...html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
@@ -166,7 +198,9 @@ for (const [url, pageType, quoteEvent] of eventRoutes) {
 }
 
 const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/gi)].map((match) => match[1]);
-const expectedSitemapUrls = registry.pages.filter(({ indexable, qualityStatus, readinessScore }) => indexable && qualityStatus === 'approved' && readinessScore >= 75)
+const expectedSitemapUrls = registry.pages.filter(({ indexable, qualityStatus, technicalScore, page1Status }) => (
+  indexable && qualityStatus === 'approved' && technicalScore >= 75 && page1Status !== 'RED'
+))
   .map(({ url }) => `${siteUrl}${url}`);
 expect(new Set(sitemapUrls).size === sitemapUrls.length, 'Corbett sitemap contains duplicate URLs.');
 expect(sitemapUrls.length === expectedSitemapUrls.length && expectedSitemapUrls.every((url) => sitemapUrls.includes(url)), 'Corbett sitemap does not exactly match approved registry entries.');
@@ -182,6 +216,7 @@ if (errors.length) {
   errors.forEach((error) => console.error(`- ${error}`));
   process.exitCode = 1;
 } else {
-  console.log(`PASS Corbett SEO validation: ${registry.pages.length} indexable routes; ${dataset.properties.length} source resort records; metadata, canonical, schema, content, sitemap, internal links, price caveats and conversion forms checked.`);
+  const indexableCount = registry.pages.filter(({ indexable }) => indexable).length;
+  console.log(`PASS Corbett SEO validation: ${indexableCount} indexable, ${registry.pages.length - indexableCount} noindex routes; ${dataset.properties.length} source resort records; metadata, canonical, schema, content, sitemap, links, 404 handling and conversion forms checked.`);
   warnings.forEach((warning) => console.warn(`WARN ${warning}`));
 }

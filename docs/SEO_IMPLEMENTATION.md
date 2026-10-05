@@ -20,9 +20,17 @@ The UUID is used because the current `trips` schema has no persisted slug field.
 
 The `npm run build:app` command produces only the SPA shell; trip metadata and content are populated client-side. The production `npm run build` command also generates static trip pages so crawlers and social preview clients receive trip content and metadata in the initial response.
 
-## Sitemap and audit
+## Universal SEO registry, sitemap groups, and production validation
 
-The root `public/sitemap.xml` is a valid sitemap index. It references the static sitemap and `sitemap-products.xml`.
+The site is a Vite React SPA with pre-rendered static HTML for the SEO landing pages and generated product snapshots. SEO URL handling is static-export based (not SSR/ISR). The frontend loads trip inventory through Supabase; no separate sitemap API or CMS route exists. `public/_redirects` uses Netlify-compatible rules, including the SPA fallback. The full production build emits `dist/seo-page-registry.json`, the normalized SEO registry consumed by the sitemap generator.
+
+`scripts/generate-seo-sitemaps.mjs` consolidates the explicit Europe and Tomorrowland intent maps, the Corbett page registry, and the quality-gated static product pages. Sitemap entries must have a generated public HTML asset, a self-canonical, `index, follow`, approved quality status, no permanent redirect, and no duplicate canonical. Index and child maps are generated from those final registry decisions; sitemap groups are created only when they contain eligible pages. The group names are path/intent based and can expand to countries, cities, routes, packages/products, festivals, weddings, MICE, guides, resorts, or future declared groups.
+
+Existing child endpoints remain available: `/sitemap-static.xml`, `/sitemap-products.xml`, and `/sitemap-corbett.xml`. The master `/sitemap.xml` points to non-empty grouped files under `/sitemaps/`, avoiding duplicate page URLs across the index. The legacy `/jim-corbett/resorts/sitemap.xml` endpoint is explicitly rewritten to the generated Corbett XML sitemap before the Corbett 404 and SPA fallback rules; the resort directory itself remains noindex and is not added to the sitemap.
+
+For a production build, use `npm run build` and deploy `dist`. Run `npm run seo:validate:production` after deployment with `SITE_URL` set to the deployed origin if it is not `https://travel4life.net`. It fetches the master and child sitemaps, rejects HTML/SPA responses and redirects, and verifies every listed URL returns HTTP 200 HTML with a matching canonical and indexable robots directive. Build-time file checks cannot prove the deployed host's actual response codes or MIME headers, so the production HTTP check is a release verification step, not a ranking guarantee.
+
+`npm run test:seo` tests sitemap XML, registry gates, duplicate handling, and the existing SEO quality logic. After a production build, `npm run seo:validate:sitemaps` checks that the master index and child XML files exactly match the generated registry. `npm run seo:validate` checks the editorial pages and intent maps; `npm run corbett:seo:validate` checks Corbett content and decisions. After deployment, `npm run seo:validate:production` checks actual HTTP responses, MIME types, redirects, canonical URLs, and robots directives.
 
 With the production Supabase environment variables available, run:
 
@@ -66,6 +74,8 @@ The source workbook contains names, broad categories and season, discounted-seas
 The admin-only Corbett SEO tab is available at `#corbett-authority`. It provides an evidence worksheet and queue, plus a Google Search Console CSV analysis dashboard. Resort-field imports require an HTTPS source URL, verification date and named verifier, and only update existing source-list entities. Individual property pages remain a human decision. Search Console snapshots are stored in the current administrator's browser local storage and are append-only; export backups before changing browsers or devices. Opportunity and CTR indicators are explicitly heuristic. No Search Console data is fabricated, no metadata changes automatically, and the dashboard does not guarantee rankings.
 
 Refresh the normalized queue with `npm run corbett:enrichment:refresh`; import verified field updates with `npm run corbett:enrichment:import -- <file.csv>`. Both `npm run build:app` and `npm run build` refresh the queue before copying static assets. Validate page and registry gates with `npm run corbett:seo:validate`; test scoring, date/CSV parsing, ranking buckets, ownership, and opportunity signals with `npm run test:seo`.
+
+The final red-team baseline, 11-dimension Page-1 readiness assessment, query ownership map, status reasons, claim/data audit and release actions are in [CORBETT_FINAL_SEO_AUDIT.md](./CORBETT_FINAL_SEO_AUDIT.md). Its 55/100 AMBER score is an evidence-based editorial assessment, not a Google position prediction. The unverified 100-property directory is intentionally served as `noindex, follow` and excluded from the sitemap until its data can support a reliable comparison. Unknown Corbett routes receive the dedicated 404 rule before the SPA fallback; verify the HTTP response on the deployed host before treating that as production evidence.
 
 Build the public app shell and Corbett SEO assets with `npm run build:app`, or use the production SEO build when Supabase credentials are available. Validate the generated Corbett routes with `npm run corbett:seo:validate`; workbook normalization is covered by `npm run test:seo`.
 

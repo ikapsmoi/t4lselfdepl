@@ -1,4 +1,4 @@
-import { mkdir, readFile, stat, writeFile } from 'node:fs/promises';
+import { mkdir, readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../src/utils/travel4lifeContact.js';
 import { calculateSeoReadiness, isCorbettPageIndexable } from './corbett-authority.mjs';
@@ -94,7 +94,7 @@ for (const page of registry.pages) {
   const htmlPath = resolve('dist', ...page.file.split('/'));
   let html = await readFile(htmlPath, 'utf8');
   const readiness = calculateSeoReadiness(page, html);
-  page.readinessScore = readiness.score;
+  page.technicalScore = readiness.score;
   page.readinessChecks = readiness.checks;
   const approvedForIndex = isCorbettPageIndexable(page, readiness.score);
   page.indexable = approvedForIndex;
@@ -110,12 +110,12 @@ await writeFile(resolve('public/jim-corbett/page-registry.json'), `${JSON.string
 
 const sitemapUrls = [];
 for (const page of registry.pages.filter((entry) => (
-  entry.indexable && entry.qualityStatus === 'approved' && entry.readinessScore >= 75
+  entry.indexable
+  && entry.qualityStatus === 'approved'
+  && entry.page1Status !== 'RED'
+  && entry.technicalScore >= 75
 ))) {
-  const htmlPath = resolve('dist', ...page.file.split('/'));
-  const { mtime } = await stat(htmlPath);
-  const lastmod = `\n    <lastmod>${mtime.toISOString()}</lastmod>`;
-  sitemapUrls.push(`  <url>\n    <loc>${escapeHtml(`${siteUrl}${page.url}`)}</loc>${lastmod}\n  </url>`);
+  sitemapUrls.push(`  <url>\n    <loc>${escapeHtml(`${siteUrl}${page.url}`)}</loc>\n  </url>`);
 }
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapUrls.join('\n')}\n</urlset>\n`;
 await mkdir(resolve('dist'), { recursive: true });

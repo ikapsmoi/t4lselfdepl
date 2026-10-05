@@ -1,5 +1,12 @@
 {
   "schemaVersion": 1,
+  "page1Readiness": {
+    "auditDate": "2026-10-05",
+    "overallScore": 55,
+    "status": "AMBER",
+    "statusLabel": "IMPROVE BEFORE SCALE",
+    "method": "Evidence-based editorial assessment using the documented 11-dimension weighted rubric; not a ranking prediction."
+  },
   "pages": [
     {
       "url": "/jim-corbett/",
@@ -13,9 +20,14 @@
       "indexable": true,
       "sitemapGroup": "jim-corbett",
       "qualityStatus": "approved",
+      "page1Status": "AMBER",
+      "page1Reasons": [
+        "Destination hub is clear, but verified local access, trip-component and safari-planning facts are limited.",
+        "No query-level Search Console export was supplied to validate demand or URL ownership."
+      ],
       "lastUpdated": null,
       "lastVerified": null,
-      "readinessScore": 100,
+      "technicalScore": 100,
       "readinessChecks": {
         "intent": true,
         "content": true,
@@ -37,18 +49,24 @@
       "searchIntent": "resort discovery and comparison",
       "parentUrl": "/jim-corbett/",
       "canonicalUrl": "https://travel4life.net/jim-corbett/resorts/",
-      "indexable": true,
+      "indexable": false,
       "sitemapGroup": "jim-corbett",
-      "qualityStatus": "approved",
+      "qualityStatus": "needs-improvement",
+      "page1Status": "RED",
+      "page1Reasons": [
+        "All 100 source-listed resort records remain unverified.",
+        "Location, room details, facilities, images, event capacity and current availability are unknown.",
+        "Workbook rate references have no validity date, occupancy, meal or tax basis."
+      ],
       "lastUpdated": null,
       "lastVerified": null,
-      "readinessScore": 100,
+      "technicalScore": 85,
       "readinessChecks": {
         "intent": true,
         "content": true,
         "data": true,
         "internalLinks": true,
-        "technical": true,
+        "technical": false,
         "schema": true,
         "ux": true,
         "trust": true,
@@ -67,9 +85,14 @@
       "indexable": true,
       "sitemapGroup": "jim-corbett",
       "qualityStatus": "approved",
+      "page1Status": "AMBER",
+      "page1Reasons": [
+        "The page offers an actionable wedding brief and venue due-diligence checklist.",
+        "No wedding venue, facility, capacity, supplier price or availability is verified."
+      ],
       "lastUpdated": null,
       "lastVerified": null,
-      "readinessScore": 100,
+      "technicalScore": 100,
       "readinessChecks": {
         "intent": true,
         "content": true,
@@ -94,9 +117,14 @@
       "indexable": true,
       "sitemapGroup": "jim-corbett",
       "qualityStatus": "approved",
+      "page1Status": "AMBER",
+      "page1Reasons": [
+        "The page offers a practical corporate event brief and venue verification checklist.",
+        "No meeting inventory, facility, capacity, supplier price or availability is verified."
+      ],
       "lastUpdated": null,
       "lastVerified": null,
-      "readinessScore": 100,
+      "technicalScore": 100,
       "readinessChecks": {
         "intent": true,
         "content": true,
@@ -121,9 +149,14 @@
       "indexable": true,
       "sitemapGroup": "jim-corbett",
       "qualityStatus": "approved",
+      "page1Status": "AMBER",
+      "page1Reasons": [
+        "The page explains the enquiry and verification process without claiming live inventory.",
+        "Legal business identity and accountable editorial ownership were not evidenced in this audit."
+      ],
       "lastUpdated": null,
       "lastVerified": null,
-      "readinessScore": 100,
+      "technicalScore": 100,
       "readinessChecks": {
         "intent": true,
         "content": true,

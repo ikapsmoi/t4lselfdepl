@@ -71,15 +71,24 @@ export interface CorbettPageRegistry {
     pageType: string;
     qualityStatus: string;
     indexable: boolean;
-    readinessScore?: number;
+    technicalScore?: number;
+    page1Status?: 'GREEN' | 'AMBER' | 'RED';
+    page1Reasons?: string[];
   }>;
+  page1Readiness?: {
+    auditDate: string;
+    overallScore: number;
+    status: 'GREEN' | 'AMBER' | 'RED';
+    statusLabel: string;
+    method: string;
+  };
   enrichmentSummary?: { readyForReview?: number; verified?: number };
 }
 
 export function parseCsv(text: string): string[][];
 export function parseSearchConsoleCsv(text: string, snapshotDate: string): SearchConsoleObservation[];
 export function createSearchConsoleSnapshot(text: string, snapshotDate: string, fileName: string): SearchConsoleSnapshot;
-export function isCorbettPageIndexable(page: { indexable: boolean; qualityStatus: string }, readinessScore: number): boolean;
+export function isCorbettPageIndexable(page: { indexable: boolean; qualityStatus: string; page1Status?: string }, readinessScore: number): boolean;
 export function analyzeSearchConsole(snapshots: SearchConsoleSnapshot[], registry: CorbettPageRegistry, options?: { minimumImpressions?: number }): {
   latestDate: string;
   priorDate: string;
@@ -94,5 +103,5 @@ export function analyzeSearchConsole(snapshots: SearchConsoleSnapshot[], registr
   alerts: Array<Record<string, string>>;
   topicalCoverage: Array<Record<string, string | number | boolean>>;
   nextActions: Array<{ title: string; targetUrl: string; reason: string; priority: number }>;
-  pageScores: Array<{ url: string; pageType: string; readinessScore: number; indexable: boolean }>;
+  pageScores: Array<{ url: string; pageType: string; technicalScore: number; indexable: boolean }>;
 };

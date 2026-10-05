@@ -388,7 +388,7 @@
       "url": "/europe/",
       "file": "europe/index.html",
       "intent": "Europe trip discovery and planning for travellers from India",
-      "primaryQuery": "Europe tour packages from India",
+      "primaryQuery": "Europe trip planning from India",
       "relatedQueries": [
         "Europe holiday packages from India",
         "Europe trips from India",
@@ -414,7 +414,7 @@
       "url": "/europe/tours-from-india/",
       "file": "europe/tours-from-india/index.html",
       "intent": "Europe tours from India authority page",
-      "primaryQuery": "Europe tour packages from India",
+      "primaryQuery": "Europe tours from India",
       "relatedQueries": [
         "Europe holidays from India",
         "Europe tours from India",
@@ -489,6 +489,42 @@
       ],
       "coverage": "Route page for a core first-time Europe combination.",
       "missingContent": "Expand with actual package and hotel detail once itinerary data is verified."
+    },
+    {
+      "url": "/europe/france-switzerland-italy/",
+      "file": "europe/france-switzerland-italy/index.html",
+      "intent": "France, Switzerland and Italy multi-country route planning",
+      "primaryQuery": "France Switzerland Italy tour",
+      "relatedQueries": ["France Switzerland Italy itinerary", "Europe multi-country tour from India"],
+      "coverage": "Existing route page provides a distinct three-country itinerary planning intent.",
+      "missingContent": "Keep package and hotel details conditional on verified inventory."
+    },
+    {
+      "url": "/europe/honeymoon/",
+      "file": "europe/honeymoon/index.html",
+      "intent": "Europe honeymoon planning for couples",
+      "primaryQuery": "Europe honeymoon packages",
+      "relatedQueries": ["Europe honeymoon itinerary", "Europe couples tour"],
+      "coverage": "Existing page serves couple-focused route and trip planning.",
+      "missingContent": "Keep live dates, stays and package availability tied to verified inventory."
+    },
+    {
+      "url": "/europe/family-tours/",
+      "file": "europe/family-tours/index.html",
+      "intent": "Family-oriented Europe tour planning",
+      "primaryQuery": "Europe family tour packages",
+      "relatedQueries": ["Europe family itinerary", "Europe trip with children"],
+      "coverage": "Existing page serves family-specific planning and suitability considerations.",
+      "missingContent": "Do not imply confirmed child facilities or package availability without evidence."
+    },
+    {
+      "url": "/europe/tours-under-200000/",
+      "file": "europe/tours-under-200000/index.html",
+      "intent": "Europe budget and under-two-lakh trip planning",
+      "primaryQuery": "Europe tour under 2 lakh",
+      "relatedQueries": ["Europe trip budget under 200000", "Europe package cost from India"],
+      "coverage": "Existing page explains budget-oriented trip planning.",
+      "missingContent": "Do not present a current bookable package unless matching inventory passes the product gate."
     },
     {
       "url": "/tomorrowland/",

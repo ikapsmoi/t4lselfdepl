@@ -103,6 +103,7 @@ test('SEO route quality score detects missing requirements and rewards a complet
   assert.equal(isCorbettPageIndexable({ indexable: true, qualityStatus: 'approved' }, 74), false);
   assert.equal(isCorbettPageIndexable({ indexable: false, qualityStatus: 'approved' }, 100), false);
   assert.equal(isCorbettPageIndexable({ indexable: true, qualityStatus: 'draft' }, 100), false);
+  assert.equal(isCorbettPageIndexable({ indexable: true, qualityStatus: 'approved', page1Status: 'RED' }, 100), false);
 });
 
 test('Search Console CSV parsing handles GSC percent CTRs, quoted commas and invalid dates', () => {

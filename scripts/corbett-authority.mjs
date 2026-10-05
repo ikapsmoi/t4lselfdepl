@@ -289,6 +289,7 @@ export const calculateSeoReadiness = (page, html) => {
 export const isCorbettPageIndexable = (page, readinessScore) => (
   page.indexable === true
   && page.qualityStatus === 'approved'
+  && page.page1Status !== 'RED'
   && Number.isFinite(readinessScore)
   && readinessScore >= 75
 );
@@ -557,13 +558,13 @@ export const analyzeSearchConsole = (snapshots, registry, { minimumImpressions =
   const pageScores = registry.pages.map((page) => ({
     url: page.url,
     pageType: page.pageType,
-    readinessScore: Number.isFinite(page.readinessScore) ? page.readinessScore : 0,
+    technicalScore: Number.isFinite(page.technicalScore) ? page.technicalScore : 0,
     indexable: page.indexable === true,
   }));
   const needsContentGap = queries.filter(({ position, targetUrl }) => {
     const target = pagesByUrl.get(targetUrl);
     return position > 20 || !target || target.qualityStatus !== 'approved'
-      || (Number.isFinite(target.readinessScore) && target.readinessScore < 75);
+      || (Number.isFinite(target.technicalScore) && target.technicalScore < 75);
   }).length;
 
   const readyForVerification = registry.enrichmentSummary?.readyForReview || 0;
@@ -624,7 +625,7 @@ export const analyzeSearchConsole = (snapshots, registry, { minimumImpressions =
       lostQueries: lostQueries.length,
       cannibalization: cannibalization.length,
       contentGaps: needsContentGap,
-      technicalIssues: pageScores.filter(({ readinessScore, indexable }) => indexable && readinessScore < 75).length,
+      technicalIssues: pageScores.filter(({ technicalScore, indexable }) => indexable && technicalScore < 75).length,
     },
     queries: [...queries].sort((a, b) => b.impressions - a.impressions),
     opportunities,

@@ -75,17 +75,31 @@ for (const requiredStyle of ["font-family: 'Plus Jakarta Sans'", '#0284c7 0%, #1
 for (const requiredStyle of ['.home-link', '.guides-link', '.whatsapp-button', '.floating-whatsapp', '@media (max-width: 480px)']) {
   if (!styles.includes(requiredStyle)) failures.push(`tomorrowland-seo.css: missing shared responsive UI style ${requiredStyle}`);
 }
+for (const requiredStyle of ['--forest-deep: #091c18', '--serif: \'Playfair Display\'', '.layout > article', 'grid-template-columns: 1fr', '@media (max-width: 560px)']) {
+  if (!styles.includes(requiredStyle)) failures.push(`tomorrowland-seo.css: missing shared destination editorial theme style ${requiredStyle}`);
+}
 const mappedUrls = new Set(routes.map(({ url }) => `${siteUrl}${url}`));
 for (const sitemapUrl of sitemapUrls) {
   if (sitemapUrl.startsWith(`${siteUrl}/tomorrowland/`) && !mappedUrls.has(sitemapUrl)) {
     failures.push(`sitemap-static.xml: Tomorrowland URL has no intent owner (${sitemapUrl})`);
+  }
+  const europeOwners = europeIntentMap.owners.filter(({ url }) => url.startsWith('/europe/'));
+  const europeOwnerUrls = new Set(europeOwners.map(({ url }) => `${siteUrl}${url}`));
+  const europePrimaryQueries = new Set();
+  for (const owner of europeOwners) {
+    const query = owner.primaryQuery.trim().toLowerCase();
+    if (europePrimaryQueries.has(query)) failures.push(`${owner.url}: duplicate Europe primary query owner "${owner.primaryQuery}"`);
+    europePrimaryQueries.add(query);
+  }
+  for (const sitemapUrl of sitemapUrls.filter((url) => url.startsWith(`${siteUrl}/europe/`))) {
+    if (!europeOwnerUrls.has(sitemapUrl)) failures.push(`sitemap-static.xml: Europe URL has no intent owner (${sitemapUrl})`);
   }
 }
 if (!sitemapIndexUrls.includes(`${siteUrl}/sitemap-static.xml`)) {
   failures.push('sitemap.xml: missing static sitemap');
 }
 if (!sitemapIndexUrls.includes(`${siteUrl}/sitemap-products.xml`)) {
-  failures.push('sitemap.xml: missing product sitemap');
+  failures.push('Legacy public sitemap.xml: missing product sitemap entry');
 }
 for (const sitemapUrl of sitemapIndexUrls) {
   const sitemapFile = resolve('public', sitemapUrl.slice(siteUrl.length + 1));
@@ -225,6 +239,9 @@ for (const sitemapUrl of sitemapUrls) {
   }
   if (validatedContactPages.has(pageUrl.pathname)) continue;
   const sourceHtml = await readFile(pagePath, 'utf8');
+  if (!sourceHtml.includes('href="/tomorrowland-seo.css"')) {
+    failures.push(`${pageUrl.pathname}: missing the shared destination editorial stylesheet`);
+  }
   const contactHtml = injectContactLayerHtml(
     sourceHtml,
     getTravel4LifeContactContextFromLocation(pageUrl.pathname, sourceHtml.match(/<title>([^<]+)<\/title>/i)?.[1] || ''),

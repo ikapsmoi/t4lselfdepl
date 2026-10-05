@@ -233,6 +233,36 @@ export const CorbettAuthorityCenter: React.FC = () => {
             ))}
           </div>
 
+          {registry?.page1Readiness && (
+            <section className="rounded-xl border border-amber-200 bg-amber-50 p-5">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-amber-800">Page-1 readiness · editorial assessment, not a ranking prediction</p>
+                  <h3 className="mt-1 text-2xl font-bold text-amber-950">
+                    {registry.page1Readiness.overallScore}/100 · {registry.page1Readiness.status} — {registry.page1Readiness.statusLabel}
+                  </h3>
+                </div>
+                <span className="text-xs text-amber-800">Audited {registry.page1Readiness.auditDate}</span>
+              </div>
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                {registry.pages.map((page) => (
+                  <article key={page.url} className="rounded-lg border border-amber-200/80 bg-white/80 p-3">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <strong className="text-sm text-gray-900">{page.url}</strong>
+                      <span className={`rounded-full px-2 py-1 text-[10px] font-bold ${page.page1Status === 'RED' ? 'bg-red-100 text-red-800' : page.page1Status === 'GREEN' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-900'}`}>
+                        {page.page1Status} · {page.indexable ? 'INDEXABLE' : 'NOINDEX'}
+                      </span>
+                    </div>
+                    <ul className="mt-2 list-disc space-y-1 pl-4 text-xs leading-5 text-gray-600">
+                      {(page.page1Reasons || []).map((reason) => <li key={reason}>{reason}</li>)}
+                    </ul>
+                  </article>
+                ))}
+              </div>
+              <p className="mt-3 text-[11px] leading-5 text-amber-900">{registry.page1Readiness.method}</p>
+            </section>
+          )}
+
           <div className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
             <article className="rounded-xl border border-gray-200 bg-white p-5 shadow-sm sm:p-6">
               <div className="mb-4 flex items-center gap-2"><ArrowDownToLine className="h-5 w-5 text-emerald-800" /><h3 className="text-lg font-bold text-gray-900">What should we improve next?</h3></div>
