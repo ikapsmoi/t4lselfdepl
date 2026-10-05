@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { optimizePexelsImage, generateResponsiveImageSrcSet, getImageSizes } from '../../utils/imageOptimization';
+import React, { useEffect, useState } from 'react';
+import { optimizeImageUrl, generateResponsiveImageSrcSet, getImageSizes } from '../../utils/imageOptimization';
 
 interface OptimizedImageProps {
   src: string;
@@ -28,6 +28,23 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
 }) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [sourceFallback, setSourceFallback] = useState(false);
+
+  useEffect(() => {
+    setImageError(false);
+    setImageLoaded(false);
+    setSourceFallback(false);
+  }, [src]);
+
+  const imageWidth = width ?? {
+    hero: 1440,
+    card: 640,
+    thumbnail: 320,
+    avatar: 96
+  }[type];
+  const optimizedSrc = optimizeImageUrl(src, { width: imageWidth, height });
+  const srcSet = priority ? generateResponsiveImageSrcSet(src) : undefined;
+  const sizes = getImageSizes(type);
 
   const handleLoad = () => {
     setImageLoaded(true);
@@ -35,14 +52,14 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   };
 
   const handleError = () => {
+    if (optimizedSrc !== src && !sourceFallback) {
+      setSourceFallback(true);
+      return;
+    }
+
     setImageError(true);
     onError?.();
   };
-
-  // Use optimized image URL
-  const optimizedSrc = optimizePexelsImage(src, { width, height });
-  const srcSet = priority ? generateResponsiveImageSrcSet(src) : undefined;
-  const sizes = getImageSizes(type);
 
   // Fallback image for errors
   const fallbackSrc = 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800&h=600';
@@ -57,11 +74,12 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
       )}
 
       <img
-        src={imageError ? fallbackSrc : optimizedSrc}
-        srcSet={imageError ? undefined : srcSet}
+        src={imageError ? fallbackSrc : sourceFallback ? src : optimizedSrc}
+        srcSet={imageError || sourceFallback ? undefined : srcSet}
         sizes={priority ? sizes : undefined}
         alt={alt}
         loading={priority ? 'eager' : loading}
+        fetchPriority={priority ? 'high' : 'auto'}
         decoding="async"
         onLoad={handleLoad}
         onError={handleError}

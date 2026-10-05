@@ -98,9 +98,9 @@ const packageDataFromTour = (tour: PackageTourRecord): PackageCreatorData => {
     : [];
   const imageList = Array.isArray(tour.images) ? tour.images.filter((image): image is string => typeof image === 'string' && image.length > 0) : [];
   const defaultImage = tour.category === 'budget'
-    ? '/pkg1.png'
+    ? '/optimized/pkg1.webp'
     : tour.category === 'indian_special'
-      ? '/pkg3.png'
+      ? '/optimized/pkg3.webp'
       : '';
   const resolvedImage = resolveTripImage(tour.title, tour.location, tour.category, imageList, defaultImage);
   const dayRecords: ItineraryDay[] = itineraryDays.map((day, index) => ({

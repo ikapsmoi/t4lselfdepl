@@ -2,8 +2,7 @@ import React, { useState, useMemo, memo } from 'react';
 import { Search, MapPin, ChevronUp, ChevronDown, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
-import { useTrips } from '@/hooks/useTrips';
-import { SearchFilters } from '../../types';
+import { SearchFilters, Trip } from '../../types';
 import {
   TRIP_TYPES,
   PRICE_RANGES,
@@ -16,11 +15,13 @@ import { getTripPath } from '../../utils/tripSeo';
 
 interface SearchBarProps {
   onSearch: (filters: SearchFilters) => void;
+  trips: Trip[];
+  tripsLoading?: boolean;
   className?: string;
   navigateOnFilter?: boolean;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className = '', navigateOnFilter = false }) => {
+export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, tripsLoading = false, className = '', navigateOnFilter = false }) => {
   const { searchTrip } = useAnalytics();
   const [destination, setDestination] = useState(
     () => new URLSearchParams(window.location.search).get('destination') || ''
@@ -32,9 +33,6 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
   const [difficulty, setDifficulty] = useState('');
   const [rating, setRating] = useState('');
   const [filtersMinimized, setFiltersMinimized] = useState(true);
-
-  // ✅ Pull trips directly
-  const { trips, loading: tripsLoading } = useTrips();
 
   const handleSearch = () => {
     const selectedTrip = trips.find(trip =>
@@ -111,8 +109,11 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, className =
       .map((trip) => trip.title?.trim())
       .filter(Boolean);
 
-    return [...new Set(live)].sort((a, b) => a.localeCompare(b));
-  }, [trips]);
+    return [...new Set(live)]
+      .filter((title) => !destination || title.toLocaleLowerCase().includes(destination.trim().toLocaleLowerCase()))
+      .sort((a, b) => a.localeCompare(b))
+      .slice(0, 20);
+  }, [destination, trips]);
 
   return (
     <div className={`w-full min-w-0 rounded-2xl p-3 sm:rounded-[20px] sm:p-5 ${className}`}>

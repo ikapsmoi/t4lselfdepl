@@ -101,7 +101,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
           {/* Brand */}
           <div className="lg:col-span-2">
             <div className="flex items-center mb-5">
-              <img src="logo-new.png" alt="Travel4life" className="w-8 h-8 object-contain" />
+              <img src="/optimized/logo.webp" alt="Travel4life" width={32} height={32} loading="lazy" decoding="async" className="w-8 h-8 object-contain" />
               <span className="ml-2 text-xl font-bold text-white">Travel4life</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-sm">

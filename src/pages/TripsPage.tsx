@@ -46,7 +46,7 @@ export const TripsPage: React.FC = () => {
 
         {/* Search Section */}
         <div className="mb-10 sm:mb-16">
-          <SearchBar onSearch={searchTrips} />
+          <SearchBar trips={trips} tripsLoading={loading} onSearch={searchTrips} />
         </div>
 
         {error && (

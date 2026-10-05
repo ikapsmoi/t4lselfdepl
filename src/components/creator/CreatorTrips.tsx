@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Star, Users, Play, Instagram, Youtube, EggFried as Verified } from 'lucide-react';
 import { CreatorTrip, Trip } from '../../types';
 import { Badge } from '../ui/Badge';
@@ -13,6 +13,8 @@ import { DEFAULT_CANCELLATION_POLICY } from '../../utils/constants';
 
 
 export const CreatorTrips: React.FC = () => {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState<string | null>(null);
   const [showCreatorApplicationModal, setShowCreatorApplicationModal] = useState(false);
   const [selectedTripForDetails, setSelectedTripForDetails] = useState<Trip | null>(null);
@@ -25,7 +27,7 @@ export const CreatorTrips: React.FC = () => {
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
 
   // Fetch top creators from database
-  const fetchTopCreators = async () => {
+  const fetchTopCreators = useCallback(async () => {
     setLoadingCreators(true);
     setErrorCreators(null);
     try {
@@ -118,10 +120,10 @@ export const CreatorTrips: React.FC = () => {
     } finally {
       setLoadingCreators(false);
     }
-  };
+  }, []);
 
   // Fetch creator trips from database
-  const fetchCreatorTrips = async () => {
+  const fetchCreatorTrips = useCallback(async () => {
     setLoadingCreatorTrips(true);
     setErrorCreatorTrips(null);
     try {
@@ -175,9 +177,9 @@ export const CreatorTrips: React.FC = () => {
           end_date: trip.end_date,
           images: trip.images && trip.images.length > 0 ? trip.images : [
             trip.category === 'budget'
-              ? '/pkg1.png'
+              ? '/optimized/pkg1.webp'
               : trip.category === 'indian_special'
-                ? '/pkg3.png'
+                ? '/optimized/pkg3.webp'
                 : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
           ],
           host_id: trip.host_id,
@@ -228,16 +230,35 @@ export const CreatorTrips: React.FC = () => {
     } finally {
       setLoadingCreatorTrips(false);
     }
-  };
-
-  // Fetch creators on component mount
-  useEffect(() => {
-    fetchTopCreators();
-    fetchCreatorTrips();
   }, []);
 
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (!('IntersectionObserver' in window)) {
+      setShouldLoad(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (entries.some((entry) => entry.isIntersecting)) {
+        setShouldLoad(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '600px 0px' });
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldLoad) return;
+    void fetchTopCreators();
+    void fetchCreatorTrips();
+  }, [fetchCreatorTrips, fetchTopCreators, shouldLoad]);
+
   return (
-    <div className="space-y-2">
+    <div ref={sectionRef} className="space-y-2">
       {/* Header
       <div className="text-center">
         <div className="flex items-center justify-center mb-4">

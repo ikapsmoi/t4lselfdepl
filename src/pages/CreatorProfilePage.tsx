@@ -114,9 +114,9 @@ export const CreatorProfilePage: React.FC = () => {
           end_date: trip.end_date,
           images: trip.images && trip.images.length > 0 ? trip.images : [
             trip.category === 'budget'
-              ? '/pkg1.png'
+              ? '/optimized/pkg1.webp'
               : trip.category === 'indian_special'
-                ? '/pkg3.png'
+                ? '/optimized/pkg3.webp'
                 : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
           ],
           host_id: trip.host_id,

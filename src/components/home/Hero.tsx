@@ -5,14 +5,20 @@ import { FeaturedTrip } from '../trips/FeaturedTrip';
 import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
 import { NewUsersTicker } from '../common/NewUsersTicker';
-import { useTrips } from '../../hooks/useTrips';
 import { supabase } from '../../lib/supabase';
 import { FloatingWhatsAppEnquiry } from '../common/FloatingWhatsAppEnquiry';
+import type { SearchFilters, Trip } from '../../types';
 
-const Hero: React.FC = memo(() => {
-  const { getFeaturedTripsArray, searchTrips } = useTrips();
+interface HeroProps {
+  trips: Trip[];
+  tripsLoading: boolean;
+  searchTrips: (filters: SearchFilters) => void;
+}
+
+const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) => {
   const [selectedTrip, setSelectedTrip] = useState(null);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
+  const [loadedBackgrounds, setLoadedBackgrounds] = useState(() => new Set([0]));
   const [currentTripIndex, setCurrentTripIndex] = useState(0);
   const [showFeaturedTrip, setShowFeaturedTrip] = useState(false);
 
@@ -29,7 +35,7 @@ const Hero: React.FC = memo(() => {
 
   const [reviewsData, setReviewsData] = useState<ReviewData[]>([]);
 
-  const featuredTrips = getFeaturedTripsArray;
+  const featuredTrips = trips.filter((trip) => trip.featured);
 
   const heroHeadlines = [
     'Find Your Travel Crew',
@@ -41,41 +47,33 @@ const Hero: React.FC = memo(() => {
 
   const heroBackgrounds = React.useMemo(() => [
     {
-      url: '/ChatGPT Image Mar 18, 2026, 06_04_06 PM.png',
+      url: '/optimized/hero-beach.webp',
       title: 'A group relaxing by the sea',
       vibe: 'Beach trip'
     },
     {
-      url: '/ChatGPT Image Mar 18, 2026, 05_59_31 PM.png',
+      url: '/optimized/hero-mountain.webp',
       title: 'Travellers exploring the mountains',
       vibe: 'Mountain trip'
     },
     {
-      url: '/ChatGPT Image Mar 18, 2026, 05_31_27 PM.png',
+      url: '/optimized/hero-city.webp',
       title: 'A group discovering a new city',
       vibe: 'City trip'
     },
     {
-      url: 'https://images.pexels.com/photos/34030625/pexels-photo-34030625.jpeg',
+      url: 'https://images.pexels.com/photos/34030625/pexels-photo-34030625.jpeg?auto=compress&cs=tinysrgb&w=1440&h=960&q=78&fm=webp',
       title: 'Travellers experiencing local culture',
       vibe: 'Cultural trip'
     },
     {
-      url: '/ChatGPT Image Mar 18, 2026, 05_30_22 PM.png',
+      url: '/optimized/hero-wildlife.webp',
       title: 'Travellers spotting wildlife',
       vibe: 'Wildlife trip'
     }
   ], []);
 
-  // Rotate backgrounds every 4 seconds
   useEffect(() => {
-    // Show featured trip after 5 seconds
-    const featuredTripTimer = setTimeout(() => {
-      if (featuredTrips.length > 0) {
-        setShowFeaturedTrip(true);
-      }
-    }, 80000);
-
     const fetchDynamicData = async () => {
       // Fetch recent reviews with reviewer details
       try {
@@ -109,36 +107,61 @@ const Hero: React.FC = memo(() => {
     };
 
     fetchDynamicData();
+  }, []);
 
-    const interval = setInterval(() => {
-      setCurrentBgIndex((prev) => (prev + 1) % heroBackgrounds.length);
+  useEffect(() => {
+    const featuredTripTimer = setTimeout(() => {
+      if (featuredTrips.length > 0) {
+        setShowFeaturedTrip(true);
+      }
+    }, 80000);
 
-      setIsTextVisible(false);
-      setTimeout(() => {
-        setIsTextVisible(true);
-      }, 300);
-    }, 4000);
+    const tripInterval = setInterval(() => {
+      if (featuredTrips.length > 1) {
+        setCurrentTripIndex((prev) => (prev + 1) % featuredTrips.length);
+      }
+    }, 5000);
 
+    return () => {
+      clearInterval(tripInterval);
+      clearTimeout(featuredTripTimer);
+    };
+  }, [featuredTrips.length]);
+
+  useEffect(() => {
     const reviewInterval = setInterval(() => {
       if (reviewsData.length > 1) {
         setCurrentReviewIndex((prev) => (prev + 1) % reviewsData.length);
       }
     }, 3000);
+    return () => clearInterval(reviewInterval);
+  }, [reviewsData.length]);
 
-    // Featured trips carousel
-    const tripInterval = setInterval(() => {
-      if (featuredTrips.length > 1) {
-        setCurrentTripIndex((prev) => (prev + 1) % featuredTrips.length);
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      const nextIndex = (currentBgIndex + 1) % heroBackgrounds.length;
+
+      if (loadedBackgrounds.has(nextIndex)) {
+        setCurrentBgIndex(nextIndex);
+        setIsTextVisible(false);
+        window.setTimeout(() => setIsTextVisible(true), 300);
+        return;
       }
-    }, 5000); // 5 second intervals as requested
 
-    return () => {
-      clearInterval(interval);
-      clearInterval(reviewInterval);
-      clearInterval(tripInterval);
-      clearTimeout(featuredTripTimer);
-    };
-  }, [featuredTrips.length, reviewsData.length, heroBackgrounds.length]);
+      const image = new Image();
+      const revealNextBackground = () => {
+        setLoadedBackgrounds((loaded) => new Set(loaded).add(nextIndex));
+        setCurrentBgIndex(nextIndex);
+        setIsTextVisible(false);
+        window.setTimeout(() => setIsTextVisible(true), 300);
+      };
+      image.onload = revealNextBackground;
+      image.onerror = revealNextBackground;
+      image.src = heroBackgrounds[nextIndex].url;
+    }, 4000);
+
+    return () => window.clearTimeout(timeout);
+  }, [currentBgIndex, heroBackgrounds, loadedBackgrounds]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -164,10 +187,11 @@ const Hero: React.FC = memo(() => {
               }`}
             >
               <img
-                src={bg.url}
+                src={loadedBackgrounds.has(index) ? bg.url : undefined}
                 alt={`${bg.title} - ${bg.vibe}`}
                 className="w-full h-full object-cover"
-                loading={index === 0 ? "eager" : "lazy"}
+                loading={index === 0 ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : 'auto'}
                 decoding="async"
               />
             </div>
@@ -203,7 +227,10 @@ const Hero: React.FC = memo(() => {
             {heroBackgrounds.map((_, index) => (
               <button
                 key={index}
-                onClick={() => setCurrentBgIndex(index)}
+                onClick={() => {
+                  setLoadedBackgrounds((loaded) => new Set(loaded).add(index));
+                  setCurrentBgIndex(index);
+                }}
                 aria-label={`View ${heroBackgrounds[index].title} background`}
                 className={`transition-all duration-300 rounded-full ${
                   index === currentBgIndex
@@ -265,7 +292,7 @@ const Hero: React.FC = memo(() => {
 
                 {/* Search bar */}
                 <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-white/30">
-                  <SearchBar onSearch={searchTrips} className="" navigateOnFilter={true} />
+                  <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} />
                 </div>
 
                 <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">

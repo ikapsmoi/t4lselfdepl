@@ -143,7 +143,7 @@ export const resolveTripThumbnail = (
     return resolveTripImage(title, destination, category, images, fallbackImage);
   }
 
-  return { src: '/pkg1.png' };
+  return { src: '/optimized/pkg1.webp' };
 };
 
 export const resolveTripImage = (
@@ -155,7 +155,7 @@ export const resolveTripImage = (
 ): ResolvedTripImage => {
   const existingImage = images?.find(Boolean);
   if (normalize(category) === ' europe ') {
-    return { src: '/pkg1.png' };
+    return { src: '/optimized/pkg1.webp' };
   }
   if (isFestivalSpecial(category)) return { src: existingImage || fallbackImage };
   const normalizedTitle = normalize(title);

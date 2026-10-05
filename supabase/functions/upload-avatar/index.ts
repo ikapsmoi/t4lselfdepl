@@ -133,7 +133,7 @@ Deno.serve(async (req: Request) => {
       .from('avatars')
       .upload(fileName, fileBuffer, {
         contentType: file.type,
-        cacheControl: '3600',
+        cacheControl: '31536000',
         upsert: true
       });
 

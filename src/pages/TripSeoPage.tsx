@@ -10,8 +10,8 @@ import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 import { Travel4LifeContactCTA } from '../components/common/Travel4LifeContactCTA';
 
 const fallbackImage = (category: string): string => {
-  if (category === 'budget') return '/pkg1.png';
-  if (category === 'indian_special') return '/pkg3.png';
+  if (category === 'budget') return '/optimized/pkg1.webp';
+  if (category === 'indian_special') return '/optimized/pkg3.webp';
   return 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg';
 };
 

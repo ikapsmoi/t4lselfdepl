@@ -30,9 +30,11 @@ const StorytellingSection: React.FC = () => (
   <section className="relative py-0 overflow-hidden">
     <div className="relative h-[60vh] md:h-[70vh]">
       <img
-        src="https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg?auto=compress&cs=tinysrgb&w=1920"
+        src="https://images.pexels.com/photos/2356045/pexels-photo-2356045.jpeg?auto=compress&cs=tinysrgb&w=1440&q=75&fm=webp"
         alt="Cinematic travel destination"
         className="w-full h-full object-cover"
+        loading="lazy"
+        decoding="async"
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
       <div className="absolute inset-0 flex items-center">
@@ -67,7 +69,7 @@ const StorytellingSection: React.FC = () => (
 );
 
 export const HomePage: React.FC = () => {
-  const { trips, loading } = useTrips();
+  const { trips, loading, searchTrips } = useTrips();
   const [topRatedCategory, setTopRatedCategory] = React.useState('all');
   const topRatedTrips = trips
     .filter(trip =>
@@ -145,7 +147,7 @@ export const HomePage: React.FC = () => {
 
   return (
     <div className="min-h-screen">
-      <Hero />
+      <Hero trips={trips} tripsLoading={loading} searchTrips={searchTrips} />
       <FestivalReleaseCTA />
 
       {/* Top-Rated Adventures */}
@@ -188,7 +190,7 @@ export const HomePage: React.FC = () => {
               subtitle="Join our most beloved trips rated by fellow travelers"
               loading={loading}
               mobileCarousel={true}
-              showViewAll={false}
+              showViewAll={true}
               prominentFirst={false}
             />
           </div>
@@ -219,7 +221,7 @@ export const HomePage: React.FC = () => {
 
       {/* India Specials */}
       <div id="india-specials" className="py-8 md:py-16">
-        <IndiaSpecials />
+        <IndiaSpecials trips={trips} loading={loading} />
       </div>
 
       {/* Safety & Trust - Only show when clicked */}

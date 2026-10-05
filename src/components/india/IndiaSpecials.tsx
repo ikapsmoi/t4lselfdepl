@@ -8,17 +8,16 @@ import { TripDetails } from '../trips/TripDetails';
 import { IndiaTripInquiryModal } from './IndiaTripInquiryModal';
 import { TripGrid } from '../trips/TripGrid';
 import { Trip } from '../../types';
-import { useTrips } from '../../hooks/useTrips';
 
+interface IndiaSpecialsProps {
+  trips: Trip[];
+  loading: boolean;
+}
 
-export const IndiaSpecials: React.FC = () => {
+export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const [showInquiryModal, setShowInquiryModal] = useState(false);
-  const { trips, loading, fetchTrips } = useTrips();
-
-
-
   const indiaTrips = trips.filter(trip => trip.type === 'indian_special');
   const activeIndiaCategories = INDIA_CATEGORIES.filter(category => {
     const tripType = category.value === 'food-trails' ? 'food' : category.value;

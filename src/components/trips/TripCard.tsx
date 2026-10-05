@@ -9,6 +9,7 @@ import { useAnalytics } from '../../utils/analytics';
 import { TRIP_TYPES, DIFFICULTY_LEVELS, getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
 import { formatCitiesForDisplay } from '../../utils/formatters';
 import { resolveTripThumbnail } from '../../utils/tripImages';
+import { optimizeImageUrl } from '../../utils/imageOptimization';
 
 
 interface TripCardProps {
@@ -46,9 +47,9 @@ export const TripCard: React.FC<TripCardProps> = memo(({
 
   const spotsLeft = trip.max_capacity - trip.current_bookings;
   const fallbackImage = trip.type === 'budget'
-    ? '/pkg1.png'
+    ? '/optimized/pkg1.webp'
     : trip.type === 'indian_special'
-      ? '/pkg3.png'
+      ? '/optimized/pkg3.webp'
       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
   const tripImage = resolveTripThumbnail(trip.title, trip.destination, trip.type, trip.images, fallbackImage);
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
@@ -118,8 +119,18 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       >
         <div className="relative h-44 overflow-hidden">
           <img
-            src={tripImage.src}
+            src={optimizeImageUrl(tripImage.src, { width: 480, height: 320 })}
             alt={trip.title}
+            width={480}
+            height={320}
+            loading="lazy"
+            decoding="async"
+            onError={(event) => {
+              if (event.currentTarget.dataset.fallbackApplied !== 'true') {
+                event.currentTarget.dataset.fallbackApplied = 'true';
+                event.currentTarget.src = tripImage.src;
+              }
+            }}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
           />
           {tripImage.credit && (
@@ -195,8 +206,18 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       {/* Image takes 65% of card height */}
       <div className="relative h-52 overflow-hidden sm:h-60 md:h-64">
         <img
-          src={tripImage.src}
+          src={optimizeImageUrl(tripImage.src, { width: 640, height: 420 })}
           alt={trip.title}
+          width={640}
+          height={420}
+          loading="lazy"
+          decoding="async"
+          onError={(event) => {
+            if (event.currentTarget.dataset.fallbackApplied !== 'true') {
+              event.currentTarget.dataset.fallbackApplied = 'true';
+              event.currentTarget.src = tripImage.src;
+            }
+          }}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
         />
         {tripImage.credit && (
@@ -275,7 +296,21 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           <div className="flex items-center mb-3">
             <div className="w-7 h-7 rounded-full overflow-hidden bg-gray-100 flex-shrink-0 mr-2.5">
               {trip.host.avatar_url ? (
-                <img src={trip.host.avatar_url} alt={trip.host.name} className="w-full h-full object-cover" />
+                <img
+                  src={optimizeImageUrl(trip.host.avatar_url, { width: 96, height: 96 })}
+                  alt={trip.host.name}
+                  width={96}
+                  height={96}
+                  loading="lazy"
+                  decoding="async"
+                  onError={(event) => {
+                    if (event.currentTarget.dataset.fallbackApplied !== 'true') {
+                      event.currentTarget.dataset.fallbackApplied = 'true';
+                      event.currentTarget.src = trip.host!.avatar_url;
+                    }
+                  }}
+                  className="w-full h-full object-cover"
+                />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
                   <User className="w-3.5 h-3.5 text-gray-400" />

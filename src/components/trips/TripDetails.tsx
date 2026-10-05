@@ -201,7 +201,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                       ? [trip.images[selectedImageIndex] || trip.images[0]]
                       : [],
                     trip.type === 'budget'
-                      ? '/pkg1.png'
+                      ? '/optimized/pkg1.webp'
                       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'
                   ).src}
                   alt={trip.title}
@@ -214,7 +214,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     trip.type,
                     trip.images,
                     trip.type === 'budget'
-                      ? '/pkg1.png'
+                      ? '/optimized/pkg1.webp'
                       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'
                   ).credit;
                   return credit ? (

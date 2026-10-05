@@ -125,6 +125,7 @@ export const renderProductPage = (template, trip, relatedTrips = [], siteUrlOver
       </article>
     </main>`;
   let html = template.replace(/<title>[^<]*<\/title>/i, () => `<title>${escapeHtml(title)}</title>`);
+  html = html.replace(/<link\s+id="home-lcp-preload"[^>]*\/?>/i, '');
   html = setMetaContent(html, 'name="description"', metaDescription);
   html = setMetaContent(html, 'name="robots"', 'index, follow, max-image-preview:large');
   html = setMetaContent(html, 'property="og:title"', title);

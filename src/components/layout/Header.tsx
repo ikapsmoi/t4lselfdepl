@@ -151,10 +151,12 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
               aria-label="Go to home page"
             >
               <img
-                src="logo-new.png"
+                src="/optimized/logo.webp"
                 alt="Travel4life Logo"
                 loading="eager"
                 decoding="async"
+                width={36}
+                height={36}
                 className="w-9 h-9 object-contain"
               />
               <span className="ml-2 text-lg font-display font-bold text-gray-900 tracking-tight">Travel4life</span>

@@ -16,10 +16,45 @@ export const optimizePexelsImage = (url: string, options: ImageOptions = {}): st
     return url;
   }
   
-  // Add optimization parameters
-  const separator = url.includes('?') ? '&' : '?';
-  return `${url}${separator}auto=compress&cs=tinysrgb&w=${width}&h=${height}&q=${quality}&fm=webp`;
+  const imageUrl = new URL(url);
+  imageUrl.searchParams.set('auto', 'compress');
+  imageUrl.searchParams.set('cs', 'tinysrgb');
+  imageUrl.searchParams.set('w', String(width));
+  imageUrl.searchParams.set('h', String(height));
+  imageUrl.searchParams.set('q', String(quality));
+  imageUrl.searchParams.set('fm', 'webp');
+  return imageUrl.toString();
 };
+
+export const optimizeSupabaseImage = (url: string, options: ImageOptions = {}): string => {
+  const { width = 640, quality = 75 } = options;
+
+  try {
+    const imageUrl = new URL(url);
+    if (
+      !imageUrl.hostname.endsWith('.supabase.co') ||
+      !imageUrl.pathname.includes('/storage/v1/object/public/')
+    ) {
+      return url;
+    }
+
+    imageUrl.pathname = imageUrl.pathname.replace(
+      '/storage/v1/object/public/',
+      '/storage/v1/render/image/public/',
+    );
+    imageUrl.searchParams.set('width', String(width));
+    imageUrl.searchParams.set('quality', String(quality));
+    if (!imageUrl.pathname.toLowerCase().endsWith('.gif')) {
+      imageUrl.searchParams.set('format', 'webp');
+    }
+    return imageUrl.toString();
+  } catch {
+    return url;
+  }
+};
+
+export const optimizeImageUrl = (url: string, options: ImageOptions = {}): string =>
+  optimizeSupabaseImage(optimizePexelsImage(url, options), options);
 
 // Generate responsive image srcset for different screen sizes
 export const generateResponsiveImageSrcSet = (baseUrl: string): string => {
