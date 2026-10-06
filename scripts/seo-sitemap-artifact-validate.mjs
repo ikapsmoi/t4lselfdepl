@@ -50,9 +50,16 @@ for (const file of ['sitemap-static.xml', 'sitemap-products.xml', 'sitemap-corbe
 
 const redirects = await readFile(resolve('public/_redirects'), 'utf8');
 const aliasRule = redirects.match(/^\/jim-corbett\/resorts\/sitemap\.xml\s+\/sitemap-corbett\.xml\s+200!?$/m);
+const tripsRoute = redirects.match(/^\/trips\s+\/index\.html\s+200!?$/m);
+const tripsSlashRoute = redirects.match(/^\/trips\/\s+\/index\.html\s+200!?$/m);
 const corbett404 = redirects.match(/^\/jim-corbett\/\*\s+\/404\.html\s+404!?$/m);
-const spaFallback = redirects.match(/^\/\*\s+\/index\.html\s+200!?$/m);
-expect(Boolean(aliasRule && corbett404 && spaFallback && aliasRule.index < corbett404.index && corbett404.index < spaFallback.index), 'Corbett legacy sitemap rewrite must precede the Corbett 404 and SPA fallback.');
+const notFoundFallback = redirects.match(/^\/\*\s+\/404\.html\s+404!?$/m);
+expect(Boolean(aliasRule && tripsRoute && tripsSlashRoute && corbett404 && notFoundFallback
+  && aliasRule.index < tripsRoute.index
+  && aliasRule.index < tripsSlashRoute.index
+  && tripsRoute.index < corbett404.index
+  && tripsSlashRoute.index < corbett404.index
+  && corbett404.index < notFoundFallback.index), 'Trip-list SPA routes and Corbett sitemap rewrite must precede the Corbett and generic 404 rules.');
 
 if (failures.length) {
   console.error(`FAIL sitemap artifact validation (${failures.length} issue(s))\n- ${failures.join('\n- ')}`);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {
   Users, Plane, DollarSign, TrendingUp, AlertTriangle,
-  Star, CreditCard, UserCheck, Globe, Image, Sparkles, Send, Database
+  Star, CreditCard, UserCheck, Globe, Image, Sparkles, Send, Database, Search
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
@@ -11,6 +11,7 @@ import { PackageCreator } from '../package-creator/PackageCreator';
 import { VoucherDispatchCenter } from './VoucherDispatchCenter';
 import { CorbettAuthorityCenter } from './CorbettAuthorityCenter';
 import { TripsManager } from './TripsManager';
+import { SeoGrowthWarRoom } from './SeoGrowthWarRoom';
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState(
@@ -72,6 +73,7 @@ export const AdminDashboard: React.FC = () => {
     { id: 'overview', label: 'Overview', icon: TrendingUp },
     { id: 'users', label: 'Users', icon: Users },
     { id: 'trips', label: 'Trips', icon: Plane },
+    { id: 'seo-war-room', label: 'SEO War Room', icon: Search },
     { id: 'gallery', label: 'Gallery', icon: Image },
     { id: 'package-creator', label: 'Package Creator', icon: Sparkles },
     { id: 'voucher-dispatch', label: 'Voucher Dispatch', icon: Send },
@@ -228,6 +230,10 @@ export const AdminDashboard: React.FC = () => {
         <TripsManager />
       )}
 
+      {activeTab === 'seo-war-room' && (
+        <SeoGrowthWarRoom />
+      )}
+
       {activeTab === 'package-creator' && (
         <PackageCreator />
       )}
@@ -240,7 +246,7 @@ export const AdminDashboard: React.FC = () => {
         <CorbettAuthorityCenter />
       )}
 
-      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'trips' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && activeTab !== 'corbett-authority' && (
+      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'trips' && activeTab !== 'seo-war-room' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && activeTab !== 'corbett-authority' && (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {tabs.find(tab => tab.id === activeTab)?.label} Management

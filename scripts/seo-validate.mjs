@@ -135,6 +135,10 @@ for (const route of routes) {
   }
 
   const sourceHtml = await readFile(filePath, 'utf8');
+  const sourceWhatsappNumbers = [...sourceHtml.matchAll(/https:\/\/wa\.me\/(\d+)/g)].map((match) => match[1]);
+  if (sourceWhatsappNumbers.some((number) => number !== TRAVEL4LIFE_CONTACT.whatsappNumber)) {
+    failures.push(`${route.url}: source WhatsApp CTA does not use the shared contact configuration`);
+  }
   const html = injectContactLayerHtml(
     sourceHtml,
     getTravel4LifeContactContextFromLocation(route.url, sourceHtml.match(/<title>([^<]+)<\/title>/i)?.[1] || ''),

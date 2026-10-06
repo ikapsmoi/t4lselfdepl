@@ -54,6 +54,12 @@ npm run preview
 
 Set `VITE_ADMIN_PASSWORD` in the local `.env.local` file or the deployment environment to enable the password gate for admin routes. The footer's Admin link opens this gate. The trips manager additionally requires a signed-in Supabase account whose `profiles.role` is `admin`; apply `supabase/migrations/20261006113000_admin_trip_management_policies.sql` to grant that role read/update access to every trip through RLS. The Vite password gate is client-side convenience only—`VITE_` variables are embedded in the browser bundle and are not secure authorization.
 
+## SEO War Room
+
+The admin dashboard's SEO War Room imports Search Console query, page, and search-appearance CSV exports into admin-only Supabase tables. Apply `supabase/migrations/20261006123800_seo_growth_command_center.sql` after the admin trip-management migration; it depends on the shared `public.is_travel4life_admin()` policy helper. The War Room requires a signed-in Supabase admin profile and the existing Supabase environment configuration. Upload each export as its own dimension and set the report dates when known. Imported query ownership, page-readiness assessments, and SEO change notes stay private behind Supabase RLS; the raw query data is not added to public assets.
+
+The command center distinguishes measured Search Console rows from planned query hypotheses. Its CTR opportunity score is an internal prioritization heuristic, not a ranking forecast. The supplied page-readiness dimension weights add up to 95 points (although its label bands are written on a 100-point scale); the War Room preserves those exact weights and labels the scoring scale rather than silently changing the rubric. Search Console dimensions can have different totals and privacy-threshold omissions, so do not combine query, page, and chart totals as a single baseline. See [SEO_IMPLEMENTATION.md](./docs/SEO_IMPLEMENTATION.md) for the observed-export caveat, editorial ownership, and validation commands.
+
 ## 📱 Features Overview
 
 ### For Travelers

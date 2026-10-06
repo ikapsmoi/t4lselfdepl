@@ -13,9 +13,18 @@
       "file": "tomorrowland/index.html",
       "schemaType": "CollectionPage",
       "intent": "India-first discovery and overview",
-      "primaryQuery": "Tomorrowland packages from India",
+      "primaryQuery": "Tomorrowland travel planning from India",
       "relatedQueries": ["Tomorrowland India travel", "Tomorrowland trip from India", "Tomorrowland destinations"],
       "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/welcome/"]
+    },
+    {
+      "url": "/tomorrowland/packages/",
+      "file": "tomorrowland/packages/index.html",
+      "schemaType": "WebPage",
+      "intent": "Commercial investigation and package due diligence",
+      "primaryQuery": "Tomorrowland packages from India",
+      "relatedQueries": ["Tomorrowland travel package inclusions", "Tomorrowland group trip from India", "Tomorrowland package booking checklist"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/sales-info/"]
     },
     {
       "url": "/tomorrowland/belgium/",

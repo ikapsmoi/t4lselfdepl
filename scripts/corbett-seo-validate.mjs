@@ -52,9 +52,9 @@ expect(rootSitemap.includes('https://travel4life.net/sitemaps/jim-corbett.xml'),
 expect(seoRegistry.pages.some((page) => page.url === '/jim-corbett/resorts/' && !page.indexable && page.quality_status !== 'approved'), 'Universal registry must preserve the RED/noindex resort decision.');
 expect(seoRegistry.sitemap_groups['jim-corbett']?.includes('/jim-corbett/'), 'Universal sitemap registry must own the Corbett hub URL.');
 const corbett404Rule = redirects.match(/^\/jim-corbett\/\*\s+\/404\.html\s+404!?$/m);
-const spaFallbackRule = redirects.match(/^\/\*\s+\/index\.html\s+200!?$/m);
-expect(Boolean(corbett404Rule && spaFallbackRule && corbett404Rule.index < spaFallbackRule.index), 'Corbett 404 route rule must appear before the generic SPA fallback.');
-expect(/<meta\s+name="robots"\s+content="noindex,\s*follow"/i.test(notFound), 'Corbett 404 document must be noindex, follow.');
+const notFoundFallbackRule = redirects.match(/^\/\*\s+\/404\.html\s+404!?$/m);
+expect(Boolean(corbett404Rule && notFoundFallbackRule && corbett404Rule.index < notFoundFallbackRule.index), 'Corbett 404 route rule must appear before the generic 404 fallback.');
+expect(/<meta\s+name="robots"\s+content="noindex,\s*follow"/i.test(notFound), '404 document must be noindex, follow.');
 expect(!/history\.(?:pushState|replaceState)|location\.(?:search|hash)\s*=/i.test(resortScript), 'Resort filters must not generate crawlable URL variants.');
 
 const names = new Set();

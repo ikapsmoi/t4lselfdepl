@@ -19,7 +19,7 @@
     "corbett:seo:validate": "node scripts/corbett-seo-validate.mjs",
     "corbett:enrichment:refresh": "node scripts/corbett-enrichment.mjs",
     "corbett:enrichment:import": "node scripts/corbett-enrichment.mjs --import",
-    "test:seo": "node --test scripts/seo-quality.test.mjs scripts/corbett-data.test.mjs scripts/corbett-authority.test.mjs scripts/corbett-enrichment.test.mjs scripts/seo-sitemap-engine.test.mjs"
+    "test:seo": "node --test src/utils/seoGrowth.test.mjs scripts/seo-quality.test.mjs scripts/corbett-data.test.mjs scripts/corbett-authority.test.mjs scripts/corbett-enrichment.test.mjs scripts/seo-sitemap-engine.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
