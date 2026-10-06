@@ -82,6 +82,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
           {showViewAll && trips.length > 6 && (
             <Button 
               variant="outline" 
+              className="border-gray-400 text-gray-800 hover:bg-gray-100 hover:text-gray-900 focus:ring-gray-600"
               onClick={() => setShowAll(!showAll)}
             >
               {showAll ? 'Show Less' : `View All ${trips.length}`}

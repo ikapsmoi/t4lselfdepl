@@ -13,7 +13,7 @@ export interface GalleryImage {
 }
 
 const FALLBACK_IMAGES = [
-  { url: '/winter1.jpeg', name: 'Dr. Ankit Yadav', location: 'Tomorrowland Winter 2026' },
+  { url: '/optimized/winter1.webp', name: 'Dr. Ankit Yadav', location: 'Tomorrowland Winter 2026' },
   { url: '/winter.jpeg', name: 'Vumi Bahl', location: 'Tomorrowland Winter 2026' },
   { url: '/2.jpg', name: 'Diane Edhume', location: 'Tomorrowland Belgium 2022' },
   { url: '/3.jpg', name: 'Arpita Patel', location: 'Tomorrowland Winter 2014' },
@@ -23,11 +23,11 @@ const FALLBACK_IMAGES = [
   { url: '/7.jpg', name: 'Ashish Seth', location: 'Tomorrowland Belgium 2021' },
   { url: '/5.jpg', name: 'Samrity Malhotra', location: 'Tomorrowland Belgium 2014' },
   { url: '/4.jpg', name: 'Nikhil Chinappa', location: 'Tomorrowland Belgium 2015' },
-  { url: '/tml1.jpeg', name: 'Ishan Kapoor', location: 'Tomorrowland Belgium 2024' },
-  { url: '/salzburg1.jpeg', name: 'Vishal Gulati & Perminder Kaur', location: 'Salzburg' },
+  { url: '/optimized/tml1.webp', name: 'Ishan Kapoor', location: 'Tomorrowland Belgium 2024' },
+  { url: '/optimized/salzburg1.webp', name: 'Vishal Gulati & Perminder Kaur', location: 'Salzburg' },
   { url: '/edc2.jpeg', name: 'Mark & Vallerie', location: 'EDC Phuket 2025' },
-  { url: '/edc1.jpeg', name: 'Ishan', location: 'EDC Phuket 2025' },
-  { url: '/amster1.jpeg', name: 'Perminder', location: 'Amsterdam' },
+  { url: '/optimized/edc1.webp', name: 'Ishan', location: 'EDC Phuket 2025' },
+  { url: '/optimized/amster1.webp', name: 'Perminder', location: 'Amsterdam' },
   { url: '/Ibo Nu.JPG', name: 'Ibo Inu', location: 'Ultra Miami' },
   { url: '/Keerti Dubay.JPG', name: 'Keerti Dubey', location: 'Rajasthan, India' },
   { url: '/12.JPG', name: 'Alex K.', location: 'Goa Groups' },

@@ -11,17 +11,6 @@ const generateSessionId = (): string => {
   return sessionId;
 };
 
-// Get client IP (best effort)
-const getClientIP = async (): Promise<string | null> => {
-  try {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json();
-    return data.ip;
-  } catch {
-    return null;
-  }
-};
-
 const getOrganicSource = (referrer: string): string => {
   if (!referrer) return 'direct';
 
@@ -111,7 +100,7 @@ export const trackEvent = async (
         referrer: document.referrer || null,
         timestamp: new Date().toISOString()
       },
-      ip_address: await getClientIP(),
+      ip_address: null,
       user_agent: navigator.userAgent
     };
 

@@ -133,7 +133,7 @@ export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) 
               subtitle="Handpicked adventures across the incredible subcontinent"
               loading={loading}
               mobileCarousel={true}
-              showViewAll={false}
+              showViewAll={true}
               prominentFirst={true}
               hideCity={true}
             />

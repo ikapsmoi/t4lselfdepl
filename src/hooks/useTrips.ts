@@ -86,9 +86,11 @@ export const useTrips = () => {
       let query = supabase
         .from('trips')
         .select(`
-          *,
+          id, title, itinerary, location, category, price_per_person, currency,
+          start_date, end_date, group_size, images, host_id, created_at,
+          nomadic_badge, difficulty, group_discount,
           profiles:host_id (
-            id, name, email, avatar_url, verified, tier, role, points, created_at, badges,
+            id, name, email, avatar_url, verified,
             host_details (
               currency_preference
             )
@@ -155,25 +157,9 @@ export const useTrips = () => {
         setUniqueDestinations(destinations);
 
         
-        // Get booking counts for each trip
+        // Publish trip cards as soon as the listing query completes; booking counts can follow.
         const tripIds = filteredData.map(trip => trip.id);
-        let bookingCounts: Record<string, number> = {};
-        
-        if (tripIds.length > 0) {
-          const { data: bookingsData } = await supabase
-            .from('bookings')
-            .select('trip_id')
-            .in('trip_id', tripIds)
-            .eq('status', 'confirmed');
-          
-          bookingCounts = (bookingsData || []).reduce((acc, booking) => {
-            acc[booking.trip_id] = (acc[booking.trip_id] || 0) + 1;
-            return acc;
-          }, {} as Record<string, number>);
-        }
-
-        // Transform the data to match our Trip interface
-        let transformedTrips: Trip[] = filteredData.map(trip => ({
+        const transformedTrips: Trip[] = filteredData.map(trip => ({
           id: trip.id,
           title: cleanTripTitle(trip.title),
           description: stripSourceNotes(trip.itinerary?.description) || 'Amazing travel experience awaits you on this incredible journey.',
@@ -184,7 +170,7 @@ export const useTrips = () => {
           currency: trip.currency  ||trip.profiles?.host_details?.currency_preference || 'USD',
           duration: trip.itinerary?.duration ? Number(trip.itinerary.duration) : Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),
           max_capacity: trip.group_size,
-          current_bookings: bookingCounts[trip.id] || 0,
+          current_bookings: 0,
           start_date: trip.start_date,
           end_date: trip.end_date,
           images: trip.images && trip.images.length > 0 ? trip.images : [
@@ -207,7 +193,7 @@ export const useTrips = () => {
             created_at: '',
             badges: []
           } : undefined,
-          rating: 4.8, // Default rating for new trips
+          rating: 4.8,
           review_count: 0,
           itinerary: trip.itinerary || {},
           created_at: trip.created_at,
@@ -219,16 +205,41 @@ export const useTrips = () => {
           requirements: trip.itinerary?.requirements || [],
           cancellation_policy: DEFAULT_CANCELLATION_POLICY,
           deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
-          group_discount: trip.group_discount || 0, // Use actual group_discount from DB, default to 0 if null
+          group_discount: trip.group_discount || 0,
           safety_measures: trip.itinerary?.safetyMeasures || []
         }));
 
         // Apply rating filter in-memory (since rating is currently mock data)
-        if (searchFilters?.rating) {
-          transformedTrips = transformedTrips.filter(trip => trip.rating >= searchFilters.rating!);
-        }
+        const visibleTrips = searchFilters?.rating
+          ? transformedTrips.filter(trip => trip.rating >= searchFilters.rating!)
+          : transformedTrips;
+        setTrips(visibleTrips);
+        setLoading(false);
 
-        setTrips(transformedTrips);
+        // Get booking counts for each trip without delaying the initial cards.
+        if (tripIds.length > 0) {
+          try {
+            const { data: bookingsData, error: bookingsError } = await supabase
+              .from('bookings')
+              .select('trip_id')
+              .in('trip_id', tripIds)
+              .eq('status', 'confirmed');
+            if (bookingsError) throw bookingsError;
+            if (requestId !== requestIdRef.current) return;
+            const bookingCounts = (bookingsData || []).reduce((acc, booking) => {
+              acc[booking.trip_id] = (acc[booking.trip_id] || 0) + 1;
+              return acc;
+            }, {} as Record<string, number>);
+            setTrips(currentTrips => currentTrips.map(trip => ({
+              ...trip,
+              current_bookings: bookingCounts[trip.id] || 0,
+            })));
+          } catch (bookingError) {
+            if (requestId === requestIdRef.current) {
+              console.error('Trip listings loaded, but booking counts could not be refreshed:', bookingError);
+            }
+          }
+        }
       }
     } catch (error) {
       if (requestId !== requestIdRef.current) return;
@@ -243,7 +254,7 @@ export const useTrips = () => {
       setTrips([]);
       setUniqueDestinations([]);
     } finally {
-      setLoading(false);
+      if (requestId === requestIdRef.current) setLoading(false);
     }
   }, []);
 

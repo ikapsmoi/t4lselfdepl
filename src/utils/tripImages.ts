@@ -120,8 +120,8 @@ const findCityImage = (title: string, destination: string): ResolvedTripImage | 
 
   if (!match) return undefined;
   if (match.city === 'kochi') return { src: '/trip-thumbnails/kerala.jpg' };
-  if (match.city === 'amsterdam') return { src: '/amster1.jpeg' };
-  if (match.city === 'salzburg') return { src: '/salzburg1.jpeg' };
+  if (match.city === 'amsterdam') return { src: '/optimized/amster1.webp' };
+  if (match.city === 'salzburg') return { src: '/optimized/salzburg1.webp' };
   if (match.city === 'belgium') return { src: '/trip-thumbnails/belgium.jpg' };
 
   const credit = TRIP_CITY_IMAGE_CREDITS[match.city];

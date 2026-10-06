@@ -7,6 +7,14 @@ interface ImageOptions {
   format?: 'webp' | 'jpeg' | 'png';
 }
 
+const optimizedLocalImages: Record<string, string> = {
+  '/tml1.jpeg': '/optimized/tml1.webp',
+  '/edc1.jpeg': '/optimized/edc1.webp',
+  '/amster1.jpeg': '/optimized/amster1.webp',
+  '/salzburg1.jpeg': '/optimized/salzburg1.webp',
+  '/winter1.jpeg': '/optimized/winter1.webp',
+};
+
 // Optimize Pexels images with query parameters
 export const optimizePexelsImage = (url: string, options: ImageOptions = {}): string => {
   const { width = 600, height = 400, quality = 75 } = options;
@@ -53,8 +61,18 @@ export const optimizeSupabaseImage = (url: string, options: ImageOptions = {}): 
   }
 };
 
-export const optimizeImageUrl = (url: string, options: ImageOptions = {}): string =>
-  optimizeSupabaseImage(optimizePexelsImage(url, options), options);
+export const optimizeImageUrl = (url: string, options: ImageOptions = {}): string => {
+  const optimizedRemoteUrl = optimizeSupabaseImage(optimizePexelsImage(url, options), options);
+  if (optimizedRemoteUrl !== url) return optimizedRemoteUrl;
+
+  try {
+    const imageUrl = new URL(url, 'https://travel4life.net');
+    if (!['travel4life.net', 'www.travel4life.net'].includes(imageUrl.hostname)) return url;
+    return optimizedLocalImages[imageUrl.pathname] ?? url;
+  } catch {
+    return url;
+  }
+};
 
 // Generate responsive image srcset for different screen sizes
 export const generateResponsiveImageSrcSet = (baseUrl: string): string => {

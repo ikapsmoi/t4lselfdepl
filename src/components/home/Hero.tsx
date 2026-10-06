@@ -232,12 +232,15 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
                   setCurrentBgIndex(index);
                 }}
                 aria-label={`View ${heroBackgrounds[index].title} background`}
-                className={`transition-all duration-300 rounded-full ${
+                className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-full"
+                aria-current={index === currentBgIndex ? 'true' : undefined}
+              >
+                <span className={`block h-2 w-2 rounded-full bg-white/50 transition-transform duration-300 ${
                   index === currentBgIndex
-                    ? 'w-8 h-2 bg-white'
-                    : 'w-2 h-2 bg-white/40 hover:bg-white/70'
-                }`}
-              />
+                    ? 'scale-x-[4] bg-white'
+                    : 'hover:bg-white/80'
+                }`} />
+              </button>
             ))}
           </div>
         </div>

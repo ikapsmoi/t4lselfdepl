@@ -25,7 +25,7 @@ const socialReviews: SocialReview[] = [
     rating: 5,
     likes: 342,
     timeAgo: '2d ago',
-    image: '/tml1.jpeg'
+    image: '/optimized/tml1.webp'
   },
   {
     id: '2',
@@ -37,7 +37,7 @@ const socialReviews: SocialReview[] = [
     rating: 5,
     likes: 189,
     timeAgo: '5d ago',
-    image: '/salzburg1.jpeg'
+    image: '/optimized/salzburg1.webp'
   },
   {
     id: '3',
@@ -49,7 +49,7 @@ const socialReviews: SocialReview[] = [
     rating: 5,
     likes: 567,
     timeAgo: '1w ago',
-    image: '/edc1.jpeg'
+    image: '/optimized/edc1.webp'
   },
   {
     id: '4',
@@ -61,7 +61,7 @@ const socialReviews: SocialReview[] = [
     rating: 5,
     likes: 234,
     timeAgo: '3d ago',
-    image: '/amster1.jpeg'
+    image: '/optimized/amster1.webp'
   },
   {
     id: '5',
@@ -73,7 +73,7 @@ const socialReviews: SocialReview[] = [
     rating: 5,
     likes: 421,
     timeAgo: '4d ago',
-    image: '/winter1.jpeg'
+    image: '/optimized/winter1.webp'
   },
   {
     id: '6',
@@ -136,6 +136,10 @@ export const SocialReviews: React.FC = () => {
                     <img
                       src={review.image}
                       alt={review.trip}
+                      width={600}
+                      height={400}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                   </div>
@@ -145,6 +149,10 @@ export const SocialReviews: React.FC = () => {
                     <img
                       src={review.avatar}
                       alt={review.username}
+                      width={32}
+                      height={32}
+                      loading="lazy"
+                      decoding="async"
                       className="w-8 h-8 rounded-full object-cover"
                     />
                     <div className="flex-1 min-w-0">

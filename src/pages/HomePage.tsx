@@ -1,22 +1,54 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import Hero from '../components/home/Hero';
-import { SearchBar } from '../components/search/SearchBar';
 import { TripGrid } from '../components/trips/TripGrid';
 
-import { Testimonials } from '../components/home/Testimonials';
-import { Newsletter } from '../components/home/Newsletter';
-import { FAQ } from '../components/home/FAQ';
-import { CreatorTrips } from '../components/creator/CreatorTrips';
-import { IndiaSpecials } from '../components/india/IndiaSpecials';
-import { ClientGallery } from '../components/home/ClientGallery';
-import { SocialReviews } from '../components/home/SocialReviews';
 import { FestivalReleaseCTA } from '../components/home/FestivalReleaseCTA';
-import { HowItWorksPage } from './HowItWorksPage';
-import { SafetyPage } from './SafetyPage';
 import { useTrips } from '../hooks/useTrips';
 import { useAnalytics } from '../utils/analytics';
 import { MapPin, ArrowRight } from 'lucide-react';
 import { TRIP_TYPES } from '../utils/constants';
+
+const SocialReviews = lazy(() => import('../components/home/SocialReviews').then(({ SocialReviews: Component }) => ({ default: Component })));
+const Testimonials = lazy(() => import('../components/home/Testimonials').then(({ Testimonials: Component }) => ({ default: Component })));
+const Newsletter = lazy(() => import('../components/home/Newsletter').then(({ Newsletter: Component }) => ({ default: Component })));
+const FAQ = lazy(() => import('../components/home/FAQ').then(({ FAQ: Component }) => ({ default: Component })));
+const CreatorTrips = lazy(() => import('../components/creator/CreatorTrips').then(({ CreatorTrips: Component }) => ({ default: Component })));
+const IndiaSpecials = lazy(() => import('../components/india/IndiaSpecials').then(({ IndiaSpecials: Component }) => ({ default: Component })));
+const ClientGallery = lazy(() => import('../components/home/ClientGallery').then(({ ClientGallery: Component }) => ({ default: Component })));
+const HowItWorksPage = lazy(() => import('./HowItWorksPage').then(({ HowItWorksPage: Component }) => ({ default: Component })));
+const SafetyPage = lazy(() => import('./SafetyPage').then(({ SafetyPage: Component }) => ({ default: Component })));
+
+const DeferredHomeSection: React.FC<{ children: React.ReactNode; reserveHeight: number }> = ({ children, reserveHeight }) => {
+  const [isNearViewport, setIsNearViewport] = React.useState(false);
+  const sectionRef = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    const section = sectionRef.current;
+    if (!section || !('IntersectionObserver' in window)) {
+      setIsNearViewport(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setIsNearViewport(true);
+        observer.disconnect();
+      }
+    }, { rootMargin: '700px 0px' });
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, []);
+
+  return (
+    <div ref={sectionRef} style={isNearViewport ? undefined : { minHeight: reserveHeight }} aria-busy={!isNearViewport}>
+      {isNearViewport && (
+        <Suspense fallback={<div aria-hidden="true" style={{ minHeight: reserveHeight }} />}>
+          {children}
+        </Suspense>
+      )}
+    </div>
+  );
+};
 
 const SectionDivider: React.FC = () => (
   <div className="relative py-4 md:py-6">
@@ -198,19 +230,19 @@ export const HomePage: React.FC = () => {
       </div>
 
       {/* Social Reviews - Mobile Only */}
-      <SocialReviews />
+      <DeferredHomeSection reserveHeight={280}><SocialReviews /></DeferredHomeSection>
 
       <SectionDivider />
 
       {/* Creator Trips */}
       <section className="py-10 md:py-16" id="creator-trips">
-        <CreatorTrips />
+        <DeferredHomeSection reserveHeight={520}><CreatorTrips /></DeferredHomeSection>
       </section>
 
       <SectionDivider />
 
       {/* Client Gallery - Masonry */}
-      <ClientGallery />
+      <DeferredHomeSection reserveHeight={520}><ClientGallery /></DeferredHomeSection>
 
       <SectionDivider />
 
@@ -221,34 +253,36 @@ export const HomePage: React.FC = () => {
 
       {/* India Specials */}
       <div id="india-specials" className="py-8 md:py-16">
-        <IndiaSpecials trips={trips} loading={loading} />
+        <DeferredHomeSection reserveHeight={620}><IndiaSpecials trips={trips} loading={loading} /></DeferredHomeSection>
       </div>
 
       {/* Safety & Trust - Only show when clicked */}
       {showSafety && (
         <div id="safety">
-          <SafetyPage />
+          <Suspense fallback={<PageSectionLoader />}><SafetyPage /></Suspense>
         </div>
       )}
 
       {/* Community/Testimonials - Only show when clicked */}
       {showTestimonialsSection && (
         <div id="testimonials">
-          <Testimonials />
+          <Suspense fallback={<PageSectionLoader />}><Testimonials /></Suspense>
         </div>
       )}
 
       {/* How It Works - Only show when clicked */}
       {showHowItWorksSection && (
         <div id="how-it-works">
-          <HowItWorksPage />
+          <Suspense fallback={<PageSectionLoader />}><HowItWorksPage /></Suspense>
         </div>
       )}
 
       <SectionDivider />
-      <FAQ />
+      <DeferredHomeSection reserveHeight={480}><FAQ /></DeferredHomeSection>
       <SectionDivider />
-      <Newsletter />
+      <DeferredHomeSection reserveHeight={260}><Newsletter /></DeferredHomeSection>
     </div>
   );
 };
+
+const PageSectionLoader: React.FC = () => <div aria-hidden="true" className="min-h-96" />;

@@ -346,6 +346,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             )}
             <button
               onClick={(e) => { e.stopPropagation(); onClick?.(); }}
+              aria-label={`View details for ${trip.title}`}
               className="flex items-center gap-1 text-xs font-medium text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-full transition-colors"
             >
               <ExternalLink className="w-3 h-3" />
