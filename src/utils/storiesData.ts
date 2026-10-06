@@ -269,5 +269,87 @@ export const STORIES: Story[] = [
     highlights: ['W Trek in Torres del Paine (5 days)', 'Perito Moreno Glacier ice trekking', 'Mt. Fitz Roy and Laguna de los Tres', 'Wildlife: condors, guanacos, pumas', 'El Chalten hiking base town'],
     location: 'Argentina & Chile',
     bestTime: 'November to March (Southern Hemisphere summer)'
+  },
+  {
+    id: 'jim-corbett-field-notes',
+    title: 'Jim Corbett: A Forest Journey, Planned with Care',
+    subtitle: 'A thoughtful guide to the river, the forest, the safari—and the decisions that make a Corbett trip feel personal.',
+    category: 'adventure',
+    heroImage: 'https://images.pexels.com/photos/9754/mountains-clouds-forest-fog.jpg?auto=compress&cs=tinysrgb&w=1920',
+    content: [
+      'The first thing you notice about the Corbett landscape is how it changes. Sal forest gives way to open grassland; a road follows the Kosi River; hills gather beyond the trees. Morning can begin with birdsong and the cool smell of damp earth, then turn into a slow afternoon beside the water. The appeal is not a guaranteed tiger sighting. It is the chance to spend time in a living forest, paying attention.',
+      'Jim Corbett National Park lies in Uttarakhand’s Nainital district, within the larger Corbett Tiger Reserve landscape. Ramnagar is the usual gateway for many visitors, but “Corbett” covers a spread of forest edges, villages and accommodation areas—not one central resort strip. Choose where to stay only after checking the actual gate, drive time, arrival route and the plan for your days.',
+      'A safari is a regulated visit, not a wildlife show. Entry zones, permitted routes, vehicle limits, timings and seasonal access can change; permits and identification requirements must be checked for the exact date and visitor. Book through current official channels or a properly authorised provider, arrive with the required documents, follow the guide and driver, keep voices low, and never ask anyone to approach or bait an animal. A tiger may appear—or it may not. Both outcomes are part of a truthful forest experience.',
+      'Timing changes the feel of a visit. Cooler months are popular for comfortable days and wildlife-focused outings, while warmer weather can make the forest feel very different and may affect what you see. The monsoon brings rain, lush growth and changing access; some routes or facilities may close seasonally. Park rules and gate schedules are not uniform or permanent, so check current notices before paying for travel, rooms or activities. Build a little flexibility into your itinerary rather than planning every hour around one safari.',
+      'Choose your stay by more than a photograph. Ask for the exact property location and room category, current availability, meal plan, taxes, cancellation terms, transport arrangements and what is—and is not—included. If being near a particular gate matters, ask for the real road journey, not a vague distance “near Corbett.” For families, older travellers or anyone with mobility needs, confirm steps, pathways, meal timings, medical access and the amount of driving involved.',
+      'A rewarding itinerary leaves room to breathe: arrive in daylight if practical, settle in, and keep the first evening gentle. Put any confirmed safari at the centre of the day, then allow time for breakfast, rest and the road back. Ask locally about suitable river viewpoints, short nature walks or cultural stops, and verify who operates them, whether they are permitted, and what the conditions are. Do not enter protected areas or private land without permission; treat nearby communities as neighbours, not scenery.',
+      'Pack for changing conditions: neutral comfortable layers, a warm outer layer for early starts in cooler months, sun protection, water, any personal medication, and a small bag that can travel easily in a safari vehicle. Carry identification and booking confirmations as required. Keep plastic and loud devices out of the forest, follow your guide’s safety directions, and check current rules on cameras, food, drones and vehicle conduct before you go.',
+      'The decisions to make before travelling are simple to list and easy to overlook: Which dates are genuinely flexible? Which gate and safari zone are confirmed? Are permits included or separate? What is the cancellation policy if access changes? How long is each transfer? Does the quoted room rate include meals and taxes? Who is the on-ground contact if a pickup is late? Get the answers in writing and compare like with like.',
+      'This is where Travel4life can make the journey feel less like a booking puzzle and more like a well-understood place. Bring us your dates, group, pace and priorities; we can help shape the brief, compare the available stay references, ask the questions that matter and coordinate the pieces with local providers where confirmed. We will not promise a tiger, invent a current resort rate, or imply a safari is included before it is verified. The local feeling comes from knowing what to ask, respecting the people and place, and leaving enough room for the forest to set the rhythm.'
+    ],
+    highlights: [
+      'Treat wildlife sightings as a possibility, never a promise',
+      'Confirm the exact gate, safari zone, permit and current access rules',
+      'Compare the property location, room, meals, taxes and cancellation terms',
+      'Allow realistic time for transfers, early starts and unhurried breaks',
+      'Pack for changing weather and follow guide and park instructions',
+      'Ask Travel4life to help coordinate a clear, date-specific brief'
+    ],
+    location: 'Ramnagar & Corbett Tiger Reserve landscape, Uttarakhand',
+    bestTime: 'Check current park openings and weather for your dates'
+  },
+  {
+    id: 'jim-corbett-corporate-retreat',
+    title: 'A Corbett Offsite That Brings the Team Back Together',
+    subtitle: 'Trade the usual conference-room routine for a considered working retreat—without leaving logistics to chance.',
+    category: 'destinations',
+    heroImage: 'https://images.pexels.com/photos/1181406/pexels-photo-1181406.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    content: [
+      'The best offsites do not begin with a bonfire or a motivational slide. They begin with a question: what should be different for this team when it goes home? In Corbett, the change of pace can help people step outside their usual routine. Forest-fringed surroundings, shared meals and time away from notifications may create room for a better conversation—but only if the work itself has been thoughtfully designed.',
+      'Start with the outcome, not the resort shortlist. Is this a leadership reset, a planning sprint, a recognition trip, a cross-team workshop or a few days together after a demanding quarter? Decide what must be accomplished, who needs to be in the room, how much uninterrupted work time is required and which parts of the programme are genuinely optional. This clarity helps you choose a venue that can support the brief rather than asking the team to adapt to whatever happens to be available.',
+      'Then work out the group shape. Confirm the headcount range, rooming preferences, arrival windows, accessibility needs, dietary requirements and likely departure times. Ramnagar is a common gateway, but the real transfer depends on your origin and the exact property. Collect arrival details before arranging vehicles; a group arriving in several waves needs a different plan from one coach with a single timetable.',
+      'A meeting room is a set of verifiable details, not a line on a brochure. Ask for the room dimensions and usable layouts, safe capacity in your preferred setup, screen and microphone inventory, dependable power and connectivity, technician support, breakout spaces, setup time and any additional charges. If the team needs reliable video calls or hybrid participation, describe the requirement specifically and ask how it will be tested. Do not assume a rural setting has the bandwidth or backup your session needs.',
+      'Build the day around human energy. A useful rhythm might include a clear arrival and check-in, a focused morning session, a proper meal break, an afternoon workshop, and unstructured time before dinner. Keep transitions realistic: moving between rooms, outdoor spaces and dining areas takes time. Any activity—nature walk, safari, games or evening gathering—needs its own operator, schedule, permissions, weather alternative and price confirmed. A safari is not a substitute for a team exercise, and park access is never something to assume.',
+      'Make the proposal comparable before you approve it. Ask each property for the same itemised version: room categories and occupancy, meal plan and dietary handling, meeting setup and AV, taxes, transfers, activities, staffing, deposits, payment milestones, cancellation and attrition terms, plus every exclusion. Confirm the venue’s actual capacity for your layout and dates. The current resort reference list is a starting point for questions, not verified inventory or a live quotation.',
+      'For the team, send one practical pre-trip note: confirmed address and travel plan, check-in window, dress and weather guidance, agenda, emergency contact, what to bring and what is optional. Keep personal details on a need-to-know basis, offer a clear route for accessibility or dietary requests, and avoid making wildlife encounters or strenuous activities compulsory. A thoughtful offsite makes belonging easier, not harder.',
+      'Travel4life is useful here as the coordinator of a clearer conversation. Share your objectives, date window and approximate headcount, and we can help organise the brief across stay, meeting requirements, meals, transport and team time, then help you ask providers for written confirmation. We do not represent unverified facilities as available; room inventory, connectivity, capacity, permits, activity operators and prices must be checked for your exact dates. That honest groundwork is what lets the retreat feel relaxed once everyone arrives.'
+    ],
+    highlights: [
+      'Define the offsite outcome before selecting a property',
+      'Confirm headcount, rooming, accessibility, dietary and arrival needs',
+      'Verify meeting layout, AV, connectivity, backup power and charges',
+      'Keep activities optional and confirm operators, permissions and weather plans',
+      'Compare itemised, date-specific proposals and cancellation terms',
+      'Travel4life can help bring the venue and logistics questions into one brief'
+    ],
+    location: 'Jim Corbett & Ramnagar, Uttarakhand',
+    bestTime: 'Choose dates around team availability and verified venue access'
+  },
+  {
+    id: 'jim-corbett-destination-wedding',
+    title: 'A Wedding in Corbett: Make the Gathering Feel Like Yours',
+    subtitle: 'A forest-side celebration shaped around your guests, your rituals and the details that make a destination wedding work.',
+    category: 'destinations',
+    heroImage: 'https://images.pexels.com/photos/169198/pexels-photo-169198.jpeg?auto=compress&cs=tinysrgb&w=1920',
+    content: [
+      'A destination wedding is not one beautiful evening. It is the whole story: the first relatives arriving, the welcome over tea, a ceremony that feels like the couple, the cousin who needs a quiet place to rest, and the last family heading home. Corbett can give that gathering a greener, slower backdrop. But the real magic is not the view alone; it is whether every guest can arrive, feel looked after and move through the celebration comfortably.',
+      'Begin with the people. Estimate the guest count honestly and separate firm invitations from maybes. Note children, older relatives, mobility needs, dietary requirements, arrival points and how many room nights different groups may need. Decide whether everyone should stay together or whether nearby accommodation is acceptable. Those answers shape the venue brief, transport plan and budget long before décor enters the conversation.',
+      'Next, map the celebration as a sequence. List each function—welcome, ceremony, meal, music, farewell—and write down the preferred timing, guest count and feel for each. Ask whether events need separate spaces, what setup and reset times are required, and how guests will move between rooms and venues. Share your priorities with a planner or property before falling in love with a single photograph.',
+      'A property should be considered a possible venue only after it proves the essentials for your dates. Request a usable capacity layout for each function, room categories and block terms, food options, outside-vendor rules, power and lighting, sound limits, event permissions, taxes, minimum spends, deposits and cancellation terms. Ask for a real rain plan—not merely the promise of an indoor option—and check the distance and transfer time between guest rooms and event spaces. Headline capacity can mean something very different from a comfortable seated meal.',
+      'Corbett’s setting adds practical questions. Confirm the road journey for guests coming from their actual origin, check-in windows and parking, plan for late arrivals, and identify a named contact for each transfer group. Ask how weather may affect an outdoor ceremony or dinner, what contingency space is available, and whether any planned activity is permitted and suitable for the guest mix. Safari permits, wildlife sightings and park access are separate matters and should never be assumed to be part of a wedding package.',
+      'The guest experience is made in small details: a concise travel note, clear function timings, signs that work after dark, drinking water, shaded or sheltered waiting, accessible routes, a quiet room, children’s arrangements and an easy way to find help. Share the local etiquette and environmental expectations kindly. Keep music and outdoor events within the venue’s confirmed rules, respect the surrounding community, and plan so the celebration leaves the place as carefully as it found it.',
+      'Before paying a deposit, compare proposals line by line. Make sure the venue, room inventory, rooming deadlines, menu, décor and production responsibilities, event spaces, service timings, taxes, vendor charges, weather alternative, payment schedule and cancellation clauses are written down. Ask which parts are confirmed and which are pending. Keep one dated master plan and appoint a decision-maker who can approve changes during the event.',
+      'Travel4life can help you turn the idea into a workable, guest-first brief. Tell us your date window, approximate guest count, number of functions and what matters most; we can help structure the accommodation, event-flow and travel questions and make the right enquiries. Our current resort references are not verified wedding venues, and we will not claim capacity or availability until the property confirms it. That transparent planning—paired with local provider coordination where available—helps you spend less time chasing loose ends and more time being present with your people.'
+    ],
+    highlights: [
+      'Start with guest count, room nights and accessibility needs',
+      'Plan the full event sequence before choosing a venue',
+      'Verify capacity by layout, room blocks, food, sound rules and rain backup',
+      'Coordinate real travel times, transfers, late arrivals and guest support',
+      'Keep safari and other activities separate unless specifically confirmed',
+      'Use one written, itemised proposal before paying a deposit'
+    ],
+    location: 'Jim Corbett & Ramnagar, Uttarakhand',
+    bestTime: 'Select a date window, then verify venue and weather options'
   }
 ];

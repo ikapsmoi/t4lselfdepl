@@ -52,7 +52,7 @@ export function StoriesPage() {
               Travel Tales & Festival Guides
             </h1>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              From the electric nights of Tomorrowland to the ancient streets of Kyoto -- stories that inspire your next adventure.
+              From festival nights and forest mornings to meaningful gatherings, find thoughtful stories for the journeys you want to take.
             </p>
           </div>
         </div>
@@ -143,6 +143,12 @@ export function StoriesPage() {
 }
 
 function StoryDetail({ story, onBack }: { story: Story; onBack: () => void }) {
+  const corbettGuide = {
+    'jim-corbett-field-notes': { href: '/jim-corbett/', label: 'Plan a Corbett visit' },
+    'jim-corbett-corporate-retreat': { href: '/jim-corbett/mice/', label: 'Plan a Corbett offsite' },
+    'jim-corbett-destination-wedding': { href: '/jim-corbett/weddings/', label: 'Plan a Corbett wedding' },
+  }[story.id];
+
   return (
     <div className="min-h-screen bg-white">
       {/* Hero */}
@@ -213,6 +219,27 @@ function StoryDetail({ story, onBack }: { story: Story; onBack: () => void }) {
             </a>.
           </p>
         )}
+        {story.id === 'jim-corbett-field-notes' && (
+          <div className="mt-8 rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
+            <h2 className="font-bold text-gray-900">Take your Corbett plan one step further</h2>
+            <p className="mt-1 text-sm text-gray-600">Explore current planning references, then confirm each property, service and date-specific detail before booking.</p>
+            <a href="/jim-corbett/" className="mt-3 inline-flex text-sm font-semibold text-emerald-800 underline underline-offset-4">Open the Jim Corbett field guide</a>
+          </div>
+        )}
+        {story.id === 'jim-corbett-corporate-retreat' && (
+          <div className="mt-8 rounded-2xl border border-sky-100 bg-sky-50/70 p-5">
+            <h2 className="font-bold text-gray-900">Planning a team gathering?</h2>
+            <p className="mt-1 text-sm text-gray-600">Build a date-specific brief for rooms, meeting setup, meals and group logistics. Venue facilities require confirmation.</p>
+            <a href="/jim-corbett/mice/" className="mt-3 inline-flex text-sm font-semibold text-sky-800 underline underline-offset-4">Explore Corbett corporate offsite planning</a>
+          </div>
+        )}
+        {story.id === 'jim-corbett-destination-wedding' && (
+          <div className="mt-8 rounded-2xl border border-rose-100 bg-rose-50/70 p-5">
+            <h2 className="font-bold text-gray-900">Bring your wedding idea into focus</h2>
+            <p className="mt-1 text-sm text-gray-600">Start with guests, dates and event flow, then verify capacity, rooms and services for your celebration.</p>
+            <a href="/jim-corbett/weddings/" className="mt-3 inline-flex text-sm font-semibold text-rose-800 underline underline-offset-4">Explore Corbett wedding planning</a>
+          </div>
+        )}
 
         {/* Highlights box */}
         <div className="mt-10 p-6 bg-gray-50 rounded-[20px] border border-gray-100">
@@ -232,15 +259,31 @@ function StoryDetail({ story, onBack }: { story: Story; onBack: () => void }) {
 
         {/* CTA */}
         <div className="mt-12 p-8 bg-gray-900 rounded-[20px] text-center">
-          <h3 className="text-xl font-bold text-white mb-2">Ready to experience this?</h3>
-          <p className="text-gray-400 text-sm mb-5">Join a Travel4life group trip and make it happen.</p>
-          <button
-            onClick={() => { window.location.hash = 'home'; window.scrollTo(0, 0); }}
-            className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-2xl font-semibold text-sm hover:bg-gray-100 transition-colors"
-          >
-            Explore Trips
-            <ArrowRight className="w-4 h-4" />
-          </button>
+          <h3 className="text-xl font-bold text-white mb-2">
+            {corbettGuide ? 'Let’s shape your Corbett plans' : 'Ready to experience this?'}
+          </h3>
+          <p className="text-gray-400 text-sm mb-5">
+            {corbettGuide
+              ? 'Start with your dates and priorities; confirm every property, inclusion and service before booking.'
+              : 'Join a Travel4life group trip and make it happen.'}
+          </p>
+          {corbettGuide ? (
+            <a
+              href={corbettGuide.href}
+              className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-2xl font-semibold text-sm hover:bg-gray-100 transition-colors"
+            >
+              {corbettGuide.label}
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          ) : (
+            <button
+              onClick={() => { window.location.hash = 'home'; window.scrollTo(0, 0); }}
+              className="inline-flex items-center gap-2 bg-white text-gray-900 px-6 py-3 rounded-2xl font-semibold text-sm hover:bg-gray-100 transition-colors"
+            >
+              Explore Trips
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          )}
         </div>
 
         {/* Back button */}
