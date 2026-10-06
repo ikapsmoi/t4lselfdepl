@@ -112,9 +112,13 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
             <div className="relative z-10 mb-3 grid grid-cols-2 gap-x-3 gap-y-2">
               <div className="flex min-w-0 items-center text-gray-700">
                 <MapPin className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 text-blue-600" />
-                <div>
+                <div className="min-w-0">
                   <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">Destination</div>
-                  <div className="truncate text-xs font-semibold leading-4 sm:text-sm">{currentTrip.destination}</div>
+                  <div className="truncate text-xs font-semibold leading-4 sm:text-sm">
+                    {currentTrip.destination.length > 15
+                      ? `${currentTrip.destination.slice(0, 14)}…`
+                      : currentTrip.destination}
+                  </div>
                 </div>
               </div>
               <div className="flex min-w-0 items-center text-gray-700">

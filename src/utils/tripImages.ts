@@ -153,6 +153,12 @@ export const resolveTripImage = (
   images: string[] | undefined,
   fallbackImage: string
 ): ResolvedTripImage => {
+  if (normalize(category) === ' wildlife ') {
+    return {
+      src: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
+    };
+  }
+
   const existingImage = images?.find(Boolean);
   if (normalize(category) === ' europe ') {
     return { src: '/optimized/pkg1.webp' };
