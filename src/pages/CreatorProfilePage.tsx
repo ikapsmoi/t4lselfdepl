@@ -116,7 +116,7 @@ export const CreatorProfilePage: React.FC = () => {
             trip.category === 'budget'
               ? '/optimized/pkg1.webp'
               : trip.category === 'indian_special'
-                ? '/optimized/pkg3.webp'
+                ? '/pkg2.png'
                 : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
           ],
           host_id: trip.host_id,

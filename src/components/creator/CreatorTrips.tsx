@@ -179,7 +179,7 @@ export const CreatorTrips: React.FC = () => {
             trip.category === 'budget'
               ? '/optimized/pkg1.webp'
               : trip.category === 'indian_special'
-                ? '/optimized/pkg3.webp'
+                ? '/pkg2.png'
                 : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
           ],
           host_id: trip.host_id,
@@ -295,7 +295,7 @@ export const CreatorTrips: React.FC = () => {
                   <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative overflow-hidden">
                     {/* Instagram-style gradient border */}
                     <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-xl opacity-15"></div>
-                    <div className="absolute inset-[2px] bg-white rounded-xl"></div>
+                    <div className="trip-card-brand-wash absolute inset-[2px] rounded-xl"></div>
 
                     <div className="relative z-10 text-center">
                       <div className="relative mb-3 inline-block">

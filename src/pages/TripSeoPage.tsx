@@ -11,7 +11,7 @@ import { Travel4LifeContactCTA } from '../components/common/Travel4LifeContactCT
 
 const fallbackImage = (category: string): string => {
   if (category === 'budget') return '/optimized/pkg1.webp';
-  if (category === 'indian_special') return '/optimized/pkg3.webp';
+  if (category === 'indian_special') return '/pkg2.png';
   return 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg';
 };
 

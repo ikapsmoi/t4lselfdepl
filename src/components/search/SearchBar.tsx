@@ -52,12 +52,12 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
     if (difficulty) filters.difficulty = difficulty;
     if (rating) filters.rating = parseFloat(rating);
 
-    if (priceRange && priceRange !== '5000+') {
+    if (priceRange && priceRange !== '100000+') {
       const [min, max] = priceRange.split('-').map((p) => parseInt(p));
       filters.minPrice = min;
       if (max) filters.maxPrice = max;
-    } else if (priceRange === '5000+') {
-      filters.minPrice = 5000;
+    } else if (priceRange === '100000+') {
+      filters.minPrice = 100000;
     }
 
     if (duration && duration !== '30+') {
@@ -118,14 +118,13 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
   return (
     <div className={`w-full min-w-0 rounded-2xl p-3 sm:rounded-[20px] sm:p-5 ${className}`}>
       {/* Experience tabs */}
-      <div className="-mx-1 mb-3 flex items-center gap-1.5 overflow-x-auto px-1 pb-1 scrollbar-hide sm:mb-4 sm:gap-1">
-        {[
-          { label: 'Adventure', value: 'adventure' },
-          { label: 'India', value: 'indian_special' },
-          { label: 'Festivals', value: 'festival' },
-          { label: 'Europe', value: 'europe' },
-          { label: 'Budget', value: 'budget' },
-        ].map((tab) => (
+      <div
+        className="search-experience-tabs -mx-1 mb-3 flex items-center gap-1.5 overflow-x-auto px-1 pb-2 sm:mb-4 sm:gap-1"
+        role="group"
+        aria-label="Trip categories. Swipe or scroll horizontally to see all categories."
+        tabIndex={0}
+      >
+        {TRIP_TYPES.map((tab) => (
           <button
             key={tab.value}
             onClick={() => {
@@ -136,16 +135,19 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
                 onSearch({ type: tab.value });
               }
             }}
-            className={`min-h-10 shrink-0 rounded-full px-3 py-2 text-xs font-semibold whitespace-nowrap transition-all duration-200 sm:px-4 sm:text-sm ${
+            className={`search-experience-tab relative isolate min-h-10 shrink-0 overflow-hidden rounded-full border px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors duration-200 sm:px-4 sm:text-sm ${
               type === tab.value
-                ? 'bg-gray-900 text-white shadow-sm'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                ? 'border-gray-900 bg-gray-900 text-white shadow-sm'
+                : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
             }`}
           >
-            {tab.label}
+            <span className="relative z-10">
+              {tab.value === 'indian_special' ? 'India' : tab.value === 'festival' ? 'Festivals' : tab.value === 'budget' ? 'Budget' : tab.label}
+            </span>
           </button>
         ))}
       </div>
+      <p className="-mt-2 mb-3 text-[10px] text-gray-400 sm:hidden">Swipe to see more categories →</p>
 
       {/* Main Search */}
       <div className="flex min-w-0 flex-col gap-2.5 sm:flex-row sm:gap-3">

@@ -122,6 +122,310 @@
   50% { transform: translateY(-3px) rotate(1deg); }
 }
 
+.hero-spotlight-label::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: -180% -35%;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    ellipse at 50% 45%,
+    rgba(255, 255, 220, 0.72) 0%,
+    rgba(255, 255, 255, 0.34) 18%,
+    rgba(255, 255, 255, 0.12) 38%,
+    transparent 68%
+  );
+  transform: translateY(-22%) scale(0.72);
+  animation: hero-spotlight-fall 3.6s ease-in-out infinite;
+}
+
+.hero-spotlight-label__text {
+  animation: hero-spotlight-text 3.6s ease-in-out infinite;
+}
+
+.hero-headline {
+  min-height: 2.2em;
+}
+
+.hero-headline__word {
+  display: inline-block;
+  margin-right: 0.24em;
+  white-space: nowrap;
+}
+
+.trip-card-brand-wash {
+  background-color: #fff;
+  background-image: linear-gradient(
+    118deg,
+    rgba(255, 93, 187, 0.12),
+    rgba(139, 92, 246, 0.1) 48%,
+    rgba(45, 212, 191, 0.13)
+  );
+  background-size: 220% 220%;
+  animation: featured-trip-brand-wash 8s ease-in-out infinite alternate;
+}
+
+.site-header-brand-wash {
+  background-color: rgba(255, 255, 255, 0.88);
+  background-image: linear-gradient(
+    112deg,
+    rgba(255, 93, 187, 0.1),
+    rgba(139, 92, 246, 0.085) 48%,
+    rgba(45, 212, 191, 0.1)
+  );
+  background-size: 220% 220%;
+  backdrop-filter: blur(16px);
+  animation: featured-trip-brand-wash 8s ease-in-out infinite alternate;
+}
+
+.search-experience-tab::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 93, 187, 0.2),
+    rgba(139, 92, 246, 0.17) 52%,
+    rgba(45, 212, 191, 0.2)
+  );
+  background-size: 220% 220%;
+  animation: search-filter-hop 10s ease-in-out infinite;
+}
+
+.search-experience-tab:nth-child(2)::before {
+  animation-delay: 2s;
+}
+
+.search-experience-tab:nth-child(3)::before {
+  animation-delay: 4s;
+}
+
+.search-experience-tab:nth-child(4)::before {
+  animation-delay: 6s;
+}
+
+.search-experience-tab:nth-child(5)::before {
+  animation-delay: 8s;
+}
+
+.search-experience-tab:nth-child(6)::before {
+  animation-delay: 10s;
+}
+
+.search-experience-tab:nth-child(7)::before {
+  animation-delay: 12s;
+}
+
+.search-experience-tab:nth-child(8)::before {
+  animation-delay: 14s;
+}
+
+.search-experience-tab:nth-child(9)::before {
+  animation-delay: 16s;
+}
+
+.search-experience-tab:nth-child(10)::before {
+  animation-delay: 18s;
+}
+
+.search-experience-tab:nth-child(11)::before {
+  animation-delay: 20s;
+}
+
+.search-experience-tab:nth-child(12)::before {
+  animation-delay: 22s;
+}
+
+.search-experience-tabs {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.45) rgba(148, 163, 184, 0.12);
+}
+
+.search-experience-tabs::-webkit-scrollbar {
+  display: block;
+  height: 4px;
+}
+
+.search-experience-tabs::-webkit-scrollbar-track {
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.12);
+}
+
+.search-experience-tabs::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(255, 93, 187, 0.7), rgba(139, 92, 246, 0.7), rgba(45, 212, 191, 0.7));
+}
+
+.top-rated-category-tab::before {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  border-radius: inherit;
+  content: '';
+  pointer-events: none;
+  opacity: 0;
+  background: linear-gradient(
+    115deg,
+    rgba(255, 93, 187, 0.2),
+    rgba(139, 92, 246, 0.17) 52%,
+    rgba(45, 212, 191, 0.2)
+  );
+  background-size: 220% 220%;
+  animation: top-rated-filter-hop 12s ease-in-out infinite;
+}
+
+.top-rated-category-tab:nth-child(2)::before {
+  animation-delay: 2s;
+}
+
+.top-rated-category-tab:nth-child(3)::before {
+  animation-delay: 4s;
+}
+
+.top-rated-category-tab:nth-child(4)::before {
+  animation-delay: 6s;
+}
+
+.top-rated-category-tab:nth-child(5)::before {
+  animation-delay: 8s;
+}
+
+.top-rated-category-tab:nth-child(6)::before {
+  animation-delay: 10s;
+}
+
+@keyframes top-rated-filter-hop {
+  0%, 3% {
+    opacity: 0;
+    background-position: 0% 50%;
+  }
+  7%, 12% {
+    opacity: 1;
+    background-position: 100% 50%;
+  }
+  19%, 100% {
+    opacity: 0;
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes search-filter-hop {
+  0%, 3% {
+    opacity: 0;
+    background-position: 0% 50%;
+  }
+  7%, 12% {
+    opacity: 1;
+    background-position: 100% 50%;
+  }
+  19%, 100% {
+    opacity: 0;
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes featured-trip-brand-wash {
+  from { background-position: 0% 50%; }
+  to { background-position: 100% 50%; }
+}
+
+.hero-headline__character {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(0.16em);
+}
+
+.hero-headline__character.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+  animation: hero-headline-spotlight 850ms ease-out both;
+}
+
+@keyframes hero-headline-spotlight {
+  0% {
+    color: #ff7ac8;
+    text-shadow: 0 0 12px rgba(255, 71, 174, 0.9), 0 0 28px rgba(99, 102, 241, 0.7);
+    transform: translateY(0.16em);
+  }
+  35% {
+    color: #7ee7ef;
+    text-shadow: 0 0 14px rgba(45, 212, 191, 0.9), 0 0 30px rgba(168, 85, 247, 0.65);
+  }
+  100% {
+    color: #fff;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.25);
+    transform: translateY(0);
+  }
+}
+
+@keyframes hero-spotlight-fall {
+  0%, 8% {
+    opacity: 0;
+    transform: translateY(-22%) scale(0.72);
+  }
+  22% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  39% {
+    opacity: 0.72;
+    transform: translateY(8%) scale(1.08);
+  }
+  52%, 100% {
+    opacity: 0;
+    transform: translateY(20%) scale(1.12);
+  }
+}
+
+@keyframes hero-spotlight-text {
+  0%, 10%, 54%, 100% {
+    text-shadow: 0 0 0 transparent;
+    color: rgba(255, 255, 255, 0.9);
+  }
+  24%, 38% {
+    text-shadow: 0 0 8px rgba(255, 255, 220, 0.95), 0 0 24px rgba(255, 255, 255, 0.65);
+    color: #fff;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-spotlight-label::before,
+  .hero-spotlight-label__text,
+  .hero-headline__character.is-visible {
+    animation: none;
+  }
+
+  .hero-headline__character {
+    opacity: 1;
+    transform: none;
+  }
+
+  .trip-card-brand-wash,
+  .site-header-brand-wash {
+    animation: none;
+  }
+
+  .search-experience-tab::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .top-rated-category-tab::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .hero-spotlight-label__text {
+    color: #fff;
+    text-shadow: 0 0 12px rgba(255, 255, 220, 0.55);
+  }
+}
+
 /* Custom scrollbar - VisitRenoTahoe style */
 ::-webkit-scrollbar {
   width: 8px;

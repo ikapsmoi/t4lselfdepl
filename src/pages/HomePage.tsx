@@ -188,30 +188,30 @@ export const HomePage: React.FC = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm font-medium text-gray-600">Browse by category</p>
-              <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible">
+              <div className="top-rated-category-tabs flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible">
                 <button
                   type="button"
                   onClick={() => setTopRatedCategory('all')}
-                  className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  className={`top-rated-category-tab relative isolate shrink-0 overflow-hidden rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                     topRatedCategory === 'all'
                       ? 'border-gray-900 bg-gray-900 text-white'
                       : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900'
                   }`}
                 >
-                  All
+                  <span className="relative z-10">All</span>
                 </button>
                 {topRatedCategories.map((type) => (
                   <button
                     key={type.value}
                     type="button"
                     onClick={() => setTopRatedCategory(type.value)}
-                    className={`shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    className={`top-rated-category-tab relative isolate shrink-0 overflow-hidden rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
                       topRatedCategory === type.value
                         ? 'border-gray-900 bg-gray-900 text-white'
                         : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900'
                     }`}
                   >
-                    {type.value === 'budget' ? 'Budget' : type.label}
+                    <span className="relative z-10">{type.value === 'budget' ? 'Budget' : type.label}</span>
                   </button>
                 ))}
               </div>

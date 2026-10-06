@@ -49,7 +49,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   const fallbackImage = trip.type === 'budget'
     ? '/optimized/pkg1.webp'
     : trip.type === 'indian_special'
-      ? '/optimized/pkg3.webp'
+      ? '/pkg2.png'
       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
   const tripImage = resolveTripThumbnail(trip.title, trip.destination, trip.type, trip.images, fallbackImage);
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
@@ -172,7 +172,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             </div>
           </div>
         </div>
-        <div className="p-4">
+        <div className="trip-card-brand-wash p-4">
           <h3 className="tour-title text-gray-900 line-clamp-2 mb-2">{trip.title}</h3>
           <div className="flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center gap-1">
@@ -280,7 +280,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           </div>
         </div>
 
-        {isFull && trip.type !== 'europe' && (
+        {isFull && trip.type !== 'europe' && trip.type !== 'weekend' && (
           <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
             <span className="bg-white text-gray-900 px-5 py-2 rounded-full text-sm font-bold shadow-lg">Sold Out</span>
           </div>
@@ -288,7 +288,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       </div>
 
       {/* Content area */}
-      <div className="p-4 sm:p-5">
+      <div className="trip-card-brand-wash p-4 sm:p-5">
         <h3 className="tour-title text-gray-900 line-clamp-2 mb-3">{trip.title}</h3>
 
         {/* Host Info */}

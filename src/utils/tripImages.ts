@@ -129,7 +129,7 @@ const findCityImage = (title: string, destination: string): ResolvedTripImage | 
 };
 
 const isPlaceholderImage = (image: string): boolean =>
-  /\/pkg\d+\.png(?:[?#].*)?$/i.test(image)
+  /\/pkg\d+\.(?:png|webp)(?:[?#].*)?$/i.test(image)
   || /images\.pexels\.com\/photos\/(?:1371360|8185807)\//i.test(image);
 
 export const resolveTripThumbnail = (

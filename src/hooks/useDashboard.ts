@@ -103,7 +103,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
             : [booking.trips.category === 'budget'
               ? '/optimized/pkg1.webp'
               : booking.trips.category === 'indian_special'
-                ? '/optimized/pkg3.webp'
+                ? '/pkg2.png'
                 : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'], // Fallback image
           booking_status: booking.status,
           booking_id: booking.id,
@@ -177,7 +177,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
             : [booking.trips.category === 'budget'
               ? '/optimized/pkg1.webp'
               : booking.trips.category === 'indian_special'
-                ? '/optimized/pkg3.webp'
+                ? '/pkg2.png'
                 : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg'],
           booking_status: booking.status,
           booking_id: booking.id

@@ -56,8 +56,8 @@ export const FestivalReleaseCTA: React.FC = () => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-700">Festival Releases</p>
-              <h2 className="mt-1 text-sm font-bold text-gray-900">A rare second chance to join the festival</h2>
-              <p className="mt-1 text-xs leading-relaxed text-gray-600">Ask our concierge whether a previously reserved package is available again.</p>
+              <h2 className="mt-1 text-sm font-bold text-gray-900">Buy Back Packages</h2>
+              <p className="mt-1 text-xs leading-relaxed text-gray-600">Find cancelled festival packages at lower rates.</p>
             </div>
           </div>
           <button

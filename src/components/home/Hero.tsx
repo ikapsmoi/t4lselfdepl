@@ -38,12 +38,15 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const featuredTrips = trips.filter((trip) => trip.featured);
 
   const heroHeadlines = [
-    'Find Your Travel Crew',
-    'Festivals Hit Different Together',
-    'Curated Group Adventures',
-    'Make New Memories',
-    'Go Further Together'
+    'Sold-Out Festival? We’ve Got You.',
+    'Weekend Escapes from ₹9,000',
+    'Cash, Cards or Crypto. Your Call.',
+    'Need a Crew? We’ve Got You.',
+    'Weddings & Corporate Events Under ₹7L'
   ];
+  const activeHeadline = heroHeadlines[currentBgIndex];
+  const headlineWords = activeHeadline.split(' ');
+  const [visibleHeadlineCharacters, setVisibleHeadlineCharacters] = useState(0);
 
   const heroBackgrounds = React.useMemo(() => [
     {
@@ -163,6 +166,28 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
     return () => window.clearTimeout(timeout);
   }, [currentBgIndex, heroBackgrounds, loadedBackgrounds]);
 
+  useEffect(() => {
+    const headlineLength = activeHeadline.length;
+    setVisibleHeadlineCharacters(0);
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setVisibleHeadlineCharacters(headlineLength);
+      return;
+    }
+
+    const typingInterval = window.setInterval(() => {
+      setVisibleHeadlineCharacters((visibleCharacters) => {
+        if (visibleCharacters >= headlineLength) {
+          window.clearInterval(typingInterval);
+          return headlineLength;
+        }
+        return visibleCharacters + 1;
+      });
+    }, 42);
+
+    return () => window.clearInterval(typingInterval);
+  }, [activeHeadline]);
+
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     if (element) {
@@ -256,15 +281,44 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
           ) : (
             <div className="text-center text-white animate-fade-in relative z-10 max-w-4xl mx-auto px-4">
               {/* Label */}
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.1 mb-6">
+              <div className="hero-spotlight-label relative isolate inline-flex items-center gap-2 overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
                 <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
-                <span className="text-xs font-semibold text-white/90 tracking-widest uppercase">Group or Customised Tours</span>
+                <span className="hero-spotlight-label__text relative z-10 text-xs font-bold text-white tracking-widest uppercase">What Makes Us Different</span>
               </div>
 
-              <h1 className={`text-4xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.08] mb-5 text-white transition-opacity duration-300 ${
+              <h1
+                aria-label={activeHeadline}
+                className={`hero-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.08] mb-5 text-white transition-opacity duration-300 ${
                 isTextVisible ? 'opacity-100' : 'opacity-0'
-              }`}>
-                {heroHeadlines[currentBgIndex]}
+              }`}
+              >
+                {headlineWords.map((word, wordIndex) => {
+                  const precedingCharacterCount = headlineWords
+                    .slice(0, wordIndex)
+                    .reduce((count, previousWord) => count + previousWord.length + 1, 0);
+
+                  return (
+                    <span
+                      key={`${currentBgIndex}-${wordIndex}`}
+                      aria-hidden="true"
+                      className="hero-headline__word"
+                    >
+                      {Array.from(word).map((character, characterIndex) => {
+                        const index = precedingCharacterCount + characterIndex;
+                        return (
+                          <span
+                            key={index}
+                            className={`hero-headline__character ${
+                              index < visibleHeadlineCharacters ? 'is-visible' : ''
+                            }`}
+                          >
+                            {character}
+                          </span>
+                        );
+                      })}
+                    </span>
+                  );
+                })}
               </h1>
 
               {/* Floating glass search card */}

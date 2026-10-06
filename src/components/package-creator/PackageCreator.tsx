@@ -100,7 +100,7 @@ const packageDataFromTour = (tour: PackageTourRecord): PackageCreatorData => {
   const defaultImage = tour.category === 'budget'
     ? '/optimized/pkg1.webp'
     : tour.category === 'indian_special'
-      ? '/optimized/pkg3.webp'
+      ? '/pkg2.png'
       : '';
   const resolvedImage = resolveTripImage(tour.title, tour.location, tour.category, imageList, defaultImage);
   const dayRecords: ItineraryDay[] = itineraryDays.map((day, index) => ({

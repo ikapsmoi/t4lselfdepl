@@ -2,6 +2,7 @@ import { DollarSign, IndianRupee, Euro } from 'lucide-react';
 
 export const TRIP_TYPES = [
   { value: 'adventure', label: 'Adventure', color: 'text-green-600', bgColor: 'bg-green-100' },
+  { value: 'weekend', label: 'Weekend', color: 'text-teal-600', bgColor: 'bg-teal-100' },
   { value: 'culture', label: 'Culture', color: 'text-blue-600', bgColor: 'bg-blue-100' },
   { value: 'wellness', label: 'Wellness', color: 'text-purple-600', bgColor: 'bg-purple-100' },
   { value: 'food', label: 'Food & Wine', color: 'text-orange-600', bgColor: 'bg-orange-100' },
@@ -99,11 +100,11 @@ export const DURATION_OPTIONS = [
 ];
 
 export const PRICE_RANGES = [
-  { value: '0-500', label: 'Under $500' },
-  { value: '500-1000', label: '$500 - $1,000' },
-  { value: '1000-2500', label: '$1,000 - $2,500' },
-  { value: '2500-5000', label: '$2,500 - $5,000' },
-  { value: '5000+', label: '$5,000+' },
+  { value: '0-10000', label: 'Under ₹10,000' },
+  { value: '10000-25000', label: '₹10,000 - ₹25,000' },
+  { value: '25000-50000', label: '₹25,000 - ₹50,000' },
+  { value: '50000-100000', label: '₹50,000 - ₹1,00,000' },
+  { value: '100000+', label: '₹1,00,000+' },
 ];
 
 export const CURRENCY_OPTIONS = [

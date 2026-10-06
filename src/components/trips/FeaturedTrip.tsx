@@ -43,8 +43,8 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
 
   return (
     <>
-      <div className="relative bg-white rounded-2xl overflow-hidden shadow-[0_18px_50px_-20px_rgba(15,23,42,0.6)] border border-transparent bg-gradient-to-br from-amber-400 via-fuchsia-500 to-sky-500 p-[1px] transform transition-all duration-500 max-w-md mx-auto hover:-translate-y-1">
-        <div className="bg-white rounded-2xl overflow-hidden relative shadow-md">
+      <div className="relative mx-auto w-full max-w-md overflow-hidden rounded-2xl border border-white/70 bg-white/95 p-px shadow-[0_18px_50px_-20px_rgba(15,23,42,0.6)]">
+        <div className="relative overflow-hidden rounded-[15px] bg-white shadow-md">
           <button
             onClick={(e) => {
               e.stopPropagation();
@@ -60,7 +60,7 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
             type="button"
             onClick={() => onViewDetails?.(currentTrip)}
             aria-label={`Explore ${currentTrip.title}`}
-            className="group relative block w-full h-48 sm:h-56 md:h-64 text-left overflow-hidden focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/60"
+            className="group relative block h-44 w-full overflow-hidden text-left focus:outline-none focus-visible:ring-4 focus-visible:ring-sky-400/60 sm:h-52 md:h-56"
           >
             <img
               key={currentTrip.images[0]}
@@ -101,50 +101,50 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
             </div>
           </button>
 
-          <div className="p-3 sm:p-4">
-            <div className="mb-2 flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-fuchsia-600">
-              <Sparkles className="h-3.5 w-3.5" /> Featured experience
+          <div className="trip-card-brand-wash p-3 sm:p-4">
+            <div className="relative z-10 mb-1.5 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.14em] text-fuchsia-700 sm:text-xs">
+              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" /> Featured experience
             </div>
-            <h1 className="tour-featured-title text-gray-900 mb-3 line-clamp-2 min-h-[3.5rem]">
+            <h2 className="relative z-10 mb-2 line-clamp-2 min-h-[2.7rem] text-base font-bold leading-[1.35] tracking-tight text-gray-900 sm:min-h-[3.25rem] sm:text-lg">
               {currentTrip.title}
-            </h1>
+            </h2>
 
-            <div className="grid grid-cols-2 gap-2.5 mb-4 min-h-[82px]">
-              <div className="flex items-center text-gray-700">
-                <MapPin className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
+            <div className="relative z-10 mb-3 grid grid-cols-2 gap-x-3 gap-y-2">
+              <div className="flex min-w-0 items-center text-gray-700">
+                <MapPin className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 text-blue-600" />
                 <div>
-                  <div className="text-xs text-gray-500">Destination</div>
-                  <div className="text-sm font-semibold leading-tight">{currentTrip.destination}</div>
+                  <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">Destination</div>
+                  <div className="truncate text-xs font-semibold leading-4 sm:text-sm">{currentTrip.destination}</div>
                 </div>
               </div>
-              <div className="flex items-center text-gray-700">
-                <span className="text-sm font-bold text-green-600 mr-1.5">₹{currentTrip.price}</span>
+              <div className="flex min-w-0 items-center text-gray-700">
                 <div>
-                  <div className="text-xs leading-tight">/person</div>
+                  <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">From</div>
+                  <div className="text-xs font-bold leading-4 text-green-600 sm:text-sm">₹{currentTrip.price}<span className="ml-1 font-normal text-gray-500">/person</span></div>
                 </div>
               </div>
-              <div className="flex items-center text-gray-700">
-                <Calendar className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
+              <div className="flex min-w-0 items-center text-gray-700">
+                <Calendar className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 text-blue-600" />
                 <div>
-                  <div className="text-xs text-gray-500">Duration</div>
-                  <div className="text-sm font-semibold leading-tight">{currentTrip.duration} days</div>
+                  <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">Duration</div>
+                  <div className="text-xs font-semibold leading-4 sm:text-sm">{currentTrip.duration} days</div>
                 </div>
               </div>
-              <div className="flex items-center text-gray-700">
-                <Star className="w-3.5 h-3.5 mr-1.5 text-yellow-500 fill-current flex-shrink-0" />
+              <div className="flex min-w-0 items-center text-gray-700">
+                <Star className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 fill-current text-yellow-500" />
                 <div>
-                  <div className="text-xs text-gray-500">Rating</div>
-                  <div className="text-sm font-semibold leading-tight">{currentTrip.rating}</div>
+                  <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">Rating</div>
+                  <div className="text-xs font-semibold leading-4 sm:text-sm">{currentTrip.rating}</div>
                 </div>
               </div>
             </div>
 
-            <div className="mt-1">
-              <div className="flex items-center gap-1.5 sm:gap-2 w-full overflow-hidden">
+            <div className="relative z-10">
+              <div className="flex w-full items-center gap-2">
                 <Button 
                   variant="outline" 
                   onClick={() => onViewDetails?.(currentTrip)}
-                  className="flex-1 min-w-0 border border-gray-300 text-gray-700 hover:bg-gray-50 hover:border-gray-400 transition-all duration-300 py-1.5 px-1.5 text-[10px] font-semibold rounded-md"
+                  className="min-w-0 flex-1 rounded-full border border-gray-300 px-2 py-2 text-xs font-semibold transition-colors duration-200 hover:border-gray-400 hover:bg-gray-50"
                 >
                   <Eye className="w-3.5 h-3.5 mr-1" />
                   Details
@@ -153,7 +153,7 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
                 <Button 
                   variant="primary" 
                   onClick={() => setShowBookingModal(true)}
-                  className="flex-1 min-w-0 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-md hover:shadow-lg transform transition-all duration-300 py-1.5 px-1.5 text-[10px] font-bold rounded-md"
+                  className="min-w-0 flex-1 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-2 py-2 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:shadow-md"
                 >
                   <Heart className="w-3.5 h-3.5 mr-1" />
                   Book
@@ -161,7 +161,7 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
                 
                 <Button 
                   onClick={() => setShowCreatorModal(true)}
-                  className="flex-1 min-w-0 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white shadow-md hover:shadow-lg transform transition-all duration-300 py-1.5 px-1.5 text-[10px] font-bold rounded-md"
+                  className="min-w-0 flex-1 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 px-2 py-2 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:shadow-md"
                 >
                   <Crown className="w-3.5 h-3.5 mr-1" />
                   Host
