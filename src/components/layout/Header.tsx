@@ -83,7 +83,9 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
     setShowAuthModal(false);
     
     // Redirect to appropriate dashboard based on user role
-    if (user.role === 'host') {
+    if (user.role === 'admin') {
+      window.location.hash = 'admin-dashboard';
+    } else if (user.role === 'host') {
       window.location.hash = 'host-dashboard';
     } else {
       window.location.hash = 'traveler-dashboard';

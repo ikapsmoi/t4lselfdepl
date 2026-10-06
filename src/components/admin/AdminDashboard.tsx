@@ -10,6 +10,7 @@ import { GalleryManager } from './GalleryManager';
 import { PackageCreator } from '../package-creator/PackageCreator';
 import { VoucherDispatchCenter } from './VoucherDispatchCenter';
 import { CorbettAuthorityCenter } from './CorbettAuthorityCenter';
+import { TripsManager } from './TripsManager';
 
 export const AdminDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState(
@@ -223,6 +224,10 @@ export const AdminDashboard: React.FC = () => {
         <GalleryManager />
       )}
 
+      {activeTab === 'trips' && (
+        <TripsManager />
+      )}
+
       {activeTab === 'package-creator' && (
         <PackageCreator />
       )}
@@ -235,7 +240,7 @@ export const AdminDashboard: React.FC = () => {
         <CorbettAuthorityCenter />
       )}
 
-      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && activeTab !== 'corbett-authority' && (
+      {activeTab !== 'overview' && activeTab !== 'analytics' && activeTab !== 'gallery' && activeTab !== 'trips' && activeTab !== 'package-creator' && activeTab !== 'voucher-dispatch' && activeTab !== 'corbett-authority' && (
         <div className="bg-white rounded-xl shadow-md p-8 text-center">
           <h3 className="text-xl font-semibold text-gray-900 mb-2">
             {tabs.find(tab => tab.id === activeTab)?.label} Management

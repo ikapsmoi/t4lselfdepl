@@ -10,6 +10,7 @@ import { EnhancedAuthModal } from './components/auth/EnhancedAuthModal';
 import { updateSeoForPage } from './utils/seo';
 import { Travel4LifeGlobalContactLayer } from './components/common/Travel4LifeContactCTA';
 import { getTravel4LifeContactContextFromLocation, type Travel4LifeContactContext } from './utils/travel4lifeContact.js';
+import { AdminPasswordGate } from './components/auth/AdminPasswordGate';
 
 // Lazy load all page components
 const HomePage = lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
@@ -48,6 +49,9 @@ const AppContent: React.FC = () => {
   const [showAuthModal, setShowAuthModal] = React.useState(false);
   const [authMode, setAuthMode] = React.useState<'login' | 'signup' | 'forgot'>('login');
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [hasAdminAccess, setHasAdminAccess] = React.useState(
+    () => sessionStorage.getItem('travel4life:admin-access') === 'granted',
+  );
   const [contactContext, setContactContext] = React.useState<Travel4LifeContactContext>(
     () => getTravel4LifeContactContextFromLocation(window.location.pathname, document.title),
   );
@@ -100,8 +104,26 @@ const AppContent: React.FC = () => {
     return () => window.removeEventListener('travel4life:contact-context', updateContactContext);
   }, []);
 
+  const grantAdminAccess = () => {
+    sessionStorage.setItem('travel4life:admin-access', 'granted');
+    setHasAdminAccess(true);
+  };
+
   // Simple routing based on user role and current view
   const getCurrentView = () => {
+    const adminPages = new Set([
+      'admin-dashboard',
+      'admin-package-creator',
+      'admin-voucher-dispatch',
+      'corbett-authority',
+    ]);
+
+    if (adminPages.has(currentPage) && !hasAdminAccess) {
+      return (
+        <AdminPasswordGate onUnlock={grantAdminAccess} />
+      );
+    }
+
     if (/^\/trips\/[^/]+\/?$/.test(window.location.pathname)) {
       return <Suspense fallback={<PageLoader />}><TripSeoPage /></Suspense>;
     }
@@ -148,17 +170,8 @@ const AppContent: React.FC = () => {
           <Suspense fallback={<PageLoader />}><HomePage /></Suspense>
         );
       case 'admin-dashboard':
-        return user?.role === 'admin' ? (
-          <Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>
-        ) : (
-          <Suspense fallback={<PageLoader />}><HomePage /></Suspense>
-        );
       case 'corbett-authority':
-        return user?.role === 'admin' ? (
-          <Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>
-        ) : (
-          <Suspense fallback={<PageLoader />}><HomePage /></Suspense>
-        );
+        return <Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>;
       default:
         // If no specific page is requested and user is logged in, default to their dashboard
         if (user) {
@@ -166,7 +179,9 @@ const AppContent: React.FC = () => {
             case 'host':
               return <Suspense fallback={<PageLoader />}><HostDashboard /></Suspense>;
             case 'admin':
-              return <Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>;
+              return hasAdminAccess
+                ? <Suspense fallback={<PageLoader />}><AdminDashboard /></Suspense>
+                : <AdminPasswordGate onUnlock={grantAdminAccess} />;
             default:
               return <Suspense fallback={<PageLoader />}><TravelerDashboard /></Suspense>;
           }

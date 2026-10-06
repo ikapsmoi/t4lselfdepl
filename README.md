@@ -50,6 +50,10 @@ npm run build
 npm run preview
 ```
 
+## Admin access
+
+Set `VITE_ADMIN_PASSWORD` in the local `.env.local` file or the deployment environment to enable the password gate for admin routes. The footer's Admin link opens this gate. The trips manager additionally requires a signed-in Supabase account whose `profiles.role` is `admin`; apply `supabase/migrations/20261006113000_admin_trip_management_policies.sql` to grant that role read/update access to every trip through RLS. The Vite password gate is client-side convenience only—`VITE_` variables are embedded in the browser bundle and are not secure authorization.
+
 ## 📱 Features Overview
 
 ### For Travelers
