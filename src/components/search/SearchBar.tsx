@@ -1,5 +1,5 @@
 import React, { useState, useMemo, memo } from 'react';
-import { Search, MapPin, ChevronUp, ChevronDown, X } from 'lucide-react';
+import { Search, MapPin, ChevronUp, ChevronDown, Sparkles, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
 import { SearchFilters, Trip } from '../../types';
@@ -26,6 +26,9 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
   const [destination, setDestination] = useState(
     () => new URLSearchParams(window.location.search).get('destination') || ''
   );
+  const [selectedTripId, setSelectedTripId] = useState<string | null>(null);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [suggestionsAbove, setSuggestionsAbove] = useState(false);
   const [type, setType] = useState('');
   const [priceRange, setPriceRange] = useState('');
   const [duration, setDuration] = useState('');
@@ -35,11 +38,12 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
   const [filtersMinimized, setFiltersMinimized] = useState(true);
 
   const handleSearch = () => {
-    const selectedTrip = trips.find(trip =>
-      trip.title.trim().toLocaleLowerCase() === destination.trim().toLocaleLowerCase()
-    );
+    const normalizedDestination = destination.trim().toLocaleLowerCase();
+    const selectedTrip = trips.find((trip) => trip.id === selectedTripId) ??
+      trips.find(trip => trip.title.trim().toLocaleLowerCase() === normalizedDestination);
 
-    if (navigateOnFilter && selectedTrip) {
+    setSuggestionsOpen(false);
+    if (selectedTrip) {
       searchTrip(destination, { selectedTripId: selectedTrip.id });
       window.location.href = getTripPath(selectedTrip.id);
       return;
@@ -91,6 +95,8 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
 
   const clearFilters = () => {
     setDestination('');
+    setSelectedTripId(null);
+    setSuggestionsOpen(false);
     setType('');
     setPriceRange('');
     setDuration('');
@@ -100,20 +106,49 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
     onSearch({});
   };
 
+  const openSuggestions = (input: HTMLInputElement) => {
+    const bounds = input.getBoundingClientRect();
+    setSuggestionsAbove(window.innerHeight - bounds.bottom < 300 && bounds.top > 300);
+    setSuggestionsOpen(true);
+  };
+
   const hasActiveFilters =
     destination || type || priceRange || duration || groupSize || difficulty || rating;
 
-  // ✅ Build title list dynamically from trips
-  const titleList = useMemo(() => {
-    const live = (trips ?? [])
-      .map((trip) => trip.title?.trim())
-      .filter(Boolean);
-
-    return [...new Set(live)]
-      .filter((title) => !destination || title.toLocaleLowerCase().includes(destination.trim().toLocaleLowerCase()))
-      .sort((a, b) => a.localeCompare(b))
-      .slice(0, 20);
+  const matchingTrips = useMemo(() => {
+    const query = destination.trim().toLocaleLowerCase();
+    return [...(trips ?? [])].filter((trip) => {
+      const tripType = TRIP_TYPES.find((option) => option.value === trip.type);
+      const searchableText = [
+        trip.title,
+        trip.destination,
+        trip.country,
+        trip.type,
+        tripType?.label,
+      ].filter(Boolean).join(' ').toLocaleLowerCase();
+      return trip.title?.trim() && (!query || searchableText.includes(query));
+    });
   }, [destination, trips]);
+
+  const recommendedTypes = useMemo(() => {
+    const counts = new Map<string, number>();
+    matchingTrips.forEach((trip) => counts.set(trip.type, (counts.get(trip.type) || 0) + 1));
+    return TRIP_TYPES
+      .filter((tripType) => counts.has(tripType.value))
+      .sort((a, b) => (counts.get(b.value) || 0) - (counts.get(a.value) || 0))
+      .slice(0, 4);
+  }, [matchingTrips]);
+
+  const visibleTrips = useMemo(() => {
+    return matchingTrips
+      .filter((trip) => !type || trip.type === type)
+      .sort((a, b) => {
+        if (!destination.trim()) {
+          return Number(b.featured) - Number(a.featured) || b.rating - a.rating || a.title.localeCompare(b.title);
+        }
+        return a.title.localeCompare(b.title);
+      });
+  }, [destination, matchingTrips, type]);
 
   return (
     <div className={`w-full min-w-0 rounded-2xl p-3 sm:rounded-[20px] sm:p-5 ${className}`}>
@@ -157,21 +192,107 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
             type="text"
             placeholder={tripsLoading ? 'Loading trips...' : 'Where do you want to go?'}
             aria-label="Search trips"
+            role="combobox"
+            aria-autocomplete="list"
+            aria-expanded={suggestionsOpen}
+            aria-controls="trip-title-suggestions"
             value={destination}
-            onChange={(e) => setDestination(e.target.value)}
+            onFocus={(event) => openSuggestions(event.currentTarget)}
+            onClick={(event) => openSuggestions(event.currentTarget)}
+            onBlur={() => window.setTimeout(() => setSuggestionsOpen(false), 100)}
+            onChange={(e) => {
+              setDestination(e.target.value);
+              setSelectedTripId(null);
+              setSuggestionsOpen(true);
+            }}
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
                 handleSearch();
+              } else if (e.key === 'Escape') {
+                setSuggestionsOpen(false);
               }
             }}
             className="min-h-12 w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 sm:rounded-2xl sm:py-3.5 sm:pl-12 sm:pr-24"
-            list="trip-titles"
           />
+          {suggestionsOpen && !tripsLoading && (
+            <div
+              className={`absolute left-0 right-0 z-50 flex max-h-[min(70vh,24rem)] flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl sm:rounded-2xl ${
+                suggestionsAbove ? 'bottom-full mb-2' : 'top-full mt-2'
+              }`}
+            >
+              {recommendedTypes.length > 0 && (
+                <div className="shrink-0 border-b border-gray-100 px-3 py-3 sm:px-4">
+                  <div className="mb-2 flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-wide text-gray-400">
+                    <Sparkles className="h-3.5 w-3.5 text-sky-500" />
+                    Recommended trip types
+                  </div>
+                  <div className="flex flex-wrap gap-1.5">
+                    {recommendedTypes.map((tripType) => (
+                      <button
+                        key={tripType.value}
+                        type="button"
+                        aria-pressed={type === tripType.value}
+                        onPointerDown={(event) => event.preventDefault()}
+                        onClick={() => {
+                          setType(type === tripType.value ? '' : tripType.value);
+                          setSelectedTripId(null);
+                        }}
+                        className={`rounded-full border px-2.5 py-1 text-xs font-medium transition-colors ${
+                          type === tripType.value
+                            ? 'border-gray-900 bg-gray-900 text-white'
+                            : 'border-gray-200 bg-gray-50 text-gray-600 hover:border-sky-300 hover:bg-sky-50'
+                        }`}
+                      >
+                        {tripType.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              <div
+                id="trip-title-suggestions"
+                role="listbox"
+                aria-label="Available trips"
+                className="min-h-0 overflow-y-auto py-1"
+              >
+                {visibleTrips.length > 0 ? visibleTrips.map((trip) => (
+                  <button
+                    key={trip.id}
+                    type="button"
+                    role="option"
+                    aria-selected={trip.id === selectedTripId}
+                    onPointerDown={(event) => event.preventDefault()}
+                    onClick={() => {
+                      setDestination(trip.title);
+                      setSelectedTripId(trip.id);
+                      setSuggestionsOpen(false);
+                    }}
+                    className="flex w-full items-center justify-between gap-3 px-3 py-2.5 text-left transition-colors hover:bg-sky-50 focus:bg-sky-50 focus:outline-none sm:px-4"
+                  >
+                    <span className="min-w-0">
+                      <span className="block truncate text-sm font-medium text-gray-900">{trip.title}</span>
+                      <span className="block truncate text-xs text-gray-500">{trip.destination}</span>
+                    </span>
+                    <span className="shrink-0 rounded-full bg-gray-100 px-2 py-1 text-[10px] font-medium text-gray-500">
+                      {TRIP_TYPES.find((tripType) => tripType.value === trip.type)?.label || 'Trip'}
+                    </span>
+                  </button>
+                )) : (
+                  <p className="px-4 py-3 text-sm text-gray-500">
+                    {matchingTrips.length > 0 ? 'No trips in this type. Choose another type.' : 'No matching trips found'}
+                  </p>
+                )}
+              </div>
+            </div>
+          )}
           {destination && (
             <button
               type="button"
-              onClick={() => setDestination('')}
+              onClick={() => {
+                setDestination('');
+                setSelectedTripId(null);
+              }}
               aria-label="Clear selected package"
               title="Clear selected package"
               className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 sm:hidden"
@@ -184,7 +305,10 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
             {destination && (
               <button
                 type="button"
-                onClick={() => setDestination('')}
+                onClick={() => {
+                  setDestination('');
+                  setSelectedTripId(null);
+                }}
                 aria-label="Clear selected package"
                 title="Clear selected package"
                 className="rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700 transition-colors"
@@ -205,11 +329,6 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
               </svg>
             </a>
           </div>
-          <datalist id="trip-titles">
-            {titleList.map((title) => (
-              <option key={title} value={title} />
-            ))}
-          </datalist>
         </div>
 
         <div className="flex w-full min-w-0 gap-2 sm:w-auto sm:flex-shrink-0">

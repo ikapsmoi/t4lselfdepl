@@ -348,7 +348,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
                 </div>
 
                 {/* Search bar */}
-                <div className="bg-white/80 backdrop-blur-lg rounded-2xl shadow-2xl overflow-hidden border border-white/30">
+                <div className="relative z-30 overflow-visible rounded-2xl border border-white/30 bg-white/80 shadow-2xl backdrop-blur-lg">
                   <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} />
                 </div>
 

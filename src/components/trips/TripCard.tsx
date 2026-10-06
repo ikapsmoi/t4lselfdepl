@@ -109,7 +109,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   if (variant === 'compact') {
     return (
       <div
-        className={`bg-white rounded-[20px] overflow-hidden shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.14)] transition-all duration-400 hover:-translate-y-1 cursor-pointer group ${
+        className={`flex flex-col bg-white rounded-[20px] overflow-hidden shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.14)] transition-all duration-400 hover:-translate-y-1 cursor-pointer group ${
           isMobileCarouselItem ? 'w-[calc(100vw-2rem)] max-w-full flex-shrink-0 snap-start' : ''
         }`}
         onClick={() => {
@@ -172,7 +172,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             </div>
           </div>
         </div>
-        <div className="trip-card-brand-wash p-4">
+        <div className="trip-card-brand-wash flex-1 p-4">
           <h3 className="tour-title text-gray-900 line-clamp-2 mb-2">{trip.title}</h3>
           <div className="flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center gap-1">
@@ -195,7 +195,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
 
   return (
     <div
-      className={`bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-400 hover:-translate-y-2 cursor-pointer group md:w-auto md:flex-shrink md:snap-none border border-gray-100/80 ${
+      className={`flex flex-col bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-400 hover:-translate-y-2 cursor-pointer group md:w-auto md:flex-shrink md:snap-none border border-gray-100/80 ${
         isMobileCarouselItem ? 'w-[calc(100vw-2rem)] max-w-full flex-shrink-0 snap-start' : ''
       }`}
       onClick={() => {
@@ -288,7 +288,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       </div>
 
       {/* Content area */}
-      <div className="trip-card-brand-wash p-4 sm:p-5">
+      <div className="trip-card-brand-wash flex-1 p-4 sm:p-5">
         <h3 className="tour-title text-gray-900 line-clamp-2 mb-3">{trip.title}</h3>
 
         {/* Host Info */}
