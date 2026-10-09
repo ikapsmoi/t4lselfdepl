@@ -38,11 +38,11 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const featuredTrips = trips.filter((trip) => trip.featured);
 
   const heroHeadlines = [
-    'Sold-Out Festival? We’ve Got You.',
+    'Festival FOMO? We’ve Got You.',
     'Weekend Escapes from ₹9,000',
-    'Cash, Cards or Crypto. Your Call.',
-    'Need a Crew? We’ve Got You.',
-    'Weddings & Corporate Events Under ₹7L'
+    'Cash, Cards or Bank. Your Call.',
+    'Travel with Group? We’ve Got You.',
+    'Weddings & Corp Events Under ₹7L'
   ];
   const activeHeadline = heroHeadlines[currentBgIndex];
   const headlineWords = activeHeadline.split(' ');
