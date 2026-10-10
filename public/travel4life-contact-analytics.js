@@ -72,9 +72,25 @@
     });
   };
 
+  const startedForms = new WeakSet();
+  const recordFormStart = (event) => {
+    if (!(event.target instanceof Element)) return;
+    const panel = event.target.closest('[data-tomorrowland-enquiry]');
+    if (!panel || startedForms.has(panel)) return;
+    startedForms.add(panel);
+    sendEvent('form_start', panel);
+  };
+
+  document.addEventListener('input', recordFormStart, true);
+  document.addEventListener('change', recordFormStart, true);
+  document.addEventListener('travel4life:contact-form-error', (event) => {
+    const { panel } = event.detail || {};
+    if (panel instanceof Element) sendEvent('form_error', panel);
+  });
+
   document.addEventListener('click', (event) => {
     if (!(event.target instanceof Element)) return;
-    const link = event.target.closest('a[data-contact-event]');
+    const link = event.target.closest('a[data-contact-event], button[data-contact-event]');
     if (!link) return;
     sendEvent(link.dataset.contactEvent, link);
     if (link.dataset.contactSecondaryEvent) {
@@ -83,5 +99,5 @@
     if (link.dataset.contactExtraEvent) {
       link.dataset.contactExtraEvent.split(',').forEach((eventName) => sendEvent(eventName, link));
     }
-  }, true);
+  });
 })();

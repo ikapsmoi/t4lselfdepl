@@ -65,6 +65,18 @@ const validateContactLayer = (route, html) => {
   if (!html.includes('/travel4life-contact-analytics.js')) failures.push(`${route}: missing contact conversion analytics script`);
   if (!contactAnalyticsScript.includes("analytics_events")) failures.push(`${route}: contact analytics does not submit conversion events`);
   if (!contactAnalyticsScript.includes('contactSecondaryEvent') || !contactAnalyticsScript.includes('contactExtraEvent')) failures.push(`${route}: contact analytics omits contextual quote events`);
+  if (!contactAnalyticsScript.includes('button[data-contact-event]')) failures.push(`${route}: contact analytics does not track the enquiry button`);
+  if (!contactAnalyticsScript.includes("sendEvent('form_start'") ||
+    !contactAnalyticsScript.includes("sendEvent('form_error'")) {
+    failures.push(`${route}: contact analytics does not distinguish enquiry starts and client-side errors`);
+  }
+  if (contactAnalyticsScript.includes('data-enquiry-') || contactAnalyticsScript.includes('.value')) {
+    failures.push(`${route}: contact analytics must not read or send enquiry field values`);
+  }
+  if (contactAnalyticsScript.includes("sendEvent('form_submit'") ||
+    contactAnalyticsScript.includes("sendEvent('qualified_enquiry'")) {
+    failures.push(`${route}: contact analytics must not claim a WhatsApp draft is a submitted or qualified lead`);
+  }
   if (!contactStyles.includes('min-height: 48px')) failures.push(`${route}: contact touch targets are below 44px`);
   const context = getTravel4LifeContactContextFromLocation(route, html.match(/<title>([^<]+)<\/title>/i)?.[1] || '');
   const expectedMessageUrl = getTravel4LifeWhatsAppUrl(context).replaceAll('&', '&amp;');
@@ -220,6 +232,24 @@ for (const route of routes) {
     }
     if (!html.includes('data-contact-secondary-event="quote_request_click"')) {
       failures.push(`${route.url}: enquiry CTA is missing quote-click tracking`);
+    }
+    if (!html.includes('data-tomorrowland-enquiry')) {
+      failures.push(`${route.url}: missing the trip-detail WhatsApp enquiry builder`);
+    }
+    if (!html.includes('/tomorrowland-enquiry.js')) {
+      failures.push(`${route.url}: missing the enquiry builder script`);
+    }
+    if (!html.includes('data-enquiry-departure') ||
+      !html.includes('data-enquiry-month') ||
+      !html.includes('data-enquiry-travellers')) {
+      failures.push(`${route.url}: enquiry builder is missing optional trip-detail fields`);
+    }
+    if (!html.includes('page does not save these optional trip details') ||
+      !html.includes('unsent WhatsApp message')) {
+      failures.push(`${route.url}: enquiry builder does not disclose its WhatsApp-only, unsaved behavior`);
+    }
+    if (/<input\b[^>]*\btype="(?:email|tel)"|<(?:input|textarea)\b[^>]*\bname="(?:name|email|phone|mobile)"/i.test(html)) {
+      failures.push(`${route.url}: static enquiry flow must not collect personal contact fields without a secure backend`);
     }
   }
   if (h1Count !== 1) failures.push(`${route.url}: expected one H1, found ${h1Count}`);

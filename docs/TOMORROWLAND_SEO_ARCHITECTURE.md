@@ -193,3 +193,49 @@ npm run build
 The validator checks all thirteen map-owned editorial documents, unique metadata, canonical and robots directives, minimum visible text, JSON-LD parsing/types, official-source links declared by the intent map, social image and alt metadata, local routes, redirects, sitemap index references and static sitemap membership.
 
 After deployment, verify the two permanent redirects, submit `https://travel4life.net/sitemap.xml` in Search Console, inspect representative static and active-product URLs, and compare actual query/page rows over a sufficiently long period. Do not treat a technical pass or this internal score as a ranking guarantee.
+
+## 10 October 2026 Phase 3 verification
+
+### Live release and technical checks
+
+The Phase 2 revision `a27e243c1a67418a370cbcb319232a2d30a4811c` is present on `origin/main`, and its static-page changes are now visible in production. This supersedes the pre-release observations above. The six priority landing pages each returned HTTP 200, a self-canonical, `index, follow`, one destination-appropriate H1, crawlable HTML copy, and one live sitemap entry. The sitemap index and all 11 child XML sitemaps parsed; the combined set contained 78 unique URLs, including all six priority pages and no UUID product URLs missing their trailing slash. Requests to a no-slash product URL redirect to the slash canonical with HTTP 301.
+
+`robots.txt` returned HTTP 200 `text/plain`, allows crawling, and points to the sitemap index. The six-page check found working phone, email and WhatsApp link targets in the source HTML and all page-authored WhatsApp links carried click/context instrumentation. This verifies markup and configured targets, not delivery of an email, connection of a call, a completed WhatsApp conversation, or Search Console indexing. No live form is present in production yet. Production mobile was previously inspected at 390 × 844 without horizontal overflow; performance lab/field data remains unverified because the public PageSpeed request returned HTTP 429.
+
+### Inventory evidence and controls
+
+An authenticated-free read using the configured public Supabase client returned 168 active trip rows, including eight whose public trip fields identify Tomorrowland. Six passed the current local product-quality predicate and two Winter records failed it; the latter advertise `L'Île-d'Yeu, Pays de la Loire` as their location and their product URLs return 404. They are not in the sitemap, so the quality gate is preventing those rows from being published as indexable inventory. Do not publish or repair those business records without the product owner's verified location and offer details.
+
+Five of the eight Tomorrowland rows have a conflict between `price_per_person` and numeric `itinerary.price`. The product renderer uses `price_per_person` consistently for the visible price and `Product`/`Offer` schema, but the other stored field disagrees; the available evidence does not establish which value the owner intends. Three such conflicting rows currently have indexable product URLs. Confirm the source of truth with the business owner before changing these records or presenting any price as a verified offer. This phase does not alter inventory, product prices, availability, ticket claims, or schema.
+
+### Search Console file received
+
+The uploaded `travel4life.net-Performance-on-Search-2026-10-10 (1).xlsx` is a Search type **Web, Last 7 days** export covering **30 September–6 October 2026**, not the requested 28-day and 3-month reports. It contains separate Query, Page, Country and Device dimensions, not a query × page × device report filtered to India. Its data are useful for a short-window directional read only:
+
+| Requested intent cluster | Query rows in export | Clicks | Impressions | CTR | Impression-weighted position | Strongest existing owner / separate page evidence |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| A. Thailand packages from India | 4 | 3 | 15 | 20.0% | 9.46 | Thailand; its page separately had 4 clicks / 30 impressions, 13.33% CTR, position 8.13 |
+| B. Winter packages and cost | 9 | 0 | 19 | 0% | 11.00 | Winter; separately 2 / 137, 1.46% CTR, position 8.31 |
+| C. Belgium packages from India | 5 | 0 | 5 | 0% | 48.60 | Belgium; 1 / 25, 4% CTR, position 34.12; packages page 0 / 11, position 53.55 |
+| D. General Tomorrowland travel from India | 7 | 1 | 24 | 4.17% | 9.79 | From-India hub; separately 0 / 8, position 18.12; broad hub 0 / 15, position 48.00 |
+| E. Cost, itinerary, accommodation and planning | 27 | 1 | 64 | 1.56% | 21.70 | Cost-from-India; separately 2 / 62, 3.23% CTR, position 16.79 |
+
+Cluster assignment is based on terms in each exported Tomorrowland query (destination first, then cost/planning terms); metrics sum the visible query rows and are not India-only. The exact `tomorrowland thailand packages from india` row had 3 clicks, 7 impressions, 42.86% CTR and average position 8.71; its page cannot be attributed from this workbook. The India Country row is 13 clicks / 229 impressions, 5.68% CTR and position 12.13 for the whole property. The Device rows are also property-wide: Mobile 18 / 616 (2.92%, position 8.28), Desktop 8 / 266 (3.01%, position 11.41), Tablet 0 / 6. No query, page, or destination performance can be assigned to India mobile from these separate dimensions. There is no prior-period comparison in this export.
+
+For the next decision, keep Thailand as the strongest commercial owner; improve Winter's snippet and first-screen answer only with a measurement window and the longer GSC baseline; strengthen Belgium's distinct package and destination evidence before creating more URLs; and retain the existing India hub and cost guide as owners rather than adding overlapping pages. Treat observed impressions as a limited sample, not proof of demand or a ranking promise.
+
+### Enquiry and analytics status
+
+The static priority pages did not have a genuine server-backed form. The configured browser Supabase client is not a lead backend, the existing mock notification function does not persist enquiries, and the public analytics table is not a safe place for personal details. The Supabase CLI and deployment credentials are unavailable in this environment, so this phase cannot install a migration or publish a secure submission endpoint.
+
+The three local destination pages now have a mobile-friendly, optional-detail WhatsApp message builder. It only collects a departure-city choice, month and traveller count; it does not ask for a name, email, phone number, budget or free-form message. Details are not stored by the website or sent to analytics. A click opens an unsent WhatsApp draft that the visitor reviews and explicitly sends. The UI does not claim that opening WhatsApp is a form submission, lead, booking or confirmed quote. Existing analytics records `contact_whatsapp_click`, quote-click intent, `form_start`, and client-side `form_error` with route context only. No successful-submission or qualified-lead event is emitted because this is not a server-backed form. Production remains unchanged for this new builder until an authorized release.
+
+### 30-day action plan
+
+| Timing / task | Page or system | Evidence | Expected impact | Effort / dependency | Success measure |
+| --- | --- | --- | --- | --- | --- |
+| Days 1–3: reconcile Tomorrowland product fields and eligibility | Thailand, Belgium, Winter inventory | Eight active rows; two invalid Winter locations; five conflicting price fields | Prevent inaccurate offers/schema and resolve missing inventory pages | Medium; business owner confirms destination, dates, price, currency, inclusions and availability | Zero active Tomorrowland rows with unresolved location/price conflicts; generated pages and schema match approved source data |
+| Days 1–5: provide 28-day and 3-month India Search Console reports | All six priority URLs | Current file is only 7 days and has no India × query/page/device combination | Establish a comparable SEO baseline and avoid decisions on tiny samples | Low; Search Console export or authorized API | Canonical-page and query baselines for India, device, period and previous-period comparison |
+| Days 1–7: approve and deploy secure enquiry storage | Three destination pages, Supabase | No suitable table/endpoint, CLI/access token or verified notification path | Enable persisted, retrievable enquiries and accurate submission/error measurement | High; project owner supplies authorized Supabase deployment access, data-retention/notice decision and lead recipient/workflow | Approved test enquiry stored once; errors are honest; no PII reaches analytics; recipient can retrieve/respond |
+| Days 7–14: review Thailand CTR and the Winter snippet/first screen | Thailand and Winter | Seven-day exact Thailand query 3/7 at 8.71; Winter page 2/137 at 1.46% | Improve relevance without repeated title changes | Low–medium; 28-day baseline and a fixed test window | Query/page/device CTR and organic clicks versus the saved baseline after 28 days |
+| Days 14–30: improve Belgium authority and internal links; review business outcomes | Belgium and packages; analytics/CRM | Belgium page position 34.12 and packages 53.55; no qualified enquiry or booking attribution | Improve intent ownership and measure progression beyond contact clicks | Medium; longer GSC window, approved package facts, CRM qualification process | Belgium non-brand impressions/clicks and separately counted WhatsApp clicks, stored enquiries, qualified enquiries and booking progression |
