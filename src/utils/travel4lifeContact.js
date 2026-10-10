@@ -21,7 +21,7 @@ const contextualMessages = {
   festival: ({ destination, eventType, tripType }) => {
     const experience = eventType || tripType || 'a festival trip';
     const repeatsDestination = destination && experience.toLowerCase().includes(destination.toLowerCase());
-    return `Hi Travel4Life, I am interested in ${experience}${destination && !repeatsDestination ? ` in ${destination}` : ''}. Please share current package availability and booking details.`;
+    return `Hi Travel4Life, I am interested in ${experience}${destination && !repeatsDestination ? ` in ${destination}` : ''}. Please share what travel options may be available and the details I should confirm.`;
   },
   travel: ({ destination, tripType }) => `Hi Travel4Life, I am interested in planning ${tripType || 'a trip'}${destination ? ` to ${destination}` : ''}. Please help me with available options and current rates.`,
 };
@@ -94,7 +94,17 @@ export const getTravel4LifeContactContextFromLocation = (pathname, title = '') =
     return getTravel4LifeContactContext({ pageType: 'europe', destination: country || 'Europe', country, city, entity: europeRoute.replaceAll('-', ' ') });
   }
   if (normalizedPath.includes('/tomorrowland')) {
-    return getTravel4LifeContactContext({ pageType: 'festival', destination, eventType: 'Tomorrowland festival trip' });
+    const festivalDestination = normalizedPath.includes('/thailand/')
+      ? 'Tomorrowland Thailand'
+      : normalizedPath.includes('/winter/')
+        ? 'Tomorrowland Winter'
+        : normalizedPath.includes('/belgium/')
+          ? 'Tomorrowland Belgium'
+          : destination;
+    const eventType = festivalDestination === 'Tomorrowland'
+      ? 'Tomorrowland festival trip'
+      : `${festivalDestination || 'Tomorrowland'} trip from India`;
+    return getTravel4LifeContactContext({ pageType: 'festival', destination: festivalDestination, eventType });
   }
   if (/^\/trips\/[^/]+/.test(normalizedPath)) {
     return getTravel4LifeContactContext({ pageType: 'package', destination: pageLabel, package: pageLabel });

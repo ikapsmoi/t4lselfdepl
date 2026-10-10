@@ -46,6 +46,11 @@ const legacyFallbacks = [
   ['tomorrowland-india.html', '/tomorrowland/from-india/'],
   ['tomorrowland/winter/2027/index.html', '/tomorrowland/winter/'],
 ];
+const destinationEnquiryPages = new Map([
+  ['/tomorrowland/thailand/', { destination: 'Tomorrowland Thailand', label: 'Ask about Thailand travel options' }],
+  ['/tomorrowland/winter/', { destination: 'Tomorrowland Winter', label: 'Ask about Winter travel options' }],
+  ['/tomorrowland/belgium/', { destination: 'Tomorrowland Belgium', label: 'Ask about Belgium travel options' }],
+]);
 
 const validateContactLayer = (route, html) => {
   validatedContactPages.add(route);
@@ -64,6 +69,24 @@ const validateContactLayer = (route, html) => {
   const context = getTravel4LifeContactContextFromLocation(route, html.match(/<title>([^<]+)<\/title>/i)?.[1] || '');
   const expectedMessageUrl = getTravel4LifeWhatsAppUrl(context).replaceAll('&', '&amp;');
   if (!html.includes(expectedMessageUrl)) failures.push(`${route}: WhatsApp message is not contextual to the landing page`);
+  if (route.startsWith('/tomorrowland/')) {
+    const whatsappAnchors = [...html.matchAll(/<a\b[^>]*href="https:\/\/wa\.me\/[^"]*"[^>]*>[\s\S]*?<\/a>/gi)]
+      .map((match) => match[0]);
+    for (const anchor of whatsappAnchors) {
+      const openingTag = anchor.slice(0, anchor.indexOf('>') + 1);
+      if (!/\bdata-contact-event="contact_whatsapp_click"/i.test(openingTag)) {
+        failures.push(`${route}: a WhatsApp link is missing click analytics`);
+      }
+      if (!/\bdata-contact-page-type="/i.test(openingTag)) {
+        failures.push(`${route}: a WhatsApp link is missing page context`);
+      }
+      const label = `${anchor.replace(/<[^>]*>/g, ' ')} ${openingTag.match(/\baria-label="([^"]*)"/i)?.[1] || ''}`;
+      if (/\b(?:quote|enquir(?:y|e)|proposal|availability|booking)\b/i.test(label)
+        && !/\bdata-contact-secondary-event="/i.test(openingTag)) {
+        failures.push(`${route}: a quote or enquiry WhatsApp link is missing quote-click analytics`);
+      }
+    }
+  }
 };
 
 if (new Set(sitemapUrls).size !== sitemapUrls.length) {
@@ -150,7 +173,7 @@ for (const route of routes) {
   const robots = html.match(/<meta\s+name="robots"\s+content="([^"]+)"/i)?.[1] || '';
   const homeLink = html.match(/<a\s+class="home-link"\s+href="\/">Home<\/a>/i);
   const guideLink = html.match(/<a\s+class="guides-link"\s+href="\/tomorrowland\/">Festival guides<\/a>/i);
-  const headerWhatsapp = html.match(new RegExp(`<a\\s+class="whatsapp-button"\\s+href="(https:\\/\\/wa\\.me\\/${TRAVEL4LIFE_CONTACT.whatsappNumber}[^"]*)"[^>]*aria-label="Chat with Travel4life on WhatsApp"`, 'i'))?.[1];
+  const headerWhatsapp = html.match(new RegExp(`<a\\s+class="whatsapp-button"\\s+href="(https:\\/\\/wa\\.me\\/${TRAVEL4LIFE_CONTACT.whatsappNumber}[^"]*)"[^>]*aria-label="Ask Travel4Life about [^"]+ on WhatsApp"`, 'i'))?.[1];
   const h1Count = (html.match(/<h1\b/gi) || []).length;
   const jsonLd = [...html.matchAll(/<script\s+type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
   const imageUrl = html.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i)?.[1];
@@ -182,6 +205,23 @@ for (const route of routes) {
   if (!guideLink) failures.push(`${route.url}: missing visible Tomorrowland guides navigation link`);
   if (!headerWhatsapp) failures.push(`${route.url}: missing accessible header WhatsApp action`);
   validateContactLayer(route.url, html);
+  const destinationEnquiry = destinationEnquiryPages.get(route.url);
+  if (destinationEnquiry) {
+    const context = getTravel4LifeContactContextFromLocation(route.url, title);
+    const expectedWhatsappUrl = getTravel4LifeWhatsAppUrl(context).replaceAll('&', '&amp;');
+    if (!html.includes(`href="${expectedWhatsappUrl}"`)) {
+      failures.push(`${route.url}: missing a WhatsApp CTA with destination-specific enquiry text`);
+    }
+    if (!html.includes(`>${destinationEnquiry.label}</a>`)) {
+      failures.push(`${route.url}: missing the destination-specific primary enquiry CTA`);
+    }
+    if (!html.includes(`data-contact-destination="${destinationEnquiry.destination}"`)) {
+      failures.push(`${route.url}: enquiry CTA is missing its destination analytics context`);
+    }
+    if (!html.includes('data-contact-secondary-event="quote_request_click"')) {
+      failures.push(`${route.url}: enquiry CTA is missing quote-click tracking`);
+    }
+  }
   if (h1Count !== 1) failures.push(`${route.url}: expected one H1, found ${h1Count}`);
   if (wordCount < 150) failures.push(`${route.url}: thin visible content (${wordCount} words; minimum 150)`);
   if (jsonLd.length === 0) failures.push(`${route.url}: missing JSON-LD`);
@@ -225,6 +265,10 @@ for (const route of routes) {
     if (!knownInternalRoutes.has(link) && !link.startsWith('/#')) {
       failures.push(`${route.url}: unknown internal link ${link}`);
     }
+  }
+  const declaredIds = new Set([...html.matchAll(/\bid="([^"]+)"/gi)].map((match) => match[1]));
+  for (const [, fragment] of html.matchAll(/\bhref="#([^"]+)"/gi)) {
+    if (!declaredIds.has(fragment)) failures.push(`${route.url}: fragment link target #${fragment} does not exist`);
   }
   for (const route of routes) {
     if (route.url !== '/tomorrowland/' && !hubLinks.has(route.url)) {

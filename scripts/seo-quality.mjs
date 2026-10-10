@@ -1,4 +1,4 @@
-export const productPath = (id) => `/trips/${encodeURIComponent(id)}`;
+export const productPath = (id) => `/trips/${encodeURIComponent(id)}/`;
 
 const hasDate = (value) => Boolean(value && !Number.isNaN(new Date(value).getTime()));
 export const isSafeImage = (image) => {

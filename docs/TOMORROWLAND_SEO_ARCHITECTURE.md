@@ -118,6 +118,69 @@ The score is an internal implementation heuristic only. It is not a Google metri
 - `TripSeoPage` currently fetches trip data in the browser and updates title, canonical and JSON-LD after the request. Search engines that do not execute the application may see only the SPA shell's initial metadata. Pre-rendering or server rendering real active product details remains a separate deployment/data task.
 - The repository's `_redirects` rules provide HTTP 301s on hosts that support the Netlify format. Verify production status codes and canonical selection after deployment.
 
+## 10 October 2026 destination-page refresh
+
+The Thailand, Winter and Belgium guides now open with distinct, destination-specific WhatsApp enquiry actions. The copy asks what travel arrangements may be available; it does not claim a live Travel4life package, ticket access, fixed price, date, room, or availability. Each page adds a cost-component checklist, a three-step enquiry checklist and answers about what an enquiry or written offer does and does not confirm. Existing official-source links, canonical URLs, editorial schema types and legacy redirects are preserved.
+
+| Page | Title | Description | H1 | Primary action |
+| --- | --- | --- | --- | --- |
+| Thailand | `Tomorrowland Thailand Package Planning from India \| Travel4life` | Planning Tomorrowland Thailand from India? Check official pass details, travel-cost factors and booking terms, then ask Travel4life what travel options may be available. | Plan Your Tomorrowland Thailand Trip from India | Ask about Thailand travel options |
+| Winter | `Tomorrowland Winter Trip Planning from India \| Travel4life` | Plan a Tomorrowland Winter trip from India with official ticket links, Alps travel checks and cost factors. Ask Travel4life about travel options for your dates. | Plan Your Tomorrowland Winter Trip from India | Ask about Winter travel options |
+| Belgium | `Tomorrowland Belgium Travel Planning from India \| Travel4life` | Plan Tomorrowland Belgium from India with official sales links, budget factors and travel checks. Ask Travel4life what travel options may be available for your dates. | Plan Your Tomorrowland Belgium Trip from India | Ask about Belgium travel options |
+
+The floating WhatsApp action now uses the same route-specific message as the injected contact panel, carries non-sensitive destination/page context and records click events through the existing Supabase analytics path. Clicks are tracked as `contact_whatsapp_click` and `quote_request_click`; neither is a confirmed lead or booking. No enquiry form or submission event was added because this site does not currently provide a verified server-backed Tomorrowland enquiry flow. The mobile floating action spans the phone viewport's safe content width and the page reserves bottom space for it.
+
+### Search Console baseline supplied with the implementation brief
+
+The brief refers to `travel4life.net-Performance-on-Search-2026-10-10.xlsx`, but that workbook is not present in the workspace. The values below are transcribed from the brief and have **not** been checked against the workbook sheets. The only local Search Console export is labelled 23 September 2026 and its documentation says it contains no Tomorrowland query or landing-page rows. These figures are therefore a provisional user-supplied baseline, not independently verified Search Console evidence.
+
+| Landing page or segment | Clicks | Impressions | CTR | Average position |
+| --- | ---: | ---: | ---: | ---: |
+| India | 13 | 229 | 5.68% | 12.13 |
+| `/tomorrowland/winter/` | 2 | 137 | 1.46% | 8.31 |
+| `/tomorrowland/cost-from-india/` | 2 | 62 | 3.23% (calculated) | 16.79 |
+| `/tomorrowland/thailand/` | 4 | 30 | 13.33% | 8.13 |
+| `/tomorrowland-india.html` | 1 | 34 | 2.94% (calculated) | 13.79 |
+| `/tomorrowland/belgium/` | 1 | 25 | 4.00% (calculated) | 34.12 |
+| `/tomorrowland/` | 0 | 15 | 0% | 48.00 |
+| `/tomorrowland/belgium/packages/` | 0 | 11 | 0% | 53.55 |
+
+The supplied CTRs are consistent with clicks divided by impressions; the three omitted CTRs above are calculated. The brief separately reports 26 clicks and 888 impressions in the Chart tab and 437 impressions in Queries. These are different report dimensions and must not be added together or treated as interchangeable totals. Its Thailand query example (3 clicks, 7 impressions, position 8.71) is also a small-sample observation. The workbook must be supplied before sheet-level analysis, query-to-page ownership checks, or a reproducible baseline report can be claimed.
+
+The live production validator was run before this code change and reported 220 issues, concentrated on UUID `/trips/{id}` sitemap URLs: Netlify returns 301 to `/trips/{id}/`, while the old sitemap URL and rendered canonical omitted the trailing slash. The shared `productPath()` builder now emits the slash form for product canonicals, links and sitemap entries. The final local production preview passed the same validator for 78 canonical indexable URLs across 11 child sitemaps and the legacy sitemap endpoints. Production has not yet been deployed, so the live sitemap/product discrepancy remains pending release and a post-deployment rerun.
+
+### Validation status for this refresh
+
+- Locally implemented and validated: route-specific snippets and enquiry copy, canonical/robots/schema/sitemap checks, and non-sensitive contact-click context.
+- Passed locally: `npm run seo:validate`, `npm run seo:validate:sitemaps`, `SITE_URL=http://127.0.0.1:4173 npm run seo:validate:production`, all 25 focused SEO tests, changed-file lint, production build, and production-preview mobile/desktop layout checks at 390px and 1440px.
+- Live pre-deployment checks: the three destination landing pages returned HTTP 200; `/robots.txt` returned HTTP 200 `text/plain`; `/sitemap.xml` returned HTTP 200 XML. The live product sitemap issue above remains unresolved until deployment.
+- Not performed: production deployment, post-deployment HTTP/redirect checks, Search Console API retrieval, Analytics debug-view confirmation, or a real lead submission. These require release authorization, the missing workbook/access, and an approved test lead flow respectively.
+
+## 10 October 2026 Phase 2 verification
+
+### Production evidence
+
+All six requested landing-page URLs returned HTTP 200 directly, retained their requested canonical URL, exposed one distinct H1, and included visible guide copy in the raw HTML. Each was present exactly once in the live sitemap index's 78-URL set (11 child sitemaps). The Thailand, Winter and Belgium production titles/H1s still differ from the newer destination refresh in this repository, so that refresh has not been deployed. The three destinations currently use a “from India” guide title, while local code has the newer destination-specific planning snippets.
+
+The live robots file allows crawling (`User-agent: *`, `Allow: /`). Each target has `index, follow` metadata. The legacy India URL and both Winter 2027 URL forms return HTTP 301 to their evergreen owners. The live sitemap's 55 UUID trip URLs omit trailing slashes; direct requests return HTTP 301 to the slash version, and the rendered product canonical also omits the slash. The local `productPath()` fix has not been deployed.
+
+At a 390 × 844 mobile viewport, all six pages rendered without horizontal overflow; the fixed WhatsApp action was visible near the bottom of the viewport. The six pages had no observed browser page errors or failed requests. All same-site links discovered on these pages returned HTTP 200. The live static pages have no enquiry forms. Phone and email anchors resolve to the configured `+91 9511446642` and `info@travel4life.net`; WhatsApp links use the matching number. This verifies markup/targets, not that a call connected, an email was delivered, or a WhatsApp conversation was completed.
+
+The public PageSpeed Insights endpoint returned HTTP 429, so no Lighthouse score or field Core Web Vitals result could be established. Browser navigation timings from a single audit session are diagnostic observations only, not a performance pass. Structured data on the six static pages is crawlable JSON-LD (Article/BreadcrumbList or WebPage/BreadcrumbList); no test here claimed validation by Google's Rich Results Test.
+
+### Confirmed code fixes in this phase
+
+- The build-time contact injector now adds `contact_whatsapp_click`, route context, and—only for enquiry/quote-labelled actions—the quote event to native WhatsApp anchors. It also makes these links open safely in a new tab. This is a local code fix; production pages still need deployment and a Supabase/analytics-debug verification.
+- The live pages had tracked injected contact-panel links, but their original header, floating and page-authored WhatsApp anchors did not consistently carry click-event attributes. The build now normalizes Tomorrowland WhatsApp links only; other site destinations retain their existing link behavior.
+- The Belgium package page now has the missing `#product` anchor, and the cost guide's “Access”, “Flights” and “Stay” links now target actual sections. SEO validation checks local fragment references to prevent regression.
+- Focused tests cover labelled versus generic WhatsApp links; the SEO validator checks every generated WhatsApp anchor for contact-event context and checks local fragment destinations.
+
+No contact form was added. There are no form-start, successful-submission, form-error or qualified-enquiry events for these static pages. Existing click analytics only record link-click intent and must not be presented as leads or bookings. The analytics payload uses page path and non-sensitive route context and does not include form fields, phone numbers, email addresses or WhatsApp message text.
+
+### Data and deployment boundary
+
+No Search Console workbook for 10 October or authenticated Search Console API access is available in the workspace. The September 23 CSV export is stale for this audit and is not a valid 28-day or 3-month baseline. Request fresh Search Console exports split by date range, query, page, country and device; no query opportunity ranking is inferred here. Deployment, analytics debug-view, CRM qualification and PageSpeed field data remain unverified.
+
 ## Validation
 
 Run:

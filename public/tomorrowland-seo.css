@@ -499,12 +499,14 @@ header::before {
 }
 
 @media (max-width: 560px) {
+	body { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+	header { display: flex; min-height: 100vh; min-height: 100svh; flex-direction: column; }
 	nav, .wrap { width: calc(100% - 36px); }
 	.topbar { width: calc(100% - 36px); min-height: 66px; }
 	.topbar-actions { width: 100%; justify-content: space-between; }
 	.home-link, .guides-link { flex: 1; text-align: center; }
 	.whatsapp-button { flex: 1.5; }
-	.hero { min-height: 0; padding: 49px 18px 51px; }
+	.hero { display: flex; min-height: 0; flex: 1; flex-direction: column; justify-content: center; padding: 49px 18px 51px; }
 	.hero h1 { font-size: clamp(2.65rem, 12vw, 4rem); line-height: 1.02; }
 	.hero p { font-size: .9rem; line-height: 1.75; }
 	.actions { display: grid; grid-template-columns: 1fr; margin-top: 22px; }
@@ -518,7 +520,14 @@ header::before {
 	.content p, .content li { font-size: .87rem; }
 	.link-grid { grid-template-columns: 1fr; }
 	.link-card { padding: 17px; }
-	.floating-whatsapp { right: 14px; bottom: 14px; min-height: 48px; padding: 11px 14px; }
+	.floating-whatsapp {
+		right: 18px;
+		bottom: max(14px, env(safe-area-inset-bottom));
+		left: 18px;
+		justify-content: center;
+		min-height: 48px;
+		padding: 11px 14px;
+	}
 }
 
 @media (max-width: 360px) {

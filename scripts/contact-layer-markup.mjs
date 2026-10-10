@@ -17,6 +17,62 @@ const contextAttributes = (context) => Object.entries(context)
   .filter(([, value]) => Boolean(value))
   .map(([key, value]) => ` data-contact-${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}="${escapeHtml(value)}"`)
   .join('');
+const setAttribute = (tag, name, value) => {
+  const attribute = new RegExp(`\\s${name}="[^"]*"`, 'i');
+  const replacement = ` ${name}="${escapeHtml(value)}"`;
+  return attribute.test(tag)
+    ? tag.replace(attribute, replacement)
+    : tag.replace(/>$/, `${replacement}>`);
+};
+const contextualizeWhatsappAnchor = (html, className, context, label) => html.replace(
+  new RegExp(`<a\\b(?=[^>]*\\bclass="[^"]*\\b${className}\\b[^"]*")[^>]*>[\\s\\S]*?<\\/a>`, 'i'),
+  (anchor) => {
+    const openingTagEnd = anchor.indexOf('>') + 1;
+    let output = anchor.slice(0, openingTagEnd);
+    let content = anchor.slice(openingTagEnd, -4);
+    output = output.replace(/\bhref="[^"]*"/i, `href="${escapeHtml(getTravel4LifeWhatsAppUrl(context))}"`);
+    output = setAttribute(output, 'aria-label', `Ask Travel4Life about ${context.destination || context.entity || 'your trip'} on WhatsApp`);
+    output = setAttribute(output, 'data-contact-event', 'contact_whatsapp_click');
+    output = setAttribute(output, 'data-contact-secondary-event', getTravel4LifeQuoteEvent(context.pageType));
+    if (label) content = content.replace(/(<span>)[\s\S]*?(<\/span>)/i, `$1${escapeHtml(label)}$2`);
+    for (const [key, value] of Object.entries(context)) {
+      if (value) output = setAttribute(output, `data-contact-${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`, value);
+    }
+    return `${output}${content}</a>`;
+  },
+);
+
+const contextualizeWhatsappCtas = (html, context) => html.replace(
+  /<a\b[^>]*>[\s\S]*?<\/a>/gi,
+  (anchor) => {
+    const openingTagEnd = anchor.indexOf('>') + 1;
+    let openingTag = anchor.slice(0, openingTagEnd);
+    if (!/\bhref="https:\/\/wa\.me\//i.test(openingTag)) return anchor;
+
+    openingTag = openingTag.replace(/\bhref="[^"]*"/i, `href="${escapeHtml(getTravel4LifeWhatsAppUrl(context))}"`);
+    openingTag = setAttribute(openingTag, 'target', '_blank');
+    openingTag = setAttribute(openingTag, 'rel', 'noopener noreferrer');
+    openingTag = setAttribute(openingTag, 'data-contact-event', 'contact_whatsapp_click');
+    if (!/\baria-label="/i.test(openingTag)) {
+      openingTag = setAttribute(openingTag, 'aria-label', `Ask Travel4Life about ${context.destination || context.entity || 'your trip'} on WhatsApp`);
+    }
+    for (const [key, value] of Object.entries(context)) {
+      if (value) openingTag = setAttribute(openingTag, `data-contact-${key.replace(/[A-Z]/g, (letter) => `-${letter.toLowerCase()}`)}`, value);
+    }
+
+    const visibleLabel = `${anchor.slice(openingTagEnd, -4).replace(/<[^>]*>/g, ' ')} ${openingTag.match(/\baria-label="([^"]*)"/i)?.[1] || ''}`;
+    if (!/\bdata-contact-secondary-event="/i.test(openingTag)
+      && /\b(?:quote|enquir(?:y|e)|proposal|availability|booking)\b/i.test(visibleLabel)) {
+      const quoteEvents = getTravel4LifeQuoteEvents(context.pageType);
+      openingTag = setAttribute(openingTag, 'data-contact-secondary-event', quoteEvents[0]);
+      if (quoteEvents.length > 1) {
+        openingTag = setAttribute(openingTag, 'data-contact-extra-event', quoteEvents.slice(1).join(','));
+      }
+    }
+
+    return `${openingTag}${anchor.slice(openingTagEnd)}`;
+  },
+);
 
 const makeLink = (channel, context, label, className, eventName = `contact_${channel}_click`) => {
   const href = channel === 'whatsapp'
@@ -45,7 +101,7 @@ const makeLink = (channel, context, label, className, eventName = `contact_${cha
   return `<a class="${escapeHtml(className)}" href="${escapeHtml(href)}"${target} aria-label="${escapeHtml(channel === 'phone' ? `Call Travel4Life at ${TRAVEL4LIFE_CONTACT.phone}` : channel === 'email' ? `Email Travel4Life at ${TRAVEL4LIFE_CONTACT.email}` : `WhatsApp Travel4Life about ${context.destination || context.entity || 'your trip'}`)}" data-contact-event="${escapeHtml(eventName)}"${contextAttributes(context)}${quoteEvent}${extraEvent}>${content}</a>`;
 };
 
-const getEnquiryLabel = (pageType) => ({
+const getEnquiryLabel = (pageType, destination) => ({
   wedding: 'Get my wedding proposal',
   mice: 'Get my corporate proposal',
   resort: 'Check availability',
@@ -54,11 +110,12 @@ const getEnquiryLabel = (pageType) => ({
   origin: 'Plan my trip',
   cost: 'Get my Corbett quote',
   activities: 'Plan my Corbett activities',
+  festival: `Ask about ${(destination || 'festival').replace(/^Tomorrowland\s+/i, '')} travel options`,
 }[pageType] || 'Plan my trip');
 
 export const createContactPanelMarkup = (context, variant = 'inline') => {
   const isFinal = variant === 'final';
-  const primaryLabel = isFinal ? getEnquiryLabel(context.pageType) : 'WhatsApp us now';
+  const primaryLabel = isFinal ? getEnquiryLabel(context.pageType, context.destination) : 'WhatsApp us now';
   return `<section class="t4l-contact-panel${isFinal ? ' t4l-contact-panel--final' : ''}" aria-label="Contact Travel4Life">
     <div class="t4l-contact-copy">
       <p class="t4l-contact-eyebrow">${isFinal ? 'Personal Travel Concierge' : 'Plan with Travel4Life'}</p>
@@ -78,6 +135,13 @@ export const injectContactLayerHtml = (html, context, analyticsConfig = {}) => {
   let output = html
     .replaceAll('+91 9871-621-921', TRAVEL4LIFE_CONTACT.phone)
     .replaceAll('919871621921', TRAVEL4LIFE_CONTACT.whatsappNumber);
+  const destination = (contactContext.destination || '').replace(/^Tomorrowland\s+/i, '');
+  const isFestivalContext = contactContext.pageType === 'festival';
+  output = contextualizeWhatsappAnchor(output, 'whatsapp-button', contactContext, isFestivalContext ? `Ask about ${destination}` : '');
+  output = contextualizeWhatsappAnchor(output, 'floating-whatsapp', contactContext, isFestivalContext ? `Ask about ${destination} options` : '');
+  if (isFestivalContext && /tomorrowland/i.test(contactContext.destination || '')) {
+    output = contextualizeWhatsappCtas(output, contactContext);
+  }
   if (!output.includes('data-t4l-contact-layer')) {
     const firstSectionEnd = output.match(/<\/h2>[\s\S]*?<\/p>/i);
     if (firstSectionEnd?.index !== undefined) {

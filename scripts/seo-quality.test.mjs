@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { getProductQuality } from './seo-quality.mjs';
+import { getProductQuality, productPath } from './seo-quality.mjs';
 import { renderProductPage } from './render-product-page.mjs';
 import { isIndexableEuropePage } from './europe-page-eligibility.mjs';
 import {
@@ -47,6 +47,7 @@ const template = `<!doctype html><html><head>
 
 test('only future, coherent, complete products pass the indexability gate', () => {
   assert.equal(getProductQuality(trip, referenceDate).eligible, true);
+  assert.equal(productPath(trip.id), `/trips/${trip.id}/`);
   assert.equal(getProductQuality({ ...trip, end_date: '2026-10-04' }, referenceDate).checks.dates, false);
   assert.equal(getProductQuality({ ...trip, end_date: '2026-11-01' }, referenceDate).checks.dates, false);
   assert.equal(getProductQuality({ ...trip, id: '../not-a-trip' }, referenceDate).checks.id, false);
@@ -77,6 +78,17 @@ test('shared contact configuration creates contextual, clickable contact actions
   const festivalMessage = new URL(getTravel4LifeWhatsAppUrl(tomorrowland)).searchParams.get('text');
   assert.match(festivalMessage, /Tomorrowland festival trip/);
   assert.doesNotMatch(festivalMessage, /Tomorrowland festival trip in Tomorrowland/);
+  for (const [path, destination] of [
+    ['/tomorrowland/thailand/', 'Tomorrowland Thailand'],
+    ['/tomorrowland/winter/', 'Tomorrowland Winter'],
+    ['/tomorrowland/belgium/', 'Tomorrowland Belgium'],
+  ]) {
+    const context = getTravel4LifeContactContextFromLocation(path, `${destination} | Travel4life`);
+    const message = new URL(getTravel4LifeWhatsAppUrl(context)).searchParams.get('text');
+    assert.equal(context.destination, destination);
+    assert.match(message, new RegExp(`${destination} trip from India`));
+    assert.match(message, /what travel options may be available/);
+  }
   assert.deepEqual(getTravel4LifeQuoteEvents('resort'), ['availability_request', 'resort_enquiry']);
   assert.deepEqual(getTravel4LifeQuoteEvents('package'), ['availability_request', 'package_enquiry']);
   const product = getTravel4LifeContactContextFromLocation('/trips/74c8aeb3-625c-48f8-9516-d6b25973dba7', 'Trip title | Travel Package');
@@ -92,13 +104,45 @@ test('shared contact configuration creates contextual, clickable contact actions
   assert.doesNotMatch(html, /t4l-contact-panel--hero/);
   assert.match(html, /t4l-contact-panel--final/);
   assert.doesNotMatch(html, /t4l-contact-sticky|t4l-global-footer/);
-  assert.match(html, /class="floating-whatsapp" href="https:\/\/wa\.me\/919511446642\?text=Hi"/);
+  assert.match(html, /class="floating-whatsapp" href="https:\/\/wa\.me\/919511446642\?text=Hi%20Travel4Life%2C/);
+  assert.match(html, /class="floating-whatsapp"[^>]*data-contact-event="contact_whatsapp_click"/);
+  assert.match(html, /class="floating-whatsapp"[^>]*data-contact-secondary-event="quote_request_click"/);
   assert.doesNotMatch(html, /t4l-contact-header/);
   assert.match(html, /class="t4l-contact-buttons"/);
   assert.match(html, /data-contact-event="contact_whatsapp_click"/);
   assert.match(html, /data-contact-page-type="jim-corbett"/);
   assert.match(html, /<h1>Jim Corbett<\/h1><h2>Resorts<\/h2><p>Explore current resort information\.<\/p><section class="t4l-contact-panel"/);
   assert.match(html, /Plan with Travel4Life/);
+
+  const thailandContext = getTravel4LifeContactContextFromLocation('/tomorrowland/thailand/', 'Tomorrowland Thailand | Travel4life');
+  const thailandHtml = injectContactLayerHtml(
+    '<html><head></head><body><header><a class="whatsapp-button" href="https://wa.me/919511446642?text=Hi" aria-label="Chat with Travel4life on WhatsApp"><span>WhatsApp us</span></a></header><main><h1>Tomorrowland Thailand</h1></main><a class="floating-whatsapp" href="https://wa.me/919511446642?text=Hi"><span>WhatsApp us</span></a></body></html>',
+    thailandContext,
+  );
+  assert.match(thailandHtml, /aria-label="Ask Travel4Life about Tomorrowland Thailand on WhatsApp"/);
+  assert.match(thailandHtml, /class="whatsapp-button" href="https:\/\/wa\.me\/919511446642\?text=Hi%20Travel4Life%2C/);
+  assert.match(thailandHtml, /<span>Ask about Thailand<\/span>/);
+  assert.match(thailandHtml, /<span>Ask about Thailand options<\/span>/);
+  assert.match(thailandHtml, /<span>Ask about Thailand travel options<\/span>/);
+  assert.match(thailandHtml, /data-contact-destination="Tomorrowland Thailand"/);
+
+  const belgiumPackageContext = getTravel4LifeContactContextFromLocation(
+    '/tomorrowland/belgium/packages/',
+    'Tomorrowland Belgium Package Enquiry | Travel4life',
+  );
+  const belgiumPackageHtml = injectContactLayerHtml(
+    '<html><head></head><body><main><h1>Belgium package enquiry</h1><a class="button" href="https://wa.me/919511446642?text=Hi">Enquire on WhatsApp</a><a href="https://wa.me/919511446642?text=Hi">WhatsApp concierge</a></main></body></html>',
+    belgiumPackageContext,
+  );
+  const enquiryCta = belgiumPackageHtml.match(/<a class="button"[^>]*>Enquire on WhatsApp<\/a>/)?.[0] || '';
+  const conciergeCta = belgiumPackageHtml.match(/<a href="https:\/\/wa\.me\/[^"]*"[^>]*>WhatsApp concierge<\/a>/)?.[0] || '';
+  assert.match(enquiryCta, /target="_blank" rel="noopener noreferrer"/);
+  assert.match(enquiryCta, /data-contact-event="contact_whatsapp_click"/);
+  assert.match(enquiryCta, /data-contact-secondary-event="quote_request_click"/);
+  assert.match(enquiryCta, /data-contact-destination="Tomorrowland Belgium"/);
+  assert.match(enquiryCta, /text=Hi%20Travel4Life%2C/);
+  assert.match(conciergeCta, /data-contact-event="contact_whatsapp_click"/);
+  assert.doesNotMatch(conciergeCta, /data-contact-secondary-event=/);
 
   const weddingHtml = injectContactLayerHtml(
     '<html><head></head><body><header><nav></nav></header><main><h1>Jim Corbett Weddings</h1><h2>Venues</h2><p>Compare wedding venues.</p></main></body></html>',
@@ -137,11 +181,11 @@ test('static trip HTML contains escaped inventory details, canonical and structu
   assert.match(html, /<title>Autumn \$&amp; &lt;adventure&gt; \| Travel Package \| Travel4life<\/title>/);
   assert.match(html, /<h1>Autumn \$&amp; &lt;adventure&gt;<\/h1>/);
   assert.match(html, /https:\/\/travel4life\.net\/trip-thumbnails\/amsterdam\.jpg/);
-  assert.match(html, /rel="canonical" href="https:\/\/travel4life\.net\/trips\/74c8aeb3-625c-48f8-9516-d6b25973dba7"/);
+  assert.match(html, /rel="canonical" href="https:\/\/travel4life\.net\/trips\/74c8aeb3-625c-48f8-9516-d6b25973dba7\/"/);
   assert.match(html, /"priceCurrency":"INR"/);
   assert.match(html, /"price":85000/);
   assert.match(html, /Group capacity<\/dt><dd>Up to 12 travellers/);
-  assert.match(html, /https:\/\/travel4life\.net\/trips\/74c8aeb3-625c-48f8-9516-d6b25973dba7/);
+  assert.match(html, /https:\/\/travel4life\.net\/trips\/74c8aeb3-625c-48f8-9516-d6b25973dba7\//);
   assert.match(html, /\\u003c\/script>/);
   assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
 });
