@@ -140,14 +140,13 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   0%, 12% { background-position: 100% 50%; }
   52%, 100% { background-position: 0% 50%; }
 }
-.hero-copy > p:not(.eyebrow):not(.hero-note) { max-width: 610px; margin: 24px 0 28px; color: #526059; font-size: 1rem; line-height: 1.85; }
+.hero-copy > p:not(.eyebrow) { max-width: 610px; margin: 24px 0 28px; color: #526059; font-size: 1rem; line-height: 1.85; }
 .hero-actions { display: flex; flex-wrap: wrap; gap: 12px; }
 .button { min-height: 48px; padding: 13px 20px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid transparent; border-radius: 4px; font-size: .86rem; font-weight: 700; text-align: center; text-decoration: none; transition: background-color .18s ease, color .18s ease, border-color .18s ease; }
 .button-primary { background: var(--forest); color: #fff; }
 .button-primary:hover { background: var(--forest-dark); }
 .button-quiet { border-color: #cdd2c8; color: var(--ink); }
 .button-quiet:hover { border-color: var(--forest); background: #e9eee7; }
-.hero-note { max-width: 540px; margin: 18px 0 0; color: #68746e; font-size: .75rem; line-height: 1.6; }
 .hero-image { position: relative; margin: 0; }
 .hero-image img { display: block; width: 100%; height: 385px; object-fit: cover; }
 .hero-image::after { position: absolute; inset: 0; border: 1px solid rgba(24,39,34,.08); content: ''; pointer-events: none; }
@@ -263,7 +262,6 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .form-grid input::placeholder { color: #89918b; }
 .form-submit { margin-top: 21px; cursor: pointer; }
 .form-error { margin: 13px 0 0; color: #9c352f; font-size: .78rem; font-weight: 600; }
-.form-privacy { margin: 13px 0 0; color: #707a73; font-size: .68rem; line-height: 1.6; }
 .draft-actions { margin-top: 17px; padding: 16px; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; border: 1px solid #cbd7c9; background: #f5f8f3; }
 .draft-actions p { margin: 0; color: #405345; font-size: .75rem; line-height: 1.6; }
 .email-draft { min-height: 40px; display: inline-flex; align-items: center; color: var(--forest); font-size: .76rem; font-weight: 700; }
@@ -310,7 +308,7 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
   .proof-group > span { padding: 7px 13px; font-size: .67rem; }
   .highlights-toggle { padding: 6px 7px; font-size: .6rem; }
   .hero h1 { font-size: clamp(2.65rem, 11vw, 4rem); }
-  .hero-copy > p:not(.eyebrow):not(.hero-note) { margin: 18px 0 21px; font-size: .9rem; line-height: 1.75; }
+  .hero-copy > p:not(.eyebrow) { margin: 18px 0 21px; font-size: .9rem; line-height: 1.75; }
   .hero-image img { height: clamp(240px, 67vw, 390px); }
   .journeys-section, .explorer-section, .plan-section { padding: 68px 16px; }
   .section-heading { margin-bottom: 25px; }

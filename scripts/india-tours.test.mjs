@@ -86,6 +86,8 @@ test('India enquiry draft includes the selected concept and safely bounded visit
     travellerName: '  Asha\nShah  ',
     travellerEmail: '  asha@example.com  ',
     travellerCount: '2',
+    travellerCountry: 'United Kingdom',
+    tripDuration: '11–14 days',
     travelDates: ' October\n2027 ',
     budget: 'Under £2,000',
     accommodation: 'Boutique hotels',
@@ -94,6 +96,8 @@ test('India enquiry draft includes the selected concept and safely bounded visit
   assert.equal(enquiry.name, 'Asha Shah');
   assert.equal(enquiry.email, 'asha@example.com');
   assert.equal(enquiry.travellerCount, 2);
+  assert.match(enquiry.message, /Country of residence: United Kingdom/);
+  assert.match(enquiry.message, /Preferred trip duration: 11–14 days/);
   assert.match(enquiry.message, /Selected route idea: Golden Triangle/);
   assert.match(enquiry.message, /Name: Asha Shah/);
   assert.match(enquiry.message, /Email: asha@example\.com/);
@@ -114,6 +118,8 @@ test('India enquiry draft rejects invalid required details and non-canonical pag
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerEmail: 'not-an-email' }), /valid email/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCount: '2.5' }), /whole number/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCount: 41 }), /whole number/);
+  assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCountry: 'Fake market' }), /supported country/);
+  assert.throws(() => createIndiaEnquiryMessage({ ...base, tripDuration: 'A month' }), /supported trip duration/);
   assert.throws(() => createIndiaEnquiryMessage({
     ...base,
     pageUrl: 'https://travel4life.net/another-page/',
@@ -129,6 +135,7 @@ test('India tours page has crawlable metadata, content, accessibility controls, 
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1] || '';
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1] || '';
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/i)?.[1];
+  const socialImage = html.match(/<meta property="og:image" content="([^"]+)"/i)?.[1];
   const visibleContent = html
     .replace(/<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
@@ -138,9 +145,11 @@ test('India tours page has crawlable metadata, content, accessibility controls, 
     .map(([, content]) => JSON.parse(content));
   const schemaTypes = schemas.flatMap((schema) => schema['@graph'].map((node) => node['@type']));
 
-  assert.match(title, /India Tour Packages for International Travellers/);
+  assert.match(title, /India Tour Planning for International Travellers/);
   assert.ok(description.length >= 80);
   assert.equal(canonical, 'https://travel4life.net/india-tours/');
+  assert.equal(socialImage, 'https://travel4life.net/trip-thumbnails/jaipur.jpg');
+  assert.match(html, /<img src="\/trip-thumbnails\/jaipur\.jpg" alt="Amer Fort overlooking Maota Lake in Jaipur, Rajasthan"/);
   assert.match(html, /<meta name="robots" content="index, follow/);
   assert.equal((html.match(/<h1\b/gi) || []).length, 1);
   assert.ok(wordCount >= 500, `Expected at least 500 crawlable words; found ${wordCount}.`);
@@ -151,28 +160,42 @@ test('India tours page has crawlable metadata, content, accessibility controls, 
   assert.match(globalFooter, /\{ name: 'Inbound', href: '\/india-tours\/' \}/);
   assert.match(html, /Government-certified guides/);
   assert.match(html, /Cash &amp; crypto/);
+  assert.match(html, /do not yet have verified supplier inventory, operational itineraries, availability or prices/i);
+  assert.doesNotMatch(html, /Route ideas are not confirmed packages\. Availability, suppliers, inclusions, guide certification and languages, payment methods and prices must be confirmed for your dates\./i);
+  assert.doesNotMatch(html, /These proposed routes have verified supplier inventory/i);
+  assert.match(html, /id="tour-selection" name="journey" required/);
+  assert.match(html, /id="traveller-country"/);
+  assert.match(html, /id="trip-duration"/);
+  assert.doesNotMatch(html, /hreflang=/i);
+  assert.doesNotMatch(html, /verified supplier inventory, operational itinerary, availability & price/i);
   assert.match(entry, /highlightsToggle\.addEventListener\('click'/);
   assert.match(stylesheet, /prefers-reduced-motion/);
   assert.match(stylesheet, /@keyframes proof-scroll/);
   assert.match(stylesheet, /@keyframes text-shimmer/);
   assert.match(stylesheet, /@keyframes journey-card-highlight/);
-  assert.match(html, /nothing has been sent or saved/i);
+  assert.doesNotMatch(html, /No form data is saved or sent to analytics\. WhatsApp opens with a draft for you to review and send yourself\./i);
+  assert.match(entry, /INDIA_JOURNEY_CONCEPTS\.forEach\(\(journey\) => \{/);
+  assert.match(entry, /tourSelection\.value = journey\.id/);
   assert.match(html, /href="https:\/\/wa\.me\/919511446642/);
   assert.match(html, /href="mailto:info@travel4life\.net"/);
   assert.match(entry, /https:\/\/www\.openstreetmap\.org\/copyright/);
   for (const eventName of [
     'india_tours_page_view',
     'india_tours_map_select',
-    'india_tours_package_select',
+    'itinerary_select',
     'india_tours_route_play',
     'india_tours_itinerary_open',
-    'india_tours_quote_click',
+    'quote_request_click',
     'contact_whatsapp_click',
     'contact_email_click',
-    'lead_form_start',
-    'lead_form_error',
-    'lead_form_draft_prepared',
+    'quote_form_start',
+    'quote_form_error',
+    'quote_form_draft_prepared',
+    'country_market_select',
   ]) assert.ok(entry.includes(eventName), `Missing privacy-safe analytics event ${eventName}.`);
+  assert.ok(!entry.includes('quote_form_submit'));
+  assert.ok(!entry.includes('quote_form_success'));
+  assert.ok(!entry.includes('tour_detail_view'));
   assert.ok(schemaTypes.includes('CollectionPage'));
   assert.ok(schemaTypes.includes('BreadcrumbList'));
   assert.ok(!schemaTypes.some((type) => ['Product', 'Offer', 'Review', 'AggregateRating'].includes(type)));

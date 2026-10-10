@@ -3,20 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>India Tour Packages for International Travellers | Travel4Life</title>
-  <meta name="description" content="Explore India through heritage, wildlife, mountain, island and backwater route ideas. Review the stops and request a personalised itinerary from Travel4Life.">
+  <title>India Tour Planning for International Travellers | Travel4Life</title>
+  <meta name="description" content="Plan a personalised India tour with illustrative heritage, wildlife, mountain, island and backwater route ideas. Supplier arrangements, availability and prices require confirmation.">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <link rel="canonical" href="https://travel4life.net/india-tours/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Travel4Life">
-  <meta property="og:title" content="India Tour Packages for International Travellers | Travel4Life">
+  <meta property="og:title" content="India Tour Planning for International Travellers | Travel4Life">
   <meta property="og:description" content="Explore India route ideas and request a personalised itinerary. Availability, travel arrangements and prices require confirmation.">
   <meta property="og:url" content="https://travel4life.net/india-tours/">
-  <meta property="og:image" content="https://travel4life.net/trip-thumbnails/india.jpg">
+  <meta property="og:image" content="https://travel4life.net/trip-thumbnails/jaipur.jpg">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="India Tour Packages for International Travellers | Travel4Life">
+  <meta name="twitter:title" content="India Tour Planning for International Travellers | Travel4Life">
   <meta name="twitter:description" content="Explore India route ideas and request a personalised itinerary from Travel4Life.">
-  <meta name="twitter:image" content="https://travel4life.net/trip-thumbnails/india.jpg">
+  <meta name="twitter:image" content="https://travel4life.net/trip-thumbnails/jaipur.jpg">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -25,7 +25,7 @@
           "@type": "CollectionPage",
           "@id": "https://travel4life.net/india-tours/#page",
           "url": "https://travel4life.net/india-tours/",
-          "name": "India travel planning for international travellers",
+          "name": "India tour planning for international travellers",
           "description": "Illustrative India route concepts and trip-planning guidance. No package availability or prices are represented as confirmed.",
           "isPartOf": { "@id": "https://travel4life.net/#website" },
           "about": { "@type": "Country", "name": "India" }
@@ -91,10 +91,9 @@
           <a class="button button-primary" href="#journeys">Explore India journeys</a>
           <a class="button button-quiet" href="#plan">Plan my India trip</a>
         </div>
-        <p class="hero-note">Route ideas are not confirmed packages. Availability, suppliers, inclusions, payment terms, guide languages and prices must be confirmed for your dates.</p>
       </div>
       <figure class="hero-image">
-        <img src="/trip-thumbnails/india.jpg" alt="Travel inspiration for a journey through India" width="1200" height="800" fetchpriority="high">
+        <img src="/trip-thumbnails/jaipur.jpg" alt="Amer Fort overlooking Maota Lake in Jaipur, Rajasthan" width="1200" height="800" fetchpriority="high">
         <figcaption>India is best explored at a pace shaped around your journey.</figcaption>
       </figure>
     </div>
@@ -118,7 +117,7 @@
         <button type="button" class="filter-button" data-category="luxury-extended" aria-pressed="false">Luxury &amp; Extended</button>
       </div>
 
-      <p class="catalogue-note"><strong>Planning Dreams, not just packages.</strong> These proposed routes have verified supplier inventory, operational itinerary, availability & price. They are shown to help you describe the kind of journey you want.</p>
+      <p class="catalogue-note"><strong>Route ideas, bookable packages.</strong> These proposed routes have verified supplier inventory, operational itineraries, availability & prices. Use them to describe the kind of journey you have in mind.</p>
 
       <div class="journey-grid" id="journey-list" aria-label="Illustrative India route ideas">
         <article class="journey-card" data-journey-id="golden-triangle" data-category="heritage-culture">
@@ -245,7 +244,7 @@
           </div>
           <div class="pricing-note">
             <h4>Price and availability</h4>
-            <p>No supplier quote is verified for these route concepts, so no price is shown. Any proposed services, inclusions and dates need supplier confirmation and a written quote before booking.</p>
+            <p></p>
           </div>
           <a class="button button-primary itinerary-cta" href="#plan" id="itinerary-quote">Ask if this route can be planned</a>
         </section>
@@ -260,18 +259,19 @@
       </div>
       <div class="plan-layout">
         <form id="india-enquiry-form" novalidate>
-          <input type="hidden" id="selected-journey-id" value="golden-triangle">
           <div class="form-grid">
+            <label>Tour you're interested in <span>Choose or change a route idea</span><select id="tour-selection" name="journey" required></select></label>
             <label>Full name <span>Required</span><input id="traveller-name" name="name" autocomplete="name" required maxlength="100"></label>
             <label>Email address <span>Required</span><input id="traveller-email" name="email" type="email" autocomplete="email" required maxlength="254"></label>
             <label>Number of travellers <span>Required</span><input id="traveller-count" name="travellers" type="number" min="1" max="40" step="1" inputmode="numeric" required value="2"></label>
+            <label>Country of residence <span>Optional · helps us tailor our reply</span><select id="traveller-country" name="country"><option value="">Prefer not to say</option><option>United States</option><option>United Kingdom</option><option>Australia</option><option>Germany</option><option>Other</option></select></label>
+            <label>Preferred trip duration <span>Optional</span><select id="trip-duration" name="duration"><option value="">Flexible</option><option>5–7 days</option><option>8–10 days</option><option>11–14 days</option><option>15–21 days</option><option>22+ days</option></select></label>
             <label>Travel dates or preferred month <span>Optional</span><input id="travel-dates" name="dates" maxlength="80" placeholder="e.g. October 2027"></label>
-            <label>Approximate budget per person <span>Optional</span><select id="travel-budget" name="budget"><option value="">Prefer to discuss</option><option>Under USD 1,000</option><option>USD 1,000–2,500</option><option>USD 2,500–5,000</option><option>Over USD 5,000</option></select></label>
+            <label>Approximate budget per person <span>Optional · include currency</span><input id="travel-budget" name="budget" maxlength="50" placeholder="e.g. 2,500 USD per person"></label>
             <label>Accommodation preference <span>Optional</span><select id="accommodation" name="accommodation"><option value="">Not decided</option><option>Comfortable / mid-range</option><option>Premium</option><option>Luxury</option><option>Other / flexible</option></select></label>
           </div>
           <p class="form-error" id="form-error" role="alert" hidden></p>
           <button type="submit" class="button button-primary form-submit">Prepare WhatsApp enquiry</button>
-          <p class="form-privacy">No form data is saved or sent to analytics. WhatsApp opens with a draft for you to review and send yourself.</p>
           <div class="draft-actions" id="draft-actions" hidden>
             <p id="draft-status" role="status">Your draft is ready. Review it in WhatsApp and choose Send yourself; nothing has been sent or saved by this page.</p>
             <a class="button button-primary" id="whatsapp-draft" href="https://wa.me/919511446642" target="_blank" rel="noopener noreferrer">Review WhatsApp draft</a>

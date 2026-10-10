@@ -29,21 +29,30 @@ const mapStatus = requiredElement<HTMLParagraphElement>('map-status');
 const categoryButtons = [...document.querySelectorAll<HTMLButtonElement>('[data-category]')];
 const journeyCards = [...document.querySelectorAll<HTMLElement>('[data-journey-id]')];
 const explorerLayout = requiredElement<HTMLDivElement>('explorer-layout');
+const tourSelection = requiredElement<HTMLSelectElement>('tour-selection');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-const analyticsContext = (journey?: IndiaJourneyConcept, city?: string) => getTravel4LifeContactContext({
+const analyticsContext = (journey?: IndiaJourneyConcept, city?: string, country?: string) => getTravel4LifeContactContext({
   pageType: 'india-tours',
   destination: 'India',
   city,
+  country,
   package: journey?.name,
   entity: journey?.id || city || 'india-tours',
 });
-const track = (eventName: string, journey?: IndiaJourneyConcept, city?: string) => {
-  void trackContactEvent(eventName, analyticsContext(journey, city));
+const track = (eventName: string, journey?: IndiaJourneyConcept, city?: string, country?: string) => {
+  void trackContactEvent(eventName, analyticsContext(journey, city, country));
 };
 
 let selectedCategory = 'all';
 let selectedJourney = journeyById.get('golden-triangle');
 if (!selectedJourney) throw new Error('The initial Golden Triangle route concept is missing from the journey catalogue.');
+INDIA_JOURNEY_CONCEPTS.forEach((journey) => {
+  const option = document.createElement('option');
+  option.value = journey.id;
+  option.textContent = journey.name;
+  tourSelection.append(option);
+});
+tourSelection.value = selectedJourney.id;
 let selectedStopIndex = 0;
 let selectedDestination: string | null = null;
 let routeTimer: number | null = null;
@@ -213,7 +222,7 @@ const renderItinerary = (journey: IndiaJourneyConcept) => {
   requiredElement<HTMLParagraphElement>('journey-category').textContent = `${JOURNEY_CATEGORIES.find(({ id }) => id === journey.category)?.label || 'India'} · route idea`;
   requiredElement<HTMLElement>('journey-duration').textContent = journey.duration_days;
   requiredElement<HTMLElement>('journey-endpoints').textContent = `${journey.starting_city} → ${journey.ending_city}`;
-  requiredElement<HTMLInputElement>('selected-journey-id').value = journey.id;
+  tourSelection.value = journey.id;
 
   const routeStops = requiredElement<HTMLOListElement>('route-stop-list');
   routeStops.replaceChildren(...journey.itinerary.map(({ destination, stop_number }) => {
@@ -288,7 +297,7 @@ const renderSelectedJourney = (journey: IndiaJourneyConcept, trackSelection = tr
     if (button) button.setAttribute('aria-pressed', String(selected));
   });
   showFullRoute(true);
-  if (trackSelection) track('india_tours_package_select', journey);
+  if (trackSelection) track('itinerary_select', journey);
 };
 
 const applyFilters = () => {
@@ -359,6 +368,12 @@ journeyCards.forEach((card) => {
   button.addEventListener('click', () => renderSelectedJourney(journey));
 });
 
+tourSelection.addEventListener('change', () => {
+  const journey = journeyById.get(tourSelection.value);
+  if (!journey) throw new Error(`Tour selection does not match the route catalogue: ${tourSelection.value || '(empty)'}`);
+  renderSelectedJourney(journey);
+});
+
 requiredElement<HTMLButtonElement>('fit-route').addEventListener('click', fitCurrentRoute);
 requiredElement<HTMLButtonElement>('route-play').addEventListener('click', () => playRoute());
 requiredElement<HTMLButtonElement>('route-pause').addEventListener('click', clearRouteTimer);
@@ -378,15 +393,19 @@ document.querySelectorAll<HTMLButtonElement>('[data-mobile-view]').forEach((butt
 });
 
 requiredElement<HTMLButtonElement>('itinerary-quote').addEventListener('click', () => {
-  track('india_tours_quote_click', selectedJourney);
+  track('quote_request_click', selectedJourney);
 });
 
 const enquiryForm = requiredElement<HTMLFormElement>('india-enquiry-form');
+const travellerCountry = requiredElement<HTMLSelectElement>('traveller-country');
 let formStarted = false;
 enquiryForm.addEventListener('input', () => {
   if (formStarted) return;
   formStarted = true;
-  track('lead_form_start', selectedJourney);
+  track('quote_form_start', selectedJourney);
+});
+travellerCountry.addEventListener('change', () => {
+  if (travellerCountry.value) track('country_market_select', selectedJourney, undefined, travellerCountry.value);
 });
 enquiryForm.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -410,7 +429,7 @@ enquiryForm.addEventListener('submit', (event) => {
         : 'Please enter a whole number of travellers from 1 to 40.';
     error.hidden = false;
     invalidField.focus();
-    track('lead_form_error', selectedJourney);
+    track('quote_form_error', selectedJourney);
     return;
   }
 
@@ -421,8 +440,10 @@ enquiryForm.addEventListener('submit', (event) => {
     travellerName: name,
     travellerEmail: email,
     travellerCount: count,
+    travellerCountry: travellerCountry.value,
+    tripDuration: requiredElement<HTMLSelectElement>('trip-duration').value,
     travelDates: requiredElement<HTMLInputElement>('travel-dates').value,
-    budget: requiredElement<HTMLSelectElement>('travel-budget').value,
+    budget: requiredElement<HTMLInputElement>('travel-budget').value,
     accommodation: requiredElement<HTMLSelectElement>('accommodation').value,
   });
   const whatsappLink = requiredElement<HTMLAnchorElement>('whatsapp-draft');
@@ -438,13 +459,13 @@ enquiryForm.addEventListener('submit', (event) => {
   emailLink.href = `mailto:${TRAVEL4LIFE_CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
   requiredElement<HTMLDivElement>('draft-actions').hidden = false;
   error.hidden = true;
-  track('lead_form_draft_prepared', journey);
+  track('quote_form_draft_prepared', journey, undefined, travellerCountry.value || undefined);
 });
 
 ['direct-whatsapp', 'whatsapp-draft'].forEach((id) => {
   requiredElement<HTMLAnchorElement>(id).addEventListener('click', () => {
     track('contact_whatsapp_click', selectedJourney);
-    track('india_tours_quote_click', selectedJourney);
+    track('quote_request_click', selectedJourney);
   });
 });
 ['direct-email', 'email-draft'].forEach((id) => {

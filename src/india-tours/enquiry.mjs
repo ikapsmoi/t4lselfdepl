@@ -9,6 +9,8 @@ export const createIndiaEnquiryMessage = ({
   travellerName,
   travellerEmail,
   travellerCount,
+  travellerCountry,
+  tripDuration,
   travelDates,
   budget,
   accommodation,
@@ -35,6 +37,12 @@ export const createIndiaEnquiryMessage = ({
   ) {
     throw new TypeError('The enquiry page URL must be the canonical Travel4Life India tours page.');
   }
+  const country = sanitizeEnquiryText(travellerCountry, 40);
+  const allowedCountries = new Set(['United States', 'United Kingdom', 'Australia', 'Germany', 'Other']);
+  if (country && !allowedCountries.has(country)) throw new TypeError('Please select a supported country option.');
+  const duration = sanitizeEnquiryText(tripDuration, 20);
+  const allowedDurations = new Set(['5–7 days', '8–10 days', '11–14 days', '15–21 days', '22+ days']);
+  if (duration && !allowedDurations.has(duration)) throw new TypeError('Please select a supported trip duration.');
   const dates = sanitizeEnquiryText(travelDates, 80) || 'Not decided';
   const budgetText = sanitizeEnquiryText(budget, 50) || 'Prefer to discuss';
   const accommodationText = sanitizeEnquiryText(accommodation, 60) || 'Not decided';
@@ -50,6 +58,8 @@ export const createIndiaEnquiryMessage = ({
     `Name: ${name}`,
     `Email: ${email}`,
     `Number of travellers: ${count}`,
+    `Country of residence: ${country || 'Not specified'}`,
+    `Preferred trip duration: ${duration || 'Flexible'}`,
     `Preferred travel dates: ${dates}`,
     `Approximate budget per person: ${budgetText}`,
     `Accommodation preference: ${accommodationText}`,

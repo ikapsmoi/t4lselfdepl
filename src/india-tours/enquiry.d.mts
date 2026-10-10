@@ -6,6 +6,8 @@ export function createIndiaEnquiryMessage(input: {
   travellerName: string;
   travellerEmail: string;
   travellerCount: number | string;
+  travellerCountry?: string;
+  tripDuration?: string;
   travelDates?: string;
   budget?: string;
   accommodation?: string;
