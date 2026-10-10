@@ -9,11 +9,13 @@ const intentMapPath = resolve('public/tomorrowland/search-intent-map.json');
 const intentMap = JSON.parse(await readFile(intentMapPath, 'utf8'));
 const routes = intentMap.owners;
 const europeIntentMap = JSON.parse(await readFile(resolve('public/europe/search-intent-map.json'), 'utf8'));
+const indiaToursIntentMap = JSON.parse(await readFile(resolve('public/india-tours/search-intent-map.json'), 'utf8'));
 const knownInternalRoutes = new Set([
   '/',
   '/trips',
   '/trips/',
   '/europe/',
+  '/india-tours/',
   '/tomorrowland-seo.css',
   '/travel4life-contact.css',
   ...routes.map(({ url }) => url),
@@ -114,6 +116,7 @@ for (const requiredStyle of ['--forest-deep: #091c18', '--serif: \'Playfair Disp
   if (!styles.includes(requiredStyle)) failures.push(`tomorrowland-seo.css: missing shared destination editorial theme style ${requiredStyle}`);
 }
 const mappedUrls = new Set(routes.map(({ url }) => `${siteUrl}${url}`));
+const indiaToursOwnerUrls = new Set(indiaToursIntentMap.owners.map(({ url }) => `${siteUrl}${url}`));
 for (const sitemapUrl of sitemapUrls) {
   if (sitemapUrl.startsWith(`${siteUrl}/tomorrowland/`) && !mappedUrls.has(sitemapUrl)) {
     failures.push(`sitemap-static.xml: Tomorrowland URL has no intent owner (${sitemapUrl})`);
@@ -128,6 +131,9 @@ for (const sitemapUrl of sitemapUrls) {
   }
   for (const sitemapUrl of sitemapUrls.filter((url) => url.startsWith(`${siteUrl}/europe/`))) {
     if (!europeOwnerUrls.has(sitemapUrl)) failures.push(`sitemap-static.xml: Europe URL has no intent owner (${sitemapUrl})`);
+  }
+  if (sitemapUrl.startsWith(`${siteUrl}/india-tours/`) && !indiaToursOwnerUrls.has(sitemapUrl)) {
+    failures.push(`sitemap-static.xml: India tours URL has no intent owner (${sitemapUrl})`);
   }
 }
 if (!sitemapIndexUrls.includes(`${siteUrl}/sitemap-static.xml`)) {

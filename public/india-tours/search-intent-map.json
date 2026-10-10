@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-11",
+  "evidence": {
+    "finding": "No approved, supplier-verified inbound India package inventory or pricing was supplied for this page.",
+    "limitation": "The route concepts are planning prompts, not active or bookable packages and not evidence of supplier availability.",
+    "pagePolicy": "Keep one crawlable India planning hub. Do not index route concepts as product pages until distinct content, current supplier arrangements, price terms and operational details are verified."
+  },
+  "owners": [
+    {
+      "url": "/india-tours/",
+      "file": "india-tours/index.html",
+      "primaryQuery": "India tour planning for international travellers",
+      "intent": "Explore India route ideas and request a personalised itinerary; package availability and price require confirmation.",
+      "pageType": "destination-guide",
+      "entityType": "destination"
+    }
+  ]
+}

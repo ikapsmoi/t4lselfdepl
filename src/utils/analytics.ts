@@ -68,7 +68,7 @@ export const trackEvent = async (
 ) => {
   try {
     // Get current user if not provided
-    let currentUserId = userId;
+    let currentUserId: string | null | undefined = userId;
     if (!currentUserId) {
       const { data: { user } } = await supabase.auth.getUser();
       currentUserId = user?.id || null;

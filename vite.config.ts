@@ -61,6 +61,12 @@ const servePublicDirectoryIndexes = (root: string) => ({
 export default defineConfig({
   plugins: [react(), servePublicDirectoryIndexes(path.resolve(__dirname, 'public'))],
   build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        indiaTours: path.resolve(__dirname, 'india-tours/index.html'),
+      },
+    },
     target: 'es2020',
     minify: 'terser',
     terserOptions: {

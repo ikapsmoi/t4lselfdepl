@@ -18,6 +18,7 @@ const contextualMessages = {
     const uniquePlaces = places.filter((place, index) => places.findIndex((candidate) => candidate.toLowerCase() === place.toLowerCase()) === index);
     return `Hi Travel4Life, I am planning a trip to ${uniquePlaces.join(', ') || 'Europe'} from India. Please share suitable trips and current availability.`;
   },
+  'india-tours': ({ package: packageName, city }) => `Hi Travel4Life, I am interested in planning an India trip${packageName ? ` around the ${packageName} route idea` : ''}${city ? ` including ${city}` : ''}. Please let me know whether this route can be planned and what current arrangements and quotation may be available.`,
   festival: ({ destination, eventType, tripType }) => {
     const experience = eventType || tripType || 'a festival trip';
     const repeatsDestination = destination && experience.toLowerCase().includes(destination.toLowerCase());
@@ -108,6 +109,9 @@ export const getTravel4LifeContactContextFromLocation = (pathname, title = '') =
   }
   if (/^\/trips\/[^/]+/.test(normalizedPath)) {
     return getTravel4LifeContactContext({ pageType: 'package', destination: pageLabel, package: pageLabel });
+  }
+  if (normalizedPath.startsWith('/india-tours')) {
+    return getTravel4LifeContactContext({ pageType: 'india-tours', destination: 'India' });
   }
   return getTravel4LifeContactContext({ pageType: 'travel', destination });
 };

@@ -21,6 +21,7 @@ const corbettSource = JSON.parse(await readFile(resolve(publicDirectory, 'jim-co
 const sourceManifests = [
   { path: 'tomorrowland/search-intent-map.json', pageType: 'festival-guide' },
   { path: 'europe/search-intent-map.json', pageType: 'destination-guide' },
+  { path: 'india-tours/search-intent-map.json', pageType: 'destination-guide' },
 ];
 
 const decodeHtml = (value) => value
@@ -150,6 +151,7 @@ const getStaticPageDescriptors = async () => {
         url: owner.url,
         file: owner.file,
         pageType: source.pageType,
+        entityType: owner.entityType || (source.pageType === 'destination-guide' ? 'destination' : undefined),
         primaryKeyword: owner.primaryQuery || owner.primaryKeyword || '',
         searchIntent: owner.intent || '',
         sitemapGroup: routeGroup(owner.url, source.pageType, 'destination'),

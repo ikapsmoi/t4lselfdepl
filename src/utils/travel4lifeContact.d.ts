@@ -11,7 +11,8 @@ export type Travel4LifeContactPageType =
   | 'safari'
   | 'origin'
   | 'europe'
-  | 'festival';
+  | 'festival'
+  | 'india-tours';
 
 export interface Travel4LifeContactContext {
   pageType?: Travel4LifeContactPageType;

@@ -43,6 +43,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
       { name: 'Jim Corbett Guide', href: '/jim-corbett/' },
       { name: 'Corbett Resorts', href: '/jim-corbett/resorts/' },
       { name: 'Europe Travel', href: '/europe/' },
+      { name: 'Inbound', href: '/india-tours/' },
       { name: 'Browse Trips', onClick: () => { window.location.hash = 'trips'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'India Specials', onClick: () => { window.location.hash = 'home'; setTimeout(() => { document.getElementById('india-specials')?.scrollIntoView({ behavior: 'smooth' }); }, 300); setIsMenuOpen?.(false); } },
       { name: 'Reviews', onClick: () => { window.location.hash = 'reviews'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
