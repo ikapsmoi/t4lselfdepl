@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
 import { BadgePercent, MessageCircle, Star } from 'lucide-react';
-import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
+import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { FeaturedTrip } from '../trips/FeaturedTrip';
 import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
@@ -21,14 +21,9 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const [currentTripIndex, setCurrentTripIndex] = useState(0);
   const [showFeaturedTrip, setShowFeaturedTrip] = useState(false);
   const [isVideoUnavailable, setIsVideoUnavailable] = useState(false);
-  const ctaRef = useRef<HTMLButtonElement>(null);
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
   const heroParallax = useTransform(scrollYProgress, [0, 1], [0, 20]);
-  const ctaX = useMotionValue(0);
-  const ctaY = useMotionValue(0);
-  const springX = useSpring(ctaX, { stiffness: 180, damping: 18 });
-  const springY = useSpring(ctaY, { stiffness: 180, damping: 18 });
   const reduceMotion = useReducedMotion();
 
   const [isTextVisible, setIsTextVisible] = useState(true);
@@ -344,31 +339,13 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               {/* Floating glass search card */}
               <div className="mx-auto max-w-2xl lg:mx-0">
                 <div className="mb-4 flex flex-col gap-3 sm:flex-row">
-                  <motion.button
-                    ref={ctaRef}
+                  <button
                     type="button"
-                    onClick={() => {
-                      openTravelPlanner();
-                    }}
-                    style={reduceMotion ? undefined : { x: springX, y: springY }}
-                    animate={reduceMotion ? undefined : { boxShadow: ['0 0 0 rgba(255,255,255,0)', '0 0 24px rgba(255,255,255,0.2)', '0 0 0 rgba(255,255,255,0)'] }}
-                    transition={reduceMotion ? undefined : { boxShadow: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' } }}
-                    onMouseMove={(event) => {
-                      if (reduceMotion || !ctaRef.current) return;
-                      const bounds = ctaRef.current.getBoundingClientRect();
-                      ctaX.set((event.clientX - bounds.left - bounds.width / 2) * 0.08);
-                      ctaY.set((event.clientY - bounds.top - bounds.height / 2) * 0.08);
-                    }}
-                    onMouseLeave={() => {
-                      ctaX.set(0);
-                      ctaY.set(0);
-                    }}
-                    whileHover={reduceMotion ? undefined : { scale: 1.02 }}
-                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
-                    className="flex min-h-14 flex-1 items-center justify-center rounded-full bg-white px-6 text-sm font-bold text-gray-900 shadow-lg transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:text-base"
+                    onClick={() => openTravelPlanner()}
+                    className="flex min-h-14 flex-1 items-center justify-center rounded-full bg-white px-6 text-sm font-bold text-gray-900 shadow-lg transition-transform hover:scale-[1.02] hover:bg-gray-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:text-base"
                   >
-                    Inquire Now
-                  </motion.button>
+                    Design My Trip
+                  </button>
                   <button
                     onClick={() => {
                       document.getElementById('top-rated-adventures')?.scrollIntoView({ behavior: reduceMotion ? 'instant' : 'smooth' });

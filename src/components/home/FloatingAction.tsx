@@ -91,7 +91,7 @@ export function FloatingAction() {
     onClick={openTravelPlanner}
     className="inline-flex min-h-12 items-center justify-center rounded-full bg-green-500 px-6 text-sm font-semibold text-white shadow-lg shadow-green-900/20 transition-transform duration-150 ease-out hover:scale-[1.02] hover:bg-green-600 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2"
   >
-    Design My VIP Trip
+    Design My Trip
   </button>;
 
   return (
