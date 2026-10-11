@@ -2,12 +2,20 @@ import { useState } from 'react';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useGallery, type GalleryImage } from '../../hooks/useGallery';
-import { openTravelPlanner } from './tripPlannerEvent';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
+import { trackContactEvent } from '../../utils/analytics';
 
 function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
   const [progress, setProgress] = useState(0);
   const reduceMotion = useReducedMotion();
   const destination = image.location || image.trip_title || 'a group adventure';
+  const contactContext = getTravel4LifeContactContext({
+    pageType: /festival|tomorrowland|edc|ultra|coachella/i.test(destination) ? 'festival' : 'travel',
+    destination,
+    eventType: 'a festival trip',
+    tripType: 'a group adventure',
+  });
+  const whatsappUrl = getTravel4LifeWhatsAppUrl(contactContext);
 
   return (
     <motion.article
@@ -58,13 +66,15 @@ function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
           <span className="truncate">{destination}</span>
         </p>
         {image.client_name && <p className="mt-1 truncate text-sm font-semibold">{image.client_name}</p>}
-        <button
-          type="button"
-          onClick={() => openTravelPlanner(destination)}
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => void trackContactEvent('contact_whatsapp_click', contactContext)}
           className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/40 bg-white/15 px-4 text-sm font-semibold text-white backdrop-blur-md transition-transform duration-150 ease-out hover:bg-white/25 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
           Join the hype <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-        </button>
+        </a>
       </div>
       {image.video_url && (
         <div className="absolute inset-x-0 bottom-0 h-1 bg-white/25" aria-hidden="true">
