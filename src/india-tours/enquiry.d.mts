@@ -11,6 +11,9 @@ export function createIndiaEnquiryMessage(input: {
   travelDates?: string;
   budget?: string;
   accommodation?: string;
+  travellerPace?: string;
+  travellerType?: string;
+  currencyPreference?: string;
   pageUrl?: string;
 }): {
   message: string;

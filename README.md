@@ -17,6 +17,7 @@ A modern travel platform connecting adventurous travelers with verified hosts fo
 
 - **Frontend**: React 18 + TypeScript
 - **Styling**: Tailwind CSS with custom design system
+- **Animations**: Framer Motion
 - **Icons**: Lucide React
 - **Build Tool**: Vite
 - **Deployment**: Netlify/Bolt Hosting

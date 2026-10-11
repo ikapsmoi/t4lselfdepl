@@ -12,6 +12,12 @@ export default {
     },
     extend: {
       colors: {
+        forest: '#234c3d',
+        'forest-dark': '#17372c',
+        paper: '#fbfaf6',
+        champagne: '#e8c99f',
+        'champagne-dark': '#9a7040',
+        muted: '#68746e',
         // New Brand Color System
         brand: {
           navy: "#0F2F6B",

@@ -91,6 +91,9 @@ test('India enquiry draft includes the selected concept and safely bounded visit
     travelDates: ' October\n2027 ',
     budget: 'Under £2,000',
     accommodation: 'Boutique hotels',
+    travellerType: 'Couple',
+    travellerPace: 'Relaxed',
+    currencyPreference: 'GBP',
   });
 
   assert.equal(enquiry.name, 'Asha Shah');
@@ -102,6 +105,9 @@ test('India enquiry draft includes the selected concept and safely bounded visit
   assert.match(enquiry.message, /Name: Asha Shah/);
   assert.match(enquiry.message, /Email: asha@example\.com/);
   assert.match(enquiry.message, /Preferred travel dates: October 2027/);
+  assert.match(enquiry.message, /Travelling as: Couple/);
+  assert.match(enquiry.message, /Preferred pace: Relaxed/);
+  assert.match(enquiry.message, /Preferred currency: GBP \(preference only/);
   assert.match(enquiry.message, /Route page: https:\/\/travel4life\.net\/india-tours\//);
   assert.ok(!/[\u0000-\u0009\u000b-\u001f\u007f-\u009f]/.test(enquiry.message));
   assert.equal(sanitizeEnquiryText(`${'x'.repeat(110)}\nignored`, 100).length, 100);
@@ -119,19 +125,32 @@ test('India enquiry draft rejects invalid required details and non-canonical pag
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCount: '2.5' }), /whole number/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCount: 41 }), /whole number/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCountry: 'Fake market' }), /supported country/);
+  assert.match(createIndiaEnquiryMessage({ ...base, travellerCountry: 'Netherlands' }).message, /Country of residence: Netherlands/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, tripDuration: 'A month' }), /supported trip duration/);
+  assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerPace: 'Breakneck' }), /supported travel pace/);
+  assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerType: 'Bus tour' }), /supported traveller type/);
+  assert.throws(() => createIndiaEnquiryMessage({ ...base, currencyPreference: 'INR' }), /supported currency preference/);
   assert.throws(() => createIndiaEnquiryMessage({
     ...base,
     pageUrl: 'https://travel4life.net/another-page/',
   }), /canonical Travel4Life/);
 });
 
-test('India tours page has crawlable metadata, content, accessibility controls, and no unsupported offer schema', async () => {
+test('India tours page preserves crawlable metadata and wires the accessible luxury journey experience', async () => {
   const html = await readFile(resolve('india-tours/index.html'), 'utf8');
-  const entry = await readFile(resolve('src/india-tours/main.ts'), 'utf8');
+  const entry = await readFile(resolve('src/india-tours/main.tsx'), 'utf8');
+  const header = await readFile(resolve('src/india-tours/components/Header.tsx'), 'utf8');
+  const hero = await readFile(resolve('src/india-tours/components/Hero.tsx'), 'utf8');
+  const trustBar = await readFile(resolve('src/india-tours/components/TrustBar.tsx'), 'utf8');
+  const tourGrid = await readFile(resolve('src/india-tours/components/TourGrid.tsx'), 'utf8');
+  const routeMap = await readFile(resolve('src/india-tours/components/RouteMap.tsx'), 'utf8');
+  const wizard = await readFile(resolve('src/india-tours/components/TripDesignerWizard.tsx'), 'utf8');
+  const page = await readFile(resolve('src/india-tours/components/IndiaToursPage.tsx'), 'utf8');
+  const regions = await readFile(resolve('src/india-tours/components/types.ts'), 'utf8');
   const globalFooter = await readFile(resolve('src/components/layout/Footer.tsx'), 'utf8');
   const staticSitemap = await readFile(resolve('public/sitemap-static.xml'), 'utf8');
   const stylesheet = await readFile(resolve('src/india-tours/india-tours.css'), 'utf8');
+  const entryMarkup = await readFile(resolve('india-tours/index.html'), 'utf8');
   const title = html.match(/<title>([^<]+)<\/title>/i)?.[1] || '';
   const description = html.match(/<meta name="description" content="([^"]+)"/i)?.[1] || '';
   const canonical = html.match(/<link rel="canonical" href="([^"]+)"/i)?.[1];
@@ -149,53 +168,66 @@ test('India tours page has crawlable metadata, content, accessibility controls, 
   assert.ok(description.length >= 80);
   assert.equal(canonical, 'https://travel4life.net/india-tours/');
   assert.equal(socialImage, 'https://travel4life.net/trip-thumbnails/jaipur.jpg');
-  assert.match(html, /<img src="\/trip-thumbnails\/jaipur\.jpg" alt="Amer Fort overlooking Maota Lake in Jaipur, Rajasthan"/);
   assert.match(html, /<meta name="robots" content="index, follow/);
   assert.equal((html.match(/<h1\b/gi) || []).length, 1);
-  assert.ok(wordCount >= 500, `Expected at least 500 crawlable words; found ${wordCount}.`);
+  assert.ok(wordCount >= 500, `Expected at least 500 crawlable fallback words; found ${wordCount}.`);
   assert.equal((html.match(/class="journey-card"/g) || []).length, INDIA_JOURNEY_CONCEPTS.length);
-  assert.match(html, /Interactive map of India/);
-  assert.match(html, /aria-label="Choose map or itinerary view"/);
-  assert.match(html, /href="\/india-tours\/" aria-current="page">Inbound<\/a>/);
+  assert.match(html, /id="india-tours-root"/);
+  assert.match(entryMarkup, /src="\.\.\/src\/india-tours\/main\.tsx"/);
   assert.match(globalFooter, /\{ name: 'Inbound', href: '\/india-tours\/' \}/);
-  assert.match(html, /Government-certified guides/);
-  assert.match(html, /Cash &amp; crypto/);
-  assert.match(html, /do not yet have verified supplier inventory, operational itineraries, availability or prices/i);
-  assert.doesNotMatch(html, /Route ideas are not confirmed packages\. Availability, suppliers, inclusions, guide certification and languages, payment methods and prices must be confirmed for your dates\./i);
-  assert.doesNotMatch(html, /These proposed routes have verified supplier inventory/i);
-  assert.match(html, /id="tour-selection" name="journey" required/);
-  assert.match(html, /id="traveller-country"/);
-  assert.match(html, /id="trip-duration"/);
   assert.doesNotMatch(html, /hreflang=/i);
-  assert.doesNotMatch(html, /verified supplier inventory, operational itinerary, availability & price/i);
-  assert.match(entry, /highlightsToggle\.addEventListener\('click'/);
+  assert.match(html, /No starting prices or availability are represented/);
+  assert.match(html, /id="route"/);
+  assert.match(html, /id="plan"/);
+  assert.match(hero, /India\. Your Way\./);
+  assert.match(hero, /One Remarkable Journey\./);
+  assert.match(hero, /Start designing my trip/);
+  assert.match(hero, /Explore curated itineraries/);
+  assert.match(hero, /motion\.h1/);
+  assert.match(trustBar, /Established 2014/);
+  assert.match(trustBar, /India-led planning/);
+  assert.doesNotMatch(`${html}\n${trustBar}`, /Trustpilot|ABTA Protected|Conde Nast Traveler|Rated 5 Stars/i);
+  assert.match(tourGrid, /INDIA_JOURNEY_CONCEPTS\.filter/);
+  assert.match(tourGrid, /aspect-\[4\/5\]/);
+  assert.match(tourGrid, /Request a tailored quote/);
+  assert.match(tourGrid, /View itinerary/);
+  assert.doesNotMatch(tourGrid, /From \$3,500/);
+  assert.match(routeMap, /IntersectionObserver/);
+  assert.match(routeMap, /data-route-stop/);
+  assert.match(routeMap, /aria-current=\{activeStop === index \? 'step' : undefined\}/);
+  assert.match(routeMap, /scrollIntoView/);
+  assert.match(wizard, /AnimatePresence/);
+  assert.match(wizard, /Who is travelling\?/);
+  assert.match(wizard, /What is your preferred pace\?/);
+  assert.match(wizard, /When are you looking to go\?/);
+  assert.match(wizard, /Where can we reach you\?/);
+  assert.match(wizard, /aria-valuenow=\{step \+ 1\}/);
+  assert.match(wizard, /createIndiaEnquiryMessage/);
+  assert.match(wizard, /contact_whatsapp_click/);
+  assert.match(wizard, /this page has not sent your message/i);
+  assert.match(regions, /US: \{ label: 'United States', currency: 'USD'/);
+  assert.match(regions, /UK: \{ label: 'United Kingdom', currency: 'GBP'/);
+  assert.match(regions, /DE: \{ label: 'Germany', currency: 'EUR'/);
+  assert.match(regions, /NL: \{ label: 'Netherlands', currency: 'EUR'/);
+  assert.match(header, /Choose your region and preferred currency/);
+  assert.match(header, /Call our India travel desk/);
+  assert.match(page, /india_tours_page_view/);
+  assert.match(page, /itinerary_select/);
   assert.match(stylesheet, /prefers-reduced-motion/);
-  assert.match(stylesheet, /@keyframes proof-scroll/);
-  assert.match(stylesheet, /@keyframes text-shimmer/);
-  assert.match(stylesheet, /@keyframes journey-card-highlight/);
-  assert.doesNotMatch(html, /No form data is saved or sent to analytics\. WhatsApp opens with a draft for you to review and send yourself\./i);
-  assert.match(entry, /INDIA_JOURNEY_CONCEPTS\.forEach\(\(journey\) => \{/);
-  assert.match(entry, /tourSelection\.value = journey\.id/);
-  assert.match(html, /href="https:\/\/wa\.me\/919511446642/);
-  assert.match(html, /href="mailto:info@travel4life\.net"/);
-  assert.match(entry, /https:\/\/www\.openstreetmap\.org\/copyright/);
+  assert.match(stylesheet, /@tailwind base/);
+  assert.match(stylesheet, /Playfair Display/);
+  assert.match(stylesheet, /DM Sans/);
   for (const eventName of [
     'india_tours_page_view',
-    'india_tours_map_select',
     'itinerary_select',
-    'india_tours_route_play',
-    'india_tours_itinerary_open',
-    'quote_request_click',
     'contact_whatsapp_click',
     'contact_email_click',
-    'quote_form_start',
-    'quote_form_error',
     'quote_form_draft_prepared',
     'country_market_select',
-  ]) assert.ok(entry.includes(eventName), `Missing privacy-safe analytics event ${eventName}.`);
-  assert.ok(!entry.includes('quote_form_submit'));
-  assert.ok(!entry.includes('quote_form_success'));
-  assert.ok(!entry.includes('tour_detail_view'));
+  ]) assert.ok(`${page}\n${wizard}`.includes(eventName), `Missing privacy-safe analytics event ${eventName}.`);
+  assert.ok(!`${page}\n${wizard}`.includes('quote_form_submit'));
+  assert.ok(!`${page}\n${wizard}`.includes('quote_form_success'));
+  assert.ok(!`${page}\n${wizard}`.includes('tour_detail_view'));
   assert.ok(schemaTypes.includes('CollectionPage'));
   assert.ok(schemaTypes.includes('BreadcrumbList'));
   assert.ok(!schemaTypes.some((type) => ['Product', 'Offer', 'Review', 'AggregateRating'].includes(type)));
