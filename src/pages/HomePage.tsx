@@ -9,7 +9,7 @@ import { MapPin, ArrowRight } from 'lucide-react';
 import { TRIP_TYPES } from '../utils/constants';
 import { TrustBar } from '../components/home/TrustBar';
 import { ViralGallery } from '../components/home/ViralGallery';
-import { FloatingAction } from '../components/home/FloatingAction';
+import { FloatingWhatsAppEnquiry } from '../components/common/FloatingWhatsAppEnquiry';
 
 const SocialReviews = lazy(() => import('../components/home/SocialReviews').then(({ SocialReviews: Component }) => ({ default: Component })));
 const Testimonials = lazy(() => import('../components/home/Testimonials').then(({ Testimonials: Component }) => ({ default: Component })));
@@ -53,7 +53,7 @@ const DeferredHomeSection: React.FC<{ children: React.ReactNode; reserveHeight: 
 };
 
 const SectionDivider: React.FC = () => (
-  <div className="relative py-4 md:py-6">
+  <div className="relative py-2 md:py-6">
   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     </div>
@@ -180,14 +180,14 @@ export const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen pb-20 md:pb-0">
+    <div className="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
       <Hero trips={trips} tripsLoading={loading} searchTrips={searchTrips} />
-      <TrustBar trips={trips} />
+      <TrustBar />
       <FestivalReleaseCTA />
 
       {/* Top-Rated Adventures */}
       <div id="top-rated-adventures">
-        <section className="bg-white py-16 md:py-24">
+        <section className="bg-white py-10 md:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm font-medium text-gray-600">Browse by category</p>
@@ -238,7 +238,7 @@ export const HomePage: React.FC = () => {
       <SectionDivider />
 
       {/* Creator Trips */}
-      <section className="py-16 md:py-24" id="creator-trips">
+      <section className="py-10 md:py-24" id="creator-trips">
         <DeferredHomeSection reserveHeight={520}><CreatorTrips /></DeferredHomeSection>
       </section>
 
@@ -284,7 +284,7 @@ export const HomePage: React.FC = () => {
       <DeferredHomeSection reserveHeight={480}><FAQ /></DeferredHomeSection>
       <SectionDivider />
       <DeferredHomeSection reserveHeight={260}><Newsletter /></DeferredHomeSection>
-      <FloatingAction />
+      <FloatingWhatsAppEnquiry />
     </div>
   );
 };

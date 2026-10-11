@@ -1,7 +1,7 @@
 ﻿import React, { useState } from 'react';
 import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
 import { trackContactEvent } from '../../utils/analytics';
-import { ChevronDown, HelpCircle, Users, CreditCard, Shield, Home } from 'lucide-react';
+import { ChevronDown, HelpCircle, CreditCard, Shield, Home } from 'lucide-react';
 
 export const FAQ: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('general');
@@ -80,20 +80,20 @@ export const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="bg-gray-50 py-16 md:py-24">
+    <section className="bg-gray-50 py-10 md:py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-12 text-center">
+        <div className="mb-8 text-center sm:mb-12">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-sky-600 mb-3">FAQ</span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-gray-900 mb-4 tracking-tight">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-display font-bold text-gray-900 mb-4 tracking-tight">
             Frequently Asked Questions
           </h2>
-          <p className="text-lg text-gray-500 font-body">
+          <p className="text-[15px] leading-relaxed text-gray-500 font-body sm:text-lg">
             Everything you need to know about traveling with Travel4life
           </p>
         </div>
 
         {/* Category Tabs */}
-        <div className="mb-8 flex flex-wrap justify-center gap-4">
+        <div className="scrollbar-hide mb-6 flex flex-nowrap justify-start gap-2 overflow-x-auto pb-2 sm:mb-8 sm:flex-wrap sm:justify-center sm:gap-4 sm:overflow-visible sm:pb-0">
           {categories.map((category) => (
             <button
               key={category.id}
@@ -101,7 +101,7 @@ export const FAQ: React.FC = () => {
                 setActiveCategory(category.id);
                 setOpenIndex(null);
               }}
-              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 ${
+              className={`flex min-h-11 shrink-0 items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 ${
                 activeCategory === category.id
                   ? 'bg-gray-900 text-white shadow-sm'
                   : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'

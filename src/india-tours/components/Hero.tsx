@@ -1,7 +1,11 @@
 import { motion, useReducedMotion } from 'framer-motion';
 import { ArrowDown, ArrowRight } from 'lucide-react';
 
-const Hero = () => {
+interface HeroProps {
+  onDesignTrip: () => void;
+}
+
+const Hero = ({ onDesignTrip }: HeroProps) => {
   const reduceMotion = useReducedMotion();
 
   return (
@@ -33,9 +37,9 @@ const Hero = () => {
             Discover India at your own pace, with a journey shaped around the places, details and moments that matter to you.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a className="inline-flex min-h-12 items-center justify-center gap-3 rounded-sm bg-champagne px-6 text-sm font-bold text-forest-dark transition-colors hover:bg-[#f5dfbd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="#plan">
-              Start designing my trip <ArrowRight size={17} aria-hidden="true" />
-            </a>
+            <button className="inline-flex min-h-12 items-center justify-center gap-3 rounded-sm bg-champagne px-6 text-sm font-bold text-forest-dark transition-colors hover:bg-[#f5dfbd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" type="button" onClick={onDesignTrip}>
+              Design My Trip <ArrowRight size={17} aria-hidden="true" />
+            </button>
             <a className="inline-flex min-h-12 items-center justify-center gap-3 rounded-sm border border-white/70 bg-white/5 px-6 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="#journeys">
               Explore curated itineraries <ArrowDown size={16} aria-hidden="true" />
             </a>

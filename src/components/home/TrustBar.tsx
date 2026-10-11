@@ -1,49 +1,72 @@
-import { useEffect, useRef } from 'react';
-import { motion, animate, useInView, useMotionValue, useReducedMotion, useTransform } from 'framer-motion';
-import type { Trip } from '../../types';
+import { useEffect, useState } from 'react';
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion';
 
-interface TrustBarProps {
-  trips: Trip[];
-}
+const trustPoints = [
+  {
+    title: 'Since 2014',
+    details: [
+      'Over a decade of travel experience',
+      'Bringing travelers together since 2014',
+      'Thoughtful journeys, backed by experience',
+    ],
+  },
+  {
+    title: 'Group journeys',
+    details: [
+      'Planned around your crew',
+      'Find a trip that fits your travel style',
+      'Explore upcoming group adventures',
+    ],
+  },
+  {
+    title: 'Personal support',
+    details: [
+      'Real people, here to help',
+      'Tell us what you have in mind',
+      'Get help choosing your next trip',
+    ],
+  },
+];
 
-function CountUp({ value }: { value: number }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, amount: 0.5 });
+export function TrustBar() {
+  const [activeDetail, setActiveDetail] = useState(0);
   const reduceMotion = useReducedMotion();
-  const count = useMotionValue(0);
-  const rounded = useTransform(count, (current) => Math.round(current).toLocaleString());
 
   useEffect(() => {
-    if (!inView) return undefined;
-    if (reduceMotion) {
-      count.set(value);
-      return undefined;
-    }
-    const animation = animate(count, value, { duration: 1.2, ease: 'easeOut' });
-    return () => animation.stop();
-  }, [count, inView, reduceMotion, value]);
+    if (reduceMotion) return undefined;
 
-  return <motion.span ref={ref}>{rounded}</motion.span>;
-}
+    const interval = window.setInterval(() => {
+      setActiveDetail((active) => (active + 1) % trustPoints[0].details.length);
+    }, 4500);
 
-export function TrustBar({ trips }: TrustBarProps) {
-  const destinations = new Set(trips.map(({ destination }) => destination.trim()).filter(Boolean)).size;
-  const confirmedTravelers = trips.reduce((total, trip) => total + trip.current_bookings, 0);
-  const stats = [
-    { value: trips.length, label: 'Active hosted journeys' },
-    { value: destinations, label: 'Destinations to explore' },
-    { value: confirmedTravelers, label: 'Confirmed travelers on listed trips' },
-  ];
+    return () => window.clearInterval(interval);
+  }, [reduceMotion]);
 
   return (
-    <section className="relative z-10 border-y border-white/10 bg-gray-950 py-6 text-white sm:py-8" aria-label="Travel4Life trip facts">
-      <div className="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-white/15 px-4 sm:px-6 lg:px-8">
-        {stats.map(({ value, label }) => (
-          <div key={label} className="px-2 text-center first:pl-0 last:pr-0 sm:px-6">
-            <p className="text-2xl font-bold tracking-tight sm:text-3xl">
-              <CountUp value={value} />
+    <section
+      className="site-header-brand-wash relative z-10 border-y border-gray-200/80 py-5 text-gray-900 sm:py-6"
+      aria-label="Why travel with Travel4Life"
+    >
+      <div className="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-gray-200 px-4 sm:px-6 lg:px-8">
+        {trustPoints.map(({ title, details }) => (
+          <div key={title} className="px-2 text-center first:pl-0 last:pr-0 sm:px-6">
+            <p className="whitespace-nowrap text-[12px] font-semibold leading-tight tracking-tight sm:text-base">
+              {title}
             </p>
-            <p className="mt-1 text-[10px] leading-tight text-white/70 sm:text-sm">{label}</p>
+            <div className="relative mt-1 min-h-7">
+              <AnimatePresence mode="wait">
+                <motion.p
+                  key={activeDetail}
+                  initial={reduceMotion ? false : { opacity: 0, y: 4 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduceMotion ? undefined : { opacity: 0, y: -4 }}
+                  transition={{ duration: reduceMotion ? 0 : 0.35 }}
+                  className="text-[10px] leading-tight text-gray-600 sm:text-sm"
+                >
+                  {details[activeDetail]}
+                </motion.p>
+              </AnimatePresence>
+            </div>
           </div>
         ))}
       </div>

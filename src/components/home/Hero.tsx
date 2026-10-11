@@ -1,11 +1,8 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
-import { BadgePercent, MessageCircle, Star } from 'lucide-react';
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { FeaturedTrip } from '../trips/FeaturedTrip';
 import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
-import { supabase } from '../../lib/supabase';
-import { openTravelPlanner } from './tripPlannerEvent';
 import type { SearchFilters, Trip } from '../../types';
 
 interface HeroProps {
@@ -27,17 +24,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const reduceMotion = useReducedMotion();
 
   const [isTextVisible, setIsTextVisible] = useState(true);
-
-  // Independent review rotation index
-  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
-
-  interface ReviewData {
-    reviewerName: string;
-    reviewComment: string;
-    tripTitle: string;
-  }
-
-  const [reviewsData, setReviewsData] = useState<ReviewData[]>([]);
 
   const featuredTrips = trips.filter((trip) => trip.featured);
 
@@ -82,42 +68,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const heroVideoUrl = import.meta.env.VITE_HERO_VIDEO_URL;
 
   useEffect(() => {
-    const fetchDynamicData = async () => {
-      // Fetch recent reviews with reviewer details
-      try {
-        const { data: reviewsQueryData, error: reviewsError } = await supabase
-          .from('reviews')
-          .select(`
-            id,
-            comment,
-            created_at,
-            reviewer_id,
-            profiles!reviews_reviewer_id_fkey(name),
-            trips!reviews_trip_id_fkey(title)
-          `)
-          .order('created_at', { ascending: false })
-          .limit(50);
-
-        if (reviewsError) {
-          console.error('Error fetching reviews:', reviewsError);
-        } else if (reviewsQueryData && reviewsQueryData.length > 0) {
-          const formattedReviews: ReviewData[] = reviewsQueryData.map((review: any) => ({
-            reviewerName: review.profiles?.name || 'Anonymous',
-            reviewComment: review.comment?.substring(0, 50) + (review.comment?.length > 50 ? '...' : ''),
-            tripTitle: review.trips?.title || 'Amazing Trip'
-          }));
-          setReviewsData(formattedReviews);
-          setCurrentReviewIndex(0);
-        }
-      } catch (e) {
-        console.error('Exception fetching reviews:', e);
-      }
-    };
-
-    fetchDynamicData();
-  }, []);
-
-  useEffect(() => {
     const featuredTripTimer = setTimeout(() => {
       if (featuredTrips.length > 0) {
         setShowFeaturedTrip(true);
@@ -135,15 +85,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
       clearTimeout(featuredTripTimer);
     };
   }, [featuredTrips.length]);
-
-  useEffect(() => {
-    const reviewInterval = setInterval(() => {
-      if (reviewsData.length > 1) {
-        setCurrentReviewIndex((prev) => (prev + 1) % reviewsData.length);
-      }
-    }, 3000);
-    return () => clearInterval(reviewInterval);
-  }, [reviewsData.length]);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -177,7 +118,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
 
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       setVisibleHeadlineCharacters(headlineLength);
-      return;
+      return undefined;
     }
 
     const typingInterval = window.setInterval(() => {
@@ -195,7 +136,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
 
   return (
     <> {/* This fragment is necessary to return multiple elements */}
-      <section ref={heroRef} className="hero-section bg-gray-950 max-lg:min-h-[72svh] max-lg:items-start max-lg:overflow-visible max-lg:pb-16 max-lg:pt-24 lg:justify-start">
+      <section ref={heroRef} className="hero-section bg-gray-950 max-lg:min-h-[40svh] max-lg:items-start max-lg:overflow-visible max-lg:pb-10 max-lg:pt-14 lg:justify-start">
         {/* New Users Ticker */}
 
         {/* Dynamic Background Slideshow */}
@@ -240,9 +181,10 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
           {/* Premium cinematic overlay */}
           <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60 lg:bg-gradient-to-l lg:from-transparent lg:via-black/25 lg:to-gray-950" />
           <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/10 lg:from-transparent lg:via-transparent lg:to-black/10" />
+          <div className="hero-color-wash absolute inset-0" aria-hidden="true" />
 
           {/* Background Indicator Dots */}
-          <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 space-x-2 transform lg:left-[80%]">
+          <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 space-x-2 transform max-sm:hidden lg:left-[80%]">
             {heroBackgrounds.map((_, index) => (
               <button
                 key={index}
@@ -264,27 +206,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
           </div>
         </motion.div>
 
-        {reviewsData.length > 0 && (
-          <div className="absolute left-1/2 top-3 z-20 w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 sm:top-4">
-            <AnimatePresence mode="wait">
-            <motion.div
-                key={currentReviewIndex}
-                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -12 }}
-                transition={{ duration: reduceMotion ? 0 : 0.25 }}
-                className="mx-auto flex w-fit max-w-full items-center gap-2 rounded-full border border-white/20 bg-gray-950/55 px-4 py-2 text-xs text-white shadow-lg backdrop-blur-xl"
-                aria-live="polite"
-              >
-                <MessageCircle className="h-3.5 w-3.5 shrink-0 text-white/80" aria-hidden="true" />
-                <span className="truncate">
-                  A recent note from {reviewsData[currentReviewIndex].reviewerName} · {reviewsData[currentReviewIndex].tripTitle}
-                </span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        )}
-
         <div className={`hero-content lg:mx-auto lg:max-w-7xl lg:px-8 lg:text-left ${featuredTrips.length > 0 && showFeaturedTrip ? 'max-w-4xl mx-auto px-4' : ''}`}>
           {featuredTrips.length > 0 && showFeaturedTrip ? (
             <FeaturedTrip
@@ -294,18 +215,12 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               onClose={() => setShowFeaturedTrip(false)}
             />
           ) : (
-            <div className="relative z-10 mx-auto max-w-4xl animate-fade-in px-4 text-center text-white lg:ml-0 lg:mr-auto lg:w-3/5 lg:max-w-none lg:px-0 lg:text-left">
-              {/* Label */}
-              <div className="hero-spotlight-label relative isolate inline-flex items-center gap-2 overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
-                <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
-                <span className="hero-spotlight-label__text relative z-10 text-xs font-bold text-white tracking-widest uppercase">What Makes Us Different</span>
-              </div>
-
+            <div className="relative z-10 mx-auto max-w-4xl animate-fade-in text-center text-white lg:ml-0 lg:mr-auto lg:w-3/5 lg:max-w-none lg:text-left">
               <h1
                 aria-label={activeHeadline}
-                className={`hero-headline text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-extrabold tracking-tight leading-[1.08] mb-5 text-white transition-opacity duration-300 ${
-                isTextVisible ? 'opacity-100' : 'opacity-0'
-              }`}
+                className={`hero-headline mb-3 text-[32px] font-display font-extrabold leading-[1.08] tracking-tight text-white transition-opacity duration-300 sm:text-5xl md:text-6xl lg:mb-5 lg:text-7xl ${
+                  isTextVisible ? 'opacity-100' : 'opacity-0'
+                }`}
               >
                 {headlineWords.map((word, wordIndex) => {
                   const precedingCharacterCount = headlineWords
@@ -335,32 +250,25 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
                   );
                 })}
               </h1>
-
               {/* Floating glass search card */}
               <div className="mx-auto max-w-2xl lg:mx-0">
-                <div className="mb-4 flex flex-col gap-3 sm:flex-row">
+                <div className="mb-4 flex flex-row items-center justify-center gap-2 lg:justify-start">
                   <button
                     type="button"
-                    onClick={() => openTravelPlanner()}
-                    className="flex min-h-14 flex-1 items-center justify-center rounded-full bg-white px-6 text-sm font-bold text-gray-900 shadow-lg transition-transform hover:scale-[1.02] hover:bg-gray-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:text-base"
-                  >
-                    Design My Trip
-                  </button>
-                  <button
                     onClick={() => {
                       document.getElementById('top-rated-adventures')?.scrollIntoView({ behavior: reduceMotion ? 'instant' : 'smooth' });
                     }}
-                    className="flex h-12 flex-1 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-4 text-xs font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:text-sm"
+                    className="flex h-10 w-fit items-center justify-center rounded-xl border border-white/30 bg-white/10 px-5 text-xs font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:h-11 sm:text-sm"
                   >
                     Explore trips
                   </button>
-                </div>
-
-                <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 lg:justify-start">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
-                    <BadgePercent className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
-                    Trip ideas built around you
-                  </span>
+                  <button
+                    type="button"
+                    onClick={() => window.dispatchEvent(new Event('triggerSignup'))}
+                    className="flex h-10 w-fit items-center justify-center rounded-xl border border-white/30 bg-white px-5 text-xs font-semibold text-gray-900 shadow-sm transition-all duration-200 hover:bg-white/90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:h-11 sm:text-sm"
+                  >
+                    Sign up
+                  </button>
                 </div>
               </div>
             </div>
@@ -370,7 +278,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
 
       <div className="relative z-30 mx-auto -mt-12 mb-8 w-full max-w-2xl px-4 lg:-mt-32 lg:max-w-7xl lg:px-8">
         <div className="overflow-visible rounded-2xl border border-white/30 bg-white/95 shadow-xl backdrop-blur-xl lg:w-3/5">
-          <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} />
+          <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} compactOnMobile />
         </div>
       </div>
 

@@ -181,7 +181,8 @@ test('India tours page preserves crawlable metadata and wires the accessible lux
   assert.match(html, /id="plan"/);
   assert.match(hero, /India\. Your Way\./);
   assert.match(hero, /One Remarkable Journey\./);
-  assert.match(hero, /Start designing my trip/);
+  assert.match(hero, /Design My Trip/);
+  assert.match(hero, /onClick=\{onDesignTrip\}/);
   assert.match(hero, /Explore curated itineraries/);
   assert.match(hero, /motion\.h1/);
   assert.match(trustBar, /Established 2014/);
@@ -213,6 +214,9 @@ test('India tours page preserves crawlable metadata and wires the accessible lux
   assert.match(header, /Call our India travel desk/);
   assert.match(page, /india_tours_page_view/);
   assert.match(page, /itinerary_select/);
+  assert.match(page, /const goToTripDesigner = \(\) =>/);
+  assert.match(page, /<Hero onDesignTrip=\{goToTripDesigner\} \/>/);
+  assert.match(page, /<MobileBottomBar onClick=\{goToTripDesigner\} \/>/);
   assert.match(stylesheet, /prefers-reduced-motion/);
   assert.match(stylesheet, /@tailwind base/);
   assert.match(stylesheet, /Playfair Display/);

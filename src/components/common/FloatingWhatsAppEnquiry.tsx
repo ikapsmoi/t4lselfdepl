@@ -95,7 +95,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
         </button>
       </div>
 
-      <MobileBottomBar onClick={() => setIsOpen(true)} />
+      <MobileBottomBar onClick={() => setIsOpen(true)} buttonLabel="WhatsApp Us" />
 
       {isOpen && (
         <div

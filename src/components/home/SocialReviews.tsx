@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Heart, MessageCircle } from 'lucide-react';
+import { Star, Heart } from 'lucide-react';
 
 interface SocialReview {
   id: string;
@@ -99,7 +99,7 @@ export const SocialReviews: React.FC = () => {
   }, []);
 
   return (
-    <section className="block py-16 md:hidden" aria-label="Traveler reviews">
+    <section className="block py-10 md:hidden" aria-label="Traveler reviews">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex items-center gap-2 mb-5">
         <div className="flex items-center gap-1.5">
@@ -174,7 +174,7 @@ export const SocialReviews: React.FC = () => {
                       <span className="text-xs text-gray-400">{review.timeAgo}</span>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-700 leading-relaxed mb-2.5 line-clamp-3">{review.content}</p>
+                  <p className="text-[15px] text-gray-700 leading-relaxed mb-2.5 line-clamp-3">{review.content}</p>
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-0.5">
                       {[...Array(review.rating)].map((_, i) => (

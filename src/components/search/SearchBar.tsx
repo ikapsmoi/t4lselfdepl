@@ -20,9 +20,10 @@ interface SearchBarProps {
   tripsLoading?: boolean;
   className?: string;
   navigateOnFilter?: boolean;
+  compactOnMobile?: boolean;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, tripsLoading = false, className = '', navigateOnFilter = false }) => {
+export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, tripsLoading = false, className = '', navigateOnFilter = false, compactOnMobile = false }) => {
   const { searchTrip } = useAnalytics();
   const [destination, setDestination] = useState(
     () => new URLSearchParams(window.location.search).get('destination') || ''
@@ -155,7 +156,9 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
     <div className={`w-full min-w-0 rounded-2xl p-3.5 sm:p-6 ${className}`}>
       {/* Experience tabs */}
       <div
-        className="search-experience-tabs scrollbar-hide -mx-3.5 mb-4 flex h-11 items-center gap-2 overflow-x-auto px-3.5 sm:mx-0 sm:mb-4 sm:h-14 sm:px-1"
+        className={`search-experience-tabs scrollbar-hide -mx-3.5 mb-4 h-11 items-center gap-2 overflow-x-auto px-3.5 sm:mx-0 sm:mb-4 sm:h-14 sm:px-1 ${
+          compactOnMobile ? 'hidden sm:flex' : 'flex'
+        }`}
         role="group"
         aria-label="Trip categories. Swipe or scroll horizontally to see all categories."
         tabIndex={0}
@@ -173,7 +176,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
                 onSearch({ type: tab.value });
               }
             }}
-            className={`search-experience-tab relative isolate inline-flex min-h-9 shrink-0 items-center overflow-hidden rounded-full border px-4 text-[13px] font-medium whitespace-nowrap transition-transform duration-150 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 sm:min-h-12 sm:text-sm sm:font-semibold ${
+            className={`search-experience-tab relative isolate inline-flex min-h-11 shrink-0 items-center overflow-hidden rounded-full border px-4 text-[13px] font-medium whitespace-nowrap transition-transform duration-150 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 sm:min-h-12 sm:text-sm sm:font-semibold ${
               type === tab.value
                 ? 'border-gray-900 text-white'
                 : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
@@ -193,7 +196,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
           </button>
         ))}
       </div>
-      <p className="-mt-2 mb-3 text-[10px] text-gray-400 sm:hidden">Swipe to see more categories →</p>
+      {!compactOnMobile && <p className="-mt-2 mb-3 text-[10px] text-gray-400 sm:hidden">Swipe to see more categories →</p>}
 
       {/* Main Search */}
       <div className="flex min-w-0 flex-col gap-2.5 sm:flex-row sm:gap-3">
