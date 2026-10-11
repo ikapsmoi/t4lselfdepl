@@ -100,7 +100,7 @@ export const FestivalReleaseCTA: React.FC = () => {
               <select
                 value={festival}
                 onChange={(event) => setFestival(event.target.value)}
-                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               >
                 <option>Tomorrowland</option>
                 <option>Ultra Miami</option>
@@ -114,7 +114,7 @@ export const FestivalReleaseCTA: React.FC = () => {
               <select
                 value={quantity}
                 onChange={(event) => setQuantity(event.target.value)}
-                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               >
                 {[1, 2, 3, 4, 5, 6].map((count) => <option key={count} value={count}>{count} {count === 1 ? 'traveler' : 'travelers'}</option>)}
               </select>
@@ -127,7 +127,7 @@ export const FestivalReleaseCTA: React.FC = () => {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 placeholder="Your name"
-                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               />
             </label>
             <label className="block text-sm font-medium text-gray-700">
@@ -138,7 +138,7 @@ export const FestivalReleaseCTA: React.FC = () => {
                 onChange={(event) => setEmail(event.target.value)}
                 placeholder="you@example.com"
                 required
-                className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+                className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               />
             </label>
           </div>
@@ -147,7 +147,7 @@ export const FestivalReleaseCTA: React.FC = () => {
             <select
               value={bookingWindow}
               onChange={(event) => setBookingWindow(event.target.value)}
-              className="mt-1.5 w-full rounded-lg border border-gray-300 px-3 py-2.5 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
+              className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
             >
               <option>As soon as possible</option>
               <option>Within 7 days</option>

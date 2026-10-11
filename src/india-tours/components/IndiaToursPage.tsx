@@ -3,6 +3,7 @@ import { ArrowUpRight } from 'lucide-react';
 import { INDIA_JOURNEY_CONCEPTS } from '../catalog.mjs';
 import { trackContactEvent } from '../../utils/analytics';
 import { getTravel4LifeContactContext } from '../../utils/travel4lifeContact.js';
+import { MobileBottomBar } from '../../components/common/MobileBottomBar';
 import Header from './Header';
 import Hero from './Hero';
 import RouteMap from './RouteMap';
@@ -51,7 +52,7 @@ const IndiaToursPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-paper text-[#182722]">
+    <div className="min-h-screen bg-paper pb-20 text-[#182722] md:pb-0">
       <Header region={region} onRegionChange={updateRegion} />
       <main>
         <Hero />
@@ -59,7 +60,7 @@ const IndiaToursPage = () => {
         <TourGrid selectedJourneyId={journey.id} onSelectJourney={selectJourney} />
         <RouteMap journey={journey} onPlanJourney={() => document.getElementById('plan')?.scrollIntoView({ behavior: 'smooth' })} />
         <TripDesignerWizard journey={journey} region={region} />
-        <section className="bg-[#f3f0e8] px-5 py-14 text-center sm:px-8">
+        <section className="bg-[#f3f0e8] px-5 py-10 text-center sm:px-8 md:py-24">
           <p className="font-serif text-2xl text-forest-dark sm:text-3xl">The most memorable journeys begin with a conversation.</p>
           <a className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest underline decoration-champagne underline-offset-4" href="#plan">Start planning <ArrowUpRight size={16} aria-hidden="true" /></a>
         </section>
@@ -74,6 +75,7 @@ const IndiaToursPage = () => {
           </div>
         </div>
       </footer>
+      <MobileBottomBar onClick={() => document.getElementById('plan')?.scrollIntoView({ behavior: 'smooth' })} />
     </div>
   );
 };

@@ -41,9 +41,9 @@ Please add this email to the newsletter list.`;
   ];
 
   return (
-    <section className="py-20 bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500">
+    <section className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 py-16 md:py-24">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="bg-white rounded-2xl p-8 md:p-12 shadow-2xl">
+        <div className="rounded-2xl border border-gray-100/80 bg-white p-6 shadow-lg sm:p-8 md:p-12">
           <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-r from-yellow-400 to-orange-500 mb-6">
             <Mail className="w-10 h-10 text-white" />
           </div>
@@ -82,7 +82,7 @@ Please add this email to the newsletter list.`;
                 placeholder="Enter your email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="flex-1"
+                className="h-11 flex-1 rounded-xl"
                 required
               />
               <Button 

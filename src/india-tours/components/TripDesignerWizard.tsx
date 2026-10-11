@@ -130,13 +130,13 @@ const TripDesignerWizard = ({ journey, region }: TripDesignerWizardProps) => {
   };
 
   return (
-    <section id="plan" className="scroll-mt-24 bg-white px-5 py-20 sm:px-8 sm:py-28 lg:px-12" aria-labelledby="plan-title">
+    <section id="plan" className="scroll-mt-24 bg-white px-5 py-10 sm:px-8 md:py-24 lg:px-12" aria-labelledby="plan-title">
       <div className="mx-auto grid max-w-[1200px] items-start gap-10 lg:grid-cols-[minmax(0,1fr)_300px] lg:gap-16">
         <div>
           <div className="mb-9 max-w-2xl">
             <p className="mb-3 text-[10px] font-bold uppercase tracking-[.2em] text-champagne-dark">A personal conversation, not a formality</p>
-            <h2 id="plan-title" className="font-serif text-4xl font-medium tracking-tight text-forest-dark sm:text-5xl">Let’s design your India</h2>
-            <p className="mt-4 text-sm leading-7 text-muted">A few thoughtful details help our team understand the trip you have in mind. Your information stays in a message draft until you choose to send it.</p>
+            <h2 id="plan-title" className="font-serif text-2xl font-medium leading-tight tracking-tight text-forest-dark sm:text-5xl">Let’s design your India</h2>
+            <p className="mt-4 text-[15px] leading-relaxed text-muted">A few thoughtful details help our team understand the trip you have in mind. Your information stays in a message draft until you choose to send it.</p>
           </div>
 
           <div className="rounded-sm border border-forest/12 bg-paper p-5 sm:p-8">
@@ -167,9 +167,9 @@ const TripDesignerWizard = ({ journey, region }: TripDesignerWizardProps) => {
                 >
                   {step === 0 && (
                     <fieldset>
-                      <legend className="font-serif text-2xl text-forest-dark sm:text-3xl">Who is travelling?</legend>
-                      <p className="mt-2 text-sm text-muted">Choose the closest fit. You can always tell us more later.</p>
-                      <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <legend className="font-serif text-2xl leading-tight text-forest-dark sm:text-3xl">Who is travelling?</legend>
+                      <p className="mt-2 text-[15px] leading-relaxed text-muted">Choose the closest fit. You can always tell us more later.</p>
+                      <div className="mt-6 grid grid-cols-2 gap-3">
                         {travelPartyOptions.map(({ id, icon: Icon, detail }) => (
                           <button className={`flex min-h-24 items-center gap-4 rounded-sm border p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${party === id ? 'border-forest bg-[#edf2ed]' : 'border-forest/15 bg-white hover:border-forest/40'}`} type="button" key={id} aria-pressed={party === id} disabled={isTransitioning} onClick={() => { setParty(id); setError(''); }}>
                             <Icon className="h-5 w-5 shrink-0 text-forest" aria-hidden="true" />

@@ -7,6 +7,9 @@ import { useTrips } from '../hooks/useTrips';
 import { useAnalytics } from '../utils/analytics';
 import { MapPin, ArrowRight } from 'lucide-react';
 import { TRIP_TYPES } from '../utils/constants';
+import { TrustBar } from '../components/home/TrustBar';
+import { ViralGallery } from '../components/home/ViralGallery';
+import { FloatingAction } from '../components/home/FloatingAction';
 
 const SocialReviews = lazy(() => import('../components/home/SocialReviews').then(({ SocialReviews: Component }) => ({ default: Component })));
 const Testimonials = lazy(() => import('../components/home/Testimonials').then(({ Testimonials: Component }) => ({ default: Component })));
@@ -14,7 +17,6 @@ const Newsletter = lazy(() => import('../components/home/Newsletter').then(({ Ne
 const FAQ = lazy(() => import('../components/home/FAQ').then(({ FAQ: Component }) => ({ default: Component })));
 const CreatorTrips = lazy(() => import('../components/creator/CreatorTrips').then(({ CreatorTrips: Component }) => ({ default: Component })));
 const IndiaSpecials = lazy(() => import('../components/india/IndiaSpecials').then(({ IndiaSpecials: Component }) => ({ default: Component })));
-const ClientGallery = lazy(() => import('../components/home/ClientGallery').then(({ ClientGallery: Component }) => ({ default: Component })));
 const HowItWorksPage = lazy(() => import('./HowItWorksPage').then(({ HowItWorksPage: Component }) => ({ default: Component })));
 const SafetyPage = lazy(() => import('./SafetyPage').then(({ SafetyPage: Component }) => ({ default: Component })));
 
@@ -52,7 +54,7 @@ const DeferredHomeSection: React.FC<{ children: React.ReactNode; reserveHeight: 
 
 const SectionDivider: React.FC = () => (
   <div className="relative py-4 md:py-6">
-    <div className="max-w-7xl mx-auto px-8 sm:px-12 lg:px-16">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     </div>
   </div>
@@ -70,7 +72,7 @@ const StorytellingSection: React.FC = () => (
       />
       <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/40 to-transparent" />
       <div className="absolute inset-0 flex items-center">
-        <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 w-full">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-xl">
             <div className="flex items-center gap-2 mb-4">
               <MapPin className="w-4 h-4 text-teal-400" />
@@ -178,17 +180,18 @@ export const HomePage: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen pb-20 md:pb-0">
       <Hero trips={trips} tripsLoading={loading} searchTrips={searchTrips} />
+      <TrustBar trips={trips} />
       <FestivalReleaseCTA />
 
       {/* Top-Rated Adventures */}
       <div id="top-rated-adventures">
-        <section className="py-10 md:py-16 bg-white">
+        <section className="bg-white py-16 md:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm font-medium text-gray-600">Browse by category</p>
-              <div className="top-rated-category-tabs flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible">
+              <div className="top-rated-category-tabs flex gap-4 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible">
                 <button
                   type="button"
                   onClick={() => setTopRatedCategory('all')}
@@ -235,14 +238,14 @@ export const HomePage: React.FC = () => {
       <SectionDivider />
 
       {/* Creator Trips */}
-      <section className="py-10 md:py-16" id="creator-trips">
+      <section className="py-16 md:py-24" id="creator-trips">
         <DeferredHomeSection reserveHeight={520}><CreatorTrips /></DeferredHomeSection>
       </section>
 
       <SectionDivider />
 
-      {/* Client Gallery - Masonry */}
-      <DeferredHomeSection reserveHeight={520}><ClientGallery /></DeferredHomeSection>
+      {/* Client Gallery */}
+      <DeferredHomeSection reserveHeight={520}><ViralGallery /></DeferredHomeSection>
 
       <SectionDivider />
 
@@ -252,7 +255,7 @@ export const HomePage: React.FC = () => {
       <SectionDivider />
 
       {/* India Specials */}
-      <div id="india-specials" className="py-8 md:py-16">
+      <div id="india-specials">
         <DeferredHomeSection reserveHeight={620}><IndiaSpecials trips={trips} loading={loading} /></DeferredHomeSection>
       </div>
 
@@ -281,6 +284,7 @@ export const HomePage: React.FC = () => {
       <DeferredHomeSection reserveHeight={480}><FAQ /></DeferredHomeSection>
       <SectionDivider />
       <DeferredHomeSection reserveHeight={260}><Newsletter /></DeferredHomeSection>
+      <FloatingAction />
     </div>
   );
 };

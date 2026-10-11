@@ -1,12 +1,11 @@
-import React, { useState, useEffect, memo } from 'react';
-import { BadgePercent, Star, Users } from 'lucide-react';
-import { Button } from '../ui/Button';
+import React, { useState, useEffect, memo, useRef } from 'react';
+import { BadgePercent, MessageCircle, Star } from 'lucide-react';
+import { AnimatePresence, motion, useMotionValue, useReducedMotion, useScroll, useSpring, useTransform } from 'framer-motion';
 import { FeaturedTrip } from '../trips/FeaturedTrip';
 import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
-import { NewUsersTicker } from '../common/NewUsersTicker';
 import { supabase } from '../../lib/supabase';
-import { FloatingWhatsAppEnquiry } from '../common/FloatingWhatsAppEnquiry';
+import { openTravelPlanner } from './tripPlannerEvent';
 import type { SearchFilters, Trip } from '../../types';
 
 interface HeroProps {
@@ -21,6 +20,16 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const [loadedBackgrounds, setLoadedBackgrounds] = useState(() => new Set([0]));
   const [currentTripIndex, setCurrentTripIndex] = useState(0);
   const [showFeaturedTrip, setShowFeaturedTrip] = useState(false);
+  const [isVideoUnavailable, setIsVideoUnavailable] = useState(false);
+  const ctaRef = useRef<HTMLButtonElement>(null);
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const heroParallax = useTransform(scrollYProgress, [0, 1], [0, 20]);
+  const ctaX = useMotionValue(0);
+  const ctaY = useMotionValue(0);
+  const springX = useSpring(ctaX, { stiffness: 180, damping: 18 });
+  const springY = useSpring(ctaY, { stiffness: 180, damping: 18 });
+  const reduceMotion = useReducedMotion();
 
   const [isTextVisible, setIsTextVisible] = useState(true);
 
@@ -75,6 +84,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
       vibe: 'Wildlife trip'
     }
   ], []);
+  const heroVideoUrl = import.meta.env.VITE_HERO_VIDEO_URL;
 
   useEffect(() => {
     const fetchDynamicData = async () => {
@@ -188,21 +198,14 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
     return () => window.clearInterval(typingInterval);
   }, [activeHeadline]);
 
-  const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
     <> {/* This fragment is necessary to return multiple elements */}
-      <section className="hero-section">
+      <section ref={heroRef} className="hero-section bg-gray-950 max-lg:min-h-[72svh] max-lg:items-start max-lg:overflow-visible max-lg:pb-16 max-lg:pt-24 lg:justify-start">
         {/* New Users Ticker */}
 
         {/* Dynamic Background Slideshow */}
-        <div className="absolute inset-0 overflow-hidden">
-          {heroBackgrounds.map((bg, index) => (
+        <motion.div style={reduceMotion ? undefined : { y: heroParallax }} className="absolute inset-0 overflow-hidden max-lg:!inset-0 lg:left-[60%]">
+          {(!heroVideoUrl || isVideoUnavailable || reduceMotion) && heroBackgrounds.map((bg, index) => (
             <div
               key={index}
               className={`absolute inset-0 transition-all duration-1000 ${
@@ -221,34 +224,30 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               />
             </div>
           ))}
-
-          {/* Premium cinematic overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60" />
-          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/10" />
-
-          {/* Review notification widget */}
-          {reviewsData.length > 0 && (
-            <div className="absolute top-20 right-4 md:top-24 md:right-8 hidden sm:block">
-              <div className="bg-white/10 backdrop-blur-md rounded-2xl p-3 shadow-lg border border-white/20 animate-float max-w-[240px]">
-                <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 bg-gradient-to-br from-sky-400 to-teal-500 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Star className="w-3.5 h-3.5 text-white fill-white" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-xs font-semibold text-white truncate">
-                      {reviewsData[currentReviewIndex].reviewerName} reviewed
-                    </div>
-                    <div className="text-xs text-white/70 truncate">
-                      "{reviewsData[currentReviewIndex].reviewComment}"
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          {heroVideoUrl && !isVideoUnavailable && !reduceMotion && (
+            <video
+              className="absolute inset-0 h-full w-full object-cover"
+              src={heroVideoUrl}
+              poster={heroBackgrounds[0].url}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-hidden="true"
+              onError={() => {
+                console.error('The configured homepage hero video could not be loaded.');
+                setIsVideoUnavailable(true);
+              }}
+            />
           )}
 
+          {/* Premium cinematic overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/60 lg:bg-gradient-to-l lg:from-transparent lg:via-black/25 lg:to-gray-950" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/20 via-transparent to-black/10 lg:from-transparent lg:via-transparent lg:to-black/10" />
+
           {/* Background Indicator Dots */}
-          <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 flex space-x-2 z-10">
+          <div className="absolute bottom-8 left-1/2 z-10 flex -translate-x-1/2 space-x-2 transform lg:left-[80%]">
             {heroBackgrounds.map((_, index) => (
               <button
                 key={index}
@@ -268,9 +267,30 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               </button>
             ))}
           </div>
-        </div>
+        </motion.div>
 
-        <div className={`hero-content ${featuredTrips.length > 0 && showFeaturedTrip ? 'max-w-4xl mx-auto px-4' : ''}`}>
+        {reviewsData.length > 0 && (
+          <div className="absolute left-1/2 top-3 z-20 w-[calc(100%-2rem)] max-w-xl -translate-x-1/2 sm:top-4">
+            <AnimatePresence mode="wait">
+            <motion.div
+                key={currentReviewIndex}
+                initial={reduceMotion ? false : { opacity: 0, y: 12 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -12 }}
+                transition={{ duration: reduceMotion ? 0 : 0.25 }}
+                className="mx-auto flex w-fit max-w-full items-center gap-2 rounded-full border border-white/20 bg-gray-950/55 px-4 py-2 text-xs text-white shadow-lg backdrop-blur-xl"
+                aria-live="polite"
+              >
+                <MessageCircle className="h-3.5 w-3.5 shrink-0 text-white/80" aria-hidden="true" />
+                <span className="truncate">
+                  A recent note from {reviewsData[currentReviewIndex].reviewerName} · {reviewsData[currentReviewIndex].tripTitle}
+                </span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        )}
+
+        <div className={`hero-content lg:mx-auto lg:max-w-7xl lg:px-8 lg:text-left ${featuredTrips.length > 0 && showFeaturedTrip ? 'max-w-4xl mx-auto px-4' : ''}`}>
           {featuredTrips.length > 0 && showFeaturedTrip ? (
             <FeaturedTrip
               featuredTrips={featuredTrips}
@@ -279,7 +299,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               onClose={() => setShowFeaturedTrip(false)}
             />
           ) : (
-            <div className="text-center text-white animate-fade-in relative z-10 max-w-4xl mx-auto px-4">
+            <div className="relative z-10 mx-auto max-w-4xl animate-fade-in px-4 text-center text-white lg:ml-0 lg:mr-auto lg:w-3/5 lg:max-w-none lg:px-0 lg:text-left">
               {/* Label */}
               <div className="hero-spotlight-label relative isolate inline-flex items-center gap-2 overflow-hidden bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-1.5 mb-6">
                 <span className="w-2 h-2 bg-teal-400 rounded-full animate-pulse"></span>
@@ -322,48 +342,47 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               </h1>
 
               {/* Floating glass search card */}
-              <div className="max-w-2xl mx-auto">
-                <div className="flex gap-3 mb-3">
+              <div className="mx-auto max-w-2xl lg:mx-0">
+                <div className="mb-4 flex flex-col gap-3 sm:flex-row">
+                  <motion.button
+                    ref={ctaRef}
+                    type="button"
+                    onClick={() => {
+                      openTravelPlanner();
+                    }}
+                    style={reduceMotion ? undefined : { x: springX, y: springY }}
+                    animate={reduceMotion ? undefined : { boxShadow: ['0 0 0 rgba(255,255,255,0)', '0 0 24px rgba(255,255,255,0.2)', '0 0 0 rgba(255,255,255,0)'] }}
+                    transition={reduceMotion ? undefined : { boxShadow: { duration: 2.6, repeat: Infinity, ease: 'easeInOut' } }}
+                    onMouseMove={(event) => {
+                      if (reduceMotion || !ctaRef.current) return;
+                      const bounds = ctaRef.current.getBoundingClientRect();
+                      ctaX.set((event.clientX - bounds.left - bounds.width / 2) * 0.08);
+                      ctaY.set((event.clientY - bounds.top - bounds.height / 2) * 0.08);
+                    }}
+                    onMouseLeave={() => {
+                      ctaX.set(0);
+                      ctaY.set(0);
+                    }}
+                    whileHover={reduceMotion ? undefined : { scale: 1.02 }}
+                    whileTap={reduceMotion ? undefined : { scale: 0.98 }}
+                    className="flex min-h-14 flex-1 items-center justify-center rounded-full bg-white px-6 text-sm font-bold text-gray-900 shadow-lg transition-colors hover:bg-gray-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:text-base"
+                  >
+                    Inquire Now
+                  </motion.button>
                   <button
                     onClick={() => {
-                      window.location.hash = 'home';
-                      setTimeout(() => {
-                        const element = document.getElementById('top-rated-adventures');
-                        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                      }, 300);
+                      document.getElementById('top-rated-adventures')?.scrollIntoView({ behavior: reduceMotion ? 'instant' : 'smooth' });
                     }}
-                    className="flex-1 py-2.5 px-4 bg-white text-gray-900 font-semibold rounded-xl hover:bg-gray-50 transition-all duration-200 shadow-lg text-xs sm:text-sm"
+                    className="flex h-12 flex-1 items-center justify-center rounded-xl border border-white/30 bg-white/10 px-4 text-xs font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:text-sm"
                   >
                     Explore trips
                   </button>
-                  <button
-                    onClick={() => {
-                      window.location.hash = 'how-it-works';
-                      window.scrollTo(0, 0);
-                    }}
-                    className="flex-1 py-2.5 px-4 bg-white/10 backdrop-blur-sm text-white font-semibold rounded-xl border border-white/30 hover:bg-white/20 transition-all duration-200 text-xs sm:text-sm"
-                  >
-                    How it works
-                  </button>
                 </div>
 
-                {/* Search bar */}
-                <div className="relative z-30 overflow-visible rounded-2xl border border-white/30 bg-white/80 shadow-2xl backdrop-blur-lg">
-                  <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} />
-                </div>
-
-                <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
-                    <Star className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
-                    4.9 rating
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
-                    <Users className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
-                    12000 plus travelers
-                  </span>
+                <div className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 lg:justify-start">
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium text-white/90">
                     <BadgePercent className="h-3.5 w-3.5 text-white/75" aria-hidden="true" />
-                    Pre Purchaser Rates
+                    Trip ideas built around you
                   </span>
                 </div>
               </div>
@@ -372,7 +391,11 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
         </div>
       </section>
 
-      <FloatingWhatsAppEnquiry />
+      <div className="relative z-30 mx-auto -mt-12 mb-8 w-full max-w-2xl px-4 lg:-mt-32 lg:max-w-7xl lg:px-8">
+        <div className="overflow-visible rounded-2xl border border-white/30 bg-white/95 shadow-xl backdrop-blur-xl lg:w-3/5">
+          <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} />
+        </div>
+      </div>
 
       {/* Trip Details Modal */}
       {selectedTrip && (

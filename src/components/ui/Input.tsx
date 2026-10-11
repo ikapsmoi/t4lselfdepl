@@ -35,7 +35,7 @@ export const Input: React.FC<InputProps> = ({
         value={value}
         onChange={onChange}
         required={required}
-        className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
+        className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-2xl focus:outline-none focus:ring-2 focus:ring-yellow-500 text-gray-900 focus:border-transparent transition-all duration-200 text-sm sm:text-base ${
           error ? 'border-red-500' : 'border-gray-300'
         } min-h-[48px]`}
       />

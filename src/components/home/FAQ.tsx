@@ -80,9 +80,9 @@ export const FAQ: React.FC = () => {
   };
 
   return (
-    <section className="py-20 md:py-28 bg-gray-50">
+    <section className="bg-gray-50 py-16 md:py-24">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-12">
+        <div className="mb-12 text-center">
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-sky-600 mb-3">FAQ</span>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-display font-bold text-gray-900 mb-4 tracking-tight">
             Frequently Asked Questions
@@ -93,7 +93,7 @@ export const FAQ: React.FC = () => {
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <div className="mb-8 flex flex-wrap justify-center gap-4">
           {categories.map((category) => (
             <button
               key={category.id}
@@ -101,7 +101,7 @@ export const FAQ: React.FC = () => {
                 setActiveCategory(category.id);
                 setOpenIndex(null);
               }}
-              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-200 ${
+              className={`flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 ${
                 activeCategory === category.id
                   ? 'bg-gray-900 text-white shadow-sm'
                   : 'bg-white text-gray-600 hover:bg-gray-100 border border-gray-200'
@@ -114,19 +114,19 @@ export const FAQ: React.FC = () => {
         </div>
 
         {/* FAQ Items */}
-        <div className="space-y-3">
+        <div className="divide-y divide-gray-100 rounded-2xl border border-gray-100 bg-white">
           {currentFAQs.map((faq, index) => (
             <div
               key={index}
-              className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="overflow-hidden transition-colors duration-200 hover:bg-gray-50/50"
             >
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-gray-50 transition-colors duration-200"
+                className="flex w-full items-center gap-4 px-4 py-5 text-left transition-colors duration-200 hover:bg-gray-50/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-sky-500"
               >
                 <h3 className="text-base font-display font-semibold text-gray-900 leading-snug">{faq.question}</h3>
                 <ChevronDown
-                  className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform duration-300 ${
+                  className={`ml-auto h-5 w-5 shrink-0 text-gray-400 transition-transform duration-200 ${
                     openIndex === index ? 'rotate-180' : ''
                   }`}
                 />
@@ -136,7 +136,7 @@ export const FAQ: React.FC = () => {
                   openIndex === index ? 'max-h-48 opacity-100' : 'max-h-0 opacity-0'
                 }`}
               >
-                <div className="px-6 pb-5">
+                <div className="px-4 pb-5">
                   <div className="h-px bg-gray-100 mb-4" />
                   <p className="text-gray-600 font-body leading-relaxed text-sm">{faq.answer}</p>
                 </div>

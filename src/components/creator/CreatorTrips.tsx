@@ -287,12 +287,11 @@ export const CreatorTrips: React.FC = () => {
             </Button>
           </div>
         ) : (
-          <div className="relative overflow-hidden">
-            <div className="flex animate-scroll-creators space-x-3">
-              {/* Duplicate creators for seamless loop */}
-              {[...dynamicTopCreators, ...dynamicTopCreators].map((creator, index) => (
-                <div key={`${creator.id}-${index}`} className="flex-shrink-0 w-56">
-                  <div className="bg-white rounded-xl p-4 shadow-md border border-gray-100 hover:shadow-lg transition-all duration-300 transform hover:scale-105 relative overflow-hidden">
+          <div className="relative -mx-4 overflow-x-auto pb-6 scrollbar-hide sm:-mx-8 md:mx-0">
+            <div className="flex snap-x snap-mandatory gap-4 px-4 sm:px-8 md:px-0">
+              {dynamicTopCreators.map((creator) => (
+                <div key={creator.id} className="w-[82vw] max-w-[320px] shrink-0 snap-start md:w-56 md:max-w-none">
+                  <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-transform duration-150 ease-out active:scale-[0.98] hover:shadow-lg">
                     {/* Instagram-style gradient border */}
                     <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-xl opacity-15"></div>
                     <div className="trip-card-brand-wash absolute inset-[2px] rounded-xl"></div>
@@ -351,36 +350,11 @@ export const CreatorTrips: React.FC = () => {
                   </div>
                 </div>
               ))}
+              <div aria-hidden="true" className="w-0 shrink-0 pr-4 md:hidden" />
             </div>
           </div>
         )}
       </div>
-
-      {/* Add CSS for auto-scroll animation */}
-      <style jsx>{`
-        @keyframes scroll-creators {
-          0% {
-            transform: translateX(0);
-          }
-          100% {
-            transform: translateX(-50%);
-          }
-        }
-        
-        .animate-scroll-creators {
-          animation: scroll-creators 20s linear infinite;
-        }
-        
-        .animate-scroll-creators:hover {
-          animation-play-state: paused;
-        }
-        
-        @media (max-width: 768px) {
-          .animate-scroll-creators {
-            animation: scroll-creators 15s linear infinite;
-          }
-        }
-      `}</style>
 
       {/* Call to Action */}
       <div className="text-center bg-gradient-to-r from-purple-50 to-pink-50 rounded-2xl p-8">

@@ -39,7 +39,7 @@ export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) 
   ];
 
   return (
-    <section className="py-8 relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50/30 to-green-50">
+    <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50/30 to-green-50 py-16 md:py-24">
       {/* Decorative Indian-inspired background elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-amber-100/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -228,7 +228,7 @@ export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) 
                 </Button>
               </div>
             ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 lg:gap-8">
               {filteredTrips.map((trip) => (
                 <div key={trip.id} className="relative">
                   {/* India Badge 

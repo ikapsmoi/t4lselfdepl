@@ -13,6 +13,9 @@ SUPABASE_SERVICE_ROLE_KEY=your_service_role_key  # Server-side only!
 NOMINATIM_USER_AGENT=TravelTag-App/1.0 (contact@traveltag.com)
 ```
 
+### Optional Homepage Hero Video
+Set `VITE_HERO_VIDEO_URL` to a publicly accessible, optimized, muted-loop video URL to use video behind the homepage hero. If it is empty or the video cannot load, the existing local hero image rotation remains in use. This is a public client-side asset URL, not a secret.
+
 ### Edge Function Deployment
 ```bash
 # Deploy all edge functions

@@ -101,16 +101,16 @@ const RouteMap = ({ journey, onPlanJourney }: RouteMapProps) => {
   const selectedStop = journey.route_stops[activeStop] || journey.route_stops[0];
 
   return (
-    <section id="route" className="scroll-mt-24 bg-[#f3f0e8] px-5 py-20 sm:px-8 sm:py-28 lg:px-12" aria-labelledby="route-title">
+    <section id="route" className="scroll-mt-24 bg-[#f3f0e8] px-5 py-10 sm:px-8 md:py-24 lg:px-12" aria-labelledby="route-title">
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-10 max-w-[680px]">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-[.2em] text-champagne-dark">A journey, stop by stop</p>
-          <h2 id="route-title" className="font-serif text-4xl font-medium tracking-tight text-forest-dark sm:text-5xl">See where the story takes you</h2>
-          <p className="mt-4 text-sm leading-7 text-muted">Explore an illustrative route. Select a stop or scroll to see its place on the map.</p>
+          <h2 id="route-title" className="font-serif text-2xl font-medium leading-tight tracking-tight text-forest-dark sm:text-5xl">See where the story takes you</h2>
+          <p className="mt-4 text-[15px] leading-relaxed text-muted">Explore an illustrative route. Select a stop or scroll to see its place on the map.</p>
         </div>
 
         <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.05fr)_minmax(360px,.95fr)] lg:gap-16">
-          <aside className="inbound-route-map top-24 self-start overflow-hidden rounded-sm bg-[#17372c] p-5 text-white shadow-xl sm:p-8 lg:sticky" aria-label={`Illustrative map for ${journey.name}`}>
+          <aside className="inbound-route-map top-24 self-start overflow-hidden rounded-2xl bg-[#17372c] p-4 text-white shadow-xl sm:p-8 lg:sticky" aria-label={`Illustrative map for ${journey.name}`}>
             <div className="flex items-start justify-between gap-5">
               <div>
                 <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#e3c59b]">Illustrative route · India</p>

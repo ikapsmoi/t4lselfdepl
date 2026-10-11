@@ -5,7 +5,7 @@ const Hero = () => {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="inbound-hero relative isolate flex min-h-[650px] items-end overflow-hidden bg-forest-dark text-white sm:min-h-[740px] lg:min-h-[min(790px,calc(100svh-76px))]" aria-labelledby="inbound-title">
+    <section className="inbound-hero relative isolate flex min-h-[560px] items-end overflow-hidden bg-forest-dark text-white sm:min-h-[740px] lg:min-h-[min(790px,calc(100svh-76px))]" aria-labelledby="inbound-title">
       <img
         className="absolute inset-0 -z-20 h-full w-full object-cover"
         src="/trip-thumbnails/jaipur.jpg"
@@ -33,10 +33,10 @@ const Hero = () => {
             Discover India at your own pace, with a journey shaped around the places, details and moments that matter to you.
           </p>
           <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a className="inline-flex min-h-14 items-center justify-center gap-3 rounded-sm bg-champagne px-6 text-sm font-bold text-forest-dark transition-colors hover:bg-[#f5dfbd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="#plan">
+            <a className="inline-flex min-h-12 items-center justify-center gap-3 rounded-sm bg-champagne px-6 text-sm font-bold text-forest-dark transition-colors hover:bg-[#f5dfbd] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="#plan">
               Start designing my trip <ArrowRight size={17} aria-hidden="true" />
             </a>
-            <a className="inline-flex min-h-14 items-center justify-center gap-3 rounded-sm border border-white/70 bg-white/5 px-6 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="#journeys">
+            <a className="inline-flex min-h-12 items-center justify-center gap-3 rounded-sm border border-white/70 bg-white/5 px-6 text-sm font-semibold text-white transition-colors hover:border-white hover:bg-white/10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white" href="#journeys">
               Explore curated itineraries <ArrowDown size={16} aria-hidden="true" />
             </a>
           </div>

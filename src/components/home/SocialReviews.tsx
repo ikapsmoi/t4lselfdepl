@@ -99,7 +99,8 @@ export const SocialReviews: React.FC = () => {
   }, []);
 
   return (
-    <section className="block md:hidden py-8 px-4">
+    <section className="block py-16 md:hidden" aria-label="Traveler reviews">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="flex items-center gap-2 mb-5">
         <div className="flex items-center gap-1.5">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none">
@@ -205,6 +206,7 @@ export const SocialReviews: React.FC = () => {
             />
           ))}
         </div>
+      </div>
       </div>
     </section>
   );

@@ -1,4 +1,5 @@
 import React, { useState, useMemo, memo } from 'react';
+import { motion } from 'framer-motion';
 import { Search, MapPin, ChevronUp, ChevronDown, Sparkles, X } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Select } from '../ui/Select';
@@ -151,10 +152,10 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
   }, [destination, matchingTrips, type]);
 
   return (
-    <div className={`w-full min-w-0 rounded-2xl p-3 sm:rounded-[20px] sm:p-5 ${className}`}>
+    <div className={`w-full min-w-0 rounded-2xl p-3.5 sm:p-6 ${className}`}>
       {/* Experience tabs */}
       <div
-        className="search-experience-tabs -mx-1 mb-3 flex items-center gap-1.5 overflow-x-auto px-1 pb-2 sm:mb-4 sm:gap-1"
+        className="search-experience-tabs scrollbar-hide -mx-3.5 mb-4 flex h-11 items-center gap-2 overflow-x-auto px-3.5 sm:mx-0 sm:mb-4 sm:h-14 sm:px-1"
         role="group"
         aria-label="Trip categories. Swipe or scroll horizontally to see all categories."
         tabIndex={0}
@@ -162,6 +163,8 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
         {TRIP_TYPES.map((tab) => (
           <button
             key={tab.value}
+            type="button"
+            aria-pressed={type === tab.value}
             onClick={() => {
               setType(tab.value);
               if (navigateOnFilter) {
@@ -170,12 +173,20 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
                 onSearch({ type: tab.value });
               }
             }}
-            className={`search-experience-tab relative isolate min-h-10 shrink-0 overflow-hidden rounded-full border px-3 py-2 text-xs font-semibold whitespace-nowrap transition-colors duration-200 sm:px-4 sm:text-sm ${
+            className={`search-experience-tab relative isolate inline-flex min-h-9 shrink-0 items-center overflow-hidden rounded-full border px-4 text-[13px] font-medium whitespace-nowrap transition-transform duration-150 ease-out active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-sky-500 sm:min-h-12 sm:text-sm sm:font-semibold ${
               type === tab.value
-                ? 'border-gray-900 bg-gray-900 text-white shadow-sm'
+                ? 'border-gray-900 text-white'
                 : 'border-gray-200 bg-white text-gray-600 hover:border-gray-300'
             }`}
           >
+            {type === tab.value && (
+              <motion.span
+                layoutId="search-active-tab"
+                className="absolute inset-0 rounded-full bg-gray-900 shadow-sm"
+                transition={{ type: 'spring', stiffness: 500, damping: 36 }}
+                aria-hidden="true"
+              />
+            )}
             <span className="relative z-10">
               {tab.value === 'indian_special' ? 'India' : tab.value === 'festival' ? 'Festivals' : tab.value === 'budget' ? 'Budget' : tab.label}
             </span>
@@ -213,7 +224,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
                 setSuggestionsOpen(false);
               }
             }}
-            className="min-h-12 w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 sm:rounded-2xl sm:py-3.5 sm:pl-12 sm:pr-24"
+            className="h-12 w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 sm:pl-12 sm:pr-24"
           />
           {suggestionsOpen && !tripsLoading && (
             <div
@@ -340,7 +351,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
             aria-expanded={!filtersMinimized}
             icon={filtersMinimized ? ChevronDown : ChevronUp}
             size="md"
-            className="relative min-w-0 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-2.5 py-2.5 text-gray-600 hover:bg-gray-100 sm:w-auto sm:flex-none sm:min-w-[120px] sm:rounded-2xl sm:px-4 sm:py-3"
+            className="relative min-h-12 min-w-0 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 text-gray-600 hover:bg-gray-100 sm:w-auto sm:flex-none sm:min-w-[120px]"
           >
             {filtersMinimized ? 'Filters' : 'Hide'}
             {hasActiveFilters && (
@@ -355,7 +366,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
             icon={Search}
             variant="primary"
             size="md"
-            className="min-w-0 flex-[1.2] rounded-xl bg-gray-900 px-2.5 py-2.5 text-white hover:bg-gray-700 sm:w-auto sm:flex-none sm:min-w-[110px] sm:rounded-2xl sm:px-6 sm:py-3"
+            className="h-12 min-w-0 flex-[1.2] rounded-xl bg-gray-900 px-6 text-white transition-transform active:scale-95 hover:bg-gray-700 sm:w-auto sm:flex-none sm:min-w-[110px]"
           >
             Search
           </Button>

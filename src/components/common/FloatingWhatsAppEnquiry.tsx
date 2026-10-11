@@ -5,6 +5,7 @@ import {
   getTravel4LifeWhatsAppUrl,
 } from '../../utils/travel4lifeContact.js';
 import { trackContactEvent } from '../../utils/analytics';
+import { MobileBottomBar } from './MobileBottomBar';
 
 interface TripEnquiry {
   fullName: string;
@@ -80,7 +81,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 z-40">
+      <div className="fixed bottom-6 right-6 z-40 hidden md:block">
         <button
           type="button"
           onClick={() => setIsOpen(true)}
@@ -94,9 +95,11 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
         </button>
       </div>
 
+      <MobileBottomBar onClick={() => setIsOpen(true)} />
+
       {isOpen && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-slate-950/60 p-3 backdrop-blur-sm sm:p-5"
+          className="fixed inset-0 z-[60] flex items-end justify-center bg-slate-950/60 p-0 backdrop-blur-sm sm:items-center sm:p-5"
           onMouseDown={(event) => {
             if (event.target === event.currentTarget) setIsOpen(false);
           }}
@@ -105,8 +108,9 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
             role="dialog"
             aria-modal="true"
             aria-labelledby="quick-trip-enquiry-title"
-            className="w-full max-w-lg overflow-hidden rounded-2xl bg-white shadow-2xl"
+            className="max-h-[88dvh] w-full max-w-lg animate-mobile-sheet overflow-y-auto rounded-t-[28px] bg-white pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-2xl sm:max-h-[90vh] sm:animate-none sm:rounded-2xl sm:pb-0"
           >
+            <div className="mx-auto mb-5 h-1 w-12 rounded-full bg-slate-200 sm:hidden" aria-hidden="true" />
             <header className="flex items-start justify-between gap-4 border-b border-slate-100 px-5 py-4 sm:px-6">
               <div>
                 <p className="text-xs font-bold uppercase tracking-[0.14em] text-emerald-700">Travel4Life concierge</p>
@@ -116,14 +120,14 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                className="rounded-full p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900"
+                className="inline-flex h-11 w-11 items-center justify-center rounded-full text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 active:scale-[0.98]"
                 aria-label="Close trip enquiry"
               >
                 <X className="h-5 w-5" aria-hidden="true" />
               </button>
             </header>
 
-            <form onSubmit={handleSubmit} className="grid max-h-[calc(100dvh-9rem)] grid-cols-1 gap-4 overflow-y-auto p-5 sm:grid-cols-2 sm:p-6">
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 gap-4 p-6 sm:grid-cols-2">
               <label className="sm:col-span-2">
                 <span className="mb-1.5 block text-sm font-semibold text-slate-700">Full name</span>
                 <input
@@ -132,7 +136,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
                   required
                   value={enquiry.fullName}
                   onChange={(event) => updateField('fullName', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="h-12 w-full rounded-2xl border border-slate-300 px-3 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                   placeholder="Your full name"
                 />
               </label>
@@ -146,7 +150,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
                   required
                   value={enquiry.adults}
                   onChange={(event) => updateField('adults', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="h-12 w-full rounded-2xl border border-slate-300 px-3 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
               </label>
 
@@ -159,7 +163,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
                   required
                   value={enquiry.children}
                   onChange={(event) => updateField('children', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="h-12 w-full rounded-2xl border border-slate-300 px-3 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
               </label>
 
@@ -171,7 +175,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
                   required
                   value={enquiry.travelDate}
                   onChange={(event) => updateField('travelDate', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="h-12 w-full rounded-2xl border border-slate-300 px-3 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
               </label>
 
@@ -184,7 +188,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
                   required
                   value={enquiry.nights}
                   onChange={(event) => updateField('nights', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="h-12 w-full rounded-2xl border border-slate-300 px-3 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                 />
               </label>
 
@@ -194,7 +198,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
                   required
                   value={enquiry.destination}
                   onChange={(event) => updateField('destination', event.target.value)}
-                  className="w-full rounded-lg border border-slate-300 px-3 py-2.5 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
+                  className="h-12 w-full rounded-2xl border border-slate-300 px-3 text-sm outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100"
                   placeholder="Where would you like to go?"
                 />
               </label>

@@ -25,6 +25,7 @@ import { useBookings } from '../../hooks/useBookings';
 import { INDIA_CATEGORIES } from '../../utils/constants';
 import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
 import { trackContactEvent } from '../../utils/analytics';
+import { MobileBottomBar } from '../common/MobileBottomBar';
 interface TripDetailsProps {
   trip: Trip;
   onClose: () => void;
@@ -144,7 +145,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-white text-xs md:text-sm">
+    <div className="fixed inset-0 z-50 overflow-y-auto rounded-t-[28px] bg-white pb-24 text-xs md:rounded-none md:pb-0 md:text-sm">
       <div className="min-h-screen">
         <div className="sticky top-0 z-10 bg-white border-b px-3 py-2 md:px-4 md:py-3">
           <div className="flex items-center justify-between max-w-7xl mx-auto">
@@ -473,6 +474,17 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
           </div>
         </div>
       </div>
+
+      <MobileBottomBar
+        contextLabel="PER PERSON"
+        contextValue={`${displayCurrencySymbol}${trip.price}`}
+        buttonLabel={isFull ? 'Trip is Full' : 'Book This Trip'}
+        disabled={isFull}
+        onClick={() => {
+          clickJoin(trip.id);
+          setShowBookingModal(true);
+        }}
+      />
 
       {/* Modals */}
       <BookingModal

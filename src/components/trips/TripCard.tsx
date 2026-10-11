@@ -45,7 +45,10 @@ export const TripCard: React.FC<TripCardProps> = memo(({
     setIsSaved(savedTrips.some(st => st.trip.id === trip.id));
   }, [savedTrips, trip.id]);
 
-  const spotsLeft = trip.max_capacity - trip.current_bookings;
+  const spotsLeft = Math.max(0, trip.max_capacity - trip.current_bookings);
+  const confirmedOccupancy = trip.max_capacity > 0
+    ? Math.min(100, Math.round((trip.current_bookings / trip.max_capacity) * 100))
+    : 0;
   const fallbackImage = trip.type === 'budget'
     ? '/optimized/pkg1.webp'
     : trip.type === 'indian_special'
@@ -55,7 +58,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
   const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === trip.difficulty);
   const isAlmostFull = spotsLeft <= 3 && spotsLeft > 0;
-  const isFull = spotsLeft === 0;
+  const isFull = trip.max_capacity > 0 && spotsLeft === 0;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', { 
@@ -109,15 +112,15 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   if (variant === 'compact') {
     return (
       <div
-        className={`flex flex-col bg-white rounded-[20px] overflow-hidden shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] hover:shadow-[0_8px_32px_-8px_rgba(0,0,0,0.14)] transition-all duration-400 hover:-translate-y-1 cursor-pointer group ${
-          isMobileCarouselItem ? 'w-[calc(100vw-2rem)] max-w-full flex-shrink-0 snap-start' : ''
+        className={`flex flex-col overflow-hidden rounded-2xl border border-gray-100/80 bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg cursor-pointer group ${
+          isMobileCarouselItem ? 'w-[82vw] max-w-[320px] shrink-0 snap-start md:w-auto md:max-w-none md:snap-none' : ''
         }`}
         onClick={() => {
           clickTripCard(trip.id);
           onClick?.();
         }}
       >
-        <div className="relative h-44 overflow-hidden">
+        <div className="relative aspect-[4/3] overflow-hidden">
           <img
             src={optimizeImageUrl(tripImage.src, { width: 480, height: 320 })}
             alt={trip.title}
@@ -155,11 +158,11 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               onClick={handleSaveTrip}
               aria-label={isSaved ? 'Remove from saved trips' : 'Save trip'}
               disabled={savingTrip}
-              className={`absolute top-3 right-3 p-2 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white hover:scale-110 transition-all ${
+              className={`absolute right-3 top-3 inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/30 text-white shadow-sm backdrop-blur-md transition-transform duration-150 ease-out hover:bg-black/40 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
                 savingTrip ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              <Heart className={`w-4 h-4 ${isSaved ? 'text-rose-500 fill-current' : 'text-gray-400'}`} />
+              <Heart className={`h-4 w-4 ${isSaved ? 'fill-current text-rose-500' : 'text-white'}`} />
             </button>
           )}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
@@ -172,8 +175,8 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             </div>
           </div>
         </div>
-        <div className="trip-card-brand-wash flex-1 p-4">
-          <h3 className="tour-title text-gray-900 line-clamp-2 mb-2">{trip.title}</h3>
+        <div className="trip-card-brand-wash flex flex-1 flex-col p-3.5 sm:p-4">
+          <h3 className="line-clamp-1 text-[16px] font-semibold leading-tight text-gray-900">{trip.title}</h3>
           <div className="flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
@@ -184,7 +187,20 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               <span>{spotsLeft} spots left</span>
             </div>
           </div>
-          <div className="mt-2 flex items-center gap-1 text-xs text-gray-500 truncate">
+          {trip.max_capacity > 0 && trip.current_bookings > 0 && (
+            <div className="mt-3" aria-label={`${confirmedOccupancy}% of trip capacity reserved`}>
+              <div className="mb-1 flex items-center justify-between gap-2 text-[11px]">
+                <span className="font-medium text-gray-500">{confirmedOccupancy}% of spaces reserved</span>
+                <span className={spotsLeft <= 4 ? 'font-semibold text-orange-700' : 'text-gray-500'}>
+                  {spotsLeft > 0 ? `${spotsLeft} spaces left` : 'Fully booked'}
+                </span>
+              </div>
+              <div className="h-1.5 overflow-hidden rounded-full bg-gray-100">
+                <div className="h-full rounded-full bg-amber-400" style={{ width: `${confirmedOccupancy}%` }} />
+              </div>
+            </div>
+          )}
+          <div className="mt-auto flex items-center gap-1 truncate border-t border-gray-100 pt-3 text-xs text-gray-500">
             <MapPin className="w-3.5 h-3.5 flex-shrink-0" />
             <span className="truncate">{formatCitiesForDisplay(trip.itinerary?.cities) || trip.destination}</span>
           </div>
@@ -195,8 +211,8 @@ export const TripCard: React.FC<TripCardProps> = memo(({
 
   return (
     <div
-      className={`flex flex-col bg-white rounded-[20px] overflow-hidden shadow-[0_4px_20px_-4px_rgba(0,0,0,0.1),0_1px_3px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_48px_-12px_rgba(0,0,0,0.18),0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-400 hover:-translate-y-2 cursor-pointer group md:w-auto md:flex-shrink md:snap-none border border-gray-100/80 ${
-        isMobileCarouselItem ? 'w-[calc(100vw-2rem)] max-w-full flex-shrink-0 snap-start' : ''
+      className={`flex flex-col overflow-hidden rounded-2xl border border-gray-100/80 bg-white shadow-sm transition-all duration-300 ease-out hover:-translate-y-1 hover:shadow-lg cursor-pointer group md:w-auto md:flex-shrink md:snap-none ${
+        isMobileCarouselItem ? 'w-[82vw] max-w-[320px] shrink-0 snap-start md:w-auto md:max-w-none md:snap-none' : ''
       }`}
       onClick={() => {
         clickTripCard(trip.id);
@@ -204,7 +220,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       }}
     >
       {/* Image takes 65% of card height */}
-      <div className="relative h-52 overflow-hidden sm:h-60 md:h-64">
+      <div className="relative aspect-[4/3] overflow-hidden">
         <img
           src={optimizeImageUrl(tripImage.src, { width: 640, height: 420 })}
           alt={trip.title}
@@ -237,7 +253,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
         {/* Top badges - minimal */}
-        <div className="absolute top-4 left-4 z-10 flex flex-wrap gap-2">
+        <div className="absolute left-3 top-3 z-10 flex flex-wrap gap-2">
           {trip.featured && (
             <span className="bg-amber-400 text-amber-900 text-xs font-bold px-3 py-1 rounded-full shadow-sm">
               Featured
@@ -251,17 +267,17 @@ export const TripCard: React.FC<TripCardProps> = memo(({
         </div>
 
         {/* Save button */}
-        <div className="absolute top-4 right-4 z-10">
+        <div className="absolute right-3 top-3 z-10">
           {showSaveButton && (
             <button
               onClick={handleSaveTrip}
               aria-label={isSaved ? 'Remove from saved trips' : 'Save trip'}
               disabled={savingTrip}
-              className={`p-2.5 bg-white/90 backdrop-blur-sm rounded-full shadow-sm hover:bg-white hover:scale-110 transition-all duration-200 ${
+              className={`inline-flex h-11 w-11 items-center justify-center rounded-full bg-black/30 text-white shadow-sm backdrop-blur-md transition-transform duration-150 ease-out hover:bg-black/40 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-black/30 ${
                 savingTrip ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
-              <Heart className={`w-4 h-4 ${isSaved ? 'text-rose-500 fill-current' : 'text-gray-400'} ${savingTrip ? 'animate-pulse' : ''}`} />
+              <Heart className={`h-4 w-4 ${isSaved ? 'fill-current text-rose-500' : 'text-white'} ${savingTrip ? 'animate-pulse' : ''}`} />
             </button>
           )}
         </div>
@@ -288,8 +304,8 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       </div>
 
       {/* Content area */}
-      <div className="trip-card-brand-wash flex-1 p-4 sm:p-5">
-        <h3 className="tour-title text-gray-900 line-clamp-2 mb-3">{trip.title}</h3>
+      <div className="trip-card-brand-wash flex flex-1 flex-col p-3.5 sm:p-4">
+        <h3 className="line-clamp-1 text-[16px] font-semibold leading-tight text-gray-900">{trip.title}</h3>
 
         {/* Host Info */}
         {trip.host && (
@@ -332,16 +348,30 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           </div>
         )}
 
+        {trip.max_capacity > 0 && trip.current_bookings > 0 && (
+          <div className="mb-3" aria-label={`${confirmedOccupancy}% of trip capacity reserved`}>
+            <div className="mb-1 flex items-center justify-between gap-2 text-[11px]">
+              <span className="font-medium text-gray-500">{confirmedOccupancy}% of spaces reserved</span>
+              <span className={spotsLeft <= 4 ? 'font-semibold text-orange-700' : 'text-gray-500'}>
+                {spotsLeft > 0 ? `${spotsLeft} spaces left` : 'Fully booked'}
+              </span>
+            </div>
+            <div className="h-1.5 overflow-hidden rounded-full bg-gray-100">
+              <div className="h-full rounded-full bg-amber-400" style={{ width: `${confirmedOccupancy}%` }} />
+            </div>
+          </div>
+        )}
+
         {/* Location + View Details */}
-        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-auto flex flex-col items-start gap-3 border-t border-gray-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex max-w-full items-center text-gray-400 sm:max-w-[140px]">
             <MapPin className="w-4 h-4 mr-1 flex-shrink-0" />
             <span className="text-sm truncate max-w-[140px]">{formatCitiesForDisplay(trip.itinerary?.cities) || trip.destination}</span>
           </div>
           <div className="flex max-w-full flex-wrap items-center gap-1.5 sm:gap-2">
             {isAlmostFull && !isFull && (
-              <span className="text-xs font-semibold text-orange-600 bg-orange-50 px-2.5 py-1 rounded-full">
-                {spotsLeft} left
+              <span className="rounded-full bg-orange-50 px-2.5 py-1 text-xs font-semibold text-orange-600">
+                {spotsLeft} spaces left
               </span>
             )}
             <button
@@ -350,7 +380,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               className="flex items-center gap-1 text-xs font-medium text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-full transition-colors"
             >
               <ExternalLink className="w-3 h-3" />
-              <span className="hidden sm:inline">Details</span>
+              <span>Inquire now</span>
             </button>
             <a
               href={`/trips/${encodeURIComponent(trip.id)}`}

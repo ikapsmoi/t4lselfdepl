@@ -53,12 +53,12 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
 
   if (loading) {
     return (
-      <div className="space-y-5 sm:space-y-6">
+      <div className="space-y-6 sm:space-y-8">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">{title}</h2>
           {subtitle && <p className="mt-1.5 text-sm text-gray-500 sm:mt-2 sm:text-base">{subtitle}</p>}
         </div>
-        <div className={`grid gap-4 sm:gap-5 md:gap-6 ${
+        <div className={`grid gap-6 lg:gap-8 ${
           variant === 'compact'
             ? 'grid-cols-1 md:grid-cols-2'
             : 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3'
@@ -73,7 +73,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
 
   return (
     <>
-      <div className="min-w-0 space-y-5 sm:space-y-6">
+      <div className="min-w-0 space-y-6 sm:space-y-8">
         <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-end">
           <div>
             <h2 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl md:text-4xl">{title}</h2>
@@ -96,9 +96,9 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
             <p className="text-gray-500 text-sm">Try adjusting your search filters or explore different destinations</p>
           </div>
         ) : (
-          <div className={`min-w-0 gap-4 sm:gap-5 md:gap-6 ${
+          <div className={`min-w-0 gap-4 md:gap-6 lg:gap-8 ${
             mobileCarousel
-              ? 'flex snap-x snap-mandatory overscroll-x-contain overflow-x-auto scroll-pl-4 pb-4 scrollbar-hide md:grid md:grid-cols-2 lg:grid-cols-3 md:overflow-visible md:snap-none md:pb-0'
+              ? '-mx-4 flex snap-x snap-mandatory overscroll-x-contain overflow-x-auto gap-4 px-4 pb-6 scrollbar-hide md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:snap-none md:pb-0 md:px-0 lg:grid-cols-3'
               : `grid ${
                   variant === 'compact'
                     ? 'grid-cols-1 md:grid-cols-2'
@@ -108,8 +108,8 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
             {prominentFirst && firstTrip ? (
               <>
                 {/* Prominent First Trip */}
-                <div className="mb-3 sm:mb-4 md:col-span-2 lg:col-span-3">
-                  <div className="relative h-56 overflow-hidden rounded-2xl border border-gray-100 shadow-[0_2px_16px_-4px_rgba(0,0,0,0.08)] sm:h-64 sm:rounded-[20px] md:h-80">
+                <div className={`shrink-0 snap-start md:col-span-2 md:pb-2 md:snap-none lg:col-span-3 ${mobileCarousel ? 'w-[82vw] max-w-[320px] md:w-auto md:max-w-none' : 'w-auto'}`}>
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-2xl border border-gray-100/80 shadow-sm transition-all duration-300 ease-out hover:shadow-lg md:aspect-[16/9]">
                     <img
                       src={firstTrip.images?.[0] || (firstTrip.type === 'budget' ? '/optimized/pkg1.webp' : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800&h=600&q=75&fm=webp')}
                       alt={firstTrip.title}
@@ -167,6 +167,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
                 />
               ))
             )}
+            {mobileCarousel && <div aria-hidden="true" className="w-0 shrink-0 pr-4 md:hidden" />}
           </div>
         )}
       </div>

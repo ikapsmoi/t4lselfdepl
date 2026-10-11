@@ -7,6 +7,7 @@ export interface GalleryImage {
   client_name?: string;
   location?: string;
   trip_title?: string;
+  video_url?: string;
   display_order: number;
   active: boolean;
   created_at: string;

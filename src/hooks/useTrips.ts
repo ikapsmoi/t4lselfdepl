@@ -226,7 +226,7 @@ export const useTrips = () => {
               .eq('status', 'confirmed');
             if (bookingsError) throw bookingsError;
             if (requestId !== requestIdRef.current) return;
-            const bookingCounts = (bookingsData || []).reduce((acc, booking) => {
+            const bookingCounts = (bookingsData || []).reduce<Record<string, number>>((acc, booking) => {
               acc[booking.trip_id] = (acc[booking.trip_id] || 0) + 1;
               return acc;
             }, {} as Record<string, number>);
