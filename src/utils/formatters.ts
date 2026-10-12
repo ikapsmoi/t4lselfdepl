@@ -34,7 +34,7 @@ export const cleanTripTitle = (title: string | undefined): string => {
 export const stripSourceNotes = (value?: string | null): string => {
   if (!value) return '';
 
-  let cleaned = value
+  const cleaned = value
     .replace(/\s*Source notes\s*:\s*.*?(?=\s*(?:Arbitrage note\s*:|$))/gis, '')
     .replace(/\s*Arbitrage note\s*:\s*.*$/gis, '')
     .replace(/\s*Published starting package\.?\s*/gi, '')
