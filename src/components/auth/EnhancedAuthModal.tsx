@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Globe } from 'lucide-react';
 import { Modal } from '../ui/Modal';
 import { EnhancedSignupForm } from './EnhancedSignupForm';
 import { EnhancedLoginForm } from './EnhancedLoginForm';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
+import type { User } from '../../types';
 
 interface EnhancedAuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   mode: 'login' | 'signup' | 'forgot';
   onSwitchMode: (mode: 'login' | 'signup' | 'forgot') => void;
-  onSuccess: (user: any) => void;
+  onSuccess: (user: User) => void;
 }
 
 export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
@@ -30,7 +31,7 @@ export const EnhancedAuthModal: React.FC<EnhancedAuthModalProps> = ({
     }
   }, [isOpen]);
 
-  const handleAuthSuccess = (user: any) => {
+  const handleAuthSuccess = (user: User) => {
     onSuccess(user);
     onClose();
   };

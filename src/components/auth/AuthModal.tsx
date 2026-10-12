@@ -4,7 +4,7 @@ import { EnhancedSignupForm } from './EnhancedSignupForm';
 import { EnhancedLoginForm } from './EnhancedLoginForm';
 import { ForgotPasswordForm } from './ForgotPasswordForm';
 import { Globe } from 'lucide-react';
-import { useAuth } from '../../hooks/useAuth';
+import type { User } from '../../types';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -26,9 +26,9 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     setAuthMode(mode);
   }, [mode]);
 
-  const handleAuthSuccess = (user: any) => {
+  const handleAuthSuccess = (user: User) => {
     onClose();
-    
+
     // Redirect to appropriate dashboard based on user role
     if (user.role === 'host') {
       window.location.hash = 'host-dashboard';

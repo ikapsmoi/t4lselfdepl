@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
-import { Plus, Minus, Camera, Utensils, Leaf, Palette, Mountain } from 'lucide-react';
+import { Plus, Minus } from 'lucide-react';
 import { TripAddon as TripAddonType } from '../../hooks/useTripAddons';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
 
 interface TripAddonsProps {
   addons: TripAddonType[];

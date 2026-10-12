@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Lock, Eye, EyeOff, AlertTriangle } from 'lucide-react';
+import { Mail, Eye, EyeOff, AlertTriangle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Modal } from '../ui/Modal';
 import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
+import type { User } from '../../types';
 
 interface LoginFormProps {
-  onSuccess: (user: any) => void;
+  onSuccess: (user: User) => void;
   onSwitchToSignup: () => void;
   onForgotPassword: () => void;
 }

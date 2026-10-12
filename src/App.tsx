@@ -59,7 +59,7 @@ const AppContent: React.FC = () => {
   // Track app open event
   React.useEffect(() => {
     appOpen();
-  }, []);
+  }, [appOpen]);
 
   // Listen for signup trigger from Hero component
   React.useEffect(() => {

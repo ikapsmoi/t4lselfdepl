@@ -1,15 +1,14 @@
-﻿import React, { useState, useEffect } from 'react';
-import { User, Mail, Lock, Instagram, Eye, EyeOff, MapPin } from 'lucide-react';
+﻿import React, { useState } from 'react';
+import { User, Mail, Eye, EyeOff, MapPin } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
-import { Select } from '../ui/Select';
 import { Modal } from '../ui/Modal';
-import { supabase } from '../../lib/supabase';
 import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
+import type { User as AppUser } from '../../types';
 
 interface SignupFormProps {
-  onSuccess: (user: any) => void;
+  onSuccess: (user: AppUser) => void;
   onSwitchToLogin: () => void;
   isExitIntentSignup?: boolean;
 }

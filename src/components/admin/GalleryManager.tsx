@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Upload, Trash2, Eye, EyeOff, Image as ImageIcon, Plus, X, Save } from 'lucide-react';
-import { useGallery } from '../../hooks/useGallery';
+import { Trash2, Eye, EyeOff, Plus, Save } from 'lucide-react';
+import { useGallery, type GalleryImage } from '../../hooks/useGallery';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { OptimizedImage } from '../ui/OptimizedImage';
@@ -39,7 +39,7 @@ export function GalleryManager() {
     setShowAddModal(false);
   };
 
-  const handleEdit = (image: any) => {
+  const handleEdit = (image: GalleryImage) => {
     setFormData({
       image_url: image.image_url,
       client_name: image.client_name || '',
