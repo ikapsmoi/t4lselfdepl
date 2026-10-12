@@ -158,17 +158,17 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
         >
           <Plane className="h-4 w-4 sm:h-6 sm:w-6" />
         </motion.div>
-        <div className="mx-auto max-w-7xl px-0 py-0 sm:px-6 sm:py-4 lg:px-8">
+        <div className="mx-auto max-w-7xl px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
           <AnimatePresence mode="wait" initial={false}>
-              <motion.div
+            <motion.div
               key={activeTrip.id}
-                className="relative z-10 grid min-h-36 grid-cols-[9rem_minmax(0,1fr)] items-stretch gap-0 sm:min-h-0 sm:grid-cols-[6rem_minmax(0,1fr)] sm:items-center sm:gap-5"
+              className="relative z-10 grid min-h-48 grid-cols-2 overflow-hidden rounded-2xl border border-slate-200 bg-white/90 shadow-sm sm:min-h-64"
               initial={reduceMotion ? false : { opacity: 0, y: 6 }}
               animate={{ opacity: 1, y: 0 }}
               exit={reduceMotion ? undefined : { opacity: 0, y: -6 }}
               transition={{ duration: reduceMotion ? 0 : 0.2 }}
             >
-              <div className="relative h-36 w-36 shrink-0 overflow-hidden sm:hidden">
+              <div className="relative min-h-48 overflow-hidden sm:min-h-64">
                 <img
                   src={activeTrip.images[0] || '/optimized/hero-beach.webp'}
                   alt={activeTrip.title}
@@ -177,11 +177,11 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
                   decoding="async"
                 />
                 {featuredTrips.length > 1 && (
-                  <div className="absolute inset-x-2 bottom-2 flex items-center justify-center gap-1.5">
+                  <div className="absolute inset-x-2 bottom-2 flex items-center justify-center gap-1.5 sm:hidden">
                     <button
                       type="button"
                       onClick={() => changeTrip(-1)}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 sm:h-10 sm:w-10"
                       aria-label="Previous featured trip"
                     >
                       <ChevronLeft className="h-4 w-4" aria-hidden="true" />
@@ -189,7 +189,7 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
                     <button
                       type="button"
                       onClick={() => changeTrip(1)}
-                      className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600"
+                      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/80 bg-white/90 text-slate-700 shadow-sm backdrop-blur-sm transition-colors hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 sm:h-10 sm:w-10"
                       aria-label="Next featured trip"
                     >
                       <ChevronRight className="h-4 w-4" aria-hidden="true" />
@@ -197,37 +197,30 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
                   </div>
                 )}
               </div>
-              <img
-                src={activeTrip.images[0] || '/optimized/hero-beach.webp'}
-                alt={activeTrip.title}
-                className="hidden h-24 w-24 rounded-xl object-cover shadow-sm sm:block"
-                loading="lazy"
-                decoding="async"
-              />
-              <div className="flex min-w-0 flex-col justify-center px-2 py-2 sm:px-0 sm:py-0">
-                <div className="flex min-w-0 items-center gap-2">
-                  <span className="shrink-0 rounded-full bg-amber-100 px-2 py-1 text-[11px] font-bold uppercase tracking-wider text-amber-800 sm:text-xs">
+              <div className="flex min-w-0 flex-col justify-center gap-2 p-3 sm:gap-3 sm:p-6">
+                <div className="flex min-w-0 flex-wrap items-center gap-1.5 sm:gap-2">
+                  <span className="shrink-0 rounded-full bg-amber-100 px-2 py-1 text-[9px] font-bold uppercase tracking-wider text-amber-800 sm:text-xs">
                     Featured trip
                   </span>
                   {featuredTrips.length > 1 && (
-                    <span className="text-xs font-medium tabular-nums text-slate-500">
+                    <span className="text-[10px] font-medium tabular-nums text-slate-500 sm:text-xs">
                       {activeTripIndex + 1} / {featuredTrips.length}
                     </span>
                   )}
                 </div>
-                <h2 className="mt-1 line-clamp-2 text-sm font-bold leading-tight text-slate-900 sm:truncate sm:text-lg">
+                <h2 className="line-clamp-3 text-sm font-bold leading-tight text-slate-900 sm:text-xl md:text-2xl">
                   {activeTrip.title}
                 </h2>
-                <div className="mt-1 flex min-w-0 items-center gap-1 text-[11px] leading-tight text-slate-600 sm:gap-3 sm:text-sm">
-                  <span className="flex min-w-0 items-center gap-1 truncate">
-                    <MapPin className="h-3 w-3 shrink-0 text-teal-700" aria-hidden="true" />
-                    <span className="truncate">{activeTrip.destination}</span>
+                <div className="flex min-w-0 flex-col gap-1 text-[10px] leading-tight text-slate-600 sm:flex-row sm:flex-wrap sm:items-center sm:gap-x-4 sm:gap-y-2 sm:text-sm">
+                  <span className="flex min-w-0 items-center gap-1.5">
+                    <MapPin className="h-3.5 w-3.5 shrink-0 text-teal-700" aria-hidden="true" />
+                    <span className="line-clamp-2">{activeTrip.destination}</span>
                   </span>
                   <span className="shrink-0 font-semibold text-slate-800">
-                    {getCurrencySymbol(activeTrip.currency)}{activeTrip.price.toLocaleString()}
+                    From {getCurrencySymbol(activeTrip.currency)}{activeTrip.price.toLocaleString()}
                   </span>
                 </div>
-                <div className="mt-2 flex items-center gap-1 sm:flex-wrap sm:gap-2">
+                <div className="mt-auto flex flex-wrap items-center gap-1.5 pt-1 sm:gap-2">
                   {featuredTrips.length > 1 && (
                     <div className="hidden items-center gap-1.5 sm:flex">
                       <button
@@ -251,13 +244,13 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
                   <button
                     type="button"
                     onClick={onViewAll}
-                    className="inline-flex min-h-11 shrink-0 items-center justify-center rounded-full border border-slate-200 px-2.5 text-[11px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 sm:px-4 sm:text-sm"
+                    className="inline-flex min-h-10 shrink-0 items-center justify-center rounded-full border border-slate-200 px-2 text-[10px] font-semibold text-slate-700 transition-colors hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 sm:min-h-11 sm:px-4 sm:text-sm"
                   >
                     All trips
                   </button>
                   <a
                     href={getTripPath(activeTrip.id)}
-                    className="inline-flex min-h-11 min-w-0 flex-1 items-center justify-center gap-1 rounded-full bg-slate-900 px-2 text-[11px] font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 sm:min-w-[6rem] sm:flex-none sm:px-4 sm:text-sm"
+                    className="inline-flex min-h-10 min-w-0 flex-1 items-center justify-center gap-1 rounded-full bg-slate-900 px-2 text-[10px] font-semibold text-white transition-colors hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 sm:min-h-11 sm:min-w-[6rem] sm:flex-none sm:px-4 sm:text-sm"
                   >
                     View trip <ArrowRight className="h-3 w-3 shrink-0" aria-hidden="true" />
                   </a>

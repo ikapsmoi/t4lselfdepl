@@ -16,7 +16,7 @@ function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
       initial={reduceMotion ? false : { opacity: 0, y: 18 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.15 }}
-      transition={{ duration: reduceMotion ? 0 : 0.35, delay: reduceMotion ? 0 : index * 0.06 }}
+      transition={{ duration: reduceMotion ? 0 : 0.35, delay: reduceMotion ? 0 : (index % 8) * 0.06 }}
       whileHover={reduceMotion ? undefined : { scale: 1.02 }}
     >
       {image.video_url ? (
@@ -79,7 +79,7 @@ function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
 export function ViralGallery() {
   const { images, loading } = useGallery();
   const reelsCarousel = useSlowMobileCarousel<HTMLDivElement>();
-  const reels = images.slice(0, 8);
+  const reels = images;
 
   if (loading || reels.length === 0) return null;
 
