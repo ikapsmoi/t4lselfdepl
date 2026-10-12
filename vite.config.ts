@@ -65,6 +65,9 @@ export default defineConfig({
       input: {
         main: path.resolve(__dirname, 'index.html'),
         indiaTours: path.resolve(__dirname, 'india-tours/index.html'),
+        indiaToursGermany: path.resolve(__dirname, 'india-tours/de/index.html'),
+        indiaToursFrance: path.resolve(__dirname, 'india-tours/fr/index.html'),
+        indiaToursNetherlands: path.resolve(__dirname, 'india-tours/nl/index.html'),
       },
     },
     target: 'es2020',

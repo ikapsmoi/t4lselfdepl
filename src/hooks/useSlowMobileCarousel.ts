@@ -1,9 +1,12 @@
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useReducedMotion } from 'framer-motion';
 import type { FocusEvent } from 'react';
 
 export function useSlowMobileCarousel<T extends HTMLElement>(enabled = true) {
-  const carouselRef = useRef<T>(null);
+  const [carousel, setCarousel] = useState<T | null>(null);
+  const carouselRef = useCallback((node: T | null) => {
+    setCarousel(node);
+  }, []);
   const isPaused = useRef(false);
   const isPointerOver = useRef(false);
   const hasFocus = useRef(false);
@@ -11,7 +14,6 @@ export function useSlowMobileCarousel<T extends HTMLElement>(enabled = true) {
   const reduceMotion = useReducedMotion();
 
   useEffect(() => {
-    const carousel = carouselRef.current;
     if (!carousel || !enabled || reduceMotion) return undefined;
 
     const mediaQuery = window.matchMedia('(max-width: 767px)');
@@ -43,7 +45,7 @@ export function useSlowMobileCarousel<T extends HTMLElement>(enabled = true) {
       window.clearInterval(interval);
       observer.disconnect();
     };
-  }, [enabled, reduceMotion]);
+  }, [carousel, enabled, reduceMotion]);
 
   return {
     carouselRef,

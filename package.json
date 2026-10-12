@@ -9,6 +9,8 @@
     "build:app": "node scripts/optimize-static-images.mjs && node scripts/corbett-enrichment.mjs && vite build && node scripts/generate-corbett-pages.mjs",
     "build:seo": "npm run build",
     "lint": "eslint .",
+    "lint:app": "eslint src",
+    "lint:edge": "eslint supabase/functions",
     "preview": "vite preview",
     "seo:sitemap": "node scripts/generate-sitemap.mjs",
     "seo:audit": "node scripts/seo-audit.mjs",
@@ -19,7 +21,7 @@
     "corbett:seo:validate": "node scripts/corbett-seo-validate.mjs",
     "corbett:enrichment:refresh": "node scripts/corbett-enrichment.mjs",
     "corbett:enrichment:import": "node scripts/corbett-enrichment.mjs --import",
-    "test:seo": "node --test src/utils/seoGrowth.test.mjs scripts/seo-quality.test.mjs scripts/tomorrowland-enquiry.test.mjs scripts/india-tours.test.mjs scripts/corbett-data.test.mjs scripts/corbett-authority.test.mjs scripts/corbett-enrichment.test.mjs scripts/seo-sitemap-engine.test.mjs"
+    "test:seo": "node --test src/utils/seoGrowth.test.mjs scripts/seo-quality.test.mjs scripts/tomorrowland-enquiry.test.mjs scripts/india-tours.test.mjs scripts/india-tours-locales.test.mjs scripts/analytics-report-auth.test.mjs scripts/analytics-payload.test.mjs scripts/corbett-data.test.mjs scripts/corbett-authority.test.mjs scripts/corbett-enrichment.test.mjs scripts/seo-sitemap-engine.test.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.57.0",
@@ -34,6 +36,7 @@
   "devDependencies": {
     "@eslint/js": "^9.9.1",
     "@types/leaflet": "^1.9.22",
+    "@types/node": "^24.19.2",
     "@types/react": "^18.3.5",
     "@types/react-dom": "^18.3.0",
     "@vitejs/plugin-react": "^4.3.1",

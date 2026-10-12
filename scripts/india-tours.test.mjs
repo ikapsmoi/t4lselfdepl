@@ -126,6 +126,7 @@ test('India enquiry draft rejects invalid required details and non-canonical pag
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCount: 41 }), /whole number/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerCountry: 'Fake market' }), /supported country/);
   assert.match(createIndiaEnquiryMessage({ ...base, travellerCountry: 'Netherlands' }).message, /Country of residence: Netherlands/);
+  assert.match(createIndiaEnquiryMessage({ ...base, travellerCountry: 'France' }).message, /Country of residence: France/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, tripDuration: 'A month' }), /supported trip duration/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerPace: 'Breakneck' }), /supported travel pace/);
   assert.throws(() => createIndiaEnquiryMessage({ ...base, travellerType: 'Bus tour' }), /supported traveller type/);
@@ -175,7 +176,9 @@ test('India tours page preserves crawlable metadata and wires the accessible lux
   assert.match(html, /id="india-tours-root"/);
   assert.match(entryMarkup, /src="\.\.\/src\/india-tours\/main\.tsx"/);
   assert.match(globalFooter, /\{ name: 'Inbound', href: '\/india-tours\/' \}/);
-  assert.doesNotMatch(html, /hreflang=/i);
+  assert.match(html, /hreflang="de-DE"/);
+  assert.match(html, /hreflang="fr-FR"/);
+  assert.match(html, /hreflang="nl-NL"/);
   assert.match(html, /No starting prices or availability are represented/);
   assert.match(html, /id="route"/);
   assert.match(html, /id="plan"/);
@@ -209,6 +212,7 @@ test('India tours page preserves crawlable metadata and wires the accessible lux
   assert.match(regions, /US: \{ label: 'United States', currency: 'USD'/);
   assert.match(regions, /UK: \{ label: 'United Kingdom', currency: 'GBP'/);
   assert.match(regions, /DE: \{ label: 'Germany', currency: 'EUR'/);
+  assert.match(regions, /FR: \{ label: 'France', currency: 'EUR'/);
   assert.match(regions, /NL: \{ label: 'Netherlands', currency: 'EUR'/);
   assert.match(header, /Choose your region and preferred currency/);
   assert.match(header, /Call our India travel desk/);

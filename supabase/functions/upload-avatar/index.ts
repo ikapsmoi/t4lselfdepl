@@ -129,7 +129,7 @@ Deno.serve(async (req: Request) => {
     const fileBuffer = await file.arrayBuffer();
 
     // Upload to Supabase Storage using service role
-    const { data: uploadData, error: uploadError } = await supabaseService.storage
+    const { error: uploadError } = await supabaseService.storage
       .from('avatars')
       .upload(fileName, fileBuffer, {
         contentType: file.type,

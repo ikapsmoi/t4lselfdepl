@@ -1,5 +1,7 @@
 import { createClient } from 'npm:@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
+import { authorizeAnalyticsReportRequest } from '../_shared/analyticsReportAuthorization.mjs';
+import { sanitizeAnalyticsMetadata } from '../_shared/analyticsMetadata.mjs';
 
 interface ReportQuery {
   start_date?: string;
@@ -8,6 +10,21 @@ interface ReportQuery {
   user_id?: string;
   report_type: 'summary' | 'detailed' | 'revenue' | 'conversion';
 }
+
+interface AnalyticsEvent {
+  event_name: string;
+  session_id: string | null;
+  timestamp: string;
+  metadata: Record<string, unknown> | null;
+}
+
+const getRevenue = (event: Pick<AnalyticsEvent, 'metadata'>): number => {
+  const revenue = event.metadata?.revenue;
+  if (typeof revenue !== 'number' && typeof revenue !== 'string') return 0;
+
+  const parsedRevenue = Number(revenue);
+  return Number.isFinite(parsedRevenue) ? parsedRevenue : 0;
+};
 
 Deno.serve(async (req: Request) => {
   if (req.method === "OPTIONS") {
@@ -28,6 +45,22 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    const authorization = await authorizeAnalyticsReportRequest({
+      request: req,
+      createClient,
+      supabaseUrl: Deno.env.get('SUPABASE_URL') ?? '',
+      anonKey: Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+    });
+    if (!authorization.authorized) {
+      return new Response(
+        JSON.stringify({ error: authorization.error }),
+        {
+          status: authorization.status,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        },
+      );
+    }
+
     // Initialize Supabase client with service role
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
@@ -40,60 +73,62 @@ Deno.serve(async (req: Request) => {
     const endDate = end_date ? new Date(end_date) : new Date();
     const startDate = start_date ? new Date(start_date) : new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
 
-    let reportData: any = {};
+    let reportData: Record<string, unknown> = {};
 
     switch (report_type) {
-      case 'summary':
+      case 'summary': {
         // Get event counts by type
-        const { data: eventCounts } = await supabase
+        const { data: eventCountRows } = await supabase
           .from('analytics_events')
           .select('event_name')
           .gte('timestamp', startDate.toISOString())
           .lte('timestamp', endDate.toISOString());
 
-        const eventSummary = eventCounts?.reduce((acc: any, event: any) => {
+        const eventCounts: Array<{ event_name: string }> = eventCountRows ?? [];
+        const eventSummary = eventCounts.reduce<Record<string, number>>((acc, event) => {
           acc[event.event_name] = (acc[event.event_name] || 0) + 1;
           return acc;
-        }, {}) || {};
+        }, {});
 
         reportData = {
           period: { start_date: startDate, end_date: endDate },
-          total_events: eventCounts?.length || 0,
+          total_events: eventCounts.length,
           event_breakdown: eventSummary
         };
         break;
+      }
 
-      case 'revenue':
+      case 'revenue': {
         // Get revenue data from booking completions
-        const { data: revenueEvents } = await supabase
+        const { data: revenueEventRows } = await supabase
           .from('analytics_events')
           .select('metadata, timestamp')
           .eq('event_name', 'complete_booking')
           .gte('timestamp', startDate.toISOString())
           .lte('timestamp', endDate.toISOString());
 
-        const totalRevenue = revenueEvents?.reduce((sum: number, event: any) => {
-          return sum + (parseFloat(event.metadata?.revenue) || 0);
-        }, 0) || 0;
+        const revenueEvents: Array<Pick<AnalyticsEvent, 'metadata' | 'timestamp'>> = revenueEventRows ?? [];
+        const totalRevenue = revenueEvents.reduce((sum, event) => sum + getRevenue(event), 0);
 
-        const dailyRevenue = revenueEvents?.reduce((acc: any, event: any) => {
+        const dailyRevenue = revenueEvents.reduce<Record<string, number>>((acc, event) => {
           const date = new Date(event.timestamp).toISOString().split('T')[0];
-          acc[date] = (acc[date] || 0) + (parseFloat(event.metadata?.revenue) || 0);
+          acc[date] = (acc[date] || 0) + getRevenue(event);
           return acc;
-        }, {}) || {};
+        }, {});
 
         reportData = {
           period: { start_date: startDate, end_date: endDate },
           total_revenue: totalRevenue,
-          total_bookings: revenueEvents?.length || 0,
-          average_booking_value: revenueEvents?.length ? totalRevenue / revenueEvents.length : 0,
+          total_bookings: revenueEvents.length,
+          average_booking_value: revenueEvents.length ? totalRevenue / revenueEvents.length : 0,
           daily_revenue: dailyRevenue
         };
         break;
+      }
 
-      case 'conversion':
+      case 'conversion': {
         // Calculate conversion funnel
-        const { data: funnelEvents } = await supabase
+        const { data: funnelEventRows } = await supabase
           .from('analytics_events')
           .select('event_name, session_id, timestamp')
           .in('event_name', ['view_home', 'view_trip', 'click_join', 'start_booking', 'complete_booking'])
@@ -101,24 +136,24 @@ Deno.serve(async (req: Request) => {
           .lte('timestamp', endDate.toISOString())
           .order('timestamp', { ascending: true });
 
-        const sessionFunnels = funnelEvents?.reduce((acc: any, event: any) => {
-          if (!acc[event.session_id]) {
-            acc[event.session_id] = [];
+        const funnelEvents: Array<Pick<AnalyticsEvent, 'event_name' | 'session_id' | 'timestamp'>> = funnelEventRows ?? [];
+        const sessionFunnels = funnelEvents.reduce<Record<string, string[]>>((acc, event) => {
+          const sessionId = event.session_id ?? 'anonymous';
+          if (!acc[sessionId]) {
+            acc[sessionId] = [];
           }
-          acc[event.session_id].push(event.event_name);
+          acc[sessionId].push(event.event_name);
           return acc;
-        }, {}) || {};
+        }, {});
 
         const funnelSteps = ['view_home', 'view_trip', 'click_join', 'start_booking', 'complete_booking'];
-        const conversionData = funnelSteps.reduce((acc: any, step: string, index: number) => {
-          const sessionsWithStep = Object.values(sessionFunnels).filter((steps: any) => 
-            steps.includes(step)
-          ).length;
+        const conversionData = funnelSteps.reduce<Record<string, { count: number; conversion_rate: number }>>((acc, step, index) => {
+          const sessionsWithStep = Object.values(sessionFunnels).filter((steps) => steps.includes(step)).length;
           
           acc[step] = {
             count: sessionsWithStep,
             conversion_rate: index === 0 ? 100 : 
-              Object.values(sessionFunnels).length > 0 ? 
+              Object.values(sessionFunnels).length > 0 ?
               (sessionsWithStep / Object.values(sessionFunnels).length) * 100 : 0
           };
           return acc;
@@ -130,13 +165,14 @@ Deno.serve(async (req: Request) => {
           conversion_funnel: conversionData
         };
         break;
+      }
 
       case 'detailed':
-      default:
+      default: {
         // Get detailed event data
         let query = supabase
           .from('analytics_events')
-          .select('*')
+          .select('event_name, timestamp, metadata')
           .gte('timestamp', startDate.toISOString())
           .lte('timestamp', endDate.toISOString())
           .order('timestamp', { ascending: false })
@@ -150,13 +186,18 @@ Deno.serve(async (req: Request) => {
           query = query.eq('user_id', user_id);
         }
 
-        const { data: detailedEvents } = await query;
+        const { data: detailedEventRows } = await query;
+        const detailedEvents: Array<Pick<AnalyticsEvent, 'event_name' | 'timestamp' | 'metadata'>> = detailedEventRows ?? [];
 
         reportData = {
           period: { start_date: startDate, end_date: endDate },
-          events: detailedEvents || []
+          events: detailedEvents.map((event) => ({
+            ...event,
+            metadata: sanitizeAnalyticsMetadata(event.metadata ?? {}),
+          })),
         };
         break;
+      }
     }
 
     return new Response(

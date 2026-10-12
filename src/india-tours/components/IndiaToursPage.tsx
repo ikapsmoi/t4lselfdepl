@@ -60,6 +60,16 @@ const IndiaToursPage = () => {
       <Header region={region} onRegionChange={updateRegion} />
       <main>
         <Hero onDesignTrip={goToTripDesigner} />
+        <section className="border-b border-forest/10 bg-white px-5 py-5 sm:px-8 lg:px-12" aria-label="India trip planning in your language">
+          <div className="mx-auto flex max-w-[1440px] flex-wrap items-center justify-center gap-x-5 gap-y-2 text-center text-xs text-muted sm:justify-between sm:text-sm">
+            <p className="font-semibold text-forest-dark">Plan an India trip in your language</p>
+            <nav className="flex flex-wrap justify-center gap-4" aria-label="Choose a language">
+              <a className="font-semibold text-forest underline underline-offset-4" href="/india-tours/de/" lang="de">Deutsch · Deutschland</a>
+              <a className="font-semibold text-forest underline underline-offset-4" href="/india-tours/fr/" lang="fr">Français · France</a>
+              <a className="font-semibold text-forest underline underline-offset-4" href="/india-tours/nl/" lang="nl">Nederlands · Nederland</a>
+            </nav>
+          </div>
+        </section>
         <TrustBar />
         <TourGrid selectedJourneyId={journey.id} onSelectJourney={selectJourney} />
         <RouteMap journey={journey} onPlanJourney={goToTripDesigner} />

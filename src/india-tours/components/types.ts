@@ -4,6 +4,7 @@ export const REGIONS = {
   US: { label: 'United States', currency: 'USD', symbol: '$', country: 'United States' },
   UK: { label: 'United Kingdom', currency: 'GBP', symbol: '£', country: 'United Kingdom' },
   DE: { label: 'Germany', currency: 'EUR', symbol: '€', country: 'Germany' },
+  FR: { label: 'France', currency: 'EUR', symbol: '€', country: 'France' },
   NL: { label: 'Netherlands', currency: 'EUR', symbol: '€', country: 'Netherlands' },
 } as const;
 

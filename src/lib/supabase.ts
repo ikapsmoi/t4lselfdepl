@@ -51,6 +51,9 @@ const createFallbackSupabaseClient = () => ({
     resetPasswordForEmail: async () => ({ data: null, error: mockError }),
   },
   from: () => createMockQueryBuilder(),
+  functions: {
+    invoke: async () => ({ data: null, error: mockError }),
+  },
   channel: () => ({
     on: () => ({ subscribe: () => ({ unsubscribe: () => undefined }) }),
     subscribe: () => ({ unsubscribe: () => undefined }),

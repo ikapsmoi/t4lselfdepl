@@ -1,44 +1,25 @@
 ﻿import React, { useState } from 'react';
-import { Mail, Send, Gift, Zap } from 'lucide-react';
+import { Mail, Send } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { useAnalytics } from '../../utils/analytics';
 
 export const Newsletter: React.FC = () => {
-  const { newsletterSignup } = useAnalytics();
+  const { newsletterEnquiryStarted } = useAnalytics();
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const [emailDraftUrl, setEmailDraftUrl] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      // Track newsletter signup
-      newsletterSignup(email);
-      
-      // Send email to info@travel4life.net
-      const subject = 'New Newsletter Subscription - Travel4life';
-      const body = `New newsletter subscription request:
-      
-Email: ${email}
-Date: ${new Date().toLocaleString()}
-Source: Travel4life Newsletter Signup
-
-Please add this email to the newsletter list.`;
-      
+    if (email.trim()) {
+      newsletterEnquiryStarted();
+      const subject = 'Travel4Life email updates';
+      const body = `Hello,\n\nI would like to receive occasional Travel4Life email updates.\nMy email address is: ${email.trim()}\n\nPlease let me know how to proceed.`;
       const mailtoLink = `mailto:info@travel4life.net?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-      window.open(mailtoLink, '_blank');
-      
-      setSubscribed(true);
+      setEmailDraftUrl(mailtoLink);
       setEmail('');
-      setTimeout(() => setSubscribed(false), 5000);
     }
   };
-
-  const benefits = [
-    { icon: Zap, text: 'Early access to new trips' },
-    { icon: Gift, text: 'Exclusive member discounts' },
-    { icon: Mail, text: 'Weekly travel inspiration' },
-  ];
 
   return (
     <section className="bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 py-16 md:py-24">
@@ -49,31 +30,28 @@ Please add this email to the newsletter list.`;
           </div>
           
           <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-            Get Travel Inspiration
+            Travel Updates by Email
           </h2>
           
           <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto leading-relaxed">
-            Subscribe to our newsletter and be the first to know about new adventures, 
-            exclusive deals, and travel tips from our global community of explorers.
+            Request occasional Travel4Life updates by email. This form prepares a message
+            for you to send; it does not automatically add your address to a mailing list.
           </p>
 
-          {/* Benefits */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-            {benefits.map((benefit, index) => (
-              <div key={index} className="flex items-center justify-center space-x-2 text-gray-600">
-                <benefit.icon className="w-5 h-5 text-yellow-600" />
-                <span className="text-sm font-medium">{benefit.text}</span>
-              </div>
-            ))}
-          </div>
-
-          {subscribed ? (
-            <div className="bg-green-100 border border-green-200 text-green-800 p-6 rounded-lg">
+          {emailDraftUrl ? (
+            <div className="rounded-lg border border-blue-200 bg-blue-50 p-6 text-blue-900" role="status" aria-live="polite">
               <div className="flex items-center justify-center mb-2">
-                <Gift className="w-6 h-6 mr-2" />
-                <span className="font-semibold">Welcome to the Travel4life family!</span>
+                <Mail className="w-6 h-6 mr-2" />
+                <span className="font-semibold">Your email request is ready</span>
               </div>
-              <p>Check your email for a special welcome offer and travel inspiration.</p>
+              <p className="mb-4">It has not been sent yet. Open your email app and send the prepared message to complete your request.</p>
+              <a
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-orange-600 px-5 py-3 font-semibold text-white hover:bg-orange-700"
+                href={emailDraftUrl}
+              >
+                <Send className="h-4 w-4" aria-hidden="true" />
+                Open email app
+              </a>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
@@ -90,13 +68,14 @@ Please add this email to the newsletter list.`;
                 icon={Send}
                 className="sm:w-auto bg-gradient-to-r from-yellow-500 to-orange-500 hover:from-yellow-600 hover:to-orange-600"
               >
-                Subscribe
+                Prepare email request
               </Button>
             </form>
           )}
 
           <p className="text-xs text-gray-500 mt-4">
-            No spam, ever. Unsubscribe anytime. By subscribing, you agree to our privacy policy.
+            Your address is included only in the message you choose to send. This form does not
+            automatically subscribe you. See our <a className="underline" href="/#privacy">privacy notice</a>.
           </p>
         </div>
       </div>

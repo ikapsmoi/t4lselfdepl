@@ -26,6 +26,7 @@ const countryCodeByRegion: Record<RegionCode, string> = {
   US: 'United States',
   UK: 'United Kingdom',
   DE: 'Germany',
+  FR: 'France',
   NL: 'Netherlands',
 };
 

@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { 
-  BarChart3, TrendingUp, Users, DollarSign, Calendar, 
-  Download, RefreshCw, Filter, Eye, MousePointer, CreditCard 
+  BarChart3, TrendingUp, Users, DollarSign,
+  Download, RefreshCw, Eye, MousePointer, CreditCard
 } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { Select } from '../ui/Select';
 import { Input } from '../ui/Input';
+import { supabase } from '../../lib/supabase';
 
 interface AnalyticsData {
   period: { start_date: string; end_date: string };
@@ -18,7 +19,13 @@ interface AnalyticsData {
   daily_revenue?: Record<string, number>;
   total_sessions?: number;
   conversion_funnel?: Record<string, { count: number; conversion_rate: number }>;
-  events?: any[];
+  events?: AnalyticsReportEvent[];
+}
+
+interface AnalyticsReportEvent {
+  event_name: string;
+  timestamp: string;
+  metadata: Record<string, unknown> | null;
 }
 
 export const AnalyticsReports: React.FC = () => {
@@ -40,45 +47,37 @@ export const AnalyticsReports: React.FC = () => {
     { value: 'detailed', label: 'Detailed Events' }
   ];
 
-  const fetchReport = async () => {
+  const fetchReport = useCallback(async () => {
     setLoading(true);
     setError('');
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analytics-report`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            start_date: startDate,
-            end_date: endDate,
-            report_type: reportType
-          }),
-        }
-      );
+      const { data: reportData, error: invokeError } = await supabase.functions.invoke('analytics-report', {
+        body: {
+          start_date: startDate,
+          end_date: endDate,
+          report_type: reportType,
+        },
+      });
 
-      if (response.ok) {
-        const reportData = await response.json();
-        setData(reportData);
-      } else {
-        const errorData = await response.json();
-        setError(errorData.error || 'Failed to fetch report');
+      if (invokeError) {
+        setError('Unable to load analytics report. Confirm your administrator access and try again.');
+        console.error('Report fetch error:', invokeError);
+        return;
       }
+
+      setData(reportData);
     } catch (error) {
       console.error('Report fetch error:', error);
       setError('Failed to fetch analytics report');
     } finally {
       setLoading(false);
     }
-  };
+  }, [endDate, reportType, startDate]);
 
   useEffect(() => {
-    fetchReport();
-  }, []);
+    void fetchReport();
+  }, [fetchReport]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('en-US', {
@@ -265,7 +264,7 @@ export const AnalyticsReports: React.FC = () => {
                   {Object.entries(data.daily_revenue || {}).map(([date, revenue]) => (
                     <div key={date} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                       <span className="font-medium text-gray-900">{formatDate(date)}</span>
-                      <span className="text-green-600 font-semibold">{formatCurrency(revenue as number)}</span>
+                      <span className="text-green-600 font-semibold">{formatCurrency(revenue)}</span>
                     </div>
                   ))}
                 </div>
@@ -278,7 +277,7 @@ export const AnalyticsReports: React.FC = () => {
             <div className="bg-white rounded-xl shadow-sm p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Conversion Funnel</h3>
               <div className="space-y-4">
-                {Object.entries(data.conversion_funnel || {}).map(([step, stepData]: [string, any]) => (
+                {Object.entries(data.conversion_funnel || {}).map(([step, stepData]) => (
                   <div key={step} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                     <div className="flex-1">
                       <span className="font-medium text-gray-900 capitalize">{step.replace('_', ' ')}</span>
@@ -311,9 +310,6 @@ export const AnalyticsReports: React.FC = () => {
                         Event
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                        User
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         Timestamp
                       </th>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -322,13 +318,10 @@ export const AnalyticsReports: React.FC = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {(data.events || []).slice(0, 50).map((event: any) => (
-                      <tr key={event.id}>
+                    {(data.events || []).slice(0, 50).map((event, index) => (
+                      <tr key={`${event.event_name}-${event.timestamp}-${index}`}>
                         <td className="px-6 py-4 whitespace-nowrap">
                           <Badge variant="secondary">{event.event_name}</Badge>
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                          {event.user_id ? event.user_id.slice(0, 8) + '...' : 'Anonymous'}
                         </td>
                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                           {new Date(event.timestamp).toLocaleString()}

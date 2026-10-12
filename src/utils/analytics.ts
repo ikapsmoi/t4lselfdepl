@@ -1,5 +1,6 @@
 import { supabase } from '../lib/supabase';
 import type { Travel4LifeContactContext } from './travel4lifeContact.js';
+import { createAnalyticsEventPayload } from './analyticsPayload.mjs';
 
 // Generate a session ID for tracking user sessions
 const generateSessionId = (): string => {
@@ -63,46 +64,17 @@ export const trackContactEvent = async (eventName: string, context: Travel4LifeC
 // Main analytics tracking function
 export const trackEvent = async (
   eventName: string, 
-  metadata: Record<string, any> = {},
-  userId?: string
+  metadata: Record<string, unknown> = {},
 ) => {
   try {
-    // Get current user if not provided
-    let currentUserId: string | null | undefined = userId;
-    if (!currentUserId) {
-      const { data: { user } } = await supabase.auth.getUser();
-      currentUserId = user?.id || null;
-    }
-
-    // Check if profile exists for the user_id to prevent foreign key constraint violation
-    let validatedUserId = null;
-    if (currentUserId) {
-      const { data: profile, error: profileError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', currentUserId)
-        .maybeSingle();
-      
-      // Only use user_id if profile exists, otherwise set to null for anonymous tracking
-      if (profile && !profileError) {
-        validatedUserId = currentUserId;
-      }
-    }
-
-    // Prepare event data
-    const eventData = {
-      event_name: eventName,
-      user_id: validatedUserId,
-      session_id: generateSessionId(),
-      metadata: {
-        ...metadata,
-        url: window.location.href,
-        referrer: document.referrer || null,
-        timestamp: new Date().toISOString()
-      },
-      ip_address: null,
-      user_agent: navigator.userAgent
-    };
+    const eventData = createAnalyticsEventPayload({
+      eventName,
+      sessionId: generateSessionId(),
+      metadata,
+      pageUrl: window.location.href,
+      referrerSource: getOrganicSource(document.referrer),
+      timestamp: new Date().toISOString(),
+    });
 
     // Insert into analytics_events table
     const { error } = await supabase
@@ -111,8 +83,6 @@ export const trackEvent = async (
 
     if (error) {
       console.error('Analytics tracking error:', error);
-    } else {
-      console.log(`📊 Event tracked: ${eventName}`, { ...metadata, user_id: validatedUserId });
     }
   } catch (error) {
     console.error('Analytics tracking failed:', error);
@@ -143,7 +113,7 @@ export const analytics = {
   }),
   
   // Authentication
-  signUp: (role: string, metadata?: any) => trackEvent('sign_up', { role, ...metadata }),
+  signUp: (role: string, metadata?: Record<string, unknown>) => trackEvent('sign_up', { role, ...metadata }),
   login: () => trackEvent('login'),
   profileComplete: (completionPercentage: number) => trackEvent('profile_complete', { 
     completion_percentage: completionPercentage 
@@ -171,7 +141,7 @@ export const analytics = {
   appOpen: () => trackEvent('app_open'),
   
   // Additional useful events
-  searchTrip: (searchQuery: string, filters: any) => trackEvent('search_trip', { 
+  searchTrip: (searchQuery: string, filters: Record<string, unknown>) => trackEvent('search_trip', {
     search_query: searchQuery,
     filters 
   }),
@@ -181,7 +151,7 @@ export const analytics = {
     platform 
   }),
   exitIntent: () => trackEvent('exit_intent'),
-  newsletterSignup: (email: string) => trackEvent('newsletter_signup', { email }),
+  newsletterEnquiryStarted: () => trackEvent('newsletter_enquiry_started'),
   
   // Discount tracking
   discountClaimed: (userId: string, discountAmount: number) => trackEvent('discount_claimed', {

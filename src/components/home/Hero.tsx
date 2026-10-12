@@ -1,4 +1,5 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
+import { Star, Users } from 'lucide-react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { SearchBar } from '../search/SearchBar';
 import type { SearchFilters, Trip } from '../../types';
@@ -218,7 +219,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               </h1>
               {/* Floating glass search card */}
               <div className="mx-auto max-w-2xl lg:mx-0">
-                <div className="mb-4 flex flex-row items-center justify-center gap-2 lg:justify-start">
+                <div className="flex flex-row items-center justify-center gap-2 lg:justify-start">
                   <button
                     type="button"
                     onClick={() => {
@@ -235,6 +236,23 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
                   >
                     Sign up
                   </button>
+                </div>
+                <div
+                  className="mx-auto mt-3 flex w-fit max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[10px] font-medium text-white/90 sm:gap-x-5 sm:text-xs lg:mx-0 lg:justify-start"
+                  aria-label="Travel4life trust signals"
+                >
+                  <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
+                    <span className="inline-flex items-center gap-0.5" aria-hidden="true">
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <Star key={index} className="h-3 w-3 fill-amber-300 text-amber-300" />
+                      ))}
+                    </span>
+                    <span>4.8 rating</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1 whitespace-nowrap">
+                    <Users className="h-3 w-3 text-white/80" aria-hidden="true" />
+                    <span>12,000+ Travelers</span>
+                  </span>
                 </div>
               </div>
             </div>

@@ -13,8 +13,8 @@ const Header = ({ region, onRegionChange }: HeaderProps) => {
 
   return (
     <header className="inbound-header sticky top-0 z-50 border-b border-forest/10 bg-paper/95 backdrop-blur-md">
-      <div className="mx-auto flex min-h-[76px] max-w-[1440px] items-center justify-between gap-5 px-5 sm:px-8 lg:px-12">
-        <a className="font-serif text-[1.35rem] font-semibold tracking-tight text-forest-dark" href="/" aria-label="Travel4Life home">
+      <div className="mx-auto flex min-h-[76px] max-w-[1440px] items-center justify-between gap-5 px-5 sm:px-8 lg:px-12 max-[360px]:gap-2 max-[360px]:px-3">
+        <a className="font-serif text-[1.35rem] font-semibold tracking-tight text-forest-dark max-[360px]:text-[1.15rem]" href="/" aria-label="Travel4Life home">
           Travel4Life<span className="ml-1 text-champagne" aria-hidden="true">.</span>
         </a>
 
@@ -25,7 +25,7 @@ const Header = ({ region, onRegionChange }: HeaderProps) => {
           <a className="md:hidden" href="#plan" onClick={() => setMenuOpen(false)}>Start planning</a>
         </nav>
 
-        <div className="ml-auto flex items-center gap-3 sm:gap-5">
+        <div className="ml-auto flex items-center gap-3 sm:gap-5 max-[360px]:gap-1.5">
           <label className="relative flex items-center gap-1.5 text-xs font-semibold text-forest-dark">
             <span className="sr-only">Choose your region and preferred currency</span>
             <select

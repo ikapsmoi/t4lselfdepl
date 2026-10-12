@@ -77,8 +77,9 @@ const verifyPage = async (url) => {
     failures.push(`${toFetchUrl(url)}: request failed (${error.message}).`);
   }
 };
-for (let index = 0; index < listedUrls.length; index += concurrency) {
-  await Promise.all(listedUrls.slice(index, index + concurrency).map(verifyPage));
+const urlsToVerify = [...new Set([...listedUrls, ...eligibleUrls])];
+for (let index = 0; index < urlsToVerify.length; index += concurrency) {
+  await Promise.all(urlsToVerify.slice(index, index + concurrency).map(verifyPage));
 }
 
 const legacySitemapUrls = [

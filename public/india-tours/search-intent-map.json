@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-11",
+  "reviewedOn": "2026-10-12",
   "evidence": {
     "finding": "No approved, supplier-verified inbound India package inventory or pricing was supplied for this page.",
     "limitation": "The route concepts are planning prompts, not active or bookable packages and not evidence of supplier availability.",
-    "pagePolicy": "Keep one crawlable India planning hub. Do not index route concepts as product pages until distinct content, current supplier arrangements, price terms and operational details are verified."
+    "pagePolicy": "Keep one English India planning hub and three genuinely localized market guides for Germany, France and the Netherlands. Do not index route concepts as product pages until distinct content, current supplier arrangements, price terms and operational details are verified."
   },
   "owners": [
     {
@@ -12,6 +12,30 @@
       "file": "india-tours/index.html",
       "primaryQuery": "India tour planning for international travellers",
       "intent": "Explore India route ideas and request a personalised itinerary; package availability and price require confirmation.",
+      "pageType": "destination-guide",
+      "entityType": "destination"
+    },
+    {
+      "url": "/india-tours/de/",
+      "file": "india-tours/de/index.html",
+      "primaryQuery": "Indien Rundreise",
+      "intent": "German-language research and planning for an India trip from Germany, with route ideas and a request for a date-specific proposal.",
+      "pageType": "destination-guide",
+      "entityType": "destination"
+    },
+    {
+      "url": "/india-tours/fr/",
+      "file": "india-tours/fr/index.html",
+      "primaryQuery": "voyage en Inde",
+      "intent": "French-language research and planning for an India trip from France, with route ideas and a request for a date-specific proposal.",
+      "pageType": "destination-guide",
+      "entityType": "destination"
+    },
+    {
+      "url": "/india-tours/nl/",
+      "file": "india-tours/nl/index.html",
+      "primaryQuery": "rondreis India",
+      "intent": "Dutch-language research and planning for an India trip from the Netherlands, with route ideas and a request for a date-specific proposal.",
       "pageType": "destination-guide",
       "entityType": "destination"
     }
