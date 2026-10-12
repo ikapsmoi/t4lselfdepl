@@ -27,6 +27,15 @@
       "officialSources": ["https://belgium.tomorrowland.com/en/sales-info/"]
     },
     {
+      "url": "/tomorrowland/b2b-travel-agent-packages/",
+      "file": "tomorrowland/b2b-travel-agent-packages/index.html",
+      "schemaType": "WebPage",
+      "intent": "B2B trade enquiry and supplier-dependent package discussion",
+      "primaryQuery": "Tomorrowland B2B travel packages for Indian travel agents",
+      "relatedQueries": ["Tomorrowland wholesale packages India", "Tomorrowland travel agent rates India", "Tomorrowland B2B packages for travel agents", "Tomorrowland group booking enquiry India"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/sales-info/", "https://winter.tomorrowland.com/en/tickets/festival-ticket"]
+    },
+    {
       "url": "/tomorrowland/belgium/",
       "file": "tomorrowland/belgium/index.html",
       "schemaType": "Article",
