@@ -39,7 +39,7 @@ export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) 
   ];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50/30 to-green-50 py-16 md:py-24">
+    <section className="relative overflow-hidden bg-gradient-to-br from-orange-50 via-amber-50/30 to-green-50 py-8 md:py-24">
       {/* Decorative Indian-inspired background elements */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 left-0 w-72 h-72 bg-gradient-to-br from-orange-200/30 to-amber-100/20 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
@@ -53,10 +53,10 @@ export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) 
       </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center mb-6">
-            <span className="text-6xl mr-4">🇮🇳</span>
-            <h2 className="text-4xl font-bold text-gray-900">India Specials</h2>
+        <div className="text-center mb-8 md:mb-16">
+          <div className="flex items-center justify-center mb-4 md:mb-6">
+            <span className="mr-3 text-4xl md:mr-4 md:text-6xl">🇮🇳</span>
+            <h2 className="text-3xl font-bold text-gray-900 md:text-4xl">India Specials</h2>
           </div>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
           </p>
@@ -126,15 +126,16 @@ export const IndiaSpecials: React.FC<IndiaSpecialsProps> = ({ trips, loading }) 
         {/* Featured India Experience */}
         {/* Featured India Experiences Carousel */}
         {indiaTrips.length > 0 && (
-          <div className="mb-16">
+          <div className="mb-8 md:mb-16">
             <TripGrid
               trips={filteredTrips}
               title="Featured India Experiences"
               subtitle="Handpicked adventures across the incredible subcontinent"
               loading={loading}
               mobileCarousel={true}
+              autoAdvanceMobile={true}
               showViewAll={true}
-              prominentFirst={true}
+              prominentFirst={false}
               hideCity={true}
             />
           </div>

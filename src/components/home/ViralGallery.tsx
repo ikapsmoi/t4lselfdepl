@@ -2,20 +2,13 @@ import { useState } from 'react';
 import { ArrowUpRight, MapPin } from 'lucide-react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { useGallery, type GalleryImage } from '../../hooks/useGallery';
-import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../../utils/travel4lifeContact.js';
-import { trackContactEvent } from '../../utils/analytics';
+import { useSlowMobileCarousel } from '../../hooks/useSlowMobileCarousel';
+import { openWhatsAppEnquiry } from '../common/whatsappEnquiryEvent';
 
 function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
   const [progress, setProgress] = useState(0);
   const reduceMotion = useReducedMotion();
   const destination = image.location || image.trip_title || 'a group adventure';
-  const contactContext = getTravel4LifeContactContext({
-    pageType: /festival|tomorrowland|edc|ultra|coachella/i.test(destination) ? 'festival' : 'travel',
-    destination,
-    eventType: 'a festival trip',
-    tripType: 'a group adventure',
-  });
-  const whatsappUrl = getTravel4LifeWhatsAppUrl(contactContext);
 
   return (
     <motion.article
@@ -66,15 +59,13 @@ function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
           <span className="truncate">{destination}</span>
         </p>
         {image.client_name && <p className="mt-1 truncate text-sm font-semibold">{image.client_name}</p>}
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() => void trackContactEvent('contact_whatsapp_click', contactContext)}
+        <button
+          type="button"
+          onClick={openWhatsAppEnquiry}
           className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/40 bg-white/15 px-4 text-sm font-semibold text-white backdrop-blur-md transition-transform duration-150 ease-out hover:bg-white/25 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
           Join the hype <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-        </a>
+        </button>
       </div>
       {image.video_url && (
         <div className="absolute inset-x-0 bottom-0 h-1 bg-white/25" aria-hidden="true">
@@ -87,12 +78,13 @@ function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
 
 export function ViralGallery() {
   const { images, loading } = useGallery();
+  const reelsCarousel = useSlowMobileCarousel<HTMLDivElement>();
   const reels = images.slice(0, 8);
 
   if (loading || reels.length === 0) return null;
 
   return (
-    <section className="overflow-hidden bg-gray-50 py-12 md:py-20" aria-labelledby="viral-gallery-title">
+    <section className="overflow-hidden bg-gray-50 py-8 md:py-20" aria-labelledby="viral-gallery-title">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-end justify-between gap-4">
           <div>
@@ -101,7 +93,14 @@ export function ViralGallery() {
             <p className="mt-2 text-sm text-gray-500">Real moments from journeys we’ve shared.</p>
           </div>
         </div>
-        <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0">
+        <div
+          ref={reelsCarousel.carouselRef}
+          onPointerEnter={reelsCarousel.onPointerEnter}
+          onPointerLeave={reelsCarousel.onPointerLeave}
+          onFocusCapture={reelsCarousel.onFocusCapture}
+          onBlurCapture={reelsCarousel.onBlurCapture}
+          className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 scrollbar-hide md:mx-0 md:grid md:grid-cols-4 md:overflow-visible md:px-0"
+        >
           {reels.map((image, index) => <ReelCard key={image.id} image={image} index={index} />)}
           <div aria-hidden="true" className="w-0 shrink-0 pr-4 md:hidden" />
         </div>

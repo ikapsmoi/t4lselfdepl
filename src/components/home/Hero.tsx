@@ -1,7 +1,5 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
-import { FeaturedTrip } from '../trips/FeaturedTrip';
-import { TripDetails } from '../trips/TripDetails';
 import { SearchBar } from '../search/SearchBar';
 import type { SearchFilters, Trip } from '../../types';
 
@@ -12,11 +10,8 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) => {
-  const [selectedTrip, setSelectedTrip] = useState(null);
   const [currentBgIndex, setCurrentBgIndex] = useState(0);
   const [loadedBackgrounds, setLoadedBackgrounds] = useState(() => new Set([0]));
-  const [currentTripIndex, setCurrentTripIndex] = useState(0);
-  const [showFeaturedTrip, setShowFeaturedTrip] = useState(false);
   const [isVideoUnavailable, setIsVideoUnavailable] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
@@ -24,8 +19,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const reduceMotion = useReducedMotion();
 
   const [isTextVisible, setIsTextVisible] = useState(true);
-
-  const featuredTrips = trips.filter((trip) => trip.featured);
 
   const heroHeadlines = [
     'Festival FOMO? We’ve Got You.',
@@ -66,25 +59,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
     }
   ], []);
   const heroVideoUrl = import.meta.env.VITE_HERO_VIDEO_URL;
-
-  useEffect(() => {
-    const featuredTripTimer = setTimeout(() => {
-      if (featuredTrips.length > 0) {
-        setShowFeaturedTrip(true);
-      }
-    }, 80000);
-
-    const tripInterval = setInterval(() => {
-      if (featuredTrips.length > 1) {
-        setCurrentTripIndex((prev) => (prev + 1) % featuredTrips.length);
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(tripInterval);
-      clearTimeout(featuredTripTimer);
-    };
-  }, [featuredTrips.length]);
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -136,7 +110,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
 
   return (
     <> {/* This fragment is necessary to return multiple elements */}
-      <section ref={heroRef} className="hero-section bg-gray-950 max-lg:min-h-[40svh] max-lg:items-start max-lg:overflow-visible max-lg:pb-10 max-lg:pt-14 lg:justify-start">
+      <section ref={heroRef} className="hero-section bg-gray-950 max-lg:min-h-[44svh] max-lg:items-start max-lg:overflow-visible max-lg:pb-10 max-lg:pt-14 lg:justify-start">
         {/* New Users Ticker */}
 
         {/* Dynamic Background Slideshow */}
@@ -206,15 +180,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
           </div>
         </motion.div>
 
-        <div className={`hero-content lg:mx-auto lg:max-w-7xl lg:px-8 lg:text-left ${featuredTrips.length > 0 && showFeaturedTrip ? 'max-w-4xl mx-auto px-4' : ''}`}>
-          {featuredTrips.length > 0 && showFeaturedTrip ? (
-            <FeaturedTrip
-              featuredTrips={featuredTrips}
-              currentTripIndex={currentTripIndex}
-              onViewDetails={(trip) => setSelectedTrip(trip)}
-              onClose={() => setShowFeaturedTrip(false)}
-            />
-          ) : (
+        <div className="hero-content lg:mx-auto lg:max-w-7xl lg:px-8 lg:text-left">
             <div className="relative z-10 mx-auto max-w-4xl animate-fade-in text-center text-white lg:ml-0 lg:mr-auto lg:w-3/5 lg:max-w-none lg:text-left">
               <h1
                 aria-label={activeHeadline}
@@ -258,21 +224,20 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
                     onClick={() => {
                       document.getElementById('top-rated-adventures')?.scrollIntoView({ behavior: reduceMotion ? 'instant' : 'smooth' });
                     }}
-                    className="flex h-10 w-fit items-center justify-center rounded-xl border border-white/30 bg-white/10 px-5 text-xs font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:h-11 sm:text-sm"
+                    className="flex min-h-11 w-fit items-center justify-center rounded-xl border border-white/30 bg-white/10 px-5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/20 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:min-h-12"
                   >
                     Explore trips
                   </button>
                   <button
                     type="button"
                     onClick={() => window.dispatchEvent(new Event('triggerSignup'))}
-                    className="flex h-10 w-fit items-center justify-center rounded-xl border border-white/30 bg-white px-5 text-xs font-semibold text-gray-900 shadow-sm transition-all duration-200 hover:bg-white/90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:h-11 sm:text-sm"
+                    className="flex min-h-11 w-fit items-center justify-center rounded-xl border border-white/30 bg-white px-5 text-sm font-semibold text-gray-900 shadow-sm transition-all duration-200 hover:bg-white/90 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 sm:min-h-12"
                   >
                     Sign up
                   </button>
                 </div>
               </div>
             </div>
-          )}
         </div>
       </section>
 
@@ -281,14 +246,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
           <SearchBar trips={trips} tripsLoading={tripsLoading} onSearch={searchTrips} className="" navigateOnFilter={true} compactOnMobile />
         </div>
       </div>
-
-      {/* Trip Details Modal */}
-      {selectedTrip && (
-        <TripDetails
-          trip={selectedTrip}
-          onClose={() => { console.log('onClose called in Hero'); setSelectedTrip(null); }}
-        />
-      )}
     </>
   );
 });

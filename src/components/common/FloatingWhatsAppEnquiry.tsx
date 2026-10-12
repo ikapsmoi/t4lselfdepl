@@ -6,6 +6,7 @@ import {
 } from '../../utils/travel4lifeContact.js';
 import { trackContactEvent } from '../../utils/analytics';
 import { MobileBottomBar } from './MobileBottomBar';
+import { OPEN_WHATSAPP_ENQUIRY_EVENT } from './whatsappEnquiryEvent';
 
 interface TripEnquiry {
   fullName: string;
@@ -35,6 +36,12 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [enquiry, setEnquiry] = useState<TripEnquiry>(initialEnquiry);
   const nameInput = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener(OPEN_WHATSAPP_ENQUIRY_EVENT, handleOpen);
+    return () => window.removeEventListener(OPEN_WHATSAPP_ENQUIRY_EVENT, handleOpen);
+  }, []);
 
   useEffect(() => {
     if (!isOpen) return undefined;

@@ -53,7 +53,7 @@ const DeferredHomeSection: React.FC<{ children: React.ReactNode; reserveHeight: 
 };
 
 const SectionDivider: React.FC = () => (
-  <div className="relative py-2 md:py-6">
+  <div className="relative py-1 md:py-6">
   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       <div className="h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent"></div>
     </div>
@@ -182,20 +182,27 @@ export const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom))] md:pb-0">
       <Hero trips={trips} tripsLoading={loading} searchTrips={searchTrips} />
-      <TrustBar />
+      <TrustBar
+        trips={trips}
+        onViewAll={() => {
+          setTopRatedCategory('all');
+          document.getElementById('top-rated-adventures')?.scrollIntoView({ behavior: 'smooth' });
+        }}
+      />
       <FestivalReleaseCTA />
 
       {/* Top-Rated Adventures */}
       <div id="top-rated-adventures">
-        <section className="bg-white py-10 md:py-24">
+        <section className="bg-white py-6 md:py-24">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <p className="text-sm font-medium text-gray-600">Browse by category</p>
-              <div className="top-rated-category-tabs flex gap-4 overflow-x-auto pb-1 sm:flex-wrap sm:justify-end sm:overflow-visible">
+            <div className="mb-5 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+              <p className="text-sm font-semibold text-gray-700">Browse by category</p>
+              <div className="top-rated-category-tabs scrollbar-hide -mx-4 flex snap-x gap-2 overflow-x-auto px-4 pb-2 sm:mx-0 sm:flex-wrap sm:justify-end sm:gap-2.5 sm:overflow-visible sm:px-0 sm:pb-0">
                 <button
                   type="button"
                   onClick={() => setTopRatedCategory('all')}
-                  className={`top-rated-category-tab relative isolate shrink-0 overflow-hidden rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                  aria-pressed={topRatedCategory === 'all'}
+                  className={`top-rated-category-tab relative isolate inline-flex min-h-11 shrink-0 snap-start items-center overflow-hidden rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
                     topRatedCategory === 'all'
                       ? 'border-gray-900 bg-gray-900 text-white'
                       : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900'
@@ -208,7 +215,8 @@ export const HomePage: React.FC = () => {
                     key={type.value}
                     type="button"
                     onClick={() => setTopRatedCategory(type.value)}
-                    className={`top-rated-category-tab relative isolate shrink-0 overflow-hidden rounded-full border px-4 py-2 text-sm font-medium transition-colors ${
+                    aria-pressed={topRatedCategory === type.value}
+                    className={`top-rated-category-tab relative isolate inline-flex min-h-11 shrink-0 snap-start items-center overflow-hidden rounded-full border px-4 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2 ${
                       topRatedCategory === type.value
                         ? 'border-gray-900 bg-gray-900 text-white'
                         : 'border-gray-200 bg-white text-gray-600 hover:border-gray-400 hover:text-gray-900'
@@ -225,6 +233,7 @@ export const HomePage: React.FC = () => {
               subtitle="Join our most beloved trips rated by fellow travelers"
               loading={loading}
               mobileCarousel={true}
+              autoAdvanceMobile={true}
               showViewAll={true}
               prominentFirst={false}
             />
@@ -238,7 +247,7 @@ export const HomePage: React.FC = () => {
       <SectionDivider />
 
       {/* Creator Trips */}
-      <section className="py-10 md:py-24" id="creator-trips">
+      <section className="py-6 md:py-24" id="creator-trips">
         <DeferredHomeSection reserveHeight={520}><CreatorTrips /></DeferredHomeSection>
       </section>
 

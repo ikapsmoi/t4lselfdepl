@@ -6,6 +6,7 @@ import { TripCard } from './TripCard';
 import { TripDetails } from './TripDetails';
 import { INDIA_CATEGORIES, getCurrencySymbol } from '../../utils/constants';
 import { formatCitiesForDisplay } from '../../utils/formatters';
+import { useSlowMobileCarousel } from '../../hooks/useSlowMobileCarousel';
 
 interface TripGridProps {
   trips: Trip[];
@@ -15,6 +16,7 @@ interface TripGridProps {
   variant?: 'default' | 'compact';
   showViewAll?: boolean;
   mobileCarousel?: boolean;
+  autoAdvanceMobile?: boolean;
   prominentFirst?: boolean;
   hideCity?: boolean;
 }
@@ -28,11 +30,13 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
   variant = 'default',
   showViewAll = false,
   mobileCarousel = false,
+  autoAdvanceMobile = false,
   prominentFirst = false,
   hideCity
 }) => {
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const carousel = useSlowMobileCarousel<HTMLDivElement>(mobileCarousel && autoAdvanceMobile);
 
   const displayTrips = showViewAll && !showAll ? trips.slice(0, 6) : trips;
   const firstTrip = displayTrips[0];
@@ -96,7 +100,13 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
             <p className="text-gray-500 text-sm">Try adjusting your search filters or explore different destinations</p>
           </div>
         ) : (
-          <div className={`min-w-0 gap-4 md:gap-6 lg:gap-8 ${
+          <div
+            ref={carousel.carouselRef}
+            onPointerEnter={carousel.onPointerEnter}
+            onPointerLeave={carousel.onPointerLeave}
+            onFocusCapture={carousel.onFocusCapture}
+            onBlurCapture={carousel.onBlurCapture}
+            className={`min-w-0 gap-4 md:gap-6 lg:gap-8 ${
             mobileCarousel
               ? '-mx-4 flex snap-x snap-mandatory overscroll-x-contain overflow-x-auto gap-4 px-4 pb-6 scrollbar-hide md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:snap-none md:pb-0 md:px-0 lg:grid-cols-3'
               : `grid ${
@@ -164,6 +174,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
                   variant={variant}
                   isMobileCarouselItem={mobileCarousel}
                   onClick={() => setSelectedTrip(trip)}
+                  hideCity={hideCity}
                 />
               ))
             )}

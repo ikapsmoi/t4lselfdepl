@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {Globe, Menu, X, User, Bell, Search, Plus } from 'lucide-react';
+import {Globe, Menu, X, User, Bell, Search, Plus, Plane } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { useAuth } from '../../hooks/useAuth';
@@ -149,7 +149,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 window.location.hash = 'home';
                 setIsMenuOpen(false);
               }}
-              className="flex items-center cursor-pointer hover:opacity-80 transition-opacity"
+              className="flex shrink-0 items-center cursor-pointer hover:opacity-80 transition-opacity"
               aria-label="Go to home page"
             >
               <img
@@ -159,23 +159,26 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 decoding="async"
                 width={36}
                 height={36}
-                className="w-9 h-9 object-contain"
+                className="h-8 w-8 object-contain sm:h-9 sm:w-9"
               />
-              <span className="ml-2 text-lg font-display font-bold text-gray-900 tracking-tight">Travel4life</span>
+              <span className="ml-1.5 whitespace-nowrap text-base font-display font-bold tracking-tight text-gray-900 sm:ml-2 sm:text-lg">Travel4life</span>
             </button>
 
             {/* Travel4life Reserve VVIP Button */}
-            <div className="relative inline-flex items-center ml-auto mr-2 sm:ml-3 sm:mr-0 group">
-              <div className="absolute -inset-px rounded-full bg-amber-400/60 opacity-70 group-hover:opacity-100 transition-opacity duration-200"></div>
+            <div className="group relative ml-auto mr-2 inline-flex shrink-0 items-center sm:ml-3 sm:mr-0">
+              <div className="absolute -inset-px rounded-full bg-amber-400/45 opacity-70 transition-opacity duration-200 group-hover:opacity-100"></div>
               <a
                 href="https://chat.whatsapp.com/IFy99NyGI38JgcTHtsvxlI"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Join the Secret Miles WhatsApp group"
-                className="relative inline-flex min-h-9 items-center gap-1 px-2 sm:px-3 py-1.5 bg-gray-900 text-amber-100 text-[9px] sm:text-xs font-bold rounded-full border border-amber-300/70 shadow-sm shadow-amber-900/10 group-hover:bg-gray-800 group-hover:-translate-y-px group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 transition-all duration-200 tracking-wide uppercase whitespace-nowrap"
+                className="relative isolate inline-flex min-h-11 items-center gap-1 overflow-hidden rounded-full border border-amber-300/60 bg-gray-900 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-amber-100 shadow-sm shadow-amber-900/10 transition-all duration-200 group-hover:-translate-y-px group-hover:bg-gray-800 group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 sm:px-3 sm:text-xs"
               >
-                <span className="w-1.5 h-1.5 bg-amber-400 rounded-full animate-pulse shrink-0"></span>
-                <span>Join Secret Miles</span>
+                <Plane className="pointer-events-none absolute right-1 top-1/2 z-0 h-8 w-8 -translate-y-1/2 rotate-[-18deg] text-amber-300/25" aria-hidden="true" />
+                <span className="relative z-10 inline-flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
+                  Join Secret Miles
+                </span>
               </a>
             </div>
 

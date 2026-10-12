@@ -377,7 +377,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             <button
               onClick={(e) => { e.stopPropagation(); onClick?.(); }}
               aria-label={`View details for ${trip.title}`}
-              className="flex items-center gap-1 text-xs font-medium text-sky-600 hover:text-sky-700 bg-sky-50 hover:bg-sky-100 px-2.5 py-1 rounded-full transition-colors"
+              className="inline-flex min-h-11 items-center gap-1 rounded-full bg-sky-50 px-3 text-sm font-medium text-sky-700 transition-colors hover:bg-sky-100 hover:text-sky-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
             >
               <ExternalLink className="w-3 h-3" />
               <span>Inquire now</span>
@@ -385,7 +385,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             <a
               href={`/trips/${encodeURIComponent(trip.id)}`}
               onClick={(event) => event.stopPropagation()}
-              className="text-xs font-medium text-gray-500 hover:text-gray-900"
+              className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
               aria-label={`Open ${trip.title} page`}
             >
               Open page

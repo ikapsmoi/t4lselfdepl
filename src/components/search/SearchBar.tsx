@@ -153,7 +153,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
   }, [destination, matchingTrips, type]);
 
   return (
-    <div className={`w-full min-w-0 rounded-2xl p-3.5 sm:p-6 ${className}`}>
+    <div className={`w-full min-w-0 rounded-2xl p-4 sm:p-6 ${className}`}>
       {/* Experience tabs */}
       <div
         className={`search-experience-tabs scrollbar-hide -mx-3.5 mb-4 h-11 items-center gap-2 overflow-x-auto px-3.5 sm:mx-0 sm:mb-4 sm:h-14 sm:px-1 ${
@@ -227,7 +227,9 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
                 setSuggestionsOpen(false);
               }
             }}
-            className="h-12 w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 pr-11 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 sm:pl-12 sm:pr-24"
+            className={`h-12 w-full rounded-xl border border-gray-200 bg-white py-3 pl-11 text-sm text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-sky-400 focus:outline-none focus:ring-2 focus:ring-sky-200 sm:pl-12 sm:pr-24 ${
+              destination ? 'pr-11' : 'pr-4'
+            }`}
           />
           {suggestionsOpen && !tripsLoading && (
             <div
@@ -288,7 +290,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
                       <span className="block truncate text-sm font-medium text-gray-900">{trip.title}</span>
                       <span className="block truncate text-xs text-gray-500">{trip.destination}</span>
                     </span>
-                    <span className="shrink-0 rounded-full bg-gray-100 px-2 py-1 text-[10px] font-medium text-gray-500">
+                    <span className="shrink-0 rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-500">
                       {TRIP_TYPES.find((tripType) => tripType.value === trip.type)?.label || 'Trip'}
                     </span>
                   </button>
@@ -309,7 +311,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
               }}
               aria-label="Clear selected package"
               title="Clear selected package"
-              className="absolute right-3 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 sm:hidden"
+              className="absolute right-2 top-1/2 inline-flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-700 sm:hidden"
             >
               <X className="h-4 w-4" />
             </button>
@@ -354,7 +356,7 @@ export const SearchBar: React.FC<SearchBarProps> = memo(({ onSearch, trips, trip
             aria-expanded={!filtersMinimized}
             icon={filtersMinimized ? ChevronDown : ChevronUp}
             size="md"
-            className="relative min-h-12 min-w-0 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 text-gray-600 hover:bg-gray-100 sm:w-auto sm:flex-none sm:min-w-[120px]"
+            className="relative min-h-12 min-w-0 flex-1 rounded-xl border border-gray-200 bg-gray-50 px-4 text-sm text-gray-600 hover:bg-gray-100 sm:w-auto sm:flex-none sm:min-w-[120px]"
           >
             {filtersMinimized ? 'Filters' : 'Hide'}
             {hasActiveFilters && (

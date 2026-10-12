@@ -9,10 +9,12 @@ import { supabase } from '../../lib/supabase';
 import { TripDetails } from '../trips/TripDetails';
 import { cleanTripTitle } from '../../utils/formatters';
 import { DEFAULT_CANCELLATION_POLICY } from '../../utils/constants';
+import { useSlowMobileCarousel } from '../../hooks/useSlowMobileCarousel';
 
 
 
 export const CreatorTrips: React.FC = () => {
+  const creatorsCarousel = useSlowMobileCarousel<HTMLDivElement>();
   const sectionRef = useRef<HTMLDivElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState<string | null>(null);
@@ -272,8 +274,8 @@ export const CreatorTrips: React.FC = () => {
 
       {/* Featured Creator Spotlight */}
       {/* Top Creators Section */}
-      <div className="bg-white rounded-3xl p-8 shadow-lg border border-gray-100">
-        <h3 className="text-2xl font-bold text-gray-900 mb-8 text-center">Top Verified Creators</h3>
+      <div className="bg-white rounded-3xl p-4 shadow-lg border border-gray-100 md:p-8">
+        <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center md:mb-8">Top Verified Creators</h3>
         {loadingCreators ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
@@ -287,9 +289,15 @@ export const CreatorTrips: React.FC = () => {
             </Button>
           </div>
         ) : (
-          <div className="relative -mx-4 overflow-x-auto pb-6 scrollbar-hide sm:-mx-8 md:mx-0">
-            <div className="flex snap-x snap-mandatory gap-4 px-4 sm:px-8 md:px-0">
-              {dynamicTopCreators.map((creator) => (
+          <div
+            ref={creatorsCarousel.carouselRef}
+            onPointerEnter={creatorsCarousel.onPointerEnter}
+            onPointerLeave={creatorsCarousel.onPointerLeave}
+            onFocusCapture={creatorsCarousel.onFocusCapture}
+            onBlurCapture={creatorsCarousel.onBlurCapture}
+            className="relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 scrollbar-hide sm:-mx-8 sm:px-8 md:mx-0 md:px-0"
+          >
+            {dynamicTopCreators.map((creator) => (
                 <div key={creator.id} className="w-[82vw] max-w-[320px] shrink-0 snap-start md:w-56 md:max-w-none">
                   <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-transform duration-150 ease-out active:scale-[0.98] hover:shadow-lg">
                     {/* Instagram-style gradient border */}
@@ -349,9 +357,8 @@ export const CreatorTrips: React.FC = () => {
                     </div>
                   </div>
                 </div>
-              ))}
-              <div aria-hidden="true" className="w-0 shrink-0 pr-4 md:hidden" />
-            </div>
+            ))}
+            <div aria-hidden="true" className="w-0 shrink-0 pr-4 md:hidden" />
           </div>
         )}
       </div>
