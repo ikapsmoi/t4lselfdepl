@@ -67,12 +67,21 @@ const asStringArray = (value: unknown): string[] =>
 const packageDataFromTour = (tour: PackageTourRecord): PackageCreatorData => {
   const itinerary = tour.itinerary || {};
   const itineraryDuration = Number(itinerary.duration);
+  const cityNights = Array.isArray(itinerary.cities)
+    ? itinerary.cities.reduce((total: number, city) => {
+        if (!city || typeof city !== 'object') return total;
+        const nights = Number((city as Record<string, unknown>).nights);
+        return Number.isFinite(nights) && nights > 0 ? total + nights : total;
+      }, 0)
+    : 0;
   const dateDuration = Math.ceil(
     (new Date(tour.end_date).getTime() - new Date(tour.start_date).getTime()) / (1000 * 60 * 60 * 24)
   );
   const days = Number.isFinite(itineraryDuration) && itineraryDuration > 0
-    ? itineraryDuration
-    : Math.max(dateDuration, 1);
+    ? Math.max(itineraryDuration, Math.max(dateDuration, 1))
+    : cityNights > 0
+      ? Math.max(cityNights + 1, Math.max(dateDuration, 1))
+      : Math.max(dateDuration, 1);
   const nights = Math.max(days - 1, 0);
   const currency = CURRENCY_OPTIONS.includes(tour.currency as CurrencyCode)
     ? tour.currency as CurrencyCode

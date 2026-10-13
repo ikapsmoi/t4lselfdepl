@@ -3,6 +3,7 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SearchFilters, Trip } from "@/types";
 import { formatCitiesForDisplay, cleanTripTitle, stripSourceNotes } from '../utils/formatters';
+import { getTripIncludedItems, getTripExcludedItems, getTripDurationFromMetadata } from '../utils/constants';
 
 const EUROPEAN_COUNTRIES = [
   'Albania',
@@ -158,55 +159,60 @@ export const useTrips = () => {
         
         // Publish trip cards as soon as the listing query completes; booking counts can follow.
         const tripIds = filteredData.map(trip => trip.id);
-        const transformedTrips: Trip[] = filteredData.map(trip => ({
-          id: trip.id,
-          title: cleanTripTitle(trip.title),
-          description: stripSourceNotes(trip.itinerary?.description) || 'Amazing travel experience awaits you on this incredible journey.',
-          destination: trip.location,
-          country: trip.location.split(',').pop()?.trim() || 'Unknown',
-          type: trip.category,
-          price: Number(trip.price_per_person),
-          currency: trip.currency || trip.profiles?.host_details?.currency_preference || (trip.category === 'indian_special' ? 'INR' : ''),
-          duration: trip.itinerary?.duration ? Number(trip.itinerary.duration) : Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),
-          max_capacity: trip.group_size,
-          current_bookings: 0,
-          start_date: trip.start_date,
-          end_date: trip.end_date,
-          images: trip.images && trip.images.length > 0 ? trip.images : [
-            trip.category === 'budget'
-              ? '/optimized/pkg1.webp'
-              : trip.category === 'indian_special'
-                ? '/pkg2.png'
-                : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
-          ],
-          host_id: trip.host_id,
-          host: trip.profiles ? {
-            id: trip.profiles.id,
-            name: trip.profiles.name,
-            email: trip.profiles.email,
-            avatar_url: trip.profiles.avatar_url,
-            role: 'host',
-            verified: trip.profiles.verified || false,
-            points: 0,
-            tier: 'silver',
-            created_at: '',
-            badges: []
-          } : undefined,
-          rating: Number(trip.review_count) > 0 ? Number(trip.rating) || 0 : 0,
-          review_count: Number(trip.review_count) || 0,
-          itinerary: trip.itinerary || {},
-          created_at: trip.created_at,
-          featured: trip.nomadic_badge || false,
-          tags: trip.itinerary?.tags || [],
-          difficulty: trip.difficulty,
-          included: trip.itinerary?.included || [],
-          not_included: trip.itinerary?.notIncluded || [],
-          requirements: trip.itinerary?.requirements || [],
-          cancellation_policy: trip.cancellation_policy || '',
-          deposit_required: Number(trip.deposit_required) || 0,
-          group_discount: trip.group_discount || 0,
-          safety_measures: trip.itinerary?.safetyMeasures || []
-        }));
+        const transformedTrips: Trip[] = filteredData.map(trip => {
+          const itinerary = trip.itinerary || {};
+          const resolvedDuration = getTripDurationFromMetadata(itinerary, trip.start_date, trip.end_date);
+
+          return {
+            id: trip.id,
+            title: cleanTripTitle(trip.title),
+            description: stripSourceNotes(itinerary?.description) || 'Amazing travel experience awaits you on this incredible journey.',
+            destination: trip.location,
+            country: trip.location.split(',').pop()?.trim() || 'Unknown',
+            type: trip.category,
+            price: Number(trip.price_per_person),
+            currency: trip.currency || trip.profiles?.host_details?.currency_preference || (trip.category === 'indian_special' ? 'INR' : ''),
+            duration: resolvedDuration,
+            max_capacity: trip.group_size,
+            current_bookings: 0,
+            start_date: trip.start_date,
+            end_date: trip.end_date,
+            images: trip.images && trip.images.length > 0 ? trip.images : [
+              trip.category === 'budget'
+                ? '/optimized/pkg1.webp'
+                : trip.category === 'indian_special'
+                  ? '/pkg2.png'
+                  : 'https://images.pexels.com/photos/8185807/pexels-photo-8185807.jpeg'
+            ],
+            host_id: trip.host_id,
+            host: trip.profiles ? {
+              id: trip.profiles.id,
+              name: trip.profiles.name,
+              email: trip.profiles.email,
+              avatar_url: trip.profiles.avatar_url,
+              role: 'host',
+              verified: trip.profiles.verified || false,
+              points: 0,
+              tier: 'silver',
+              created_at: '',
+              badges: []
+            } : undefined,
+            rating: Number(trip.review_count) > 0 ? Number(trip.rating) || 0 : 0,
+            review_count: Number(trip.review_count) || 0,
+            itinerary,
+            created_at: trip.created_at,
+            featured: trip.nomadic_badge || false,
+            tags: trip.itinerary?.tags || [],
+            difficulty: trip.difficulty,
+            included: getTripIncludedItems(itinerary, trip.category),
+            not_included: getTripExcludedItems(itinerary, trip.category),
+            requirements: trip.itinerary?.requirements || [],
+            cancellation_policy: trip.cancellation_policy || '',
+            deposit_required: Number(trip.deposit_required) || 0,
+            group_discount: trip.group_discount || 0,
+            safety_measures: trip.itinerary?.safetyMeasures || []
+          };
+        });
 
         // Do not treat trips without submitted reviews as rated results.
         const visibleTrips = searchFilters?.rating

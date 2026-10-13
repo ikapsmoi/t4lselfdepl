@@ -35,6 +35,63 @@ export const DEFAULT_TRIP_EXCLUSIONS = [
   'Visa fees not included.',
 ];
 
+export const normalizeTripTextArray = (value: unknown): string[] => {
+  if (!Array.isArray(value)) return [];
+  return value
+    .filter((item): item is string => typeof item === 'string')
+    .map((item) => item.trim())
+    .filter(Boolean);
+};
+
+export const getTripIncludedItems = (itinerary: Record<string, unknown> | undefined, category?: string): string[] => {
+  const rawIncluded = normalizeTripTextArray(itinerary?.included);
+  if (rawIncluded.length > 0) return rawIncluded;
+
+  if (category === 'indian_special') {
+    return [...DEFAULT_TRIP_INCLUSIONS];
+  }
+
+  return rawIncluded;
+};
+
+export const getTripExcludedItems = (itinerary: Record<string, unknown> | undefined, category?: string): string[] => {
+  const rawExcluded = normalizeTripTextArray(itinerary?.notIncluded || itinerary?.not_included);
+  if (rawExcluded.length > 0) return rawExcluded;
+
+  return category === 'indian_special'
+    ? DEFAULT_TRIP_EXCLUSIONS.filter((value) => value !== 'City tax if applicable.' && value !== 'Visa fees not included.')
+    : DEFAULT_TRIP_EXCLUSIONS;
+};
+
+export const getTripDurationFromMetadata = (
+  itinerary: Record<string, unknown> | undefined,
+  startDate?: string,
+  endDate?: string,
+): number => {
+  const itineraryDuration = Number(itinerary?.duration);
+  const cityNights = Array.isArray(itinerary?.cities)
+    ? itinerary.cities.reduce((total: number, city) => {
+        if (!city || typeof city !== 'object') return total;
+        const value = Number((city as Record<string, unknown>).nights);
+        return Number.isFinite(value) && value > 0 ? total + value : total;
+      }, 0)
+    : 0;
+
+  const dateDiff = startDate && endDate
+    ? Math.max(1, Math.ceil((new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24)))
+    : 0;
+
+  if (Number.isFinite(itineraryDuration) && itineraryDuration > 0) {
+    return Math.max(itineraryDuration, dateDiff || 1);
+  }
+
+  if (cityNights > 0) {
+    return Math.max(cityNights + 1, dateDiff || 1);
+  }
+
+  return Math.max(dateDiff || 1, 1);
+};
+
 export const DEFAULT_CANCELLATION_POLICY = '25% cancellation cost if cancelled within 90 days of tour start date. 50% cancellation cost if cancelled within 60 days of tour start date. 75% cancellation cost if cancelled within 30 days of tour start date. 100% cancellation cost if cancelled within 15 days of tour start date.';
 
 export const DIFFICULTY_LEVELS = [

@@ -91,6 +91,10 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
       window.location.hash = 'traveler-dashboard';
     }
   };
+  const openIndiaSpecials = () => {
+    window.location.hash = 'trips?type=indian_special';
+    setIsMenuOpen(false);
+  };
   const scrollToSection = (sectionId: string) => {
     // If we're not on the home page, navigate there first
     const currentHash = window.location.hash;
@@ -195,11 +199,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 }, 300);
                 setIsMenuOpen(false);
               }} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200">Global</button>
-              <button onClick={() => {
-                window.location.hash = 'home';
-                setTimeout(() => scrollToSection('india-specials'), 300);
-                setIsMenuOpen(false);
-              }} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200">India</button>
+              <button onClick={openIndiaSpecials} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200">India</button>
               <a
                 href="/tomorrowland/"
                 className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
@@ -390,11 +390,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                   setTimeout(() => scrollToSection('top-rated-adventures'), 300);
                   setIsMenuOpen(false); 
                 }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">Browse Adventures</button>
-                <button onClick={() => { 
-                  window.location.hash = 'home';
-                  setTimeout(() => scrollToSection('india-specials'), 300);
-                  setIsMenuOpen(false); 
-                }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">India Specials</button>
+                <button onClick={openIndiaSpecials} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">India Specials</button>
                 <a
                   href="/tomorrowland/"
                   onClick={() => setIsMenuOpen(false)}

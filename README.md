@@ -59,6 +59,12 @@ The admin dashboard's SEO War Room imports Search Console query, page, and searc
 
 The command center distinguishes measured Search Console rows from planned query hypotheses. Its CTR opportunity score is an internal prioritization heuristic, not a ranking forecast. The supplied page-readiness dimension weights add up to 95 points (although its label bands are written on a 100-point scale); the War Room preserves those exact weights and labels the scoring scale rather than silently changing the rubric. Search Console dimensions can have different totals and privacy-threshold omissions, so do not combine query, page, and chart totals as a single baseline. See [SEO_IMPLEMENTATION.md](./docs/SEO_IMPLEMENTATION.md) for the observed-export caveat, editorial ownership, and validation commands.
 
+### SEO strategy deliverables
+
+- [Keyword map](./docs/seo/keyword-map.md)
+- [Competitor gap analysis](./docs/seo/competitor-gap-analysis.md)
+- [Market prioritization](./docs/seo/market-prioritization.md)
+
 ## 📱 Features Overview
 
 ### For Travelers

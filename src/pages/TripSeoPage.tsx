@@ -62,9 +62,22 @@ type TripRow = {
 
 const toTrip = (row: TripRow): Trip => {
   const itinerary = row.itinerary || {};
-  const duration = itinerary.duration
-    ? Number(itinerary.duration)
-    : Math.ceil((new Date(row.end_date).getTime() - new Date(row.start_date).getTime()) / (1000 * 60 * 60 * 24));
+  const duration = (() => {
+    const itineraryDuration = Number(itinerary.duration);
+    const dateDiff = Math.max(1, Math.ceil((new Date(row.end_date).getTime() - new Date(row.start_date).getTime()) / (1000 * 60 * 60 * 24)));
+    if (Number.isFinite(itineraryDuration) && itineraryDuration > 0) {
+      return Math.max(itineraryDuration, dateDiff);
+    }
+    if (Array.isArray(itinerary.cities)) {
+      const cityNights = itinerary.cities.reduce((total: number, city) => {
+        if (!city || typeof city !== 'object') return total;
+        const nights = Number((city as Record<string, unknown>).nights);
+        return Number.isFinite(nights) && nights > 0 ? total + nights : total;
+      }, 0);
+      if (cityNights > 0) return Math.max(cityNights + 1, dateDiff);
+    }
+    return dateDiff;
+  })();
   const existingImages = Array.isArray(row.images) ? row.images : [];
   const resolvedImage = resolveTripImage(
     row.title,
@@ -76,8 +89,30 @@ const toTrip = (row: TripRow): Trip => {
   const images = existingImages.length > 0
     ? [resolvedImage, ...existingImages.slice(1)]
     : [resolvedImage];
-  const included = Array.isArray(itinerary.included) ? itinerary.included : [];
-  const notIncluded = Array.isArray(itinerary.notIncluded) ? itinerary.notIncluded : [];
+  const included = Array.isArray(itinerary.included) && itinerary.included.length > 0
+    ? itinerary.included
+    : row.category === 'indian_special'
+      ? [
+        'Accommodation included for the entire duration of the stay at central 3 star property.',
+        'Daily Continental breakfast included.',
+        'Transfers as per the itinerary included.',
+        'Sightseeing as per the itinerary offered and shared with you.',
+        'Double occupancy rates.',
+        'Travel Insurance included.',
+        'Visa assistance at INR 2000 per person included.',
+        'GST and TCS additional.',
+      ]
+      : [];
+  const notIncluded = Array.isArray(itinerary.notIncluded) && itinerary.notIncluded.length > 0
+    ? itinerary.notIncluded
+    : row.category === 'indian_special'
+      ? [
+        'GST and TCS not included.',
+        'Airfare from India not included.',
+        'Any other meals except breakfast not included.',
+        'All Prices are Per Person on Double sharing occupancy basis.',
+      ]
+      : [];
   const tags = Array.isArray(itinerary.tags) ? itinerary.tags : [];
 
   return {
