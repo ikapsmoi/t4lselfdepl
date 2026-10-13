@@ -2,7 +2,7 @@ import type { Trip } from '../types';
 
 export const siteUrl = 'https://travel4life.net';
 
-export const getTripPath = (tripId: string): string => `/trips/${encodeURIComponent(tripId)}`;
+export const getTripPath = (tripId: string): string => `/trips/${encodeURIComponent(tripId)}/`;
 
 export const getTripCanonicalUrl = (tripId: string): string => `${siteUrl}${getTripPath(tripId)}`;
 

@@ -9,5 +9,6 @@ http://travel4life.net/* https://travel4life.net/:splat 301!
 /jim-corbett/resorts/sitemap.xml /sitemap-corbett.xml 200!
 /trips /index.html 200!
 /trips/ /index.html 200!
+/trips/* /index.html 200
 /jim-corbett/* /404.html 404
 /* /404.html 404

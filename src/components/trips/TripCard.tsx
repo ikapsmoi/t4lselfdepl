@@ -10,6 +10,7 @@ import { TRIP_TYPES, DIFFICULTY_LEVELS, getCurrencySymbol, INDIA_CATEGORIES } fr
 import { formatCitiesForDisplay } from '../../utils/formatters';
 import { resolveTripThumbnail } from '../../utils/tripImages';
 import { optimizeImageUrl } from '../../utils/imageOptimization';
+import { getTripPath } from '../../utils/tripSeo';
 
 
 interface TripCardProps {
@@ -383,7 +384,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               <span>Inquire now</span>
             </button>
             <a
-              href={`/trips/${encodeURIComponent(trip.id)}`}
+              href={getTripPath(trip.id)}
               onClick={(event) => event.stopPropagation()}
               className="inline-flex min-h-11 items-center rounded-full px-3 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
               aria-label={`Open ${trip.title} page`}
