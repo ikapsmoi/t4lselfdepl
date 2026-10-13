@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { supabase } from "@/lib/supabase";
 import type { SearchFilters, Trip } from "@/types";
 import { formatCitiesForDisplay, cleanTripTitle, stripSourceNotes } from '../utils/formatters';
-import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 
 const EUROPEAN_COUNTRIES = [
   'Albania',
@@ -167,7 +166,7 @@ export const useTrips = () => {
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
           type: trip.category,
           price: Number(trip.price_per_person),
-          currency: trip.currency  ||trip.profiles?.host_details?.currency_preference || 'USD',
+          currency: trip.currency || trip.profiles?.host_details?.currency_preference || (trip.category === 'indian_special' ? 'INR' : ''),
           duration: trip.itinerary?.duration ? Number(trip.itinerary.duration) : Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),
           max_capacity: trip.group_size,
           current_bookings: 0,
@@ -193,8 +192,8 @@ export const useTrips = () => {
             created_at: '',
             badges: []
           } : undefined,
-          rating: 4.8,
-          review_count: 0,
+          rating: Number(trip.review_count) > 0 ? Number(trip.rating) || 0 : 0,
+          review_count: Number(trip.review_count) || 0,
           itinerary: trip.itinerary || {},
           created_at: trip.created_at,
           featured: trip.nomadic_badge || false,
@@ -203,15 +202,15 @@ export const useTrips = () => {
           included: trip.itinerary?.included || [],
           not_included: trip.itinerary?.notIncluded || [],
           requirements: trip.itinerary?.requirements || [],
-          cancellation_policy: DEFAULT_CANCELLATION_POLICY,
-          deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
+          cancellation_policy: trip.cancellation_policy || '',
+          deposit_required: Number(trip.deposit_required) || 0,
           group_discount: trip.group_discount || 0,
           safety_measures: trip.itinerary?.safetyMeasures || []
         }));
 
-        // Apply rating filter in-memory (since rating is currently mock data)
+        // Do not treat trips without submitted reviews as rated results.
         const visibleTrips = searchFilters?.rating
-          ? transformedTrips.filter(trip => trip.rating >= searchFilters.rating!)
+          ? transformedTrips.filter(trip => trip.review_count > 0 && trip.rating >= searchFilters.rating!)
           : transformedTrips;
         setTrips(visibleTrips);
         setLoading(false);

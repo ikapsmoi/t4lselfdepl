@@ -11,8 +11,6 @@ import { TrustBar } from '../components/home/TrustBar';
 import { ViralGallery } from '../components/home/ViralGallery';
 import { FloatingWhatsAppEnquiry } from '../components/common/FloatingWhatsAppEnquiry';
 
-const SocialReviews = lazy(() => import('../components/home/SocialReviews').then(({ SocialReviews: Component }) => ({ default: Component })));
-const Testimonials = lazy(() => import('../components/home/Testimonials').then(({ Testimonials: Component }) => ({ default: Component })));
 const Newsletter = lazy(() => import('../components/home/Newsletter').then(({ Newsletter: Component }) => ({ default: Component })));
 const FAQ = lazy(() => import('../components/home/FAQ').then(({ FAQ: Component }) => ({ default: Component })));
 const CreatorTrips = lazy(() => import('../components/creator/CreatorTrips').then(({ CreatorTrips: Component }) => ({ default: Component })));
@@ -117,10 +115,7 @@ export const HomePage: React.FC = () => {
     type.value !== 'indian_special' && trips.some(trip => trip.type === type.value)
   );
   const { viewHome } = useAnalytics();
-  const [showIndiaSpecials, setShowIndiaSpecials] = React.useState(false);
-  const [showTrendingDestinations, setShowTrendingDestinations] = React.useState(false);
   const [showSafety, setShowSafety] = React.useState(false);
-  const [showTestimonialsSection, setShowTestimonialsSection] = React.useState(false);
   const [showHowItWorksSection, setShowHowItWorksSection] = React.useState(false);
 
   // Track home page view
@@ -135,21 +130,12 @@ export const HomePage: React.FC = () => {
       const hash = window.location.hash;
 
       // Reset all section visibility
-      setShowTestimonialsSection(false);
       setShowHowItWorksSection(false);
       setShowSafety(false);
 
       if (hash === '#top-rated-adventures') {
         setTimeout(() => {
           const element = document.getElementById('top-rated-adventures');
-          if (element) {
-            element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        }, 200);
-      } else if (hash === '#testimonials') {
-        setShowTestimonialsSection(true);
-        setTimeout(() => {
-          const element = document.getElementById('testimonials');
           if (element) {
             element.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
@@ -229,8 +215,8 @@ export const HomePage: React.FC = () => {
             </div>
             <TripGrid
               trips={topRatedTrips}
-              title="Top-Rated Adventures"
-              subtitle="Join our most beloved trips rated by fellow travelers"
+              title="Explore Trips"
+              subtitle="Browse current group travel options"
               loading={loading}
               mobileCarousel={true}
               autoAdvanceMobile={true}
@@ -240,9 +226,6 @@ export const HomePage: React.FC = () => {
           </div>
         </section>
       </div>
-
-      {/* Social Reviews - Mobile Only */}
-      <DeferredHomeSection reserveHeight={280}><SocialReviews /></DeferredHomeSection>
 
       <SectionDivider />
 
@@ -272,13 +255,6 @@ export const HomePage: React.FC = () => {
       {showSafety && (
         <div id="safety">
           <Suspense fallback={<PageSectionLoader />}><SafetyPage /></Suspense>
-        </div>
-      )}
-
-      {/* Community/Testimonials - Only show when clicked */}
-      {showTestimonialsSection && (
-        <div id="testimonials">
-          <Suspense fallback={<PageSectionLoader />}><Testimonials /></Suspense>
         </div>
       )}
 

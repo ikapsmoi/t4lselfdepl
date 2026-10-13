@@ -2,7 +2,7 @@
 import { Modal } from '../ui/Modal';
 import { Button } from '../ui/Button';
 import { Trip } from '../../types';
-import { Instagram, Share2, Copy, Download, CheckCircle, Smartphone, Camera } from 'lucide-react';
+import { Instagram, Share2, Copy, CheckCircle, Smartphone, Camera } from 'lucide-react';
 import { useAnalytics } from '../../utils/analytics';
 import { stripSourceNotes } from '../../utils/formatters';
 
@@ -35,7 +35,7 @@ export const PromoteTripModal: React.FC<PromoteTripModalProps> = ({
 📍 ${trip.destination}
 ⏰ ${trip.duration} days of pure adventure
 💰 Starting from $${trip.price} per person
-⭐ ${trip.rating}/5 rating from fellow travelers
+${trip.review_count > 0 ? `⭐ ${trip.rating}/5 rating from ${trip.review_count} reviews` : ''}
 
 ${cleanedDescription}
 
@@ -54,7 +54,7 @@ ${hashtags}
 ${trip.title}
 📍 ${trip.destination}
 💸 $${trip.price}/person
-⭐ ${trip.rating} rating
+${trip.review_count > 0 ? `⭐ ${trip.rating} rating (${trip.review_count} reviews)` : ''}
 
 Swipe up to book! 👆`;
   };

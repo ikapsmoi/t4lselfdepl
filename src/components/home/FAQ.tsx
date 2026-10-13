@@ -18,57 +18,57 @@ export const FAQ: React.FC = () => {
     general: [
       {
         question: 'How does Travel4life work?',
-        answer: 'Travel4life connects travelers with verified hosts who create unique group travel experiences. Browse trips, join a group, and embark on adventures with like-minded people from around the world.',
+        answer: 'Browse the trips currently listed and contact Travel4life to confirm availability, inclusions, price, payment schedule and terms before booking.',
       },
       {
         question: 'What makes Travel4life different?',
-        answer: 'We focus on small group experiences (6-16 people), verified hosts, and authentic local connections. Plus, we offer unique features like NFT souvenirs, creator trips, and a comprehensive safety system.',
+        answer: 'Trip formats and services vary. Check the details on the trip page and ask us to confirm anything that is not stated for your specific trip.',
       },
       {
         question: 'How do I join a trip?',
-        answer: 'Simply browse our trips, select one that interests you, and click "Book Now". You can pay a deposit to secure your spot or pay in full. You\'ll then be added to the trip group chat to meet your fellow travelers.',
+        answer: 'Choose a trip and use its enquiry or booking option. Confirm current availability, the applicable payment terms and cancellation policy before paying.',
       }
     ],
     booking: [
       {
         question: 'How do payments work?',
-        answer: 'You can pay a deposit to secure your spot and pay the balance later, or pay in full upfront. We accept credit cards and PayPal, and all payments are securely processed.',
+        answer: 'Payment methods, deposit amounts and schedules depend on the specific trip. Ask for the current written terms before making a payment.',
       },
       {
         question: 'What if I need to cancel my trip?',
-        answer: 'Cancellation policies vary by trip, but most offer free cancellation up to 14-30 days before departure. You can see the specific policy on each trip page before booking.',
+        answer: 'Cancellation terms are trip-specific. Review the terms supplied for your trip and request them in writing if they are not shown before booking.',
       },
       {
         question: 'Can I get a refund?',
-        answer: 'Refunds depend on the trip\'s cancellation policy and timing. We also offer trip insurance for additional protection against unforeseen circumstances.',
+        answer: 'Any refund depends on the applicable written booking and cancellation terms. Travel4life does not make a general insurance or refund promise here.',
       }
     ],
     safety: [
       {
         question: 'Are the hosts verified and trustworthy?',
-        answer: 'Yes! All hosts undergo a thorough verification process including background checks, identity verification, and reference checks. We also have a comprehensive review system and 24/7 support.',
+        answer: 'Ask us what checks and support apply to the specific trip and host. Do not assume a particular screening process or round-the-clock support unless it is confirmed for your booking.',
       },
       {
         question: 'What safety measures are in place?',
-        answer: 'We provide 24/7 emergency support, GPS tracking, buddy matching, and all trips include emergency communication devices. Our hosts are trained in first aid and emergency procedures.',
+        answer: 'Safety arrangements differ by trip. Confirm the available emergency contact, local support and any included safety equipment with us before booking.',
       },
       {
         question: 'Is travel insurance included?',
-        answer: 'Basic coverage is included with every booking, but we recommend purchasing comprehensive travel insurance for additional protection. We can help you find the right coverage.',
+        answer: 'Do not assume travel insurance is included. Check your trip terms and arrange suitable cover directly with an insurer.',
       }
     ],
     hosting: [
       {
         question: 'Can I become a host?',
-        answer: 'Absolutely! If you\'re passionate about travel and want to share unique experiences, apply to become a host. We provide training, support, and all the tools you need to succeed.',
+        answer: 'Contact Travel4life to ask whether host applications are currently open and to request the applicable onboarding details.',
       },
       {
         question: 'How much can I earn as a host?',
-        answer: 'Host earnings vary based on trip price, frequency, and group size. Our top hosts earn $50,000+ annually. We take a 15% commission, which is among the lowest in the industry.',
+        answer: 'Earnings and fees depend on the applicable written host agreement. Request the current commercial terms; no typical earnings or commission rate is promised here.',
       },
       {
         question: 'What support do hosts receive?',
-        answer: 'Hosts get comprehensive training, 24/7 support, marketing assistance, payment processing, insurance coverage, and access to our host community for tips and advice.',
+        answer: 'Host support, training, insurance and payment arrangements depend on the current program and written agreement. Confirm what is included before joining.',
       }
     ]
   };

@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import { Instagram, Facebook, Mail, Phone, MapPin, Send, Star, Shield, MessageCircle } from 'lucide-react';
+import { Instagram, Facebook, Mail, Phone, MapPin, Send, MessageCircle } from 'lucide-react';
 import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl, TRAVEL4LIFE_CONTACT, type Travel4LifeContactContext } from '../../utils/travel4lifeContact.js';
 import { trackContactEvent } from '../../utils/analytics';
 
@@ -16,18 +16,16 @@ type FooterLink = {
 
 export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext }) => {
   const [email, setEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
+  const [emailDraftUrl, setEmailDraftUrl] = useState('');
   const contact = contactContext || getTravel4LifeContactContext();
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
-      const subject = 'Newsletter Signup';
-      const body = `Email: ${email}\nDate: ${new Date().toLocaleString()}`;
-      window.open(`mailto:${TRAVEL4LIFE_CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
-      setSubscribed(true);
+    if (email.trim()) {
+      const subject = 'Travel4life email updates';
+      const body = `Hello,\n\nI would like to receive occasional Travel4life email updates.\nMy email address is: ${email.trim()}\n\nPlease let me know how to proceed.`;
+      setEmailDraftUrl(`mailto:${TRAVEL4LIFE_CONTACT.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`);
       setEmail('');
-      setTimeout(() => setSubscribed(false), 4000);
     }
   };
 
@@ -44,9 +42,9 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
       { name: 'Corbett Resorts', href: '/jim-corbett/resorts/' },
       { name: 'Europe Travel', href: '/europe/' },
       { name: 'Inbound', href: '/india-tours/' },
+      { name: 'Tomorrowland planning', href: '/tomorrowland/' },
       { name: 'Browse Trips', onClick: () => { window.location.hash = 'trips'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
       { name: 'India Specials', onClick: () => { window.location.hash = 'home'; setTimeout(() => { document.getElementById('india-specials')?.scrollIntoView({ behavior: 'smooth' }); }, 300); setIsMenuOpen?.(false); } },
-      { name: 'Reviews', onClick: () => { window.location.hash = 'reviews'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
     ],
     hosts: [
       { name: 'Become a Host', onClick: () => { window.location.hash = 'how-it-works'; window.scrollTo(0, 0); setIsMenuOpen?.(false); } },
@@ -71,8 +69,11 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
               <h3 className="text-2xl md:text-3xl font-bold text-white mb-2 tracking-tight">Get travel inspiration</h3>
               <p className="text-gray-400 text-sm">Exclusive deals, new trips, and community stories. No spam.</p>
             </div>
-            {subscribed ? (
-              <div className="text-teal-400 font-semibold text-sm">Welcome to the Travel4life community!</div>
+            {emailDraftUrl ? (
+              <div className="max-w-md text-center text-sm text-gray-300 sm:text-left" role="status" aria-live="polite">
+                <p className="mb-2 font-semibold text-teal-300">Your email request is ready; it has not been sent.</p>
+                <a className="underline underline-offset-2 hover:text-white" href={emailDraftUrl}>Open your email app to send it</a>
+              </div>
             ) : (
               <form onSubmit={handleNewsletterSubmit} className="flex w-full min-w-0 max-w-md flex-col gap-2 sm:flex-row">
                 <input
@@ -88,7 +89,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
                   className="flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 text-sm font-semibold text-gray-900 transition-colors hover:bg-gray-100 sm:w-auto sm:rounded-l-none sm:rounded-r-2xl sm:px-6 sm:py-3.5"
                 >
                   <Send className="w-4 h-4" />
-                  Subscribe
+                  Prepare email
                 </button>
               </form>
             )}
@@ -106,7 +107,7 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
               <span className="ml-2 text-xl font-bold text-white">Travel4life</span>
             </div>
             <p className="text-gray-400 text-sm leading-relaxed mb-6 max-w-sm">
-              Founded in 2014, India's most trusted gateway to international music festivals and curated group travel experiences.
+              Group travel and festival trip planning from India.
             </p>
 
             {/* Contact */}
@@ -181,33 +182,6 @@ export const Footer: React.FC<FooterProps> = ({ setIsMenuOpen, contactContext })
               </ul>
             </div>
           ))}
-        </div>
-
-        {/* Partners */}
-        <div className="border-t border-white/5 pt-8 mb-8">
-          <p className="text-center text-xs text-gray-500 uppercase tracking-wider font-medium mb-4">Our Partners</p>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-gray-500 text-xs">
-            <span className="font-medium text-gray-400">Accor Hotels</span>
-            <span className="font-medium text-gray-400">IATA</span>
-            <span className="font-medium text-gray-400">Marriott</span>
-            <span className="font-medium text-gray-400">Taj Hotels</span>
-            <span className="font-medium text-gray-400">Emirates</span>
-            <span className="font-medium text-gray-400">IndiGo</span>
-            <span className="font-medium text-gray-400">Air India</span>
-            <span className="font-medium text-gray-400">Ultra</span>
-            <span className="font-medium text-gray-400">EDC</span>
-            <span className="font-medium text-gray-400">Booking.com</span>
-          </div>
-        </div>
-
-        {/* Trust indicators */}
-        <div className="border-t border-white/5 pt-8 mb-8">
-          <div className="flex flex-wrap items-center justify-center gap-6 text-gray-500 text-xs">
-            <span className="flex items-center gap-1.5"><Shield className="w-3.5 h-3.5" /> SSL Secured</span>
-            <span>GST 07AIGPK7468L1ZN</span>
-            <span>MSME UDYAM-DL010106969</span>
-            <span className="flex items-center gap-1.5"><Star className="w-3.5 h-3.5" /> Since 2014</span>
-          </div>
         </div>
 
         {/* Bottom */}

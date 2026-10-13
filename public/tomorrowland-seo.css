@@ -570,3 +570,26 @@ header::before {
 	.whatsapp-button span { display: none; }
 	.home-link, .guides-link { padding-inline: 7px; }
 }
+
+.b2b-enquiry-form { display: grid; gap: 10px; margin-top: 18px; }
+.b2b-enquiry-form > label, .b2b-enquiry-form legend { color: var(--ink); font-size: .9rem; font-weight: 700; }
+.b2b-enquiry-form > input, .b2b-enquiry-form > select {
+	width: 100%;
+	min-height: 48px;
+	padding: 10px 12px;
+	border: 1px solid #a8b5a9;
+	border-radius: 8px;
+	background: #fff;
+	color: var(--ink);
+	font: inherit;
+}
+.b2b-enquiry-form input:focus, .b2b-enquiry-form select:focus {
+	outline: 3px solid rgb(16 120 91 / 24%);
+	border-color: var(--forest-mid);
+}
+.b2b-enquiry-form fieldset { display: grid; gap: 8px; margin: 8px 0; padding: 12px; border: 1px solid var(--line); border-radius: 8px; }
+.b2b-enquiry-form fieldset label { display: flex; align-items: center; gap: 8px; color: var(--ink); }
+.b2b-enquiry-form input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--forest-mid); }
+.b2b-enquiry-form [hidden] { display: none !important; }
+.b2b-enquiry-form a.button.secondary { color: var(--ink); border-color: var(--line); background: #fff; }
+.b2b-enquiry-form [role="status"] { margin: 0; color: var(--forest-deep); }

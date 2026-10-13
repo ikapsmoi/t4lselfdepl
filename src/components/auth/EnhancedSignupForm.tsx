@@ -1,5 +1,5 @@
 ﻿import React, { useState } from 'react';
-import { User, Mail, Eye, EyeOff, MapPin } from 'lucide-react';
+import { User, Mail, Eye, EyeOff, MapPin, Instagram } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Input } from '../ui/Input';
 import { Modal } from '../ui/Modal';
@@ -192,33 +192,10 @@ export const EnhancedSignupForm: React.FC<SignupFormProps> = ({
                 <MapPin className="w-8 h-8 text-green-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">I'm a Host</h3>
-              <p className="text-green-600 font-semibold mb-3">Earn money hosting trips. Share your world with travelers.</p>
-              
-              {/* Social Proof */}
-              <div className="bg-green-50 rounded-lg p-4 mb-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <div className="font-bold text-green-900">₹50K-100K</div>
-                    <div className="text-green-700">Avg Earnings/Trip</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-green-900">2,500+</div>
-                    <div className="text-green-700">Active Hosts</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-green-900">15%</div>
-                    <div className="text-green-700">Commission Only</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-green-900">24/7</div>
-                    <div className="text-green-700">Support</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="text-sm text-gray-600">
-                ✓ Insurance coverage • ✓ 24/7 support • ✓ Verified payments
-              </div>
+              <p className="text-green-600 font-semibold mb-3">Create trip listings and share travel experiences.</p>
+              <p className="rounded-lg bg-green-50 p-4 text-sm text-green-900">
+                Earnings, fees, insurance and support depend on the current written host agreement. Confirm the terms before applying.
+              </p>
             </div>
           </div>
   {/* Traveler Option */}
@@ -234,33 +211,10 @@ export const EnhancedSignupForm: React.FC<SignupFormProps> = ({
                 <User className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-2">I'm a Traveler</h3>
-              <p className="text-blue-600 font-semibold mb-3">Join group adventures, make friends, and travel for less.</p>
-              
-              {/* Trust Signals */}
-              <div className="bg-blue-50 rounded-lg p-4 mb-4">
-                <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <div className="font-bold text-blue-900">18K+</div>
-                    <div className="text-blue-700">Happy Travelers</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-blue-900">60+</div>
-                    <div className="text-blue-700">Destinations</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-blue-900">4.65★</div>
-                    <div className="text-blue-700">Average Rating</div>
-                  </div>
-                  <div>
-                    <div className="font-bold text-blue-900">100%</div>
-                    <div className="text-blue-700">Insured</div>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="text-sm text-gray-600">
-                ✓ Backed by insurance • ✓ Safe payments • ✓ Verified hosts
-              </div>
+              <p className="text-blue-600 font-semibold mb-3">Browse trip listings and send travel enquiries.</p>
+              <p className="rounded-lg bg-blue-50 p-4 text-sm text-blue-900">
+                Availability, pricing, inclusions, payment schedules and cancellation terms vary by trip. Confirm them before booking.
+              </p>
             </div>
           </div>
           {/* Switch to Login */}

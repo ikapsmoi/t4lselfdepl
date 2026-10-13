@@ -36,18 +36,18 @@ export const HowItWorks: React.FC = () => {
   const features = [
     {
       icon: Shield,
-      title: 'Verified Hosts',
-      description: 'All hosts are background-checked and verified for your safety',
+      title: 'Trip details',
+      description: 'Review the information shown for each listing and ask us to confirm anything missing',
     },
     {
       icon: Star,
-      title: 'Quality Guaranteed',
-      description: 'Every trip is reviewed and rated by our community',
+      title: 'Clear terms',
+      description: 'Confirm current availability, price and booking terms before you proceed',
     },
     {
       icon: Users,
       title: 'Small Groups',
-      description: 'Intimate group sizes for personalized experiences',
+      description: 'Check the group size shown on the trip listing',
     },
   ];
 

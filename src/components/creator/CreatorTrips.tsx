@@ -1,14 +1,11 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Star, Users, Play, Instagram, Youtube, EggFried as Verified } from 'lucide-react';
+import { Star, Instagram, EggFried as Verified } from 'lucide-react';
 import { CreatorTrip, Trip } from '../../types';
-import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
-import { TripCard } from '../trips/TripCard';
 import { CreatorApplicationModal } from './CreatorApplicationModal';
 import { supabase } from '../../lib/supabase';
 import { TripDetails } from '../trips/TripDetails';
 import { cleanTripTitle } from '../../utils/formatters';
-import { DEFAULT_CANCELLATION_POLICY } from '../../utils/constants';
 import { useSlowMobileCarousel } from '../../hooks/useSlowMobileCarousel';
 
 
@@ -50,75 +47,23 @@ export const CreatorTrips: React.FC = () => {
         const mappedCreators = data.map(profile => ({
           id: profile.id,
           name: profile.name,
-          avatar: profile.avatar_url || 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
+          avatar: profile.avatar_url || '',
           followers: profile.creator_followers || 0,
           specialty: 'Travel & Adventure', // Placeholder - could be derived from trip categories
           verified: profile.creator_verified,
-          trips_hosted: Math.floor(Math.random() * 8) + 10, // Random number between 10-99
-          rating: 4.8, // Placeholder - would require aggregating from reviews
-          total_earnings_inr: profile.total_earnings_inr || Math.floor(Math.random() * 40000 + 10000),
+          trips_hosted: 0,
+          rating: 0,
+          total_earnings_inr: Number(profile.total_earnings_inr) || 0,
           instagram_id: profile.instagram_id
         }));
         setDynamicTopCreators(mappedCreators);
       } else {
-        // Fallback to mock data if no verified creators found
-        const fallbackCreators = [
-          {
-            id: '1',
-            name: 'Priya Sharma',
-            avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
-            followers: 250000,
-            specialty: 'Bollywood & Entertainment',
-            verified: true,
-            trips_hosted: Math.floor(Math.random() * 90) + 10,
-            rating: 4.9,
-            total_earnings_inr: 45000,
-            instagram_id: 'priya_bollywood_travels'
-          },
-          {
-            id: '2',
-            name: 'Arjun Patel',
-            avatar: 'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg',
-            followers: 180000,
-            specialty: 'Yoga & Spirituality',
-            verified: true,
-            trips_hosted: Math.floor(Math.random() * 90) + 10,
-            rating: 4.8,
-            total_earnings_inr: 38000,
-            instagram_id: 'arjun_yoga_journeys'
-          },
-          {
-            id: '3',
-            name: 'Chef Ravi Menon',
-            avatar: 'https://images.pexels.com/photos/1043471/pexels-photo-1043471.jpeg',
-            followers: 320000,
-            specialty: 'Culinary Adventures',
-            verified: true,
-            trips_hosted: Math.floor(Math.random() * 90) + 10,
-            rating: 4.9,
-            total_earnings_inr: 52000,
-            instagram_id: 'chef_ravi_travels'
-          }
-        ];
-        setDynamicTopCreators(fallbackCreators);
+        setDynamicTopCreators([]);
       }
     } catch (err) {
       console.error('Error fetching top creators:', err);
       setErrorCreators('Failed to load top creators.');
-      // Fallback to mock data on error
-      const fallbackCreators = [
-        {
-          id: '1',
-          name: 'Priya Sharma',
-          avatar: 'https://images.pexels.com/photos/774909/pexels-photo-774909.jpeg',
-          followers: 250000,
-          specialty: 'Bollywood & Entertainment',
-          verified: true,
-          trips_hosted: 15,
-          rating: 4.9
-        }
-      ];
-      setDynamicTopCreators(fallbackCreators);
+      setDynamicTopCreators([]);
     } finally {
       setLoadingCreators(false);
     }
@@ -171,7 +116,7 @@ export const CreatorTrips: React.FC = () => {
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
           type: trip.category,
           price: Number(trip.price_per_person),
-          currency: trip.currency || 'USD',
+          currency: trip.currency || (trip.category === 'indian_special' ? 'INR' : ''),
           duration: trip.itinerary?.duration ? Number(trip.itinerary.duration) : Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),
           max_capacity: trip.group_size,
           current_bookings: bookingCounts[trip.id] || 0,
@@ -199,7 +144,7 @@ export const CreatorTrips: React.FC = () => {
             instagram_id: trip.host.instagram_id,
             avatar_url: trip.host.avatar_url,
           } : undefined,
-          rating: 4.8,
+          rating: 0,
           review_count: 0,
           itinerary: trip.itinerary || {},
           created_at: trip.created_at,
@@ -209,9 +154,9 @@ export const CreatorTrips: React.FC = () => {
           included: trip.itinerary?.included || [],
           not_included: trip.itinerary?.notIncluded || [],
           requirements: trip.itinerary?.requirements || [],
-          cancellation_policy: DEFAULT_CANCELLATION_POLICY,
-          deposit_required: Number((Number(trip.price_per_person) * 0.5).toFixed(2)),
-          group_discount: 10,
+          cancellation_policy: '',
+          deposit_required: Number(trip.deposit_required) || 0,
+          group_discount: Number(trip.group_discount) || 0,
           safety_measures: trip.itinerary?.safetyMeasures || [],
           creator_verified: trip.host?.creator_verified || false,
           creator_followers: trip.host?.creator_followers || 0,
@@ -220,7 +165,7 @@ export const CreatorTrips: React.FC = () => {
             youtube: undefined,
             tiktok: undefined,
           },
-          trending_score: Math.floor(Math.random() * 40) + 60 // Random score between 60-100
+          trending_score: Number(trip.trending_score) || 0
         }));
         
         setDynamicCreatorTrips(transformedTrips);
@@ -297,6 +242,9 @@ export const CreatorTrips: React.FC = () => {
             onBlurCapture={creatorsCarousel.onBlurCapture}
             className="relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 scrollbar-hide sm:-mx-8 sm:px-8 md:mx-0 md:px-0"
           >
+            {dynamicTopCreators.length === 0 && (
+              <p className="w-full py-6 text-center text-sm text-gray-600">No creator profiles are available right now.</p>
+            )}
             {dynamicTopCreators.map((creator) => (
                 <div key={creator.id} className="w-[82vw] max-w-[320px] shrink-0 snap-start md:w-56 md:max-w-none">
                   <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-transform duration-150 ease-out active:scale-[0.98] hover:shadow-lg">
@@ -311,11 +259,17 @@ export const CreatorTrips: React.FC = () => {
                             window.location.hash = `creator-profile?id=${creator.id}`;
                           }}
                         >
-                          <img
-                            src={creator.avatar}
-                            alt={creator.name}
-                            className="w-14 h-14 rounded-full object-cover border-3 border-gradient-to-r from-pink-500 to-purple-500 shadow-md"
-                          />
+                          {creator.avatar ? (
+                            <img
+                              src={creator.avatar}
+                              alt={creator.name}
+                              className="w-14 h-14 rounded-full object-cover border-3 border-gradient-to-r from-pink-500 to-purple-500 shadow-md"
+                            />
+                          ) : (
+                            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 font-semibold text-gray-500" aria-hidden="true">
+                              {creator.name.charAt(0)}
+                            </span>
+                          )}
                         </button>
                         <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
                           <Verified className="w-3 h-3 text-white" />
@@ -325,23 +279,12 @@ export const CreatorTrips: React.FC = () => {
                       <h4 className="font-bold text-gray-900 text-sm mb-0.5 truncate">{creator.name}</h4>
                       <p className="text-xs text-gray-500 mb-3">{creator.specialty}</p>
 
-                      <div className="grid grid-cols-3 gap-1 mb-3 text-center">
-                        <div>
-                          <div className="text-sm font-bold text-gray-900">{(creator.followers / 1000).toFixed(1)}K</div>
+                      {creator.followers > 0 && (
+                        <div className="mb-3 text-center">
+                          <div className="text-sm font-bold text-gray-900">{creator.followers.toLocaleString()}</div>
                           <div className="text-[10px] text-gray-400">followers</div>
                         </div>
-                        <div>
-                          <div className="text-sm font-bold text-gray-900">{creator.trips_hosted}</div>
-                          <div className="text-[10px] text-gray-400">trips</div>
-                        </div>
-                        <div className="flex flex-col items-center">
-                          <div className="flex items-center">
-                            <Star className="w-3 h-3 text-yellow-500 fill-current mr-0.5" />
-                            <span className="text-sm font-bold text-gray-900">{creator.rating}</span>
-                          </div>
-                          <div className="text-[10px] text-gray-400">rating</div>
-                        </div>
-                      </div>
+                      )}
 
                       <Button
                         variant="outline"

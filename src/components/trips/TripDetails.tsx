@@ -1,22 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { 
-  Star, Users, Calendar, MapPin, Clock, Shield, Heart, Share2, X, Home,
-  CheckCircle, XCircle, AlertTriangle, Camera, MessageCircle, Eye 
+import {
+  Users, Calendar, MapPin, Shield, Heart, Share2, X, Home,
+  CheckCircle, XCircle, AlertTriangle, MessageCircle, Eye
 } from 'lucide-react';
-import { Trip, User, Booking } from '../../types';
+import { Trip, Booking } from '../../types';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { Rating } from '../ui/Rating';
-import { Modal } from '../ui/Modal';
-import { Input } from '../ui/Input';
 import { BookingModal } from './BookingModal';
 import { ReviewSection } from './ReviewSection';
 import { VRPreview } from '../vr/VRPreview';
 import { InquireNowModal } from './InquireNowModal';
 import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
-import { TRIP_TYPES, DIFFICULTY_LEVELS, BADGES, DEFAULT_TRIP_INCLUSIONS, DEFAULT_TRIP_EXCLUSIONS } from '../../utils/constants';
-import { DEFAULT_TRIP_REVIEWS } from '../../utils/defaultReviews';
+import { TRIP_TYPES, DIFFICULTY_LEVELS } from '../../utils/constants';
 import { getCurrencySymbol } from '../../utils/constants';
 import { stripSourceNotes } from '../../utils/formatters';
 import { useAnalytics } from '../../utils/analytics';
@@ -29,9 +26,10 @@ import { MobileBottomBar } from '../common/MobileBottomBar';
 interface TripDetailsProps {
   trip: Trip;
   onClose: () => void;
+  quoteOnly?: boolean;
 }
 
-export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
+export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOnly = false }) => {
   const { viewTrip, clickJoin, whatsappClick } = useAnalytics();
   const { user } = useAuth();
   const { getBookingByTripAndUser } = useBookings();
@@ -97,12 +95,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
     return getCurrencySymbol(trip.currency || 'INR'); // Fallback to existing logic
   }, [trip.type, trip.currency]);
   const sanitizedDescription = stripSourceNotes(trip.description);
-  const includedItems = trip.included?.some(item => item.trim())
-    ? trip.included
-    : DEFAULT_TRIP_INCLUSIONS;
-  const excludedItems = trip.not_included?.some(item => item.trim())
-    ? trip.not_included
-    : DEFAULT_TRIP_EXCLUSIONS;
+  const includedItems = trip.included?.filter(item => item.trim()) || [];
+  const excludedItems = trip.not_included?.filter(item => item.trim()) || [];
+  const inquiryOnly = quoteOnly || !trip.currency || !Number.isFinite(trip.deposit_required) || trip.deposit_required <= 0;
   const displayedExcludedItems = trip.type === 'indian_special'
     ? excludedItems.filter(item => item !== 'City tax if applicable.' && item !== 'Visa fees not included.')
     : excludedItems;
@@ -275,10 +270,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                     <Users className="w-3.5 h-3.5 md:w-5 md:h-5 mr-1 md:mr-2" />
                     <span>{trip.max_capacity} max</span>
                   </div>
-                  <Rating
-                    rating={trip.rating}
-                    reviewCount={trip.review_count + (trip.type === 'festival' ? 0 : DEFAULT_TRIP_REVIEWS.length)}
-                  />
+                  {trip.review_count > 0 && <Rating rating={trip.rating} reviewCount={trip.review_count} />}
                 </div>
 
                 <p className="tour-description text-gray-700 mb-4 md:mb-6 whitespace-pre-wrap">{sanitizedDescription}</p>
@@ -292,8 +284,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-                <div>
+              {(includedItems.length > 0 || displayedExcludedItems.length > 0) && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+                {includedItems.length > 0 && <div>
                   <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
                     <CheckCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600 mr-1.5 md:mr-2" />
                     What's Included
@@ -305,9 +298,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                       </li>
                     ))}
                   </ul>
-                </div>
+                </div>}
 
-                <div>
+                {displayedExcludedItems.length > 0 && <div>
                   <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
                     <XCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-600 mr-1.5 md:mr-2" />
                     Not Included
@@ -319,8 +312,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                       </li>
                     ))}
                   </ul>
+                </div>}
                 </div>
-              </div>
+              )}
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
@@ -357,12 +351,20 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             <div className="lg:col-span-1">
               <div className="sticky top-20 bg-white rounded-xl shadow-lg p-3 md:p-6 border">
                 <div className="text-center mb-4 md:mb-6">
-                  <div className="text-2xl md:text-3xl font-bold text-gray-900">{displayCurrencySymbol}{trip.price}</div>
-                  <div className="text-xs md:text-sm text-gray-600">per person · total trip price</div>
-                  <div className="mt-1 text-xs font-semibold text-amber-700">
-                    {displayCurrencySymbol}{trip.deposit_required} deposit due today ({Math.round((trip.deposit_required / trip.price) * 100)}%)
-                  </div>
-                  {trip.early_bird_discount && (
+                  {inquiryOnly ? (
+                    <div className="text-base font-semibold text-gray-900">Ask for current price and terms</div>
+                  ) : (
+                    <>
+                      <div className="text-2xl md:text-3xl font-bold text-gray-900">{displayCurrencySymbol}{trip.price}</div>
+                      <div className="text-xs md:text-sm text-gray-600">per person · total trip price</div>
+                      {trip.deposit_required > 0 && (
+                        <div className="mt-1 text-xs font-semibold text-amber-700">
+                          {displayCurrencySymbol}{trip.deposit_required} deposit due today ({Math.round((trip.deposit_required / trip.price) * 100)}%)
+                        </div>
+                      )}
+                    </>
+                  )}
+                  {!inquiryOnly && trip.early_bird_discount && (
                     <Badge variant="success" size="sm" className="mt-2 text-[9px] md:text-xs">
                       Save {trip.early_bird_discount}% - Early Bird!
                     </Badge>
@@ -380,7 +382,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   </div>
                   <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Group size:</span>
-                    <span className="font-medium">{trip.current_bookings}/{trip.max_capacity} travelers</span>
+                    <span className="font-medium">Up to {trip.max_capacity} travelers</span>
                   </div>
                   <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Difficulty:</span>
@@ -388,20 +390,41 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                   </div>
                 </div>
 
-                <div className="mb-4 md:mb-6">
-                  <div className="flex justify-between text-[10px] md:text-sm mb-1 md:mb-2">
-                    <span className="text-gray-600">Spots filled</span>
-                    <span className="font-medium">{trip.current_bookings}/{trip.max_capacity}</span>
+                {trip.current_bookings > 0 && (
+                  <div className="mb-4 md:mb-6">
+                    <div className="flex justify-between text-[10px] md:text-sm mb-1 md:mb-2">
+                      <span className="text-gray-600">Spots filled</span>
+                      <span className="font-medium">{trip.current_bookings}/{trip.max_capacity}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2">
+                      <div
+                        className="bg-yellow-500 h-1.5 md:h-2 rounded-full transition-all duration-500"
+                        style={{ width: `${(trip.current_bookings / trip.max_capacity) * 100}%` }}
+                      />
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-1.5 md:h-2">
-                    <div 
-                      className="bg-yellow-500 h-1.5 md:h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${(trip.current_bookings / trip.max_capacity) * 100}%` }}
-                    />
-                  </div>
-                </div>
+                )}
 
-                {isFull ? (
+                {inquiryOnly ? (
+                  <div className="space-y-2 md:space-y-3">
+                    <Button
+                      variant="outline"
+                      className="w-full text-xs md:text-sm"
+                      onClick={() => setShowInquireModal(true)}
+                      icon={MessageCircle}
+                    >
+                      Inquire Now
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="w-full text-xs md:text-sm"
+                      onClick={handleWhatsAppClick}
+                      icon={MessageCircle}
+                    >
+                      Ask on WhatsApp
+                    </Button>
+                  </div>
+                ) : isFull ? (
                   <Button variant="outline" className="w-full text-[10px] md:text-sm" disabled>
                     Trip is Full
                   </Button>
@@ -456,7 +479,11 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
                 )}
 
                 <div className="mt-4 md:mt-6 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-blue-900 md:p-4 md:text-sm">
-                  <strong>What happens next?</strong> Choose your travelers, review inclusions and add-ons, then confirm your booking. You will be logged in and see your booking confirmation to proceed with payment. If you are already logged in, you will be directed to the payment gateway. Once paid, your booking will be vouchered and confirmation shared within 24 hours.
+                  {inquiryOnly ? (
+                    <>Ask us to confirm current availability, price, inclusions, payment schedule, and cancellation terms before you book.</>
+                  ) : (
+                    <><strong>What happens next?</strong> Review the trip details and booking terms shown before confirming your booking.</>
+                  )}
                 </div>
 
                 {trip.group_discount > 0 && (
@@ -470,17 +497,21 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose }) => {
             </div>
           </div>
           <div className="mt-6 md:mt-8">
-            <ReviewSection tripId={trip.id} tripType={trip.type} />
+            <ReviewSection tripId={trip.id} />
           </div>
         </div>
       </div>
 
       <MobileBottomBar
-        contextLabel="PER PERSON"
-        contextValue={`${displayCurrencySymbol}${trip.price}`}
-        buttonLabel={isFull ? 'Trip is Full' : 'Book This Trip'}
-        disabled={isFull}
+        contextLabel={inquiryOnly ? 'PRICE' : 'PER PERSON'}
+        contextValue={inquiryOnly ? 'Ask for current price' : `${displayCurrencySymbol}${trip.price}`}
+        buttonLabel={inquiryOnly ? 'Ask about this trip' : isFull ? 'Trip is Full' : 'Book This Trip'}
+        disabled={!inquiryOnly && isFull}
         onClick={() => {
+          if (inquiryOnly) {
+            setShowInquireModal(true);
+            return;
+          }
           clickJoin(trip.id);
           setShowBookingModal(true);
         }}

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
-import { Star, Users } from 'lucide-react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
 import { SearchBar } from '../search/SearchBar';
 import type { SearchFilters, Trip } from '../../types';
@@ -237,23 +236,12 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
                     Sign up
                   </button>
                 </div>
-                <div
-                  className="mx-auto mt-3 flex w-fit max-w-full flex-wrap items-center justify-center gap-x-3 gap-y-1.5 text-[10px] font-medium text-white/90 sm:gap-x-5 sm:text-xs lg:mx-0 lg:justify-start"
-                  aria-label="Travel4life trust signals"
-                >
-                  <span className="inline-flex items-center gap-1.5 whitespace-nowrap">
-                    <span className="inline-flex items-center gap-0.5" aria-hidden="true">
-                      {Array.from({ length: 5 }, (_, index) => (
-                        <Star key={index} className="h-3 w-3 fill-amber-300 text-amber-300" />
-                      ))}
-                    </span>
-                    <span>4.8 rating</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1 whitespace-nowrap">
-                    <Users className="h-3 w-3 text-white/80" aria-hidden="true" />
-                    <span>12,000+ Travelers</span>
-                  </span>
-                </div>
+                  <a
+                    href="/tomorrowland/"
+                    className="mx-auto mt-2 inline-flex min-h-11 items-center justify-center rounded-xl px-4 text-sm font-semibold text-white underline decoration-white/60 underline-offset-4 transition-colors hover:text-amber-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-gray-950 lg:mx-0"
+                  >
+                    Planning Tomorrowland travel?
+                  </a>
               </div>
             </div>
         </div>

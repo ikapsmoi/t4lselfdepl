@@ -1,12 +1,10 @@
 import React, { useState, memo, useCallback } from 'react';
-import { Star, Users, Calendar, MapPin, Heart, Clock, TrendingUp, Shield, User, EggFried as Verified, ExternalLink } from 'lucide-react';
+import { Star, Users, Calendar, MapPin, Heart, User, EggFried as Verified, ExternalLink } from 'lucide-react';
 import { Trip } from '../../types';
-import { Badge } from '../ui/Badge';
-import { Button } from '../ui/Button';
 import { useAuth } from '../../hooks/useAuth';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useAnalytics } from '../../utils/analytics';
-import { TRIP_TYPES, DIFFICULTY_LEVELS, getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
+import { TRIP_TYPES, getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
 import { formatCitiesForDisplay } from '../../utils/formatters';
 import { resolveTripThumbnail } from '../../utils/tripImages';
 import { optimizeImageUrl } from '../../utils/imageOptimization';
@@ -29,8 +27,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   onClick, 
   showSaveButton = true,
   variant = 'default',
-  isCreatorTrip = false,
-  trending_score,
   isMobileCarouselItem = false
 }) => {
   const { user } = useAuth();
@@ -57,7 +53,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       : 'https://images.pexels.com/photos/1371360/pexels-photo-1371360.jpeg?auto=compress&cs=tinysrgb&w=800';
   const tripImage = resolveTripThumbnail(trip.title, trip.destination, trip.type, trip.images, fallbackImage);
   const tripType = TRIP_TYPES.find(t => t.value === trip.type);
-  const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === trip.difficulty);
   const isAlmostFull = spotsLeft <= 3 && spotsLeft > 0;
   const isFull = trip.max_capacity > 0 && spotsLeft === 0;
 
@@ -107,8 +102,9 @@ export const TripCard: React.FC<TripCardProps> = memo(({
     if (trip.type && indiaSpecialTypes.includes(trip.type)) {
       return '₹'; // Force INR for India Special trips
     }
-    return getCurrencySymbol(trip.currency || 'INR'); // Fallback to existing logic
+    return trip.currency ? getCurrencySymbol(trip.currency) : '';
   }, [trip.type, trip.currency]);
+  const hasDisplayPrice = Boolean(displayCurrencySymbol) && Number.isFinite(trip.price) && trip.price > 0;
 
   if (variant === 'compact') {
     return (
@@ -168,11 +164,13 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           )}
           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-4">
             <div className="flex items-center justify-between text-white">
-              <div className="flex items-center gap-1">
-                <Star className="w-3.5 h-3.5 text-amber-400 fill-current" />
-                <span className="text-sm font-semibold">{trip.rating}</span>
-              </div>
-              <span className="text-base font-bold">{displayCurrencySymbol}{trip.price}</span>
+              {trip.review_count > 0 && (
+                <div className="flex items-center gap-1">
+                  <Star className="w-3.5 h-3.5 text-amber-400 fill-current" />
+                  <span className="text-sm font-semibold">{trip.rating}</span>
+                </div>
+              )}
+              <span className="text-base font-bold">{hasDisplayPrice ? `${displayCurrencySymbol}${trip.price}` : 'Ask for price'}</span>
             </div>
           </div>
         </div>
@@ -183,10 +181,12 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               <Calendar className="w-3.5 h-3.5" />
               <span>{formatDate(trip.start_date)} · {trip.duration} days</span>
             </div>
-            <div className="flex items-center gap-1">
-              <Users className="w-3.5 h-3.5" />
-              <span>{spotsLeft} spots left</span>
-            </div>
+            {trip.max_capacity > 0 && (
+              <div className="flex items-center gap-1">
+                <Users className="w-3.5 h-3.5" />
+                <span>Up to {trip.max_capacity}</span>
+              </div>
+            )}
           </div>
           {trip.max_capacity > 0 && trip.current_bookings > 0 && (
             <div className="mt-3" aria-label={`${confirmedOccupancy}% of trip capacity reserved`}>
@@ -287,12 +287,16 @@ export const TripCard: React.FC<TripCardProps> = memo(({
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-5">
           <div className="flex items-end justify-between text-white">
             <div className="flex items-center gap-1.5">
-              <Star className="w-4 h-4 text-amber-400 fill-current" />
-              <span className="text-sm font-bold">{trip.rating}</span>
+              {trip.review_count > 0 && (
+                <>
+                  <Star className="w-4 h-4 text-amber-400 fill-current" />
+                  <span className="text-sm font-bold">{trip.rating}</span>
+                </>
+              )}
               <span className="text-xs text-white/60 ml-1">{trip.duration} days</span>
             </div>
             <div className="text-right">
-              <div className="text-xl font-extrabold tracking-tight sm:text-2xl">{displayCurrencySymbol}{trip.price}</div>
+              <div className="text-xl font-extrabold tracking-tight sm:text-2xl">{hasDisplayPrice ? `${displayCurrencySymbol}${trip.price}` : 'Ask for price'}</div>
             </div>
           </div>
         </div>

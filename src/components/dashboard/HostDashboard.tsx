@@ -1,11 +1,9 @@
 import React, { useState } from 'react';
-import { Plus, TrendingUp, Users, Star, Calendar, MessageCircle, Settings, Search, Save, Instagram, Youtube, Facebook, Phone, MapPin, CreditCard, Edit, Pencil, Verified as Verify, IndianRupee, Euro, Trash2 } from 'lucide-react';
+import { Plus, TrendingUp, Users, Star, Calendar, MessageCircle, Search, MapPin, Pencil, Verified as Verify, Trash2 } from 'lucide-react';
 import { getCurrencyIcon, getCurrencySymbol } from '../../utils/constants';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
-import { Input } from '../ui/Input';
 import { Modal } from '../ui/Modal';
-import { TripGrid } from '../trips/TripGrid';
 import { CreateTripModal } from '../trips/CreateTripModal';
 import { HostSettingsModal } from './HostSettingsModal';
 import { ReferralModal } from '../referral/ReferralModal';
@@ -166,7 +164,7 @@ export const HostDashboard: React.FC = () => {
             Welcome back, {user?.name}! 🌟
           </h1>
           <p className="text-xl text-gray-600 font-body max-w-2xl mx-auto leading-relaxed mb-8">
-            You be the Host. We take care of the rest. No payment required for vouchers. Lowest 15% commission worldwide. Payment fees on us.  
+            Create and manage trip listings. Confirm current fees, payment responsibilities and applicable host terms in writing before accepting a booking.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button variant="primary" size="lg" icon={Plus} onClick={() => setShowCreateModal(true)} className="shadow-lg">
@@ -190,66 +188,21 @@ export const HostDashboard: React.FC = () => {
             <div className="text-center lg:text-left">
               <h3 className="text-2xl md:text-3xl font-display font-bold mb-4 flex items-center justify-center lg:justify-start">
                 <Star className="w-8 h-8 mr-3 text-yellow-300 fill-current" />
-                Verified Host Status
+                Host account
               </h3>
               <p className="text-lg text-white opacity-95 font-body">
-                You're a trusted member of our community with <span className="font-bold text-2xl">{user?.points || 0}</span> host points
+                Your account currently has <span className="font-bold text-2xl">{user?.points || 0}</span> host points
               </p>
             </div>
             <div className="text-center lg:text-right">
-              <div className="text-4xl md:text-5xl font-display font-bold mb-2">4.9</div>
-              <div className="text-lg font-semibold text-white opacity-90">Host Rating</div>
-              <div className="flex items-center justify-center lg:justify-end mt-2">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-5 h-5 text-yellow-300 fill-current" />
-                ))}
-              </div>
+            <div className="text-lg font-semibold text-white opacity-90">Host tools</div>
+            <div className="mt-2">Manage listings and review your account details</div>
             </div>
           </div>
         </div>
 
-        {/* Host Information Scroller */}
-        <div className="bg-gradient-to-r from-green-500 to-blue-500 rounded-3xl p-8 mb-12 text-white shadow-2xl overflow-hidden relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-green-600/20 to-blue-600/20"></div>
-          <div className="relative z-10">
-            <h3 className="text-2xl font-bold mb-6 text-center">Host Success Metrics</h3>
-            <div className="flex animate-scroll-left-infinite space-x-8">
-              {/* Duplicate content for seamless loop */}
-              {[...Array(2)].map((_, loopIndex) => (
-                <React.Fragment key={loopIndex}>
-                  <div className="flex-shrink-0 text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 min-w-[280px]">
-                    <div className="text-3xl font-bold mb-2">₹50,000 - ₹1,00,000</div>
-                    <div className="text-lg font-semibold">Expected Minimum Earnings per Trip</div>
-                    <div className="text-sm opacity-90 mt-2">Based on group size and trip duration</div>
-                  </div>
-                  
-                  <div className="flex-shrink-0 text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 min-w-[280px]">
-                    <div className="text-3xl font-bold mb-2">10 - 20</div>
-                    <div className="text-lg font-semibold">Average Group Size</div>
-                    <div className="text-sm opacity-90 mt-2">Perfect for intimate experiences</div>
-                  </div>
-                  
-                  <div className="flex-shrink-0 text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 min-w-[280px]">
-                    <div className="text-3xl font-bold mb-2">15%</div>
-                    <div className="text-lg font-semibold">Commission Only</div>
-                    <div className="text-sm opacity-90 mt-2">Lowest in the industry</div>
-                  </div>
-                  
-                  <div className="flex-shrink-0 text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 min-w-[280px]">
-                    <div className="text-3xl font-bold mb-2">3 Steps</div>
-                    <div className="text-lg font-semibold">Simplified Trip Creation</div>
-                    <div className="text-sm opacity-90 mt-2">Easy setup, maximum impact</div>
-                  </div>
-                  
-                  <div className="flex-shrink-0 text-center bg-white/10 backdrop-blur-sm rounded-xl p-6 min-w-[280px]">
-                    <div className="text-3xl font-bold mb-2">24/7</div>
-                    <div className="text-lg font-semibold">Support & Insurance</div>
-                    <div className="text-sm opacity-90 mt-2">We've got your back</div>
-                  </div>
-                </React.Fragment>
-              ))}
-            </div>
-          </div>
+        <div className="mb-12 rounded-2xl border border-blue-100 bg-blue-50 p-6 text-blue-950">
+          Earnings, fees, payment processing, insurance and support depend on the current written host agreement. Confirm the terms that apply to your account before publishing or accepting a booking.
         </div>
 
         {/* Stats Grid */}

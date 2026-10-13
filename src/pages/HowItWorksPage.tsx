@@ -22,49 +22,49 @@ export const HowItWorksPage: React.FC = () => {
     {
       icon: Search,
       title: 'Discover Your Vibe',
-      description: 'Browse epic adventures curated by verified hosts worldwide',
+      description: 'Browse current listings and check the details provided for each trip',
       details: [
         'Filter by your interests and budget',
-        'Read real reviews from fellow travelers',
-        'Check out 360° previews and host stories'
+        'Review trip-specific dates and inclusions',
+        'Ask us about any information not shown'
       ]
     },
     {
       icon: Users,
       title: 'Join Your Squad',
-      description: 'Connect with like-minded travelers in small groups',
+      description: 'Review the group size and arrangements listed for your trip',
       details: [
-        'Meet your travel buddies before departure',
-        'Join group chats and plan together',
-        'Build friendships that last beyond the trip'
+        'Confirm who is organizing the trip',
+        'Ask whether group communication is available',
+        'Check the current availability before booking'
       ]
     },
     {
       icon: Plane,
       title: 'Live Your Adventure',
-      description: 'Experience incredible destinations with expert guidance',
+      description: 'Plan your trip using the information confirmed for your booking',
       details: [
-        'Follow carefully planned itineraries',
-        'Enjoy 24/7 support and safety features',
-        'Create content-worthy memories'
+        'Confirm the itinerary and included services',
+        'Ask about local contacts and safety arrangements',
+        'Review the written booking terms'
       ]
     },
     {
       icon: Heart,
-      title: 'Share & Earn',
-      description: 'Document your journey and inspire others',
+      title: 'Confirm Before Booking',
+      description: 'Make sure the trip details and terms meet your needs',
       details: [
-        'Collect digital souvenirs (NFTs)',
-        'Share your experience and earn points',
-        'Unlock exclusive perks and discounts'
+        'Confirm the total price and payment schedule',
+        'Read the applicable cancellation policy',
+        'Check whether insurance is included or arrange it separately'
       ]
     }
   ];
 
   const features = [
-    { icon: Shield, title: 'Verified Hosts', description: 'Background-checked and community-rated' },
-    { icon: Star, title: 'Quality Guaranteed', description: '4.9/5 average rating across all trips' },
-    { icon: Users, title: 'Small Groups', description: '6-16 people max for intimate experiences' }
+    { icon: Shield, title: 'Trip-specific details', description: 'Check each listing and request confirmation for missing terms' },
+    { icon: Star, title: 'Travel planning', description: 'Use the guides to prepare questions for an enquiry' },
+    { icon: Users, title: 'Group size', description: 'Review the capacity stated on the individual listing' }
   ];
 
   return (

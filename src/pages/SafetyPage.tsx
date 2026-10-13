@@ -1,6 +1,6 @@
 import React from 'react';
 import { Shield, Users, Phone, MapPin, Heart, CheckCircle, MessageCircle } from 'lucide-react';
-import { Button } from '../components/ui/Button';
+import { getTravel4LifeContactContext, getTravel4LifeWhatsAppUrl } from '../utils/travel4lifeContact.js';
 
 export const SafetyPage: React.FC = () => {
   const [currentBgIndex, setCurrentBgIndex] = React.useState(0);
@@ -21,33 +21,33 @@ export const SafetyPage: React.FC = () => {
   const safetyFeatures = [
     {
       icon: Shield,
-      title: 'Verified Hosts',
-      description: 'All hosts undergo background checks and identity verification'
+      title: 'Host checks',
+      description: 'Ask which checks have been completed for the host on your specific trip.'
     },
     {
       icon: Users,
-      title: 'Small Groups',
-      description: 'Intimate group sizes for better safety and personalized experiences'
+      title: 'Group arrangements',
+      description: 'Confirm the group size and trip arrangements shown for your booking.'
     },
     {
       icon: Phone,
-      title: '24/7 Support',
-      description: 'Round-the-clock emergency support and assistance'
+      title: 'Support contacts',
+      description: 'Ask for the relevant contact details and available support hours before booking.'
     },
     {
       icon: MapPin,
-      title: 'GPS Tracking',
-      description: 'Live location sharing with emergency contacts'
+      title: 'Local assistance',
+      description: 'Confirm whether local assistance is available and how to reach it.'
     },
     {
       icon: Heart,
-      title: 'Travel Insurance',
-      description: 'Comprehensive coverage for all our trips'
+      title: 'Insurance',
+      description: 'Check the written trip terms to see whether any insurance is included; do not assume cover.'
     },
     {
       icon: CheckCircle,
-      title: 'Safety Protocols',
-      description: 'Standardized safety procedures for all activities'
+      title: 'Activity safety',
+      description: 'Ask what equipment, precautions and emergency steps apply to planned activities.'
     }
   ];
 
@@ -80,7 +80,7 @@ export const SafetyPage: React.FC = () => {
             </h1>
             
             <p className="text-lg md:text-xl font-body leading-relaxed mb-8 max-w-4xl mx-auto font-medium opacity-95 text-shadow">
-              Your safety is our priority. Discover how we keep you protected on every adventure.
+              Safety arrangements vary by trip. Confirm the applicable contacts, support and coverage before booking.
             </p>
           </div>
         </div>
@@ -103,14 +103,19 @@ export const SafetyPage: React.FC = () => {
 
         {/* Emergency Contact */}
         <div className="text-center bg-gradient-to-r from-red-50 to-orange-50 rounded-2xl p-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Emergency Support</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-4">Before you book</h3>
           <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            In case of emergency during your trip, contact our 24/7 support team immediately.
+            Request the trip-specific emergency contact, local assistance details and applicable safety terms in writing.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button variant="primary" icon={Phone}>Emergency Hotline</Button>
-            <Button variant="outline" icon={MessageCircle}>Live Chat</Button>
-          </div>
+          <a
+            href={getTravel4LifeWhatsAppUrl(getTravel4LifeContactContext({ pageType: 'travel', tripType: 'trip-specific safety information' }))}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gray-900 px-5 py-3 font-semibold text-white hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            Ask Travel4life
+          </a>
         </div>
       </div>
     </div>

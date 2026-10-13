@@ -6,7 +6,6 @@ import { TripDetails } from '../components/trips/TripDetails';
 import { cleanTripTitle, stripSourceNotes } from '../utils/formatters';
 import { getTripCanonicalUrl, getTripJsonLd, getTripPath, getTripSeoDescription, getTripSeoTitle } from '../utils/tripSeo';
 import { updateSeoForTrip } from '../utils/seo';
-import { DEFAULT_CANCELLATION_POLICY } from '../utils/constants';
 import { Travel4LifeContactCTA } from '../components/common/Travel4LifeContactCTA';
 
 const fallbackImage = (category: string): string => {
@@ -36,6 +35,7 @@ type TripRow = {
   price_per_person: number;
   group_size: number;
   currency?: string;
+  deposit_required?: number;
   images?: string[];
   itinerary?: Record<string, unknown> & {
     description?: string;
@@ -88,7 +88,7 @@ const toTrip = (row: TripRow): Trip => {
     country: row.location?.split(',').pop()?.trim() || 'Unknown',
     type: row.category,
     price: Number(row.price_per_person),
-    currency: row.currency || 'INR',
+    currency: row.currency || '',
     duration,
     max_capacity: Number(row.group_size || 0),
     current_bookings: 0,
@@ -108,7 +108,7 @@ const toTrip = (row: TripRow): Trip => {
       badges: [],
       avatar_url: row.profiles.avatar_url,
     } : undefined,
-    rating: 4.8,
+    rating: 0,
     review_count: 0,
     itinerary,
     created_at: row.created_at,
@@ -118,8 +118,10 @@ const toTrip = (row: TripRow): Trip => {
     included,
     not_included: notIncluded,
     requirements: Array.isArray(itinerary.requirements) ? itinerary.requirements : [],
-    cancellation_policy: DEFAULT_CANCELLATION_POLICY,
-    deposit_required: Number((Number(row.price_per_person) * 0.5).toFixed(2)),
+    cancellation_policy: '',
+    deposit_required: typeof row.deposit_required === 'number' && Number.isFinite(row.deposit_required)
+      ? row.deposit_required
+      : 0,
     group_discount: Number(row.group_discount || 0),
     safety_measures: Array.isArray(itinerary.safetyMeasures) ? itinerary.safetyMeasures : [],
   };
@@ -229,7 +231,9 @@ export const TripSeoPage: React.FC = () => {
               <span className="flex items-center gap-2"><Users className="w-5 h-5" />{trip.max_capacity} travelers maximum</span>
             </div>
             <div className="mt-6 flex items-center justify-between gap-4">
-              <p className="text-2xl font-bold text-gray-900">{trip.currency} {trip.price.toLocaleString('en-IN')}</p>
+              <p className="text-2xl font-bold text-gray-900">
+                {trip.currency ? `${trip.currency} ${trip.price.toLocaleString('en-IN')}` : 'Ask for current price'}
+              </p>
               <button onClick={() => setShowDetails(true)} className="rounded-xl bg-gray-900 px-5 py-3 font-semibold text-white hover:bg-gray-700">Check availability</button>
             </div>
           </div>

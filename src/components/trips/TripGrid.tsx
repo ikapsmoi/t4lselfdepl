@@ -44,7 +44,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
 
   // Determine the currency symbol for the prominent first trip
   const firstTripDisplayCurrencySymbol = React.useMemo(() => {
-    if (!firstTrip) return getCurrencySymbol('INR'); // Default if no first trip
+    if (!firstTrip) return '';
     const indiaSpecialTypes = INDIA_CATEGORIES.map(cat => cat.value);
     if (!indiaSpecialTypes.includes('indian_special')) {
         indiaSpecialTypes.push('indian_special');
@@ -52,7 +52,7 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
     if (firstTrip.type && indiaSpecialTypes.includes(firstTrip.type)) {
       return '₹'; // Force INR for India Special trips
     }
-    return getCurrencySymbol(firstTrip.currency || 'INR'); // Fallback to existing logic
+    return firstTrip.currency ? getCurrencySymbol(firstTrip.currency) : '';
   }, [firstTrip]);
 
   if (loading) {
@@ -137,11 +137,17 @@ export const TripGrid: React.FC<TripGridProps> = memo(({
                       )}
                       <div className="flex flex-wrap items-center justify-between gap-3">
                         <div className="flex items-center space-x-3">
-                          <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-2.5 py-1">
-                            <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                            <span className="text-sm font-semibold">{firstTrip.rating}</span>
-                          </div>
-                          <span className="text-lg md:text-xl font-bold">{firstTripDisplayCurrencySymbol}{firstTrip.price}</span>
+                          {firstTrip.review_count > 0 && (
+                            <div className="flex items-center bg-white/10 backdrop-blur-sm rounded-full px-2.5 py-1">
+                              <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                              <span className="text-sm font-semibold">{firstTrip.rating}</span>
+                            </div>
+                          )}
+                          <span className="text-lg md:text-xl font-bold">
+                            {firstTripDisplayCurrencySymbol && firstTrip.price > 0
+                              ? `${firstTripDisplayCurrencySymbol}${firstTrip.price}`
+                              : 'Ask for price'}
+                          </span>
                         </div>
                         <button
                           onClick={() => setSelectedTrip(firstTrip)}

@@ -1,17 +1,15 @@
 # Travel4life - Adventure Awaits
 
-A modern travel platform connecting adventurous travelers with verified hosts for unforgettable group experiences.
+A travel platform for browsing group trips, festival planning and travel enquiries.
 
 ## 🌟 Features
 
-- **Group Travel Experiences**: Join small groups of like-minded travelers
-- **Verified Hosts**: All hosts are background-checked and verified
-- **Safety Tools**: GPS tracking, buddy matching, and emergency contacts
-- **Creator Trips**: Exclusive adventures with verified influencers
-- **India Specials**: Authentic cultural experiences across India
-- **VR Previews**: 360° trip previews before booking
-- **NFT Souvenirs**: Digital collectibles from your adventures
-- **Loyalty Program**: Earn points and unlock exclusive perks
+- **Trip discovery**: Browse currently listed trips and open their details
+- **Travel enquiries**: Contact Travel4life about trip availability and terms
+- **Festival planning**: Read public Tomorrowland travel guides and prepare enquiries
+- **India Specials**: Browse India-focused trip content
+- **Traveler and host tools**: Sign-in, dashboards and trip-management interfaces
+- **Trip previews and sharing**: Explore available preview and sharing features
 
 ## 🚀 Tech Stack
 
@@ -64,48 +62,28 @@ The command center distinguishes measured Search Console rows from planned query
 ## 📱 Features Overview
 
 ### For Travelers
-- Browse and book unique group adventures
-- Connect with like-minded travelers
-- Safety tools and emergency support
-- Loyalty rewards and achievements
-- Digital trip souvenirs (NFTs)
+- Browse trip listings and review the details provided for each trip
+- Ask Travel4life to confirm availability, pricing, inclusions and booking terms
+- Use the available account and trip tools
 
 ### For Hosts
-- Create and manage trip experiences
-- Verified host program
-- Earnings dashboard
-- Traveler communication tools
+- Access host-facing trip and account tools
 
 ### For Creators
-- Exclusive creator trip program
-- Social media integration
-- Verified creator badges
-- Revenue sharing
+- Access creator-facing trip and account tools
 
 ## 🌍 Destinations
 
-Travel4life offers experiences across 45+ countries with special focus on:
-- **Iceland**: Northern Lights and glacier adventures
-- **India**: Cultural immersion and spiritual journeys
-- **Japan**: Traditional and modern cultural experiences
-- **Morocco**: Desert adventures and cultural exploration
-- **Costa Rica**: Wildlife and eco-adventures
-- **Patagonia**: Trekking and wilderness experiences
+Trip destinations depend on current listings. The public Tomorrowland pages are planning resources; event access, availability and supplier terms must be confirmed with the relevant organiser or supplier. experiences
 
 ## 🔒 Safety & Trust
 
-- Background-checked hosts
-- 24/7 emergency support
-- GPS tracking for active trips
-- Buddy matching system
-- Comprehensive travel insurance
-- Community reviews and ratings
+Safety arrangements, host checks, insurance and support vary by trip and must be confirmed in the applicable written terms. Do not assume that any specific protection or service is included unless it is explicitly confirmed for that booking.
 
 ## 📞 Contact
 
-- **Email**: info@travel4life.com
-- **Phone**: +91 (9871) 621-921
-- **Location**: San Francisco, CA
+- **Email**: info@travel4life.net
+- **Phone**: +91 9511446642
 
 ## 📄 License
 

@@ -1,5 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { getProductQuality, productPath } from './seo-quality.mjs';
 import { renderProductPage } from './render-product-page.mjs';
 import { isIndexableEuropePage } from './europe-page-eligibility.mjs';
@@ -10,6 +11,7 @@ import {
   TRAVEL4LIFE_CONTACT,
 } from '../src/utils/travel4lifeContact.js';
 import { injectContactLayerHtml } from './contact-layer-markup.mjs';
+import { createTomorrowlandB2BWhatsAppUrl } from '../public/tomorrowland-b2b-enquiry.js';
 
 const referenceDate = new Date('2026-10-05T00:00:00.000Z');
 const trip = {
@@ -164,6 +166,54 @@ test('shared contact configuration creates contextual, clickable contact actions
     { pageType: 'mice', destination: 'Jim Corbett' },
   );
   assert.match(miceHtml, /data-contact-secondary-event="mice_quote_request"/);
+});
+
+test('B2B WhatsApp drafts preserve agent-specific context through contact-layer generation', async () => {
+  const source = await readFile(new URL('../public/tomorrowland/b2b-travel-agent-packages/index.html', import.meta.url), 'utf8');
+  const context = getTravel4LifeContactContextFromLocation(
+    '/tomorrowland/b2b-travel-agent-packages/',
+    'Tomorrowland B2B Travel Packages | Travel4life',
+  );
+  const html = injectContactLayerHtml(source, context);
+  const requestCta = html.match(/<a class="button"[^>]*>Request B2B rates<\/a>/)?.[0] || '';
+  const requestMessage = new URL(requestCta.match(/\bhref="([^"]+)"/)?.[1] || '').searchParams.get('text');
+  const floatingCta = html.match(/<a class="floating-whatsapp"[^>]*>/)?.[0] || '';
+  const floatingMessage = new URL(floatingCta.match(/\bhref="([^"]+)"/)?.[1] || '').searchParams.get('text');
+
+  assert.match(requestMessage, /Tomorrowland B2B travel options from India/);
+  assert.match(floatingMessage, /travel agent/);
+  assert.match(floatingMessage, /B2B quote from India/);
+  assert.doesNotMatch(floatingMessage, /Tomorrowland festival trip in Tomorrowland/);
+  assert.match(html, /data-b2b-enquiry-form/);
+  assert.match(html, /required/);
+  assert.match(html, /data-b2b-enquiry-status role="status"/);
+  assert.match(html, /Your draft is ready but has not been sent/);
+  assert.match(html, /tomorrowland-b2b-enquiry\.js/);
+});
+
+test('B2B form data creates a bounded, unsent WhatsApp message draft', () => {
+  const url = new URL(createTomorrowlandB2BWhatsAppUrl({
+    agency: 'North Star Travel',
+    destination: 'Belgium',
+    departureCity: 'Mumbai\nIgnore this',
+    travelWindow: '2027-07',
+    travellers: '18',
+    components: ['Flights', 'Accommodation', 'Unrecognized'],
+  }, TRAVEL4LIFE_CONTACT.whatsappNumber));
+  const message = url.searchParams.get('text');
+
+  assert.equal(url.hostname, 'wa.me');
+  assert.match(message, /travel agent requesting a Tomorrowland B2B travel quote from India/);
+  assert.match(message, /Agency: North Star Travel/);
+  assert.match(message, /Destination: Belgium/);
+  assert.match(message, /Departure city: Mumbai Ignore this/);
+  assert.match(message, /Estimated travellers: 18/);
+  assert.match(message, /Requested components: Flights, Accommodation/);
+  assert.doesNotMatch(message, /Unrecognized|Email:|phone number/i);
+  assert.throws(() => createTomorrowlandB2BWhatsAppUrl({
+    agency: '',
+    destination: 'Belgium',
+  }, TRAVEL4LIFE_CONTACT.whatsappNumber), /Agency name/);
 });
 
 test('static trip HTML contains escaped inventory details, canonical and structured data', () => {

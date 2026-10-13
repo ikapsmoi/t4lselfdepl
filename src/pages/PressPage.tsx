@@ -1,7 +1,6 @@
-﻿import React from 'react';
-import { Camera, Download, Mail, Users, Globe, TrendingUp } from 'lucide-react';
-import { Button } from '../components/ui/Button';
-import { Badge } from '../components/ui/Badge';
+import React from 'react';
+import { Mail } from 'lucide-react';
+import { TRAVEL4LIFE_CONTACT } from '../utils/travel4lifeContact.js';
 
 export const PressPage: React.FC = () => {
   const [currentBgIndex, setCurrentBgIndex] = React.useState(0);
@@ -18,19 +17,6 @@ export const PressPage: React.FC = () => {
     }, 4000);
     return () => clearInterval(interval);
   }, []);
-
-  const stats = [
-    { number: '50K+', label: 'Active Travelers', icon: Users },
-    { number: '120+', label: 'Destinations', icon: Globe },
-    { number: '4.9/5', label: 'Average Rating', icon: TrendingUp }
-  ];
-
-  const mediaKit = [
-    { name: 'Travel4life Logo Pack', type: 'ZIP', size: '2.4 MB' },
-    { name: 'Brand Guidelines', type: 'PDF', size: '1.8 MB' },
-    { name: 'Product Screenshots', type: 'ZIP', size: '15.2 MB' },
-    { name: 'Company Fact Sheet', type: 'PDF', size: '890 KB' }
-  ];
 
   return (
     <div className="min-h-screen">
@@ -61,7 +47,7 @@ export const PressPage: React.FC = () => {
             </h1>
             
             <p className="text-lg md:text-xl font-body leading-relaxed mb-8 max-w-4xl mx-auto font-medium opacity-95 text-shadow">
-              Revolutionizing group travel for the next generation. Get the latest news, resources, and brand assets.
+              Travel4life trip listings and public travel-planning resources.
             </p>
           </div>
         </div>
@@ -69,89 +55,19 @@ export const PressPage: React.FC = () => {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
-        {/* Company Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {stats.map((stat, index) => (
-            <div key={index} className="text-center p-6 bg-white rounded-xl shadow-md">
-              <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mb-4">
-                <stat.icon className="w-8 h-8 text-blue-600" />
-              </div>
-              <div className="text-3xl font-bold text-gray-900 mb-2">{stat.number}</div>
-              <div className="text-gray-600">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Company Story */}
-        <div className="bg-white rounded-xl shadow-lg p-8 mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-6">Our Story</h2>
-          <div className="prose prose-lg max-w-none text-gray-700">
-            <p className="mb-4">
-              <strong>Travel4life</strong> was born from a simple idea: travel should bring people together, not isolate them.
-              Founded in 2024, we've quickly become the go-to platform for Gen Z and millennial travelers seeking authentic, 
-              social experiences.
-            </p>
-            <p className="mb-4">
-              Our mission is to make group travel accessible, safe, and unforgettable. We connect adventurous souls 
-              with verified hosts who create unique experiences that you simply can't find anywhere else.
-            </p>
-            <p>
-              Today, we're proud to serve over 50,000 travelers across 120+ destinations, with a 4.9/5 average rating 
-              and a 95% rebooking rate. We're not just changing how people travel – we're building a global community 
-              of explorers.
-            </p>
-          </div>
-        </div>
-
-        {/* Media Kit */}
-        <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-8 mb-16">
-          <h3 className="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-            <Camera className="w-7 h-7 mr-3 text-purple-600" />
-            Media Kit & Resources
-          </h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {mediaKit.map((item, index) => (
-              <div key={index} className="bg-white rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold text-gray-900">{item.name}</h4>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <Badge variant="secondary" size="sm">{item.type}</Badge>
-                      <span className="text-sm text-gray-500">{item.size}</span>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm" icon={Download}>
-                    Download
-                  </Button>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Press Contact */}
-        <div className="text-center bg-white rounded-xl shadow-lg p-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-4">Press Inquiries</h3>
-          <p className="text-gray-600 mb-6 max-w-2xl mx-auto">
-            For media inquiries, interviews, or partnership opportunities, reach out to our press team.
+        <section className="mx-auto max-w-3xl rounded-xl bg-white p-8 text-center shadow-lg">
+          <h2 className="text-2xl font-bold text-gray-900">Media inquiries</h2>
+          <p className="my-4 text-gray-600">
+            Contact Travel4life for current company information. Trip availability, pricing and terms are specific to each listing and should be confirmed before booking.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button 
-              variant="primary" 
-              icon={Mail}
-              onClick={() => window.open('mailto:press@travel4life.net', '_blank')}
-            >
-              Contact Press Team
-            </Button>
-            <Button variant="outline">
-              Download Media Kit
-            </Button>
-          </div>
-          <div className="mt-6 text-sm text-gray-500">
-            <p>Press Contact: press@travel4life.net</p>
-            <p>Response time: Within 24 hours</p>
-          </div>
-        </div>
+          <a
+            href={`mailto:${TRAVEL4LIFE_CONTACT.email}?subject=${encodeURIComponent('Travel4life media inquiry')}`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-gray-900 px-5 py-3 font-semibold text-white hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-600 focus-visible:ring-offset-2"
+          >
+            <Mail className="h-4 w-4" aria-hidden="true" />
+            Email Travel4life
+          </a>
+        </section>
       </div>
     </div>
   );

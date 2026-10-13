@@ -1,23 +1,19 @@
 import React, { useState } from 'react';
-import { Star, ThumbsUp, Camera, CheckCircle } from 'lucide-react';
+import { ThumbsUp, CheckCircle } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { Rating } from '../ui/Rating';
 import { Modal } from '../ui/Modal';
-import { Input } from '../ui/Input';
 import { useReviews } from '../../hooks/useReviews';
 import { useAuth } from '../../hooks/useAuth';
 import { BADGES } from '../../utils/constants';
 import { useBookings } from '../../hooks/useBookings';
-import { getDefaultTripReviews } from '../../utils/defaultReviews';
-import type { Trip } from '../../types';
 
 interface ReviewSectionProps {
   tripId: string;
-  tripType: Trip['type'];
 }
 
-export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId, tripType }) => {
+export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId }) => {
   const { getTripReviews, addReview, markHelpful, loading: reviewsLoading } = useReviews();
   const { user } = useAuth();
   const { getUserBookings } = useBookings();
@@ -27,8 +23,6 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId, tripType }
   const [submittingReview, setSubmittingReview] = useState(false);
 
   const reviews = getTripReviews(tripId);
-  const defaultReviews = tripType === 'festival' ? [] : getDefaultTripReviews(tripId);
-  const displayedReviews = [...reviews, ...defaultReviews];
   
   // Check if user has completed this trip
   const userBookings = user ? getUserBookings(user.id) : [];
@@ -81,7 +75,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId, tripType }
     <div>
       <div className="flex items-center justify-between mb-6">
         <h2 className="text-2xl font-bold text-gray-900">
-          Reviews ({displayedReviews.length})
+          Reviews ({reviews.length})
         </h2>
         {user && hasCompletedTrip && !hasReviewed && (
           <Button variant="outline" onClick={() => setShowReviewModal(true)}>
@@ -108,7 +102,12 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId, tripType }
         </div>
       ) : (
         <div className="space-y-6">
-          {displayedReviews.map((review) => (
+          {reviews.length === 0 && (
+            <p className="rounded-lg bg-gray-50 p-6 text-center text-gray-600">
+              No reviews have been submitted for this trip yet.
+            </p>
+          )}
+          {reviews.map((review) => (
             <div key={review.id} className="bg-gray-50 rounded-lg p-6">
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0">
@@ -116,7 +115,7 @@ export const ReviewSection: React.FC<ReviewSectionProps> = ({ tripId, tripType }
                     <img
                       src={review.reviewer.avatar || review.reviewer.avatar_url}
                       alt={review.reviewer.name}
-                      className={`w-12 h-12 rounded-full object-cover ${review.id.startsWith('default-review-') ? 'review-fallback-character' : ''}`}
+                      className="w-12 h-12 rounded-full object-cover"
                     />
                   ) : (
                     <div

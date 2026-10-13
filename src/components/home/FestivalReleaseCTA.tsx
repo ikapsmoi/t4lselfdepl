@@ -13,6 +13,7 @@ export const FestivalReleaseCTA: React.FC = () => {
   const [email, setEmail] = useState('');
   const [quantity, setQuantity] = useState('1');
   const [bookingWindow, setBookingWindow] = useState('As soon as possible');
+  const [draftUrl, setDraftUrl] = useState('');
 
   React.useEffect(() => {
     if (sessionStorage.getItem('travel4life:festival-release-dismissed') === 'true') {
@@ -28,20 +29,18 @@ export const FestivalReleaseCTA: React.FC = () => {
     sessionStorage.setItem('travel4life:festival-release-dismissed', 'true');
   };
 
-  const openWhatsApp = () => {
+  const prepareWhatsAppDraft = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const message = [
-      'Hi Travel4life! I want to check Festival Release availability.',
+      'Hi Travel4life, I would like to ask about current festival travel availability.',
       `Festival: ${festival} | Quantity: ${quantity}`,
       `Name: ${name.trim() || 'Not provided'} | Email: ${email.trim()}`,
       `Booking timeline: ${bookingWindow}`,
-      'Please share the available package details and next steps.'
+      'Please confirm whether any suitable options are available and share the applicable price and terms.'
     ].join('\n');
 
     const context = getTravel4LifeContactContext({ pageType: 'festival', eventType: festival, tripType: 'festival travel', destination: festival });
-    const personalizedUrl = getTravel4LifeWhatsAppUrl(context, message);
-    window.open(personalizedUrl, '_blank', 'noopener,noreferrer');
-    void trackContactEvent('contact_whatsapp_click', context);
-    setIsOpen(false);
+    setDraftUrl(getTravel4LifeWhatsAppUrl(context, message));
   };
 
   if (!isVisible || isDismissed) return null;
@@ -56,8 +55,8 @@ export const FestivalReleaseCTA: React.FC = () => {
             </div>
             <div className="min-w-0 flex-1">
               <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-700">Festival Releases</p>
-              <h2 className="mt-1 text-sm font-bold text-gray-900">Buy Back Packages</h2>
-              <p className="mt-1 text-xs leading-relaxed text-gray-600">Find cancelled festival packages at lower rates.</p>
+              <h2 className="mt-1 text-sm font-bold text-gray-900">Festival availability</h2>
+              <p className="mt-1 text-xs leading-relaxed text-gray-600">Ask us to check current travel options. Availability and terms must be confirmed.</p>
             </div>
           </div>
           <button
@@ -90,16 +89,16 @@ export const FestivalReleaseCTA: React.FC = () => {
       </aside>
 
       <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Check Festival Release" maxWidth="max-w-md">
-        <div className="space-y-3">
+        <form onSubmit={prepareWhatsAppDraft} className="space-y-3">
           <p className="text-sm leading-relaxed text-gray-600">
-            Tell us what you are looking for and we will check current availability with the concierge.
+            Share your request to prepare a WhatsApp message. Nothing is sent or stored by this form.
           </p>
           <div className="grid grid-cols-2 gap-3">
             <label className="block text-sm font-medium text-gray-700">
               Festival
               <select
                 value={festival}
-                onChange={(event) => setFestival(event.target.value)}
+                onChange={(event) => { setFestival(event.target.value); setDraftUrl(''); }}
                 className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               >
                 <option>Tomorrowland</option>
@@ -113,7 +112,7 @@ export const FestivalReleaseCTA: React.FC = () => {
               Quantity
               <select
                 value={quantity}
-                onChange={(event) => setQuantity(event.target.value)}
+                onChange={(event) => { setQuantity(event.target.value); setDraftUrl(''); }}
                 className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               >
                 {[1, 2, 3, 4, 5, 6].map((count) => <option key={count} value={count}>{count} {count === 1 ? 'traveler' : 'travelers'}</option>)}
@@ -125,7 +124,7 @@ export const FestivalReleaseCTA: React.FC = () => {
               Name <span className="font-normal text-gray-400">(optional)</span>
               <input
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) => { setName(event.target.value); setDraftUrl(''); }}
                 placeholder="Your name"
                 className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
               />
@@ -135,7 +134,7 @@ export const FestivalReleaseCTA: React.FC = () => {
               <input
                 type="email"
                 value={email}
-                onChange={(event) => setEmail(event.target.value)}
+                onChange={(event) => { setEmail(event.target.value); setDraftUrl(''); }}
                 placeholder="you@example.com"
                 required
                 className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
@@ -146,7 +145,7 @@ export const FestivalReleaseCTA: React.FC = () => {
             How soon do you plan to book?
             <select
               value={bookingWindow}
-              onChange={(event) => setBookingWindow(event.target.value)}
+              onChange={(event) => { setBookingWindow(event.target.value); setDraftUrl(''); }}
               className="mt-1.5 h-11 w-full rounded-lg border border-gray-300 px-3 text-sm text-gray-900 focus:border-amber-400 focus:outline-none focus:ring-2 focus:ring-amber-200"
             >
               <option>As soon as possible</option>
@@ -156,14 +155,32 @@ export const FestivalReleaseCTA: React.FC = () => {
             </select>
           </label>
           <button
-            type="button"
-            onClick={openWhatsApp}
+            type="submit"
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-green-600 px-4 py-3 text-sm font-bold text-white transition-colors hover:bg-green-700 focus:outline-none focus-visible:ring-2 focus-visible:ring-green-500 focus-visible:ring-offset-2"
           >
             <MessageCircle className="h-4 w-4" />
-            Check availability on WhatsApp
+            Prepare WhatsApp draft
           </button>
-        </div>
+          {draftUrl && (
+            <div className="rounded-lg border border-green-200 bg-green-50 p-3 text-sm text-green-900" role="status" aria-live="polite">
+              <p>Your message is ready but has not been sent.</p>
+              <a
+                href={draftUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={() => {
+                  const context = getTravel4LifeContactContext({ pageType: 'festival', eventType: festival, tripType: 'festival travel', destination: festival });
+                  void trackContactEvent('contact_whatsapp_click', context);
+                  setIsOpen(false);
+                }}
+                className="mt-2 inline-flex min-h-11 items-center gap-2 font-semibold underline underline-offset-2"
+              >
+                <MessageCircle className="h-4 w-4" />
+                Open WhatsApp draft
+              </a>
+            </div>
+          )}
+        </form>
       </Modal>
     </>
   );

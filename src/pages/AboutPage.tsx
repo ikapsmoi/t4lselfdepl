@@ -1,5 +1,5 @@
 ﻿import React from 'react';
-import { Globe, Users, Shield, Heart, Award, MapPin } from 'lucide-react';
+import { Users, Shield, Heart, Award } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const AboutPage: React.FC = () => {
@@ -27,39 +27,18 @@ export const AboutPage: React.FC = () => {
     },
     {
       icon: Shield,
-      title: 'Safety First',
-      description: 'Your safety and security are our top priorities, with verified hosts and 24/7 support.'
+      title: 'Trip-specific safety',
+      description: 'Safety arrangements and support details should be confirmed for each booking.'
     },
     {
       icon: Users,
       title: 'Community Driven',
-      description: 'Our platform is built by travelers, for travelers, creating genuine experiences.'
+      description: 'Explore the travel information and enquiry options published on this site.'
     },
     {
       icon: Award,
-      title: 'Quality Experiences',
-      description: 'Every trip is carefully curated to ensure unforgettable adventures and lasting memories.'
-    }
-  ];
-
-  const team = [
-    {
-      name: 'Ishan Kapoor',
-      role: 'CEO & Co-Founder',
-      image: 'WhatsApp Image 2026-03-18 at 7.53.51 PM.jpeg',
-      bio: 'Former DM turned entrepreneur, passionate about connecting travelers worldwide.'
-    },
-    {
-      name: 'Khushi Singh',
-      role: 'Destination Manager-India',
-      image: 'khushi.jfif',
-      bio: 'Adventure seeker, building the future of group travel.'
-    },
-    {
-      name: 'Mahak',
-      role: 'Travel Sales Manager',
-      image: 'mahak.jfif',
-      bio: 'Community builder and travel expert, ensuring every traveler feels at home.'
+      title: 'Clear trip information',
+      description: 'Review the details shown for each listing and ask us to confirm anything missing.'
     }
   ];
 
@@ -125,23 +104,12 @@ export const AboutPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Team */}
+        {/* Company contact */}
         <div className="mb-20">
-          <h3 className="text-2xl font-bold text-gray-900 text-center mb-12">Meet Our Team</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, index) => (
-              <div key={index} className="text-center bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-24 h-24 rounded-full mx-auto mb-4 object-cover"
-                />
-                <h4 className="text-lg font-semibold text-gray-900 mb-1">{member.name}</h4>
-                <p className="text-blue-600 font-medium mb-3">{member.role}</p>
-                <p className="text-gray-600 text-sm">{member.bio}</p>
-              </div>
-            ))}
-          </div>
+          <h3 className="text-2xl font-bold text-gray-900 text-center mb-6">Contact Travel4life</h3>
+          <p className="mx-auto max-w-2xl text-center text-gray-600">
+            For company information or trip questions, use the contact details published in the footer. Confirm trip-specific availability, pricing and terms before booking.
+          </p>
         </div>
 
         {/* Call to Action */}

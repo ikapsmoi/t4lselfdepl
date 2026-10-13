@@ -7,27 +7,27 @@ import { getTripPath } from '../../utils/tripSeo';
 
 const trustPoints = [
   {
-    title: 'Since 2014',
+    title: 'Trip listings',
     details: [
-      'Over a decade of travel experience',
-      'Bringing travelers together since 2014',
-      'Thoughtful journeys, backed by experience',
+      'Browse currently listed trips',
+      'Review the details shown for each trip',
+      'Ask us to confirm current availability',
     ],
   },
   {
-    title: 'Group journeys',
+    title: 'Festival guides',
     details: [
-      'Planned around your crew',
-      'Find a trip that fits your travel style',
-      'Explore upcoming group adventures',
+      'Explore Tomorrowland travel planning',
+      'Compare the trip details you need',
+      'Check official event information',
     ],
   },
   {
-    title: 'Personal support',
+    title: 'Before you book',
     details: [
-      'Real people, here to help',
-      'Tell us what you have in mind',
-      'Get help choosing your next trip',
+      'Confirm the current price and terms',
+      'Check the listed inclusions',
+      'Ask about details not shown',
     ],
   },
 ];
@@ -75,7 +75,7 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
     return (
       <section
         className="site-header-brand-wash relative z-10 border-y border-gray-200/80 py-5 text-gray-900 sm:py-6"
-        aria-label="Why travel with Travel4Life"
+        aria-label="Trip and festival travel information"
       >
         <div className="mx-auto grid max-w-7xl grid-cols-3 divide-x divide-gray-200 px-4 sm:px-6 lg:px-8">
           {trustPoints.map(({ title, details }) => (

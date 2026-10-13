@@ -24,13 +24,21 @@ const setAttribute = (tag, name, value) => {
     ? tag.replace(attribute, replacement)
     : tag.replace(/>$/, `${replacement}>`);
 };
+const hasSpecificWhatsappMessage = (tag) => {
+  const href = tag.match(/\bhref="(https:\/\/wa\.me\/[^"]*)"/i)?.[1];
+  if (!href) return false;
+  const message = new URL(href.replaceAll('&amp;', '&')).searchParams.get('text')?.trim();
+  return Boolean(message && !/^(hi|hello)[!.]*$/i.test(message));
+};
 const contextualizeWhatsappAnchor = (html, className, context, label) => html.replace(
   new RegExp(`<a\\b(?=[^>]*\\bclass="[^"]*\\b${className}\\b[^"]*")[^>]*>[\\s\\S]*?<\\/a>`, 'i'),
   (anchor) => {
     const openingTagEnd = anchor.indexOf('>') + 1;
     let output = anchor.slice(0, openingTagEnd);
     let content = anchor.slice(openingTagEnd, -4);
-    output = output.replace(/\bhref="[^"]*"/i, `href="${escapeHtml(getTravel4LifeWhatsAppUrl(context))}"`);
+    if (!hasSpecificWhatsappMessage(output)) {
+      output = output.replace(/\bhref="[^"]*"/i, `href="${escapeHtml(getTravel4LifeWhatsAppUrl(context))}"`);
+    }
     output = setAttribute(output, 'aria-label', `Ask Travel4Life about ${context.destination || context.entity || 'your trip'} on WhatsApp`);
     output = setAttribute(output, 'data-contact-event', 'contact_whatsapp_click');
     output = setAttribute(output, 'data-contact-secondary-event', getTravel4LifeQuoteEvent(context.pageType));
@@ -49,7 +57,9 @@ const contextualizeWhatsappCtas = (html, context) => html.replace(
     let openingTag = anchor.slice(0, openingTagEnd);
     if (!/\bhref="https:\/\/wa\.me\//i.test(openingTag)) return anchor;
 
-    openingTag = openingTag.replace(/\bhref="[^"]*"/i, `href="${escapeHtml(getTravel4LifeWhatsAppUrl(context))}"`);
+    if (!hasSpecificWhatsappMessage(openingTag)) {
+      openingTag = openingTag.replace(/\bhref="[^"]*"/i, `href="${escapeHtml(getTravel4LifeWhatsAppUrl(context))}"`);
+    }
     openingTag = setAttribute(openingTag, 'target', '_blank');
     openingTag = setAttribute(openingTag, 'rel', 'noopener noreferrer');
     openingTag = setAttribute(openingTag, 'data-contact-event', 'contact_whatsapp_click');

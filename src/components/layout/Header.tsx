@@ -200,6 +200,12 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 setTimeout(() => scrollToSection('india-specials'), 300);
                 setIsMenuOpen(false);
               }} className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200">India</button>
+              <a
+                href="/tomorrowland/"
+                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
+              >
+                Festival planning
+              </a>
              {/*
              <button onClick={() => {
                 window.location.hash = 'testimonials';
@@ -223,15 +229,6 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                 className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
               >
                Top Host
-              </button>
-              <button
-                onClick={() => {
-                  window.location.hash = 'reviews';
-                  setIsMenuOpen(false);
-                }}
-                className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg transition-all duration-200"
-              >
-                Reviews
               </button>
             <button
                 onClick={() => {
@@ -398,6 +395,13 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                   setTimeout(() => scrollToSection('india-specials'), 300);
                   setIsMenuOpen(false); 
                 }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">India Specials</button>
+                <a
+                  href="/tomorrowland/"
+                  onClick={() => setIsMenuOpen(false)}
+                  className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left"
+                >
+                  Tomorrowland planning
+                </a>
                 <button onClick={() => { window.location.hash = 'safety'; setIsMenuOpen(false); }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">Safety & Trust</button>
                 <button onClick={() => {
                   window.location.hash = 'how-it-works';
@@ -407,10 +411,6 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                   window.location.hash = 'creator-trips';
                   setIsMenuOpen(false);
                 }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">Creators</button>
-                <button onClick={() => {
-                  window.location.hash = 'reviews';
-                  setIsMenuOpen(false);
-                }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">Reviews</button>
               {/*  <Button
                   variant="primary"
                   size="md"

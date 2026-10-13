@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Star, Users, Calendar, ArrowRight, MapPin, Clock, Crown, Sparkles, X, Heart, Share2, Eye, User, Verified } from 'lucide-react';
+import { Star, Calendar, ArrowRight, MapPin, Crown, Sparkles, X, Heart, Eye } from 'lucide-react';
 import { Trip } from '../../types';
 import { Button } from '../ui/Button';
 import { Badge } from '../ui/Badge';
 import { BookingModal } from './BookingModal';
 import { CreatorApplicationModal } from '../creator/CreatorApplicationModal';
-import { DIFFICULTY_LEVELS } from '../../utils/constants';
+import { getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
 
 
 interface FeaturedTripProps {
@@ -32,7 +32,9 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
   }
 
   const spotsLeft = currentTrip.max_capacity - currentTrip.current_bookings;
-  const difficultyLevel = DIFFICULTY_LEVELS.find(d => d.value === currentTrip.difficulty);
+  const isIndiaTrip = currentTrip.type === 'indian_special' || INDIA_CATEGORIES.some(category => category.value === currentTrip.type);
+  const displayCurrencySymbol = isIndiaTrip ? '₹' : currentTrip.currency ? getCurrencySymbol(currentTrip.currency) : '';
+  const canBook = Boolean(displayCurrencySymbol && currentTrip.price > 0 && currentTrip.deposit_required > 0);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', { 
@@ -91,9 +93,11 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="flex items-center justify-between text-white">
                 <div className="text-xs sm:text-sm font-semibold">Starts {formatDate(currentTrip.start_date)}</div>
-                <div className="bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full">
-                  <span className="font-bold text-xs">{spotsLeft} spots left</span>
-                </div>
+                {currentTrip.current_bookings > 0 && (
+                  <div className="bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full">
+                    <span className="font-bold text-xs">{spotsLeft} spots left</span>
+                  </div>
+                )}
               </div>
               <div className="mt-3 h-1 overflow-hidden rounded-full bg-white/30">
                 <div className="h-full rounded-full bg-amber-300 transition-all duration-700" style={{ width: `${Math.min(100, Math.max(10, (spotsLeft / Math.max(currentTrip.max_capacity, 1)) * 100))}%` }} />
@@ -124,7 +128,11 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
               <div className="flex min-w-0 items-center text-gray-700">
                 <div>
                   <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">From</div>
-                  <div className="text-xs font-bold leading-4 text-green-600 sm:text-sm">₹{currentTrip.price}<span className="ml-1 font-normal text-gray-500">/person</span></div>
+                  <div className="text-xs font-bold leading-4 text-green-600 sm:text-sm">
+                    {displayCurrencySymbol && currentTrip.price > 0
+                      ? <>{displayCurrencySymbol}{currentTrip.price}<span className="ml-1 font-normal text-gray-500">/person</span></>
+                      : 'Ask for price'}
+                  </div>
                 </div>
               </div>
               <div className="flex min-w-0 items-center text-gray-700">
@@ -134,13 +142,15 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
                   <div className="text-xs font-semibold leading-4 sm:text-sm">{currentTrip.duration} days</div>
                 </div>
               </div>
-              <div className="flex min-w-0 items-center text-gray-700">
-                <Star className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 fill-current text-yellow-500" />
-                <div>
-                  <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">Rating</div>
-                  <div className="text-xs font-semibold leading-4 sm:text-sm">{currentTrip.rating}</div>
+              {currentTrip.review_count > 0 && (
+                <div className="flex min-w-0 items-center text-gray-700">
+                  <Star className="mr-1.5 h-3.5 w-3.5 flex-shrink-0 fill-current text-yellow-500" />
+                  <div>
+                    <div className="text-[10px] leading-4 text-gray-500 sm:text-xs">Rating</div>
+                    <div className="text-xs font-semibold leading-4 sm:text-sm">{currentTrip.rating}</div>
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
             <div className="relative z-10">
@@ -154,14 +164,24 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
                   Details
                 </Button>
                 
-                <Button 
-                  variant="primary" 
-                  onClick={() => setShowBookingModal(true)}
-                  className="min-w-0 flex-1 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-2 py-2 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:shadow-md"
-                >
-                  <Heart className="w-3.5 h-3.5 mr-1" />
-                  Book
-                </Button>
+                {canBook ? (
+                  <Button
+                    variant="primary"
+                    onClick={() => setShowBookingModal(true)}
+                    className="min-w-0 flex-1 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-2 py-2 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:shadow-md"
+                  >
+                    <Heart className="w-3.5 h-3.5 mr-1" />
+                    Book
+                  </Button>
+                ) : (
+                  <Button
+                    variant="primary"
+                    onClick={() => onViewDetails?.(currentTrip)}
+                    className="min-w-0 flex-1 rounded-full bg-gradient-to-r from-blue-500 to-blue-600 px-2 py-2 text-xs font-bold text-white shadow-sm transition-all duration-200 hover:shadow-md"
+                  >
+                    Ask
+                  </Button>
+                )}
                 
                 <Button 
                   onClick={() => setShowCreatorModal(true)}
@@ -173,7 +193,7 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
               </div>
             </div>
 
-            {spotsLeft <= 3 && spotsLeft > 0 && (
+            {currentTrip.current_bookings > 0 && spotsLeft <= 3 && spotsLeft > 0 && (
               <div className="mt-2 bg-gradient-to-r from-red-500 to-orange-500 text-white px-2 py-1.5 rounded-full text-center shadow-md animate-pulse">
                 <span className="text-[10px] font-bold">
                   Only {spotsLeft} spots left!
