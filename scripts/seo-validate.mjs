@@ -7,7 +7,8 @@ import { injectContactLayerHtml } from './contact-layer-markup.mjs';
 const siteUrl = 'https://travel4life.net';
 const intentMapPath = resolve('public/tomorrowland/search-intent-map.json');
 const intentMap = JSON.parse(await readFile(intentMapPath, 'utf8'));
-const routes = intentMap.owners;
+const mysterylandIntentMap = JSON.parse(await readFile(resolve('public/mysteryland/search-intent-map.json'), 'utf8'));
+const routes = [...intentMap.owners, ...mysterylandIntentMap.owners];
 const europeIntentMap = JSON.parse(await readFile(resolve('public/europe/search-intent-map.json'), 'utf8'));
 const indiaToursIntentMap = JSON.parse(await readFile(resolve('public/india-tours/search-intent-map.json'), 'utf8'));
 const knownInternalRoutes = new Set([
@@ -117,9 +118,13 @@ for (const requiredStyle of ['--forest-deep: #091c18', '--serif: \'Playfair Disp
 }
 const mappedUrls = new Set(routes.map(({ url }) => `${siteUrl}${url}`));
 const indiaToursOwnerUrls = new Set(indiaToursIntentMap.owners.map(({ url }) => `${siteUrl}${url}`));
+const mysterylandOwnerUrls = new Set(mysterylandIntentMap.owners.map(({ url }) => `${siteUrl}${url}`));
 for (const sitemapUrl of sitemapUrls) {
   if (sitemapUrl.startsWith(`${siteUrl}/tomorrowland/`) && !mappedUrls.has(sitemapUrl)) {
     failures.push(`sitemap-static.xml: Tomorrowland URL has no intent owner (${sitemapUrl})`);
+  }
+  if (sitemapUrl.startsWith(`${siteUrl}/mysteryland/`) && !mysterylandOwnerUrls.has(sitemapUrl)) {
+    failures.push(`sitemap-static.xml: Mysteryland URL has no intent owner (${sitemapUrl})`);
   }
   const europeOwners = europeIntentMap.owners.filter(({ url }) => url.startsWith('/europe/'));
   const europeOwnerUrls = new Set(europeOwners.map(({ url }) => `${siteUrl}${url}`));
@@ -307,7 +312,7 @@ for (const route of routes) {
     if (!declaredIds.has(fragment)) failures.push(`${route.url}: fragment link target #${fragment} does not exist`);
   }
   for (const route of routes) {
-    if (route.url !== '/tomorrowland/' && !hubLinks.has(route.url)) {
+    if (route.url.startsWith('/tomorrowland/') && route.url !== '/tomorrowland/' && !hubLinks.has(route.url)) {
       failures.push(`/tomorrowland/: missing direct hub link to ${route.url}`);
     }
   }
@@ -315,7 +320,9 @@ for (const route of routes) {
 
 for (const sitemapUrl of sitemapUrls) {
   const pageUrl = new URL(sitemapUrl);
-  if (!pageUrl.pathname.startsWith('/europe/') && !pageUrl.pathname.startsWith('/tomorrowland/')) continue;
+  if (!pageUrl.pathname.startsWith('/europe/')
+    && !pageUrl.pathname.startsWith('/tomorrowland/')
+    && !pageUrl.pathname.startsWith('/mysteryland/')) continue;
   const pagePath = resolve('public', ...pageUrl.pathname.split('/').filter(Boolean), 'index.html');
   if (!existsSync(pagePath)) {
     failures.push(`${pageUrl.pathname}: missing static SEO page for global contact validation`);
@@ -412,6 +419,6 @@ if (failures.length > 0) {
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exitCode = 1;
 } else {
-  console.log(`Validated ${routes.length} Tomorrowland pages and the Europe hub: intent ownership, visible content, metadata, canonical, schema, internal links, redirects, sitemap coverage and availability caveats.`);
+  console.log(`Validated ${intentMap.owners.length} Tomorrowland pages, ${mysterylandIntentMap.owners.length} Mysteryland pages and the Europe hub: intent ownership, visible content, metadata, canonical, schema, internal links, redirects, sitemap coverage and availability caveats.`);
   console.log(`Travel4Life Contact Layer: validated ${validatedContactPages.size} SEO landing pages for clickable phone, WhatsApp and email, no added hero or footer bars, final CTAs, contextual messages, and analytics event wiring.`);
 }

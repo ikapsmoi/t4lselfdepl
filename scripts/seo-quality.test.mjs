@@ -128,6 +128,19 @@ test('shared contact configuration creates contextual, clickable contact actions
   assert.match(thailandHtml, /<span>Ask about Thailand travel options<\/span>/);
   assert.match(thailandHtml, /data-contact-destination="Tomorrowland Thailand"/);
 
+  const mysterylandContext = getTravel4LifeContactContextFromLocation(
+    '/mysteryland/2027/',
+    'Mysteryland 2027 Packages from India | Travel4life',
+  );
+  assert.equal(mysterylandContext.pageType, 'festival');
+  assert.equal(mysterylandContext.destination, 'Mysteryland 2027');
+  assert.equal(mysterylandContext.eventType, 'Mysteryland 2027 trip from India');
+  const mysterylandMessage = new URL(getTravel4LifeWhatsAppUrl(mysterylandContext)).searchParams.get('text');
+  assert.equal(
+    mysterylandMessage,
+    'Hi Travel4Life, I am interested in Mysteryland 2027 trip from India. Please share what travel options may be available and the details I should confirm.',
+  );
+
   const belgiumPackageContext = getTravel4LifeContactContextFromLocation(
     '/tomorrowland/belgium/packages/',
     'Tomorrowland Belgium Package Enquiry | Travel4life',

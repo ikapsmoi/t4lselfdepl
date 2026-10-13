@@ -94,6 +94,13 @@ export const getTravel4LifeContactContextFromLocation = (pathname, title = '') =
     const city = europeRoute.startsWith('paris-') ? 'Paris' : undefined;
     return getTravel4LifeContactContext({ pageType: 'europe', destination: country || 'Europe', country, city, entity: europeRoute.replaceAll('-', ' ') });
   }
+  if (normalizedPath.includes('/mysteryland/')) {
+    return getTravel4LifeContactContext({
+      pageType: 'festival',
+      destination: 'Mysteryland 2027',
+      eventType: 'Mysteryland 2027 trip from India',
+    });
+  }
   if (normalizedPath.includes('/tomorrowland')) {
     const festivalDestination = normalizedPath.includes('/thailand/')
       ? 'Tomorrowland Thailand'

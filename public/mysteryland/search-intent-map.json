@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "reviewedOn": "2026-10-13",
+  "evidence": {
+    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-10-13",
+    "finding": "Mysteryland 2027 received 59 impressions and 2 clicks in the supplied last-7-days export. Related queries include ticket and date intent.",
+    "limitation": "The report does not establish current event dates, official ticket prices, package inventory, or the terms of any Travel4life offer. Verify these directly before publishing commercial claims."
+  },
+  "owners": [
+    {
+      "url": "/mysteryland/2027/",
+      "file": "mysteryland/2027/index.html",
+      "schemaType": "Article",
+      "intent": "Mysteryland 2027 travel and package-planning research from India",
+      "primaryQuery": "Mysteryland 2027 packages from India",
+      "relatedQueries": [
+        "Mysteryland 2027",
+        "Mysteryland 2027 tickets",
+        "Mysteryland 2027 dates",
+        "Mysteryland festival 2027"
+      ],
+      "officialSources": ["https://www.mysteryland.nl/"]
+    }
+  ]
+}

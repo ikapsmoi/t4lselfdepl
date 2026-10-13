@@ -20,6 +20,7 @@ const staticSitemap = await readFile(resolve(outputDirectory, 'sitemap-static.xm
 const corbettSource = JSON.parse(await readFile(resolve(publicDirectory, 'jim-corbett/page-registry.json'), 'utf8'));
 const sourceManifests = [
   { path: 'tomorrowland/search-intent-map.json', pageType: 'festival-guide' },
+  { path: 'mysteryland/search-intent-map.json', pageType: 'festival-guide' },
   { path: 'europe/search-intent-map.json', pageType: 'destination-guide' },
   { path: 'india-tours/search-intent-map.json', pageType: 'destination-guide' },
 ];
@@ -137,6 +138,7 @@ const routeGroup = (url, pageType, entityType) => {
   if (segments[0] === 'tomorrowland') {
     return segments.includes('packages') ? 'festival-packages' : 'festivals';
   }
+  if (segments[0] === 'mysteryland') return 'festivals';
   return entityType === 'package' || pageType === 'product' ? 'packages' : `${segments[0]}-pages`;
 };
 const getStaticPageDescriptors = async () => {

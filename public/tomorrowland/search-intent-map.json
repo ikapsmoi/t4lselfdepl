@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-02",
+  "reviewedOn": "2026-10-13",
   "evidence": {
-    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-09-23",
-    "finding": "No Tomorrowland query rows were present in Queries.csv and no Tomorrowland landing-page rows were present in Pages.csv in the supplied export.",
-    "limitation": "The supplied CSV export does not establish demand, rankings, or query volume for Tomorrowland topics. Treat the mapped query families as intent hypotheses, not measured opportunities.",
+    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-10-13.xlsx",
+    "finding": "The last-7-days report shows the Tomorrowland Winter page at 123 impressions, 2 clicks, 1.63% CTR and average position 7.93; the Thailand page at 56 impressions, 4 clicks and position 8.48; and the cost-from-India page at 56 impressions, 1 click and position 17.25. Queries include Tomorrowland 2027 ticket-price intent and Mysteryland 2027 (59 impressions, 2 clicks).",
+    "limitation": "This is a short last-7-days snapshot, not a sustained trend. Query and page rows do not establish a one-to-one query-to-URL relationship, current ticket prices, official event details, package inventory, or the terms of any Travel4life offer.",
     "originCityDecision": "Do not publish Delhi, Mumbai, Bengaluru, or other origin-city landing pages without query evidence and genuinely differentiated departure or product information."
   },
   "owners": [
