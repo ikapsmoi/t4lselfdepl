@@ -56,7 +56,7 @@ const IndiaToursPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-paper pb-20 text-[#182722] md:pb-0">
+    <div className="min-h-screen bg-paper pb-20 text-gray-900 md:pb-0">
       <Header region={region} onRegionChange={updateRegion} />
       <main>
         <Hero onDesignTrip={goToTripDesigner} />
@@ -74,7 +74,7 @@ const IndiaToursPage = () => {
         <TourGrid selectedJourneyId={journey.id} onSelectJourney={selectJourney} />
         <RouteMap journey={journey} onPlanJourney={goToTripDesigner} />
         <TripDesignerWizard journey={journey} region={region} />
-        <section className="bg-[#f3f0e8] px-5 py-10 text-center sm:px-8 md:py-24">
+        <section className="bg-paper px-5 py-10 text-center sm:px-8 md:py-24">
           <p className="font-serif text-2xl text-forest-dark sm:text-3xl">The most memorable journeys begin with a conversation.</p>
           <a className="mt-5 inline-flex items-center gap-2 text-sm font-bold text-forest underline decoration-champagne underline-offset-4" href="#plan">Start planning <ArrowUpRight size={16} aria-hidden="true" /></a>
         </section>

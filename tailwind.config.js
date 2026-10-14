@@ -12,16 +12,42 @@ export default {
     },
     extend: {
       colors: {
-        forest: '#234c3d',
-        'forest-dark': '#17372c',
-        paper: '#fbfaf6',
-        champagne: '#e8c99f',
-        'champagne-dark': '#9a7040',
-        muted: '#68746e',
+        gray: {
+          50: '#fff8f1',
+          100: '#fff0e5',
+          200: '#f1e2d8',
+          300: '#dfccc2',
+          400: '#bba8a0',
+          500: '#84746e',
+          600: '#665650',
+          700: '#4c3f3a',
+          800: '#302825',
+          900: '#211b19',
+          950: '#19191b',
+        },
+        teal: {
+          50: '#fff3ee',
+          100: '#ffe4d9',
+          200: '#ffc7b2',
+          300: '#ffa184',
+          400: '#ff7654',
+          500: '#ff4028',
+          600: '#dc3723',
+          700: '#bd2f20',
+          800: '#98271c',
+          900: '#742018',
+          950: '#4d1713',
+        },
+        forest: '#bd2f20',
+        'forest-dark': '#19191b',
+        paper: '#fff8f1',
+        champagne: '#ffc7b2',
+        'champagne-dark': '#bd2f20',
+        muted: '#665650',
         // New Brand Color System
         brand: {
-          navy: "#0F2F6B",
-          aqua: "#47B5C4",
+          navy: "#19191B",
+          aqua: "#FF4028",
           forest: "#3E6A4F",
           midnight: "#0E1521",
           charcoal: "#1E1E1E",
@@ -31,16 +57,16 @@ export default {
         },
         // Legacy colors maintained for compatibility
         primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
+          50: '#fff3ee',
+          100: '#ffe4d9',
+          200: '#ffc7b2',
+          300: '#ffa184',
+          400: '#ff7654',
+          500: '#ff4028',
+          600: '#dc3723',
+          700: '#bd2f20',
+          800: '#98271c',
+          900: '#742018',
           black: "#1E1E1E", // mapped to charcoal
           darkGray: "#0E1521", // mapped to midnight
           mediumGray: "#5B6673", // mapped to slate
@@ -73,10 +99,10 @@ export default {
           sandBeige: "#F4F6F8", // mapped to light
         },
         ui: {
-          background: "#FFFFFF",
-          cardBackground: "rgba(244, 246, 248, 0.9)",
+          background: "#FFF8F1",
+          cardBackground: "rgba(255, 253, 249, 0.94)",
           overlay: "rgba(14, 21, 33, 0.4)",
-          border: "#F4F6F8",
+          border: "#F1E2D8",
           shadow: "rgba(14, 21, 33, 0.1)",
         },
         text: {
@@ -88,11 +114,11 @@ export default {
         },
         // Contiki-inspired brand colors
         contiki: {
-          teal: "#00B3A6",     // Primary brand teal
-          navy: "#00263A",     // Dark navy for backgrounds
-          coral: "#FF4C61",    // Accent red/coral
-          grayLight: "#F7F7F7",
-          grayMid: "#666666",
+          teal: "#BD2F20",
+          navy: "#19191B",
+          coral: "#FF4028",
+          grayLight: "#FFF0E5",
+          grayMid: "#665650",
           white: "#FFFFFF",
         },
         earth: {

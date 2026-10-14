@@ -4,6 +4,7 @@ import { escapeXml, getProductQuality, productPath } from './seo-quality.mjs';
 import { renderProductPage } from './render-product-page.mjs';
 import { fetchActiveTrips } from './supabase-seo-data.mjs';
 import { gateEuropePages } from './gate-europe-pages.mjs';
+import { generateTomorrowlandTripCards } from './tomorrowland-trip-cards.mjs';
 
 const siteUrl = (process.env.SITE_URL || 'https://travel4life.net').replace(/\/$/, '');
 const outputDirectory = resolve('dist');
@@ -44,6 +45,7 @@ const sitemapEntries = await Promise.all(eligibleTrips.map(async (trip) => {
     : '';
   return `  <url>\n    <loc>${escapeXml(`${siteUrl}${tripPath}`)}</loc>${lastmod}\n  </url>`;
 }));
+await generateTomorrowlandTripCards(eligibleTrips, outputDirectory);
 const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${sitemapEntries.join('\n')}\n</urlset>\n`;
 await writeFile(resolve(outputDirectory, 'sitemap-products.xml'), sitemap, 'utf8');
 console.log(`Generated ${eligibleTrips.length} crawlable trip pages from ${trips.length} active listings; excluded ${trips.length - eligibleTrips.length} listings that did not pass quality and date checks, and gated ${gatedEuropePages} Europe pages with no matching eligible inventory.`);

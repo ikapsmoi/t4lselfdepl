@@ -168,21 +168,17 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
               <span className="ml-1.5 whitespace-nowrap text-base font-display font-bold tracking-tight text-gray-900 sm:ml-2 sm:text-lg">Travel4life</span>
             </button>
 
-            {/* Travel4life Reserve VVIP Button */}
-            <div className="group relative ml-auto mr-2 inline-flex shrink-0 items-center sm:ml-3 sm:mr-0">
-              <div className="absolute -inset-px rounded-full bg-amber-400/45 opacity-70 transition-opacity duration-200 group-hover:opacity-100"></div>
+            {/* Secret Miles group link */}
+            <div className="ml-auto mr-2 inline-flex shrink-0 items-center sm:ml-3 sm:mr-0">
               <a
                 href="https://chat.whatsapp.com/IFy99NyGI38JgcTHtsvxlI"
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Join the Secret Miles WhatsApp group"
-                className="relative isolate inline-flex min-h-11 items-center gap-1 overflow-hidden rounded-full border border-amber-300/60 bg-gray-900 px-2.5 py-1.5 text-[10px] font-bold uppercase tracking-wide text-amber-100 shadow-sm shadow-amber-900/10 transition-all duration-200 group-hover:-translate-y-px group-hover:bg-gray-800 group-hover:shadow-md group-hover:shadow-amber-900/15 active:translate-y-0 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 focus-visible:ring-offset-2 sm:px-3 sm:text-xs"
+                className="inline-flex min-h-11 items-center justify-end gap-1.5 whitespace-nowrap px-1 text-[9px] font-bold uppercase tracking-wide text-gray-900 transition-colors hover:text-[#bd2f20] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#bd2f20] focus-visible:ring-offset-2 sm:gap-2 sm:px-2 sm:text-xs"
               >
-                <Plane className="pointer-events-none absolute right-1 top-1/2 z-0 h-8 w-8 -translate-y-1/2 rotate-[-18deg] text-amber-300/25" aria-hidden="true" />
-                <span className="relative z-10 inline-flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-amber-400" />
-                  Join Secret Miles
-                </span>
+                <span>Join Secret Miles</span>
+                <Plane className="h-4 w-4 shrink-0 rotate-[-18deg] text-[#bd2f20] sm:h-5 sm:w-5" aria-hidden="true" />
               </a>
             </div>
 

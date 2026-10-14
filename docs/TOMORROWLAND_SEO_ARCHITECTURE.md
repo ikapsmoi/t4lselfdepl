@@ -10,6 +10,8 @@ Reviewed on **2 October 2026**. The supplied Search Console export is labelled `
 
 One primary search-intent owner is recorded per indexable page in [`public/tomorrowland/search-intent-map.json`](../public/tomorrowland/search-intent-map.json). Its query families are editorial hypotheses, not Search Console volume or ranking data.
 
+Selected commercial and destination owners also declare a `tripInventory` match in that map. The production build uses only active, future, quality-checked products and inserts a responsive card section when the product text explicitly matches Tomorrowland and the page's destination scope. Pages without matching listings remain unchanged; card links lead to the inventory-backed trip detail and availability flow. The listing cards do not imply festival access or official partnership.
+
 | Canonical URL | Search intent owner | Status |
 | --- | --- | --- |
 | `/tomorrowland/` | Broad India-first discovery and destination selection | Indexable hub |

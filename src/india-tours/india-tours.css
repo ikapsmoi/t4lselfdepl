@@ -7,8 +7,8 @@
 :root {
   color-scheme: light;
   font-family: 'DM Sans', Arial, sans-serif;
-  color: #182722;
-  background: #fbfaf6;
+  color: #19191b;
+  background: #fff8f1;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -19,12 +19,12 @@
 }
 
 html { min-width: 320px; }
-body { min-width: 320px; margin: 0; background: #fbfaf6; }
+body { min-width: 320px; margin: 0; background: #fff8f1; }
 body, button, input, select { font-family: 'DM Sans', Arial, sans-serif; }
 button, a, input, select { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible {
-  outline: 3px solid #527966;
+  outline: 3px solid #bd2f20;
   outline-offset: 3px;
 }
 .font-serif { font-family: 'Playfair Display', Georgia, serif; }
@@ -32,26 +32,26 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .inbound-region-select { min-height: 38px; }
 .inbound-header nav a {
   padding: .6rem .1rem;
-  color: #17372c;
+  color: #19191b;
   font-size: .8rem;
   font-weight: 600;
   text-decoration: none;
 }
-.inbound-header nav a:hover { color: #9a7040; }
+.inbound-header nav a:hover { color: #bd2f20; }
 .inbound-input {
   display: block;
   width: 100%;
   min-height: 48px;
-  border: 1px solid rgba(35, 76, 61, .24);
+  border: 1px solid rgba(189, 47, 32, .24);
   border-radius: 2px;
-  background: #fff;
+  background: #fffdf9;
   padding: .7rem .8rem;
-  color: #17372c;
+  color: #19191b;
   font-size: .9rem;
 }
-.inbound-input:focus { border-color: #234c3d; outline: 2px solid rgba(35, 76, 61, .2); }
-.inbound-input:disabled { cursor: not-allowed; background: #f2f0e9; opacity: .6; }
-.inbound-route-map { box-shadow: 0 18px 55px rgba(23, 55, 44, .14); }
+.inbound-input:focus { border-color: #bd2f20; outline: 2px solid rgba(189, 47, 32, .2); }
+.inbound-input:disabled { cursor: not-allowed; background: #fff0e5; opacity: .6; }
+.inbound-route-map { box-shadow: 0 18px 55px rgba(25, 25, 27, .14); }
 
 @media (max-width: 767px) {
   .inbound-nav-closed { display: none; }

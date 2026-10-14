@@ -197,7 +197,7 @@ const AppContent: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-gray-50">
+      <div className="site-theme min-h-screen bg-gray-50">
         <Header isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
         <main>{getCurrentView()}</main>
         <Travel4LifeGlobalContactLayer

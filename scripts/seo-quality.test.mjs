@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { getProductQuality, productPath } from './seo-quality.mjs';
 import { renderProductPage } from './render-product-page.mjs';
+import { injectTomorrowlandTripCards, renderTomorrowlandTripCards, selectTomorrowlandTrips } from './tomorrowland-trip-cards.mjs';
 import { isIndexableEuropePage } from './europe-page-eligibility.mjs';
 import {
   getTravel4LifeContactContextFromLocation,
@@ -67,6 +68,86 @@ test('Europe commercial pages require matching future inventory', () => {
     location: 'Brussels, ',
     itinerary: { ...trip.itinerary, description: `${trip.itinerary.description} Includes Switzerland ideas.` },
   }]), false);
+});
+
+test('Tomorrowland trip cards only include related, destination-matched inventory', () => {
+  const winterTrip = {
+    ...trip,
+    id: 'winter-trip',
+    title: 'Tomorrowland Winter group trip',
+    location: "Alpe d'Huez, France",
+    start_date: '2027-03-10',
+    end_date: '2027-03-14',
+  };
+  const belgiumTrip = {
+    ...trip,
+    id: 'belgium-trip',
+    title: 'Tomorrowland Belgium group trip',
+    location: 'Boom, Belgium',
+    start_date: '2027-07-10',
+    end_date: '2027-07-14',
+  };
+  const thailandTrip = {
+    ...trip,
+    id: 'thailand-trip',
+    title: 'Tomorrowland Thailand group trip',
+    location: 'Thailand',
+    start_date: '2027-11-10',
+    end_date: '2027-11-14',
+  };
+  const unrelatedTrip = { ...trip, id: 'unrelated', title: 'Amsterdam group adventure' };
+  const listings = [thailandTrip, unrelatedTrip, belgiumTrip, winterTrip];
+
+  assert.deepEqual(selectTomorrowlandTrips(listings, 'tomorrowland').map(({ id }) => id), [
+    'winter-trip',
+    'belgium-trip',
+    'thailand-trip',
+  ]);
+  assert.deepEqual(selectTomorrowlandTrips(listings, 'belgium').map(({ id }) => id), ['belgium-trip']);
+  assert.deepEqual(selectTomorrowlandTrips(listings, 'winter').map(({ id }) => id), ['winter-trip']);
+  assert.deepEqual(selectTomorrowlandTrips(listings, 'thailand').map(({ id }) => id), ['thailand-trip']);
+});
+
+test('Tomorrowland trip cards escape inventory, expose pricing and link to availability details', () => {
+  const unsafeTrip = {
+    ...trip,
+    id: '74c8aeb3-625c-48f8-9516-d6b25973dba7',
+    title: 'Tomorrowland <Winter> & Alps',
+    location: "Alpe d'Huez, France",
+  };
+  const cards = renderTomorrowlandTripCards([unsafeTrip], 'winter');
+
+  assert.match(cards, /Current Tomorrowland Winter trips/);
+  assert.match(cards, /Tomorrowland &lt;Winter&gt; &amp; Alps/);
+  assert.match(cards, /₹85,000 per person/);
+  assert.match(cards, /href="\/trips\/74c8aeb3-625c-48f8-9516-d6b25973dba7\/"/);
+  assert.match(cards, /View trip &amp; check availability/);
+  assert.match(cards, /Festival access is not implied/);
+  assert.doesNotMatch(cards, /<img src="javascript:/);
+});
+
+test('Tomorrowland trip cards follow the page introduction and are omitted without matching inventory', () => {
+  const template = '<html><head></head><body><main><article><div class="notice">Read before booking.</div><h2>Trip information</h2><p>Guide introduction.</p></article></main></body></html>';
+  const tomorrowlandTrip = { ...trip, title: 'Tomorrowland festival group trip' };
+  const cards = injectTomorrowlandTripCards(template, [tomorrowlandTrip], 'tomorrowland');
+  const introductionEnd = cards.indexOf('</p>');
+  const cardsStart = cards.indexOf('<section class="t4l-trip-listing"');
+
+  assert.ok(cardsStart > introductionEnd);
+  assert.ok(cards.indexOf('href="/seo-trip-cards.css"') > -1);
+  assert.equal(injectTomorrowlandTripCards(template, [{ ...trip, title: 'Other festival trip' }], 'tomorrowland'), template);
+});
+
+test('the global contact panel stays outside the generated trip card section', () => {
+  const template = '<html><head></head><body><main><article><div class="notice">Read before booking.</div><h2>Trip information</h2><p>Guide introduction.</p></article></main></body></html>';
+  const withCards = injectTomorrowlandTripCards(template, [{ ...trip, title: 'Tomorrowland festival group trip' }], 'tomorrowland');
+  const withContactPanel = injectContactLayerHtml(withCards, { pageType: 'festival', destination: 'Tomorrowland' });
+  const listingStart = withContactPanel.indexOf('<section class="t4l-trip-listing"');
+  const contactPanelStart = withContactPanel.indexOf('<section class="t4l-contact-panel"');
+  const listingEnd = withContactPanel.indexOf('</section>', listingStart);
+
+  assert.ok(contactPanelStart >= 0);
+  assert.ok(contactPanelStart < listingStart || contactPanelStart > listingEnd);
 });
 
 test('shared contact configuration creates contextual, clickable contact actions', () => {

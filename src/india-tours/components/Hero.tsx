@@ -17,12 +17,12 @@ const Hero = ({ onDesignTrip }: HeroProps) => {
         width="1600"
         height="1000"
       />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#10271f]/90 via-[#10271f]/58 to-[#10271f]/15" aria-hidden="true" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#10271f]/50 via-transparent to-[#10271f]/10" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#19191b]/90 via-[#19191b]/58 to-[#ff4028]/20" aria-hidden="true" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#19191b]/50 via-transparent to-[#ff4028]/10" aria-hidden="true" />
 
       <div className="mx-auto w-full max-w-[1440px] px-5 pb-16 pt-24 sm:px-8 sm:pb-20 lg:px-12 lg:pb-24">
         <div className="max-w-[780px]">
-          <p className="mb-5 text-[10px] font-bold uppercase tracking-[.24em] text-[#f1d7af] sm:text-xs">Private India journeys · Thoughtfully planned</p>
+          <p className="mb-5 text-[10px] font-bold uppercase tracking-[.24em] text-[#ffd0bd] sm:text-xs">Private India journeys · Thoughtfully planned</p>
           <motion.h1
             id="inbound-title"
             className="max-w-[750px] font-serif text-[clamp(3.25rem,8vw,7.4rem)] font-medium leading-[.99] tracking-[-.055em] text-white"
@@ -31,7 +31,7 @@ const Hero = ({ onDesignTrip }: HeroProps) => {
             transition={{ duration: reduceMotion ? 0 : 0.75, ease: [0.22, 1, 0.36, 1] }}
           >
             India. Your Way.
-            <span className="mt-2 block text-[#f1d7af]">One Remarkable Journey.</span>
+            <span className="mt-2 block text-[#ffd0bd]">One Remarkable Journey.</span>
           </motion.h1>
           <p className="mt-7 max-w-[580px] text-sm leading-7 text-white/85 sm:text-base sm:leading-8">
             Discover India at your own pace, with a journey shaped around the places, details and moments that matter to you.

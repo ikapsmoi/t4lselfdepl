@@ -75,15 +75,15 @@ const TourGrid = ({ selectedJourneyId, onSelectJourney }: TourGridProps) => {
                   width="800"
                   height="1000"
                 />
-                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#0c211a]/95 via-[#0c211a]/15 to-[#0c211a]/5" aria-hidden="true" />
+                <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#19191b]/95 via-[#19191b]/15 to-[#19191b]/5" aria-hidden="true" />
                 <div className="absolute inset-x-0 bottom-0 p-3.5 text-white sm:p-7">
-                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[.17em] text-[#f1d7af]">{categoryLabel}</p>
+                  <p className="mb-2 text-[10px] font-bold uppercase tracking-[.17em] text-[#ffd0bd]">{categoryLabel}</p>
                   <h3 className="line-clamp-2 max-w-sm font-serif text-base font-medium leading-tight sm:text-3xl">{journey.name}</h3>
                   <p className="mt-1 text-[13px] leading-relaxed text-white/80 sm:mt-2 sm:text-sm">{journey.duration_days} · {journey.starting_city} to {journey.ending_city}</p>
                   <div className="mt-3 flex items-center justify-between gap-3 border-t border-white/30 pt-2.5 sm:mt-5 sm:pt-4">
                     <span className="text-xs font-semibold text-white/90">Request a tailored quote</span>
                     <button
-                      className="inline-flex min-h-12 items-center gap-2 border-b border-[#f1d7af] pb-1 text-xs font-bold text-[#f1d7af] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+                      className="inline-flex min-h-12 items-center gap-2 border-b border-[#ffd0bd] pb-1 text-xs font-bold text-[#ffd0bd] transition-colors hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
                       type="button"
                       aria-label={`View route outline for ${journey.name}`}
                       aria-pressed={selected}

@@ -101,7 +101,7 @@ const RouteMap = ({ journey, onPlanJourney }: RouteMapProps) => {
   const selectedStop = journey.route_stops[activeStop] || journey.route_stops[0];
 
   return (
-    <section id="route" className="scroll-mt-24 bg-[#f3f0e8] px-5 py-10 sm:px-8 md:py-24 lg:px-12" aria-labelledby="route-title">
+    <section id="route" className="scroll-mt-24 bg-paper px-5 py-10 sm:px-8 md:py-24 lg:px-12" aria-labelledby="route-title">
       <div className="mx-auto max-w-[1440px]">
         <div className="mb-10 max-w-[680px]">
           <p className="mb-3 text-[10px] font-bold uppercase tracking-[.2em] text-champagne-dark">A journey, stop by stop</p>

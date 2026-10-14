@@ -111,7 +111,7 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
   return (
     <>
       <section
-        className="relative z-10 isolate overflow-hidden border-y border-slate-200 bg-white text-slate-900"
+        className="relative z-10 isolate overflow-hidden border-y border-gray-200 bg-[#fff8f1] text-gray-900"
         aria-label="Featured trips"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
@@ -120,16 +120,7 @@ export function TrustBar({ trips, onViewAll }: TrustBarProps) {
           if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setIsPaused(false);
         }}
       >
-        <img
-          src="/gifs.gif"
-          alt=""
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-0 h-full w-full object-cover opacity-30 sm:hidden"
-          loading="lazy"
-          decoding="async"
-        />
-        <div className="pointer-events-none absolute inset-0 z-0 bg-white/65 sm:hidden" aria-hidden="true" />
-        <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-r from-white via-teal-50/40 to-sky-100/70" aria-hidden="true" />
+        <div className="featured-trip-orange-overflow pointer-events-none absolute inset-0 z-0" aria-hidden="true" />
         <motion.svg
           viewBox="0 0 520 140"
           preserveAspectRatio="none"

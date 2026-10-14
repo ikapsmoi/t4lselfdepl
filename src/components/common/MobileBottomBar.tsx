@@ -31,9 +31,9 @@ export const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
       type="button"
       onClick={onClick}
       disabled={disabled}
-      className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-emerald-200 bg-white px-4 text-sm font-semibold text-emerald-800 shadow-sm transition-colors duration-150 hover:border-emerald-300 hover:bg-emerald-50 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-300 focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:px-6"
+      className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full border border-[#ffc7b2] bg-white px-4 text-sm font-semibold text-[#bd2f20] shadow-sm transition-colors duration-150 hover:border-[#ff7654] hover:bg-[#fff3ee] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#ff7654] focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60 sm:px-6"
     >
-      <MessageCircle className="h-4 w-4 text-emerald-600" aria-hidden="true" />
+      <MessageCircle className="h-4 w-4 text-[#bd2f20]" aria-hidden="true" />
       {buttonLabel}
     </button>
   </div>

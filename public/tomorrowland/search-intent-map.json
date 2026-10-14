@@ -11,6 +11,7 @@
     {
       "url": "/tomorrowland/",
       "file": "tomorrowland/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "CollectionPage",
       "intent": "India-first discovery and overview",
       "primaryQuery": "Tomorrowland travel planning from India",
@@ -20,6 +21,7 @@
     {
       "url": "/tomorrowland/packages/",
       "file": "tomorrowland/packages/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "WebPage",
       "intent": "Commercial investigation and package due diligence",
       "primaryQuery": "Tomorrowland packages from India",
@@ -38,6 +40,7 @@
     {
       "url": "/tomorrowland/belgium/",
       "file": "tomorrowland/belgium/index.html",
+      "tripInventory": "belgium",
       "schemaType": "Article",
       "intent": "Belgium destination and travel planning",
       "primaryQuery": "Tomorrowland Belgium from India",
@@ -47,6 +50,7 @@
     {
       "url": "/tomorrowland/belgium/packages/",
       "file": "tomorrowland/belgium/packages/index.html",
+      "tripInventory": "belgium",
       "schemaType": "WebPage",
       "intent": "Commercial investigation and package due diligence",
       "primaryQuery": "Tomorrowland Belgium travel package from India",
@@ -56,6 +60,7 @@
     {
       "url": "/tomorrowland/winter/",
       "file": "tomorrowland/winter/index.html",
+      "tripInventory": "winter",
       "schemaType": "Article",
       "intent": "Winter destination and Alps travel planning",
       "primaryQuery": "Tomorrowland Winter from India",
@@ -65,6 +70,7 @@
     {
       "url": "/tomorrowland/thailand/",
       "file": "tomorrowland/thailand/index.html",
+      "tripInventory": "thailand",
       "schemaType": "Article",
       "intent": "Thailand destination and festival travel planning",
       "primaryQuery": "Tomorrowland Thailand from India",
@@ -74,6 +80,7 @@
     {
       "url": "/tomorrowland/cost-from-india/",
       "file": "tomorrowland/cost-from-india/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "Article",
       "intent": "Cost research and budget methodology",
       "primaryQuery": "Tomorrowland trip cost from India",
@@ -83,6 +90,7 @@
     {
       "url": "/tomorrowland/from-india/",
       "file": "tomorrowland/from-india/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "Article",
       "intent": "India departure logistics and trip planning",
       "primaryQuery": "How to go to Tomorrowland from India",
@@ -92,6 +100,7 @@
     {
       "url": "/tomorrowland/compare/",
       "file": "tomorrowland/compare/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "Article",
       "intent": "Destination comparison",
       "primaryQuery": "Tomorrowland Belgium vs Winter vs Thailand",
@@ -110,6 +119,7 @@
     {
       "url": "/tomorrowland/group-travel/",
       "file": "tomorrowland/group-travel/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "Article",
       "intent": "Group coordination and shared travel",
       "primaryQuery": "Tomorrowland group travel from India",
@@ -137,6 +147,7 @@
     {
       "url": "/tomorrowland/package-vs-independent/",
       "file": "tomorrowland/package-vs-independent/index.html",
+      "tripInventory": "tomorrowland",
       "schemaType": "Article",
       "intent": "Package-versus-independent decision support",
       "primaryQuery": "Tomorrowland package vs independent travel",

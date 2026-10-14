@@ -172,7 +172,7 @@ const TripDesignerWizard = ({ journey, region }: TripDesignerWizardProps) => {
                       <p className="mt-2 text-[15px] leading-relaxed text-muted">Choose the closest fit. You can always tell us more later.</p>
                       <div className="mt-6 grid grid-cols-2 gap-3">
                         {travelPartyOptions.map(({ id, icon: Icon, detail }) => (
-                          <button className={`flex min-h-24 items-center gap-4 rounded-sm border p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${party === id ? 'border-forest bg-[#edf2ed]' : 'border-forest/15 bg-white hover:border-forest/40'}`} type="button" key={id} aria-pressed={party === id} disabled={isTransitioning} onClick={() => { setParty(id); setError(''); }}>
+                          <button className={`flex min-h-24 items-center gap-4 rounded-sm border p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${party === id ? 'border-forest bg-[#fff0e5]' : 'border-forest/15 bg-white hover:border-forest/40'}`} type="button" key={id} aria-pressed={party === id} disabled={isTransitioning} onClick={() => { setParty(id); setError(''); }}>
                             <Icon className="h-5 w-5 shrink-0 text-forest" aria-hidden="true" />
                             <span><span className="block text-sm font-bold text-forest-dark">{id}</span><span className="mt-1 block text-xs text-muted">{detail}</span></span>
                             {party === id && <Check className="ml-auto h-4 w-4 text-forest" aria-hidden="true" />}
@@ -188,7 +188,7 @@ const TripDesignerWizard = ({ journey, region }: TripDesignerWizardProps) => {
                       <p className="mt-2 text-sm text-muted">We’ll use this to shape the rhythm of your route.</p>
                       <div className="mt-6 grid gap-3">
                         {paceOptions.map(({ id, detail }) => (
-                          <button className={`flex min-h-16 items-center justify-between gap-4 rounded-sm border p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${pace === id ? 'border-forest bg-[#edf2ed]' : 'border-forest/15 bg-white hover:border-forest/40'}`} type="button" key={id} aria-pressed={pace === id} disabled={isTransitioning} onClick={() => { setPace(id); setError(''); }}>
+                          <button className={`flex min-h-16 items-center justify-between gap-4 rounded-sm border p-4 text-left transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-forest ${pace === id ? 'border-forest bg-[#fff0e5]' : 'border-forest/15 bg-white hover:border-forest/40'}`} type="button" key={id} aria-pressed={pace === id} disabled={isTransitioning} onClick={() => { setPace(id); setError(''); }}>
                             <span><span className="block text-sm font-bold text-forest-dark">{id}</span><span className="mt-1 block text-xs text-muted">{detail}</span></span>
                             {pace === id && <Check className="h-4 w-4 shrink-0 text-forest" aria-hidden="true" />}
                           </button>
@@ -253,7 +253,7 @@ const TripDesignerWizard = ({ journey, region }: TripDesignerWizardProps) => {
             </form>
 
             {preparedLinks && (
-              <div className="mt-6 rounded-sm border border-forest/20 bg-[#edf2ed] p-5" role="status">
+              <div className="mt-6 rounded-sm border border-forest/20 bg-[#fff0e5] p-5" role="status">
                 <p className="font-semibold text-forest-dark">Your enquiry draft is ready.</p>
                 <p className="mt-1 text-xs leading-5 text-muted">Review the details in your chosen app; this page has not sent your message.</p>
                 <div className="mt-4 flex flex-wrap gap-3">
@@ -266,13 +266,13 @@ const TripDesignerWizard = ({ journey, region }: TripDesignerWizardProps) => {
         </div>
 
         <aside className="rounded-sm bg-forest-dark p-6 text-white sm:p-7">
-          <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#f1d7af]">Personal travel concierge</p>
+          <p className="text-[10px] font-bold uppercase tracking-[.18em] text-[#ffd0bd]">Personal travel concierge</p>
           <h3 className="mt-3 font-serif text-2xl">A real conversation, at your pace.</h3>
           <p className="mt-3 text-sm leading-6 text-white/75">Your selected starting point: <strong className="font-semibold text-white">{journey.name}</strong>. We’ll confirm what can be arranged before you make a decision.</p>
           <div className="mt-6 space-y-3 border-t border-white/15 pt-5 text-sm">
-            <a className="block text-[#f1d7af] hover:text-white" href="tel:+919511446642">Call +91 95114 46642</a>
-            <a className="block text-[#f1d7af] hover:text-white" href={`mailto:${TRAVEL4LIFE_CONTACT.email}`}>{TRAVEL4LIFE_CONTACT.email}</a>
-            <a className="block text-[#f1d7af] hover:text-white" href={getTravel4LifeWhatsAppUrl({ pageType: 'india-tours', destination: 'India' })} target="_blank" rel="noopener noreferrer">WhatsApp our India team</a>
+            <a className="block text-[#ffd0bd] hover:text-white" href="tel:+919511446642">Call +91 95114 46642</a>
+            <a className="block text-[#ffd0bd] hover:text-white" href={`mailto:${TRAVEL4LIFE_CONTACT.email}`}>{TRAVEL4LIFE_CONTACT.email}</a>
+            <a className="block text-[#ffd0bd] hover:text-white" href={getTravel4LifeWhatsAppUrl({ pageType: 'india-tours', destination: 'India' })} target="_blank" rel="noopener noreferrer">WhatsApp our India team</a>
           </div>
           <p className="mt-5 text-[11px] leading-5 text-white/55">International line · +91 95114 46642. We do not advertise unverified local toll-free numbers.</p>
         </aside>

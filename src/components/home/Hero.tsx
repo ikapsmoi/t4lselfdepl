@@ -23,7 +23,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const heroHeadlines = [
     'Festival FOMO? We’ve Got You.',
     'Weekend Escapes from ₹9,000',
-    'Cash, Cards or Bank. Your Call.',
+    'Cash, Cards or Bank. We’ve Got You.',
     'Travel with Group? We’ve Got You.',
     'Weddings & Corp Events Under ₹7L'
   ];
@@ -114,7 +114,7 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
         {/* New Users Ticker */}
 
         {/* Dynamic Background Slideshow */}
-        <motion.div style={reduceMotion ? undefined : { y: heroParallax }} className="absolute inset-0 overflow-hidden max-lg:!inset-0 lg:left-[60%]">
+        <motion.div style={reduceMotion ? undefined : { y: heroParallax }} className="absolute inset-0 overflow-hidden max-lg:!inset-0 lg:left-1/2">
           {(!heroVideoUrl || isVideoUnavailable || reduceMotion) && heroBackgrounds.map((bg, index) => (
             <div
               key={index}
