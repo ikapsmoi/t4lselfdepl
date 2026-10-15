@@ -395,6 +395,7 @@ export const Header: React.FC<HeaderProps> = ({ isMenuOpen, setIsMenuOpen }) => 
                   Tomorrowland planning
                 </a>
                 <button onClick={() => { window.location.hash = 'safety'; setIsMenuOpen(false); }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">Safety & Trust</button>
+                <button onClick={() => { window.location.hash = 'reviews'; setIsMenuOpen(false); }} className="text-gray-700 hover:text-primary-600 transition-colors font-sans font-semibold text-lg text-left">Reviews</button>
                 <button onClick={() => {
                   window.location.hash = 'how-it-works';
                   setIsMenuOpen(false);

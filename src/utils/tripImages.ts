@@ -98,8 +98,8 @@ const titleAliases: Array<readonly [string, string]> = [
   ['salzburg', 'salzburg'],
 ];
 
-const normalize = (value: string): string =>
-  ` ${value.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()} `;
+const normalize = (value: string | null | undefined): string =>
+  ` ${(value ?? '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim()} `;
 
 const isFestivalSpecial = (category: string): boolean => {
   const normalizedCategory = normalize(category);

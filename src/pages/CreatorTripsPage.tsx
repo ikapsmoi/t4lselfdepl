@@ -56,6 +56,7 @@ export const CreatorTripsPage: React.FC = () => {
       // Transform trips data
       const transformedTrips: CreatorTrip[] = (tripsData || []).map(trip => ({
         ...trip,
+        type: trip.category || 'adventure',
         destination: trip.location,
         price: Number(trip.price_per_person),
         duration: Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),

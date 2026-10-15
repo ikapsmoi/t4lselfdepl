@@ -114,7 +114,7 @@ export const CreatorTrips: React.FC = () => {
           description: trip.itinerary?.description || 'Amazing creator-led travel experience awaits you.',
           destination: trip.location,
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
-          type: trip.category,
+          type: trip.category || 'adventure',
           price: Number(trip.price_per_person),
           currency: trip.currency || (trip.category === 'indian_special' ? 'INR' : ''),
           duration: trip.itinerary?.duration ? Number(trip.itinerary.duration) : Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),

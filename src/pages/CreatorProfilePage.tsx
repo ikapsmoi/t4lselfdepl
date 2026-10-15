@@ -104,7 +104,7 @@ export const CreatorProfilePage: React.FC = () => {
           description: trip.itinerary?.description || 'Amazing creator-led travel experience.',
           destination: trip.location,
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
-          type: trip.category,
+          type: trip.category || 'adventure',
           price: Number(trip.price_per_person),
           currency: trip.currency || 'USD',
           duration: Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),
