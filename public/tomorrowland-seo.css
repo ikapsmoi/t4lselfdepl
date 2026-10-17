@@ -494,6 +494,41 @@ header::before {
 .faq { padding: 18px 0; border-top-color: #e5e8df; }
 .faq h3 { margin-top: 0; }
 .small { color: #748078 !important; }
+
+.t4l-price-table-wrap {
+  max-width: 100%;
+  margin: 1rem 0 1.5rem;
+  overflow-x: auto;
+  border: 1px solid #dce5df;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.t4l-price-table-wrap table {
+  width: 100%;
+  min-width: 620px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.t4l-price-table-wrap caption {
+  padding: 1rem;
+  color: #263d2d;
+  font-weight: 700;
+  text-align: left;
+}
+
+.t4l-price-table-wrap th,
+.t4l-price-table-wrap td {
+  padding: .75rem 1rem;
+  border-top: 1px solid #e6ece8;
+  vertical-align: top;
+}
+
+.t4l-price-table-wrap thead th {
+  color: #263d2d;
+  background: #f3f7f4;
+}
 .trust { color: #526056 !important; }
 .footer {
 	padding: 30px 0;

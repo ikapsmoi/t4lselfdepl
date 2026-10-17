@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises';
 import { getProductQuality, productPath } from './seo-quality.mjs';
 import { renderProductPage } from './render-product-page.mjs';
 import { injectTomorrowlandTripCards, renderTomorrowlandTripCards, selectTomorrowlandTrips } from './tomorrowland-trip-cards.mjs';
-import { isIndexableEuropePage } from './europe-page-eligibility.mjs';
+import { getEligibleEuropeTrips, isIndexableEuropePage } from './europe-page-eligibility.mjs';
+import { renderEuropeBudgetListings } from './gate-europe-pages.mjs';
 import {
   getTravel4LifeContactContextFromLocation,
   getTravel4LifeQuoteEvents,
@@ -62,12 +63,31 @@ test('Europe commercial pages require matching future inventory', () => {
   assert.equal(isIndexableEuropePage('/europe/switzerland/', [trip]), false);
   assert.equal(isIndexableEuropePage('/europe/', [trip]), true);
   assert.equal(isIndexableEuropePage('/europe/tours-under-200000/', [trip]), true);
+  assert.equal(isIndexableEuropePage('/europe/not-a-budget-route/', [trip]), true);
   assert.equal(isIndexableEuropePage('/europe/paris-switzerland/', [trip]), false);
   assert.equal(isIndexableEuropePage('/europe/', [{
     ...trip,
     location: 'Brussels, ',
     itinerary: { ...trip.itinerary, description: `${trip.itinerary.description} Includes Switzerland ideas.` },
   }]), false);
+});
+
+test('Europe under-2-lakh listings are filtered and rendered from matching product data', () => {
+  const atLimit = { ...trip, price_per_person: 200000 };
+  const zeroPrice = { ...trip, id: 'c4c8aeb3-625c-48f8-9516-d6b25973dba7', price_per_person: 0 };
+  const overLimit = { ...trip, id: 'a4c8aeb3-625c-48f8-9516-d6b25973dba7', price_per_person: 200001 };
+  const nonEurope = { ...trip, id: 'b4c8aeb3-625c-48f8-9516-d6b25973dba7', location: 'Bangkok, Thailand' };
+  const eligible = getEligibleEuropeTrips('/europe/tours-under-200000/', [trip, atLimit, zeroPrice, overLimit, nonEurope]);
+
+  assert.deepEqual(eligible.map(({ price_per_person }) => price_per_person), [85000, 200000]);
+  const cards = renderEuropeBudgetListings(eligible);
+  assert.match(cards, /Autumn group adventure/);
+  assert.match(cards, /₹85,000 per person/);
+  assert.match(cards, /10 Nov 2026–14 Nov 2026/);
+  assert.doesNotMatch(cards, /5 days/);
+  assert.match(cards, /\/trips\/74c8aeb3-625c-48f8-9516-d6b25973dba7\//);
+  assert.doesNotMatch(cards, /Bangkok|200,001/);
+  assert.match(renderEuropeBudgetListings([]), /no active qualifying Europe trip listings/i);
 });
 
 test('Tomorrowland trip cards only include related, destination-matched inventory', () => {

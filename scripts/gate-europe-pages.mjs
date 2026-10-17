@@ -1,6 +1,7 @@
 import { readFile, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import { isIndexableEuropePage } from './europe-page-eligibility.mjs';
+import { getEligibleEuropeTrips, isIndexableEuropePage } from './europe-page-eligibility.mjs';
+import { productPath } from './seo-quality.mjs';
 
 const siteUrl = (process.env.SITE_URL || 'https://travel4life.net').replace(/\/$/, '');
 
@@ -10,6 +11,40 @@ const updateRobots = (html, indexable, route) => {
   return html.replace(pattern, (_match, prefix, suffix) => (
     `${prefix}${indexable ? 'index, follow, max-image-preview:large' : 'noindex, follow'}${suffix}`
   ));
+};
+
+const escapeHtml = (value) => String(value ?? '')
+  .replaceAll('&', '&amp;')
+  .replaceAll('<', '&lt;')
+  .replaceAll('>', '&gt;')
+  .replaceAll('"', '&quot;')
+  .replaceAll("'", '&#39;');
+
+const formatPrice = (price, currency) => new Intl.NumberFormat('en-IN', {
+  style: 'currency',
+  currency: currency || 'INR',
+  maximumFractionDigits: 0,
+}).format(Number(price));
+
+const formatDate = (value) => new Intl.DateTimeFormat('en-IN', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date(value));
+
+export const renderEuropeBudgetListings = (trips) => {
+  if (trips.length === 0) {
+    return '<p class="notice">There are no active qualifying Europe trip listings at this budget right now. Check the Europe catalogue for current options.</p>';
+  }
+
+  const cards = trips.map((trip) => {
+    const destination = trip.location.trim().replace(/[,\s]+$/, '');
+    const details = `${destination} · ${formatDate(trip.start_date)}–${formatDate(trip.end_date)}`;
+    return `<a class="link-card" href="${escapeHtml(productPath(trip.id))}"><strong>${escapeHtml(trip.title)}</strong><span>${escapeHtml(details)}</span><span>${escapeHtml(formatPrice(trip.price_per_person, trip.currency || 'INR'))} per person</span><span>View itinerary, price and inclusions</span></a>`;
+  }).join('');
+
+  return `<div class="link-grid">${cards}</div>`;
 };
 
 export const gateEuropePages = async (eligibleTrips, outputDirectory = resolve('dist')) => {
@@ -31,7 +66,18 @@ export const gateEuropePages = async (eligibleTrips, outputDirectory = resolve('
     const relativePath = route.slice('/europe/'.length);
     const pagePath = resolve(outputDirectory, 'europe', relativePath, 'index.html');
     const html = await readFile(pagePath, 'utf8');
-    await writeFile(pagePath, updateRobots(html, indexable, route), 'utf8');
+    let updatedHtml = updateRobots(html, indexable, route);
+    if (route === '/europe/tours-under-200000/') {
+      const marker = '<div id="europe-budget-listings" aria-live="polite"></div>';
+      if (!updatedHtml.includes(marker)) {
+        throw new Error(`${route}: missing the Europe budget listing insertion point.`);
+      }
+      updatedHtml = updatedHtml.replace(
+        marker,
+        renderEuropeBudgetListings(getEligibleEuropeTrips(route, eligibleTrips)),
+      );
+    }
+    await writeFile(pagePath, updatedHtml, 'utf8');
 
     if (indexable) {
       retainedEntries.push(entry);

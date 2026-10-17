@@ -19,7 +19,8 @@ const routeRequirements = new Map([
   ['/europe/honeymoon/', (trip, text, location) => hasEuropeanInventory(location) && /\bhoneymoon\b|\bcouple\b/.test(text)],
   ['/europe/family-tours/', (trip, text, location) => hasEuropeanInventory(location) && /\bfamil(y|ies)\b|\bchild(?:ren)?\b/.test(text)],
   ['/europe/tours-under-200000/', (trip, text, location) => hasEuropeanInventory(location) &&
-    (!trip.currency || trip.currency === 'INR') && Number(trip.price_per_person) <= 200000],
+    (!trip.currency || trip.currency === 'INR') &&
+    Number(trip.price_per_person) > 0 && Number(trip.price_per_person) <= 200000],
 ]);
 
 const hasEuropeanInventory = (searchText) => europeDestinations.some((destination) => searchText.includes(destination));
@@ -37,5 +38,11 @@ const getLocationText = (trip) => (typeof trip.location === 'string' ? trip.loca
 export const isIndexableEuropePage = (route, eligibleTrips) => {
   const requirement = routeRequirements.get(route);
   if (!requirement) return true;
-  return eligibleTrips.some((trip) => requirement(trip, getSearchText(trip), getLocationText(trip)));
+  return getEligibleEuropeTrips(route, eligibleTrips).length > 0;
+};
+
+export const getEligibleEuropeTrips = (route, eligibleTrips) => {
+  const requirement = routeRequirements.get(route);
+  if (!requirement) return [];
+  return eligibleTrips.filter((trip) => requirement(trip, getSearchText(trip), getLocationText(trip)));
 };
