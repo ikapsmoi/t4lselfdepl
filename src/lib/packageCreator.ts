@@ -42,6 +42,7 @@ export interface PackageCreatorData {
   template: string;
   outputFormat: OutputFormat;
   showItinerary: boolean;
+  showAdditionalInformation?: boolean;
   stays: StayItem[];
   inclusions: InclusionItem[];
   exclusions: ExclusionItem[];
@@ -61,6 +62,12 @@ export const COMPANY_CONFIG = {
   whatsapp: '+91-9511446642',
   email: 'info@travel4life.net',
   paymentUrl: 'https://razorpay.me/@travel4life',
+  bankDetails: {
+    accountNumber: '50200116350847',
+    ifsc: 'HDFC0002076',
+    accountName: 'Travel4life Global',
+    branch: 'Mangal Bazaar',
+  },
   logo: '/logo-new.png',
 };
 
@@ -160,6 +167,7 @@ export const getDemoPackageData = (): PackageCreatorData => ({
   template: 'TRAVEL4LIFE EDITORIAL',
   outputFormat: 'single',
   showItinerary: true,
+  showAdditionalInformation: true,
   stays: [
     {
       id: 'stay-1',
@@ -199,7 +207,7 @@ export const getDemoPackageData = (): PackageCreatorData => ({
     { id: 'exc-3', value: 'Personal expenses' },
     { id: 'exc-4', value: 'Travel insurance' },
   ],
-  additionalInformation: 'Booking conditions: Passport valid for minimum 6 months. Visa guidance provided as per destination requirements. Please carry a printout of booking confirmation for transfers and hotel check-ins.\n\nBANK ACCOUNT\n50200116350847\n\nIFSC\nHDFC0002076\n\nACCOUNT NAME BRANCH\nTravel4life Global\nBRANCH: MANGAL BAZAAR\n\nCANCELLATION POLICY\nCancelled after 15 days of booking: free.\nCancelled 60 days before travel date: 25% of package cost.\nCancelled less than 30 days before travel: 50% of package cost.\nCancelled less than 15 days before travel: 100% of package cost.\nAll music festival packages, including Tomorrowland, Ultra and EDC, are non-refundable but can be transferred without cost.',
+  additionalInformation: 'Booking conditions: Passport valid for minimum 6 months. Visa guidance provided as per destination requirements. Please carry a printout of booking confirmation for transfers and hotel check-ins.\n\nCANCELLATION POLICY\nCancelled after 15 days of booking: free.\nCancelled 60 days before travel date: 25% of package cost.\nCancelled less than 30 days before travel: 50% of package cost.\nCancelled less than 15 days before travel: 100% of package cost.\nAll music festival packages, including Tomorrowland, Ultra and EDC, are non-refundable but can be transferred without cost.',
   itinerary: [
     {
       id: 'day-1',

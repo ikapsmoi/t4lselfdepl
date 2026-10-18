@@ -3,7 +3,7 @@ import { Calendar, CheckCircle, Home, MapPin, Users } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Trip } from '../types';
 import { TripDetails } from '../components/trips/TripDetails';
-import { cleanTripTitle, formatTripDateRange, stripSourceNotes } from '../utils/formatters';
+import { cleanTripTitle, formatTripDateRange, formatTripPrice, stripSourceNotes } from '../utils/formatters';
 import { getTripCanonicalUrl, getTripJsonLd, getTripPath, getTripSeoDescription, getTripSeoTitle } from '../utils/tripSeo';
 import { updateSeoForTrip } from '../utils/seo';
 import { Travel4LifeContactCTA } from '../components/common/Travel4LifeContactCTA';
@@ -269,7 +269,7 @@ export const TripSeoPage: React.FC = () => {
             </div>
             <div className="mt-6 flex items-center justify-between gap-4">
               <p className="text-2xl font-bold text-gray-900">
-                {trip.currency ? `${trip.currency} ${trip.price.toLocaleString('en-IN')}` : 'Ask for current price'}
+                {formatTripPrice(trip.price, trip.currency, trip.type === 'indian_special')}
               </p>
               <button onClick={() => setShowDetails(true)} className="rounded-xl bg-gray-900 px-5 py-3 font-semibold text-white hover:bg-gray-700">Check availability</button>
             </div>

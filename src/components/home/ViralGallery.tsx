@@ -64,7 +64,7 @@ function ReelCard({ image, index }: { image: GalleryImage; index: number }) {
           onClick={openWhatsAppEnquiry}
           className="mt-3 inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full border border-white/40 bg-white/15 px-4 text-sm font-semibold text-white backdrop-blur-md transition-transform duration-150 ease-out hover:bg-white/25 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
         >
-          Join the hype <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+          Join the Vibe <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
       {image.video_url && (

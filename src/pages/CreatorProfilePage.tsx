@@ -106,7 +106,7 @@ export const CreatorProfilePage: React.FC = () => {
           country: trip.location.split(',').pop()?.trim() || 'Unknown',
           type: trip.category || 'adventure',
           price: Number(trip.price_per_person),
-          currency: trip.currency || 'USD',
+          currency: trip.currency || '',
           duration: Math.ceil((new Date(trip.end_date).getTime() - new Date(trip.start_date).getTime()) / (1000 * 60 * 60 * 24)),
           max_capacity: trip.group_size,
           current_bookings: 0,

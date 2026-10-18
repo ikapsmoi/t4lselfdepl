@@ -66,16 +66,6 @@ export const ReviewsPage: React.FC = () => {
     );
   };
 
-  const averageRating = reviews.length > 0
-    ? (reviews.reduce((sum, review) => sum + review.rating, 0) / reviews.length).toFixed(1)
-    : '0';
-
-  const ratingDistribution = [5, 4, 3, 2, 1].map(rating => {
-    const count = reviews.filter(r => r.rating === rating).length;
-    const percentage = reviews.length > 0 ? (count / reviews.length) * 100 : 0;
-    return { rating, count, percentage };
-  });
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -88,43 +78,28 @@ export const ReviewsPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-[#fff8f1] to-amber-50 py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-sm p-8 mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">Trip Reviews</h1>
-          <p className="text-gray-600 mb-6">
-            Real experiences from travelers around the world
+        <div className="mb-6 rounded-2xl border border-orange-100 bg-white p-6 shadow-sm sm:p-8">
+          <h1 className="mb-3 text-3xl font-bold text-gray-900 sm:text-4xl">Traveler Reviews</h1>
+          <p className="mb-6 text-gray-600">
+            Real experiences from travelers around the world.
           </p>
 
           {/* Rating Summary */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="flex items-center gap-6">
-              <div className="text-center">
-                <div className="text-6xl font-bold text-gray-900 mb-2">{averageRating}</div>
-                <div className="flex justify-center mb-2">
-                  {renderStars(Math.round(parseFloat(averageRating)))}
-                </div>
-                <p className="text-sm text-gray-600">{reviews.length} reviews</p>
-              </div>
+          <div className="flex flex-col gap-6 rounded-2xl bg-gradient-to-r from-orange-50 to-amber-50 p-5 sm:flex-row sm:items-center sm:gap-8 sm:p-6">
+            <div className="shrink-0 text-center sm:min-w-36">
+              <div className="mb-1 text-6xl font-bold tracking-tight text-orange-700">4.7</div>
+              <p className="text-sm font-medium text-gray-600">out of 5</p>
             </div>
-
-            <div className="space-y-2">
-              {ratingDistribution.map(({ rating, count, percentage }) => (
-                <div key={rating} className="flex items-center gap-3">
-                  <div className="flex items-center gap-1 w-20">
-                    <span className="text-sm font-medium text-gray-700">{rating}</span>
-                    <Star className="w-4 h-4 text-yellow-400 fill-yellow-400" />
-                  </div>
-                  <div className="flex-1 bg-gray-200 rounded-full h-2 overflow-hidden">
-                    <div
-                      className="bg-yellow-400 h-full transition-all duration-300"
-                      style={{ width: `${percentage}%` }}
-                    />
-                  </div>
-                  <span className="text-sm text-gray-600 w-12 text-right">{count}</span>
-                </div>
-              ))}
+            <div className="border-t border-orange-200 pt-5 sm:border-l sm:border-t-0 sm:pl-8 sm:pt-0">
+              <h2 className="text-xl font-bold text-gray-900 sm:text-2xl">
+                13 years of helping travelers make memories
+              </h2>
+              <p className="mt-2 max-w-3xl leading-relaxed text-gray-600">
+                Read what our customers say on our review and social pages below.
+              </p>
             </div>
           </div>
         </div>
@@ -132,42 +107,36 @@ export const ReviewsPage: React.FC = () => {
         {/* Independent review and social pages */}
         <section
           aria-labelledby="external-reviews-heading"
-          className="mb-8 overflow-hidden rounded-2xl border border-blue-100 bg-gradient-to-br from-blue-50 via-white to-sky-50 shadow-sm"
+          className="mb-8 overflow-hidden rounded-2xl border border-orange-100 bg-white shadow-sm"
         >
-          <div className="p-6 sm:p-8">
-            <div className="mb-6 flex items-start gap-4">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-[#1877F2] text-white shadow-sm">
-                <Facebook className="h-6 w-6" fill="currentColor" aria-hidden="true" />
-              </div>
-              <div>
-                <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-blue-700">
-                  Independent reviews and social updates
-                </p>
-                <h2 id="external-reviews-heading" className="text-2xl font-bold text-gray-900">
-                  Explore Travel4Life beyond this page
-                </h2>
-                <p className="mt-2 max-w-3xl text-gray-600">
-                  Read feedback on Google and Facebook, or follow our Instagram for more travel
-                  inspiration. Each link takes you to the original page.
-                </p>
-              </div>
+          <div className="p-5 sm:p-8">
+            <div className="mb-5">
+              <p className="mb-1 text-sm font-semibold uppercase tracking-wide text-orange-700">
+                From our community
+              </p>
+              <h2 id="external-reviews-heading" className="text-xl font-bold text-gray-900 sm:text-2xl">
+                Read our customer reviews
+              </h2>
+              <p className="mt-2 max-w-3xl text-gray-600">
+                Visit our pages to read feedback and see more of our travel community.
+              </p>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
               {[
                 {
                   name: 'Travel Life',
                   href: 'https://www.facebook.com/travellife2/reviews',
                   platform: 'Facebook',
                   description: 'Travel experiences and feedback from the Travel Life community.',
-                  action: 'Read reviews on Facebook',
+                  action: 'Read Facebook reviews',
                 },
                 {
                   name: 'The Travellers Store',
                   href: 'https://www.facebook.com/thetravellersstore/reviews',
                   platform: 'Facebook',
                   description: 'Browse customer reviews on The Travellers Store Facebook page.',
-                  action: 'Read reviews on Facebook',
+                  action: 'Read Facebook reviews',
                 },
                 {
                   name: 'Travel4Life',
@@ -180,8 +149,8 @@ export const ReviewsPage: React.FC = () => {
                   name: '@travel4life_net',
                   href: 'https://www.instagram.com/travel4life_net/',
                   platform: 'Instagram',
-                  description: 'Follow along for trip highlights, travel inspiration, and updates.',
-                  action: 'Visit our Instagram',
+                  description: 'Follow trip highlights, travel inspiration, and updates.',
+                  action: 'Visit Instagram',
                 },
               ].map((page) => (
                 <a
@@ -189,7 +158,7 @@ export const ReviewsPage: React.FC = () => {
                   href={page.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex min-h-36 items-center justify-between gap-4 rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition hover:-translate-y-0.5 hover:border-blue-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2"
+                  className="group flex min-h-40 flex-col justify-between rounded-xl border border-orange-100 bg-gradient-to-br from-white to-orange-50/70 p-4 transition hover:-translate-y-0.5 hover:border-orange-300 hover:shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-orange-500 focus-visible:ring-offset-2"
                 >
                   <div>
                     <div className="mb-2 flex items-center gap-2">
@@ -200,19 +169,19 @@ export const ReviewsPage: React.FC = () => {
                       ) : (
                         <span aria-hidden="true" className="text-base font-extrabold text-[#4285F4]">G</span>
                       )}
-                      <span className="text-xs font-semibold uppercase tracking-wide text-blue-700">
+                      <span className="text-xs font-semibold uppercase tracking-wide text-orange-700">
                         {page.platform}
                       </span>
                     </div>
-                    <h3 className="text-lg font-bold text-gray-900 group-hover:text-blue-700">
+                    <h3 className="font-bold text-gray-900 group-hover:text-orange-800">
                       {page.name}
                     </h3>
                     <p className="mt-1 text-sm leading-relaxed text-gray-600">{page.description}</p>
-                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-700">
-                      {page.action}
-                      <ExternalLink className="h-4 w-4" aria-hidden="true" />
-                    </span>
                   </div>
+                  <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-orange-700">
+                    {page.action}
+                    <ExternalLink className="h-4 w-4" aria-hidden="true" />
+                  </span>
                 </a>
               ))}
             </div>

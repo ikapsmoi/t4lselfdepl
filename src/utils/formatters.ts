@@ -37,6 +37,7 @@ const cleanTripText = (value?: string | null): string => {
   return value
     .replace(/\r\n?/g, '\n')
     .replace(/<br\s*\/?>/gi, '\n')
+    .replace(/\s*(?:\bGST(?:IN)?\s*:\s*[A-Z0-9]{15}\b|\bCorporate\s+Office\s*:|\bIFSC\s*:\s*[A-Z]{4}0[A-Z0-9]{6}\b|\bA\s*\/?\s*C\s*:\s*\d{8,}\b|WWW\.TRAVEL4LIFE\.NET|INSTAGRAM\.COM\/TRAVEL|FACEBOOK\.COM\/TRAVELLIFE)[\s\S]*$/i, '')
     .replace(/\s*Source\s*:[\s\S]*$/i, '')
     .replace(/\s*Source notes\s*:\s*.*?(?=\s*(?:Arbitrage note\s*:|$))/gis, '')
     .replace(/\s*Arbitrage note\s*:\s*.*$/gis, '')
@@ -87,4 +88,28 @@ export const formatTripDateRange = (
   if (datesFlexible) return 'Flexible';
   if (!startDate || !endDate) return 'Dates not available';
   return `${formatDate(startDate)} - ${formatDate(endDate)}`;
+};
+
+export const formatTripPrice = (
+  price: number | null | undefined,
+  currency: string | null | undefined,
+  isIndiaTrip = false,
+): string => {
+  if (price == null || !Number.isFinite(price) || price < 0) return 'Price unavailable';
+
+  const currencyCode = isIndiaTrip ? 'INR' : currency?.trim().toUpperCase();
+  if (!currencyCode) {
+    return `${price.toLocaleString('en-IN')} (currency not specified)`;
+  }
+
+  try {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: currencyCode,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    }).format(price);
+  } catch {
+    return `${currencyCode} ${price.toLocaleString('en-IN')}`;
+  }
 };

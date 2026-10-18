@@ -1582,3 +1582,36 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(135deg, #dc3723, #98271c);
 }
+
+.package-creator--brand > div:first-child h1 {
+  color: var(--brand-coral-deep);
+}
+
+.package-creator--brand section[class*="rounded-[24px]"] {
+  border-color: rgba(255, 112, 82, 0.24);
+  background-color: rgba(255, 248, 241, 0.94);
+}
+
+.package-creator--brand section[class*="from-[#fffdf9]"] {
+  background-image: linear-gradient(135deg, #fff8f1, #ffeadc);
+}
+
+.package-creator--brand button[class*="bg-stone-900"] {
+  background-image: linear-gradient(110deg, #ff704f, #dc3723);
+}
+
+.package-creator--brand button[class*="bg-stone-900"]:hover {
+  background-image: linear-gradient(110deg, #ea5b3c, #bd2f20);
+}
+
+.package-creator--brand button[class*="border-stone-300"]:hover {
+  border-color: #ff704f;
+  color: #bd2f20;
+}
+
+.package-creator--brand input:focus,
+.package-creator--brand select:focus,
+.package-creator--brand textarea:focus {
+  border-color: #ff704f;
+  box-shadow: 0 0 0 2px rgba(255, 112, 82, 0.18);
+}

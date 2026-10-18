@@ -15,7 +15,7 @@ import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
 import { TRIP_TYPES, DIFFICULTY_LEVELS } from '../../utils/constants';
 import { getCurrencySymbol } from '../../utils/constants';
-import { formatTripDateRange, formatTripDescription, formatTripListItems } from '../../utils/formatters';
+import { formatTripDateRange, formatTripDescription, formatTripListItems, formatTripPrice } from '../../utils/formatters';
 import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import { useBookings } from '../../hooks/useBookings';
@@ -83,21 +83,12 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
   const isFull = spotsLeft === 0;
 
   // Determine the currency symbol based on trip type
-  const displayCurrencySymbol = React.useMemo(() => {
-    const indiaSpecialTypes = INDIA_CATEGORIES.map(cat => cat.value);
-    if (!indiaSpecialTypes.includes('indian_special')) {
-        indiaSpecialTypes.push('indian_special');
-    }
-
-    if (trip.type && indiaSpecialTypes.includes(trip.type)) {
-      return '₹'; // Force INR for India Special trips
-    }
-    return getCurrencySymbol(trip.currency || 'INR'); // Fallback to existing logic
-  }, [trip.type, trip.currency]);
   const descriptionParagraphs = formatTripDescription(trip.description);
   const includedItems = formatTripListItems(trip.included);
   const excludedItems = formatTripListItems(trip.not_included);
   const inquiryOnly = quoteOnly || !trip.currency || !Number.isFinite(trip.deposit_required) || trip.deposit_required <= 0;
+  const isIndiaTrip = trip.type === 'indian_special' || INDIA_CATEGORIES.some(category => category.value === trip.type);
+  const displayPrice = formatTripPrice(trip.price, trip.currency, isIndiaTrip);
   const displayedExcludedItems = trip.type === 'indian_special'
     ? excludedItems.filter(item => item !== 'City tax if applicable.' && item !== 'Visa fees not included.')
     : excludedItems;
@@ -369,15 +360,15 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
             <div className="lg:col-span-1">
               <div className="sticky top-20 bg-white rounded-xl shadow-lg p-3 md:p-6 border">
                 <div className="text-center mb-4 md:mb-6">
-                  {inquiryOnly ? (
+                  {quoteOnly ? (
                     <div className="text-base font-semibold text-gray-900">Ask for current price and terms</div>
                   ) : (
                     <>
-                      <div className="text-2xl md:text-3xl font-bold text-gray-900">{displayCurrencySymbol}{trip.price}</div>
-                      <div className="text-xs md:text-sm text-gray-600">per person · total trip price</div>
-                      {trip.deposit_required > 0 && (
+                      <div className="text-2xl md:text-3xl font-bold text-gray-900">{displayPrice}</div>
+                      <div className="text-xs md:text-sm text-gray-600">listed price per person</div>
+                      {!inquiryOnly && trip.deposit_required > 0 && (
                         <div className="mt-1 text-xs font-semibold text-amber-700">
-                          {displayCurrencySymbol}{trip.deposit_required} deposit due today ({Math.round((trip.deposit_required / trip.price) * 100)}%)
+                          {formatTripPrice(trip.deposit_required, trip.currency, isIndiaTrip)} deposit due today ({Math.round((trip.deposit_required / trip.price) * 100)}%)
                         </div>
                       )}
                     </>
@@ -500,11 +491,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
                 )}
 
                 <div className="mt-4 md:mt-6 rounded-lg border border-blue-100 bg-blue-50 p-3 text-xs leading-relaxed text-blue-900 md:p-4 md:text-sm">
-                  {inquiryOnly ? (
-                    <>Ask us to confirm current availability, price, inclusions, payment schedule, and cancellation terms before you book.</>
-                  ) : (
-                    <><strong>What happens next?</strong> Review the trip details and booking terms shown before confirming your booking.</>
-                  )}
+                  {quoteOnly
+                    ? <><strong>Price and availability:</strong> Ask us to confirm the current price, availability, inclusions, payment schedule, and cancellation terms before booking.</>
+                    : <><strong>Price and availability:</strong> The displayed price is the listing amount per person. Confirm the current price, availability, inclusions, payment schedule, and cancellation terms before booking.</>}
                 </div>
 
                 {trip.group_discount > 0 && (
@@ -525,7 +514,7 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
 
       <MobileBottomBar
         contextLabel={inquiryOnly ? 'PRICE' : 'PER PERSON'}
-        contextValue={inquiryOnly ? 'Ask for current price' : `${displayCurrencySymbol}${trip.price}`}
+        contextValue={quoteOnly ? 'Ask for current price' : displayPrice}
         buttonLabel={inquiryOnly ? 'Ask about this trip' : isFull ? 'Trip is Full' : 'Book This Trip'}
         disabled={!inquiryOnly && isFull}
         onClick={() => {

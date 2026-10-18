@@ -4,8 +4,8 @@ import { Trip } from '../../types';
 import { useAuth } from '../../hooks/useAuth';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useAnalytics } from '../../utils/analytics';
-import { TRIP_TYPES, getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
-import { formatCitiesForDisplay, formatTripDateRange } from '../../utils/formatters';
+import { TRIP_TYPES, INDIA_CATEGORIES } from '../../utils/constants';
+import { formatCitiesForDisplay, formatTripDateRange, formatTripPrice } from '../../utils/formatters';
 import { resolveTripThumbnail } from '../../utils/tripImages';
 import { optimizeImageUrl } from '../../utils/imageOptimization';
 import { getTripPath } from '../../utils/tripSeo';
@@ -92,19 +92,12 @@ export const TripCard: React.FC<TripCardProps> = memo(({
   }, [user, isSaved, trip.id, saveTrip, unsaveTrip]);
 
   // Determine the currency symbol based on trip type
-  const displayCurrencySymbol = React.useMemo(() => {
-    const indiaSpecialTypes = INDIA_CATEGORIES.map(cat => cat.value);
-    // Ensure 'indian_special' is included if not already in INDIA_CATEGORIES values
-    if (!indiaSpecialTypes.includes('indian_special')) {
-        indiaSpecialTypes.push('indian_special');
-    }
-
-    if (trip.type && indiaSpecialTypes.includes(trip.type)) {
-      return '₹'; // Force INR for India Special trips
-    }
-    return trip.currency ? getCurrencySymbol(trip.currency) : '';
-  }, [trip.type, trip.currency]);
-  const hasDisplayPrice = Boolean(displayCurrencySymbol) && Number.isFinite(trip.price) && trip.price > 0;
+  const isIndiaTrip = trip.type === 'indian_special' || INDIA_CATEGORIES.some(category => category.value === trip.type);
+  const displayPrice = formatTripPrice(
+    trip.price,
+    trip.currency,
+    isIndiaTrip,
+  );
 
   if (variant === 'compact') {
     return (
@@ -170,7 +163,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
                   <span className="text-sm font-semibold">{trip.rating}</span>
                 </div>
               )}
-              <span className="text-base font-bold">{hasDisplayPrice ? `${displayCurrencySymbol}${trip.price}` : 'Ask for price'}</span>
+              <span className="text-base font-bold">{displayPrice}</span>
             </div>
           </div>
         </div>
@@ -296,7 +289,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
               <span className="text-xs text-white/60 ml-1">{trip.duration} days</span>
             </div>
             <div className="text-right">
-              <div className="text-xl font-extrabold tracking-tight sm:text-2xl">{hasDisplayPrice ? `${displayCurrencySymbol}${trip.price}` : 'Ask for price'}</div>
+              <div className="text-xl font-extrabold tracking-tight sm:text-2xl">{displayPrice}</div>
             </div>
           </div>
         </div>

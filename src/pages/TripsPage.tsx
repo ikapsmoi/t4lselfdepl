@@ -42,6 +42,9 @@ export const TripsPage: React.FC = () => {
           <p className="mx-auto max-w-3xl text-base leading-relaxed text-gray-600 font-body sm:text-xl">
             Browse through hundreds of unique travel experiences created by passionate hosts worldwide.
           </p>
+          <p className="mx-auto mt-3 max-w-3xl text-sm leading-relaxed text-gray-500">
+            Prices shown are the listed per-person amounts. Confirm current pricing, availability, and inclusions before booking.
+          </p>
         </div>
 
         {/* Search Section */}
