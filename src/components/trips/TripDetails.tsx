@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   Users, Calendar, MapPin, Shield, Heart, Share2, X, Home,
-  CheckCircle, XCircle, AlertTriangle, MessageCircle, Eye
+  CheckCircle, XCircle, AlertTriangle, MessageCircle
 } from 'lucide-react';
 import { Trip, Booking } from '../../types';
 import { Button } from '../ui/Button';
@@ -15,7 +15,7 @@ import { PromoteTripModal } from './PromoteTripModal';
 import { BookingConfirmationDisplayModal } from './BookingConfirmationDisplayModal';
 import { TRIP_TYPES, DIFFICULTY_LEVELS } from '../../utils/constants';
 import { getCurrencySymbol } from '../../utils/constants';
-import { stripSourceNotes } from '../../utils/formatters';
+import { formatTripDateRange, formatTripDescription, formatTripListItems } from '../../utils/formatters';
 import { useAnalytics } from '../../utils/analytics';
 import { useAuth } from '../../hooks/useAuth';
 import { useBookings } from '../../hooks/useBookings';
@@ -94,9 +94,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
     }
     return getCurrencySymbol(trip.currency || 'INR'); // Fallback to existing logic
   }, [trip.type, trip.currency]);
-  const sanitizedDescription = stripSourceNotes(trip.description);
-  const includedItems = trip.included?.filter(item => item.trim()) || [];
-  const excludedItems = trip.not_included?.filter(item => item.trim()) || [];
+  const descriptionParagraphs = formatTripDescription(trip.description);
+  const includedItems = formatTripListItems(trip.included);
+  const excludedItems = formatTripListItems(trip.not_included);
   const inquiryOnly = quoteOnly || !trip.currency || !Number.isFinite(trip.deposit_required) || trip.deposit_required <= 0;
   const displayedExcludedItems = trip.type === 'indian_special'
     ? excludedItems.filter(item => item !== 'City tax if applicable.' && item !== 'Visa fees not included.')
@@ -111,7 +111,8 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
   };
 
   const handleWhatsAppClick = () => {
-    const message = `Hi Travel4life! I would like to check availability for "${trip.title}" in ${trip.destination}. Dates: ${formatDate(trip.start_date)} - ${formatDate(trip.end_date)}. Please share the package details and next steps.`;
+    const tripDates = formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible, formatDate);
+    const message = `Hi Travel4life! I would like to check availability for "${trip.title}" in ${trip.destination}. Dates: ${tripDates}. Please share the package details and next steps.`;
     const context = getTravel4LifeContactContext({
       pageType: 'package',
       destination: trip.destination,
@@ -169,8 +170,8 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
               <Button variant="ghost" size="sm" onClick={handleShare} icon={Share2} className="text-[10px] px-2 py-1 md:text-sm">
                 Share
               </Button>
-              <Button variant="ghost" size="sm" onClick={() => setShowVRPreview(true)} icon={Eye} className="text-[10px] px-2 py-1 md:text-sm">
-                Preview Trip
+              <Button variant="ghost" size="sm" onClick={() => setShowVRPreview(true)} icon={MapPin} className="text-[10px] px-2 py-1 md:text-sm">
+                Preview Route
               </Button>
               <Button 
                 variant="ghost" 
@@ -273,7 +274,18 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
                   {trip.review_count > 0 && <Rating rating={trip.rating} reviewCount={trip.review_count} />}
                 </div>
 
-                <p className="tour-description text-gray-700 mb-4 md:mb-6 whitespace-pre-wrap">{sanitizedDescription}</p>
+                {descriptionParagraphs.length > 0 && (
+                  <section className="mb-4 rounded-xl border border-gray-200 bg-gray-50/70 p-4 md:mb-6 md:p-5" aria-labelledby="trip-description-heading">
+                    <h2 id="trip-description-heading" className="mb-3 text-sm font-semibold text-gray-900 md:text-base">About this trip</h2>
+                    <div className="space-y-3">
+                      {descriptionParagraphs.map((paragraph, index) => (
+                        <p key={`${index}-${paragraph}`} className="tour-description text-sm leading-6 text-gray-700 md:text-base md:leading-7">
+                          {paragraph}
+                        </p>
+                      ))}
+                    </div>
+                  </section>
+                )}
 
                 <div className="flex flex-wrap gap-1.5 md:gap-2 mb-4 md:mb-6">
                   {trip.tags.map((tag) => (
@@ -287,31 +299,37 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
               {(includedItems.length > 0 || displayedExcludedItems.length > 0) && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {includedItems.length > 0 && <div>
-                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
+                  <div className="h-full rounded-xl border border-emerald-100 bg-emerald-50/40 p-4 md:p-5">
+                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-3 md:mb-4 flex items-center">
                     <CheckCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-green-600 mr-1.5 md:mr-2" />
                     What's Included
                   </h3>
-                  <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
+                  <ul className="space-y-3">
                     {includedItems.map((item, index) => (
-                      <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
+                      <li key={`${index}-${item}`} className="flex items-start gap-3 text-xs leading-5 text-gray-700 md:text-sm md:leading-6">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-emerald-600" aria-hidden="true" />
                         {item}
                       </li>
                     ))}
                   </ul>
+                  </div>
                 </div>}
 
                 {displayedExcludedItems.length > 0 && <div>
-                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-2 md:mb-3 flex items-center">
+                  <div className="h-full rounded-xl border border-rose-100 bg-rose-50/30 p-4 md:p-5">
+                  <h3 className="text-sm md:text-lg font-semibold text-gray-900 mb-3 md:mb-4 flex items-center">
                     <XCircle className="w-3.5 h-3.5 md:w-5 md:h-5 text-red-600 mr-1.5 md:mr-2" />
                     Not Included
                   </h3>
-                  <ul className="space-y-1.5 md:space-y-2 list-disc ml-4 md:ml-5">
+                  <ul className="space-y-3">
                     {displayedExcludedItems.map((item, index) => (
-                      <li key={index} className="flex items-center text-[10px] text-gray-700 md:text-sm">
+                      <li key={`${index}-${item}`} className="flex items-start gap-3 text-xs leading-5 text-gray-700 md:text-sm md:leading-6">
+                        <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-rose-500" aria-hidden="true" />
                         {item}
                       </li>
                     ))}
                   </ul>
+                  </div>
                 </div>}
                 </div>
               )}
@@ -374,7 +392,9 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
                 <div className="space-y-2 md:space-y-4 mb-4 md:mb-6">
                   <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Dates:</span>
-                    <span className="font-medium text-right">{formatDate(trip.start_date)} - {formatDate(trip.end_date)}</span>
+                    <span className="font-medium text-right">
+                      {formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible, formatDate)}
+                    </span>
                   </div>
                   <div className="flex justify-between gap-2 text-[10px] md:text-sm">
                     <span className="text-gray-600">Duration:</span>
@@ -449,15 +469,6 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
                       Ask on WhatsApp
                     </Button>
                     <Button 
-                      variant="secondary" 
-                      size="sm" 
-                      className="w-full mt-2 md:mt-3 text-[10px] md:text-sm"
-                      onClick={() => setShowVRPreview(true)}
-                      icon={Eye}
-                    >
-                      360° Preview
-                    </Button>
-                    <Button 
                       variant="outline" 
                       size="sm" 
                       className="w-full mt-1.5 md:mt-2 text-[10px] md:text-sm"
@@ -468,6 +479,16 @@ export const TripDetails: React.FC<TripDetailsProps> = ({ trip, onClose, quoteOn
                     </Button>
                   </div>
                 )}
+
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="mt-2 w-full text-[10px] md:mt-3 md:text-sm"
+                  onClick={() => setShowVRPreview(true)}
+                  icon={MapPin}
+                >
+                  Preview Route
+                </Button>
 
                 {isAlmostFull && (
                   <div className="mt-3 md:mt-4 p-2 md:p-3 bg-orange-50 border border-orange-200 rounded-lg">

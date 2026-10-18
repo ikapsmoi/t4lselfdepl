@@ -3,7 +3,7 @@ import { Calendar, CheckCircle, Home, MapPin, Users } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { Trip } from '../types';
 import { TripDetails } from '../components/trips/TripDetails';
-import { cleanTripTitle, stripSourceNotes } from '../utils/formatters';
+import { cleanTripTitle, formatTripDateRange, stripSourceNotes } from '../utils/formatters';
 import { getTripCanonicalUrl, getTripJsonLd, getTripPath, getTripSeoDescription, getTripSeoTitle } from '../utils/tripSeo';
 import { updateSeoForTrip } from '../utils/seo';
 import { Travel4LifeContactCTA } from '../components/common/Travel4LifeContactCTA';
@@ -32,6 +32,7 @@ type TripRow = {
   host_id: string;
   start_date: string;
   end_date: string;
+  dates_flexible?: boolean;
   price_per_person: number;
   group_size: number;
   currency?: string;
@@ -129,6 +130,7 @@ const toTrip = (row: TripRow): Trip => {
     current_bookings: 0,
     start_date: row.start_date,
     end_date: row.end_date,
+    dates_flexible: row.dates_flexible === true,
     images,
     host_id: row.host_id,
     host: row.profiles ? {
@@ -262,7 +264,7 @@ export const TripSeoPage: React.FC = () => {
             <p className="tour-description mt-4 text-gray-600">{trip.description}</p>
             <div className="mt-6 grid gap-3 text-gray-700">
               <span className="flex items-center gap-2"><MapPin className="w-5 h-5" />{trip.destination}</span>
-              <span className="flex items-center gap-2"><Calendar className="w-5 h-5" />{formatDate(trip.start_date)} to {formatDate(trip.end_date)}</span>
+              <span className="flex items-center gap-2"><Calendar className="w-5 h-5" />{formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible, formatDate)}</span>
               <span className="flex items-center gap-2"><Users className="w-5 h-5" />{trip.max_capacity} travelers maximum</span>
             </div>
             <div className="mt-6 flex items-center justify-between gap-4">

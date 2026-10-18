@@ -75,6 +75,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
             location,
             start_date,
             end_date,
+            dates_flexible,
             price_per_person,
             category,
             images
@@ -149,6 +150,7 @@ export const useDashboard = (userId: string, userRole: 'host' | 'traveler') => {
             location,
             start_date,
             end_date,
+            dates_flexible,
             price_per_person,
             category,
             images

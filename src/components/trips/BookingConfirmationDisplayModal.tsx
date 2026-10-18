@@ -5,6 +5,7 @@ import { Badge } from '../ui/Badge';
 import { CheckCircle } from 'lucide-react';
 import { Trip, Booking } from '../../types';
 import { getCurrencySymbol } from '../../utils/constants';
+import { formatTripDateRange } from '../../utils/formatters';
 
 interface BookingConfirmationDisplayModalProps {
   isOpen: boolean;
@@ -141,7 +142,7 @@ export const BookingConfirmationDisplayModal: React.FC<BookingConfirmationDispla
             <div className="flex justify-between">
               <span className="text-gray-600">Dates:</span>
               <span className="font-medium">
-                {trip?.start_date ? formatDate(trip.start_date) : '—'} - {trip?.end_date ? formatDate(trip.end_date) : '—'}
+                {formatTripDateRange(trip?.start_date, trip?.end_date, trip?.dates_flexible, formatDate)}
               </span>
             </div>
             <div className="flex justify-between">
@@ -229,4 +230,3 @@ export const BookingConfirmationDisplayModal: React.FC<BookingConfirmationDispla
     </Modal>
   );
 };
-

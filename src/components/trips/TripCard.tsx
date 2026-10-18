@@ -5,7 +5,7 @@ import { useAuth } from '../../hooks/useAuth';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useAnalytics } from '../../utils/analytics';
 import { TRIP_TYPES, getCurrencySymbol, INDIA_CATEGORIES } from '../../utils/constants';
-import { formatCitiesForDisplay } from '../../utils/formatters';
+import { formatCitiesForDisplay, formatTripDateRange } from '../../utils/formatters';
 import { resolveTripThumbnail } from '../../utils/tripImages';
 import { optimizeImageUrl } from '../../utils/imageOptimization';
 import { getTripPath } from '../../utils/tripSeo';
@@ -179,7 +179,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           <div className="flex items-center justify-between text-xs text-gray-400">
             <div className="flex items-center gap-1">
               <Calendar className="w-3.5 h-3.5" />
-              <span>{formatDate(trip.start_date)} · {trip.duration} days</span>
+              <span>{trip.dates_flexible ? 'Flexible' : formatDate(trip.start_date)} · {trip.duration} days</span>
             </div>
             {trip.max_capacity > 0 && (
               <div className="flex items-center gap-1">
@@ -346,10 +346,12 @@ export const TripCard: React.FC<TripCardProps> = memo(({
         )}
 
         {/* Travel date */}
-        {trip.start_date && (
+        {(trip.start_date || trip.dates_flexible) && (
           <div className="flex items-center text-gray-500 mb-3">
             <Calendar className="w-3.5 h-3.5 mr-1.5 text-gray-400" />
-            <span className="text-xs font-medium">{formatDate(trip.start_date)} - {formatDate(trip.end_date)}</span>
+            <span className="text-xs font-medium">
+              {formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible, formatDate)}
+            </span>
           </div>
         )}
 

@@ -87,7 +87,7 @@ export const useTrips = () => {
         .from('trips')
         .select(`
           id, title, itinerary, location, category, price_per_person, currency,
-          start_date, end_date, group_size, images, host_id, created_at,
+          start_date, end_date, dates_flexible, group_size, images, host_id, created_at,
           nomadic_badge, difficulty, group_discount,
           profiles:host_id (
             id, name, email, avatar_url, verified,
@@ -177,6 +177,7 @@ export const useTrips = () => {
             current_bookings: 0,
             start_date: trip.start_date,
             end_date: trip.end_date,
+            dates_flexible: trip.dates_flexible === true,
             images: trip.images && trip.images.length > 0 ? trip.images : [
               trip.category === 'budget'
                 ? '/optimized/pkg1.webp'

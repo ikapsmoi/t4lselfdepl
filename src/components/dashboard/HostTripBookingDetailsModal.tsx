@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../hooks/useAuth';
+import { formatTripDateRange } from '../../utils/formatters';
 
 interface HostTripBookingDetailsModalProps {
   isOpen: boolean;
@@ -133,10 +134,12 @@ export const HostTripBookingDetailsModal: React.FC<HostTripBookingDetailsModalPr
                 <div>
                   <span className="text-sm text-gray-600">Dates:</span>
                   <div className="font-semibold text-gray-900">
-                    {booking.trips?.start_date && booking.trips?.end_date 
-                      ? `${formatDate(booking.trips.start_date)} - ${formatDate(booking.trips.end_date)}`
-                      : 'Dates not available'
-                    }
+                    {formatTripDateRange(
+                      booking.trips?.start_date,
+                      booking.trips?.end_date,
+                      booking.trips?.dates_flexible,
+                      formatDate,
+                    )}
                   </div>
                 </div>
                 <div>

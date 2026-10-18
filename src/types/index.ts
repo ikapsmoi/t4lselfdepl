@@ -41,6 +41,7 @@ export interface Trip {
   current_bookings: number;
   start_date: string;
   end_date: string;
+  dates_flexible?: boolean;
   images: string[];
   host_id: string;
   host?: User;
@@ -50,6 +51,7 @@ export interface Trip {
     description?: string;
     duration?: number;
     difficulty?: string;
+    cities?: TripItineraryCity[];
     tags?: string[];
     included?: string[];
     notIncluded?: string[];
@@ -68,6 +70,18 @@ export interface Trip {
   group_discount: number;
   early_bird_discount?: number;
   safety_measures: string[];
+}
+
+export interface TripItineraryCity {
+  city_id?: string;
+  city_name: string;
+  state_name?: string;
+  country?: string;
+  lat?: number;
+  lon?: number;
+  longitude?: number;
+  coordinates?: [number, number];
+  nights?: number;
 }
 
 export interface ItineraryItem {

@@ -12,6 +12,7 @@ import { useDashboard } from '../../hooks/useDashboard';
 import { useTrips } from '../../hooks/useTrips';
 import { useMessages } from '../../hooks/useMessages';
 import { Trip } from '../../types';
+import { formatTripDateRange } from '../../utils/formatters';
 
 export const HostDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -361,7 +362,7 @@ export const HostDashboard: React.FC = () => {
                     </div>
                   </div>
                   <p className="text-base text-gray-600 mb-4 font-body">
-                    {new Date(trip.start_date).toLocaleDateString()} - {new Date(trip.end_date).toLocaleDateString()}
+                    {formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
                   </p>
                   <div className="flex items-center justify-between mb-3">
                     <span className="text-lg font-bold text-green-600"> 

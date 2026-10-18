@@ -19,7 +19,7 @@ export const getTripSeoTitle = (trip: Trip): string =>
 export const getTripSeoDescription = (trip: Trip): string => {
   const details = [
     trip.destination,
-    formatDate(trip.start_date),
+    trip.dates_flexible ? 'Flexible dates' : formatDate(trip.start_date),
     `${trip.duration} days`,
     trip.included.length > 0 ? `Includes ${trip.included.slice(0, 2).join(' and ')}.` : '',
   ].filter(Boolean).join(' • ');

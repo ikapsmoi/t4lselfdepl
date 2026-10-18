@@ -16,7 +16,7 @@ export const useBookings = () => {
         .from('bookings')
         .select(`
           *,
-          trips:trip_id(id, title, location),
+          trips:trip_id(id, title, location, start_date, end_date, dates_flexible),
           profiles:traveler_id(id, name, email)
         `)
         .order('created_at', { ascending: false });
@@ -133,7 +133,7 @@ export const useBookings = () => {
         .from('bookings')
         .select(`
           *,
-          trips:trip_id(id, title, location, start_date, end_date, price_per_person, currency),
+          trips:trip_id(id, title, location, start_date, end_date, dates_flexible, price_per_person, currency),
           profiles:traveler_id(id, name, email)
         `)
         .eq('trip_id', tripId)

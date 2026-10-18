@@ -122,6 +122,7 @@ export const CreatorTrips: React.FC = () => {
           current_bookings: bookingCounts[trip.id] || 0,
           start_date: trip.start_date,
           end_date: trip.end_date,
+          dates_flexible: trip.dates_flexible === true,
           images: trip.images && trip.images.length > 0 ? trip.images : [
             trip.category === 'budget'
               ? '/optimized/pkg1.webp'

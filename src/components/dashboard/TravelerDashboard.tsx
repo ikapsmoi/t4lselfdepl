@@ -16,6 +16,7 @@ import { PaymentHistoryModal } from '../trips/PaymentHistoryModal';
 import { USER_TIERS, BADGES } from '../../utils/constants';
 import { useMessages } from '../../hooks/useMessages';
 import { MessageHostModal } from '../trips/MessageHostModal';
+import { formatTripDateRange } from '../../utils/formatters';
 
 export const TravelerDashboard: React.FC = () => {
   const { user } = useAuth();
@@ -302,7 +303,7 @@ export const TravelerDashboard: React.FC = () => {
                           {trip.location}
                         </p>
                         <p className="text-sm text-gray-600">
-                          {new Date(trip.start_date).toLocaleDateString()} - {new Date(trip.end_date).toLocaleDateString()}
+                          {formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
                         </p>
                       </div>
                     </div>

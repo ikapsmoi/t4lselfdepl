@@ -120,8 +120,8 @@ export const CreateTripModal: React.FC<CreateTripModalProps> = ({ isOpen, onClos
             city_name: city.city_name,
             state_name: city.state_name,
             country: city.country || 'India',
-            lat: city.lat || 0,
-            lon: city.lon || 0
+            lat: city.lat ?? 0,
+            lon: city.lon ?? 0
           },
           nights: city.nights || 1
         }));
@@ -351,6 +351,8 @@ const handleIndianSpecialChange = (checked: boolean) => {
               city_name: sc.city.city_name,
               state_name: sc.city.state_name,
               country: sc.city.country,
+              lat: sc.city.lat,
+              lon: sc.city.lon,
               nights: sc.nights
             }))
           },
@@ -400,6 +402,8 @@ const handleIndianSpecialChange = (checked: boolean) => {
               city_name: sc.city.city_name,
               state_name: sc.city.state_name,
               country: sc.city.country,
+              lat: sc.city.lat,
+              lon: sc.city.lon,
               nights: sc.nights
             }))
           },

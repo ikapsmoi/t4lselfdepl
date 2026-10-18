@@ -7,6 +7,7 @@ import { MessageCircle, CheckCircle } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useDashboard } from '../../hooks/useDashboard';
 import { useMessages } from '../../hooks/useMessages';
+import { formatTripDateRange } from '../../utils/formatters';
 
 interface InquireNowModalProps {
   isOpen: boolean;
@@ -43,7 +44,7 @@ Trip Details:
 - Destination: ${trip.destination}
 - Duration: ${trip.duration} days
 - Price: $${trip.price} per person
-- Start Date: ${new Date(trip.start_date).toLocaleDateString()}
+- Dates: ${formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
 
 Customer Details:
 - Name: ${name}
@@ -67,7 +68,7 @@ Please respond to this inquiry as soon as possible.`;
           const dashboardMessage = `New inquiry for "${trip.title}" from ${name}
 
 Travel Details:
-- Dates: ${new Date(trip.start_date).toLocaleDateString()} - ${new Date(trip.end_date).toLocaleDateString()}
+- Dates: ${formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
 - Travelers: ${user.name}
 - Contact: ${email}
 
@@ -97,7 +98,7 @@ Trip Details:
 - Destination: ${trip.destination}
 - Duration: ${trip.duration} days
 - Price: $${trip.price} per person
-- Start Date: ${new Date(trip.start_date).toLocaleDateString()}
+- Dates: ${formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
 
 Please ensure the host responds to this inquiry promptly.
 

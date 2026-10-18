@@ -7,6 +7,7 @@ import { Trip } from '../../types';
 import { MessageCircle, Send, CheckCircle, Shield } from 'lucide-react';
 import { useAuth } from '../../hooks/useAuth';
 import { useMessages } from '../../hooks/useMessages';
+import { formatTripDateRange } from '../../utils/formatters';
 
 interface MessageHostModalProps {
   isOpen: boolean;
@@ -59,7 +60,7 @@ Trip Details:
 - Trip: ${trip.title}
 - Destination: ${trip.destination}
 - Duration: ${trip.duration} days
-- Start Date: ${new Date(trip.start_date).toLocaleDateString()}
+- Dates: ${formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
 
 Please respond to this message through your Travel4life dashboard or reply to this email.
 

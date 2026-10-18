@@ -9,6 +9,7 @@ import {
 import { supabase } from '../../lib/supabase';
 import { Trip } from '../../types';
 import { getCurrencySymbol } from '../../utils/constants';
+import { formatTripDateRange } from '../../utils/formatters';
 
 interface Payment {
   id: string;
@@ -156,7 +157,7 @@ export const PaymentHistoryModal: React.FC<PaymentHistoryModalProps> = ({
             <div>
               <span className="text-gray-600">Dates:</span>
               <div className="font-medium">
-                {new Date(trip.start_date).toLocaleDateString()} - {new Date(trip.end_date).toLocaleDateString()}
+                {formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
               </div>
             </div>
           </div>

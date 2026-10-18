@@ -92,7 +92,9 @@ export const FeaturedTrip: React.FC<FeaturedTripProps> = ({
 
             <div className="absolute bottom-0 left-0 right-0 p-4">
               <div className="flex items-center justify-between text-white">
-                <div className="text-xs sm:text-sm font-semibold">Starts {formatDate(currentTrip.start_date)}</div>
+                <div className="text-xs sm:text-sm font-semibold">
+                  {currentTrip.dates_flexible ? 'Flexible dates' : `Starts ${formatDate(currentTrip.start_date)}`}
+                </div>
                 {currentTrip.current_bookings > 0 && (
                   <div className="bg-white/20 backdrop-blur-sm px-2.5 py-1 rounded-full">
                     <span className="font-bold text-xs">{spotsLeft} spots left</span>

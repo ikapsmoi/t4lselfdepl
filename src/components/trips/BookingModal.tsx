@@ -14,6 +14,7 @@ import { useDashboard } from '../../hooks/useDashboard';
 import { useTripAddons } from '../../hooks/useTripAddons';
 import { useAnalytics } from '../../utils/analytics';
 import { getCurrencySymbol } from '../../utils/constants';
+import { formatTripDateRange } from '../../utils/formatters';
 import { supabase } from '../../lib/supabase';
 
 interface BookingModalProps {
@@ -585,7 +586,7 @@ Please respond to this inquiry through your Travel4life dashboard.`;
                 <h3 className="font-semibold text-gray-900 mb-2">{trip.title}</h3>
                 <p className="text-sm text-gray-600">{trip.destination} • {trip.duration} days</p>
                 <p className="text-sm text-gray-600">
-                  {new Date(trip.start_date).toLocaleDateString()} - {new Date(trip.end_date).toLocaleDateString()}
+                  {formatTripDateRange(trip.start_date, trip.end_date, trip.dates_flexible)}
                 </p>
               </div>
 
