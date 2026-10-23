@@ -1,48 +1,65 @@
 # 06 — Google Search Console
 
-**Audit date:** 12 October 2026
+**Updated:** 23 October 2026
 
 ## Access and evidence sources
 
-No authorised GSC connector or authenticated account session was available. A local workbook, `travel4life.net-Performance-on-Search-2026-10-10 (1).xlsx`, was available and inspected. The workbook metadata says it was created on 10 October 2026; its filter sheet says “Last 7 days”, while its chart rows cover 30 September through 6 October 2026. Treat the export as a short, sampled snapshot. The verified GSC property is not recorded in the workbook; listed page URLs use `https://travel4life.net/`.
+No authorised GSC connector or authenticated account session was available. The current local workbook, `travel4life.net-Performance-on-Search-2026-10-23.xlsx`, is filtered to Web search and “Last 28 days”; its Chart sheet covers 24 September–21 October 2026. The verified GSC property is not recorded in the workbook; page URLs use `https://travel4life.net/`.
 
-## Search performance observed in the supplied export
+The workbook exports date, query, page, country, device and search-appearance dimensions separately. They are sampled reports, not a query × page × country × device cross-tab. GSC can omit low-volume and privacy-thresholded query data.
 
-The chart contains seven daily rows totaling **26 clicks and 888 impressions**, a derived aggregate CTR of **2.93%**. Daily average positions range from 7.5 to 12.0. This is a short time window, not a trend or booking baseline.
+## Search performance observed
 
-The country table reports:
+The Chart sheet contains 28 daily rows totaling **64 clicks and 2,127 impressions**, a derived CTR of **3.01%** and impression-weighted position of **10.26**. These are a short-term snapshot, not a ranking or booking baseline.
 
-| Country | Clicks | Impressions | Exported average position |
-|---|---:|---:|---:|
-| Germany | 0 | 57 | 8.84 |
-| Netherlands | 0 | 31 | 7.13 |
-| France | 0 | 26 | 13.77 |
+| Chart week | Clicks | Impressions | Derived CTR | Impression-weighted daily position |
+|---|---:|---:|---:|---:|
+| 24–30 Sep | 16 | 706 | 2.27% | 8.73 |
+| 1–7 Oct | 27 | 843 | 3.20% | 9.32 |
+| 8–14 Oct | 8 | 295 | 2.71% | 12.47 |
+| 15–21 Oct | 13 | 283 | 4.59% | 14.56 |
 
-These three markets total 114 impressions and zero clicks in this export. Small counts and a single short period do not establish durable market demand or a conversion rate.
+The last week has a higher CTR but fewer impressions and a worse impression-weighted position than the previous week. This is mixed evidence, not a sustained improvement.
 
-The device table reports mobile 18 clicks / 616 impressions (2.92% CTR), desktop 8 / 266 (3.01%), and tablet 0 / 6. Search appearance lists product snippets at 1 click / 219 impressions (0.46% CTR). Query and page dimensions are separate sampled exports and should not be added together.
+The dimensions do not reconcile: the Queries sheet reports 17 clicks / 1,058 impressions, the Pages sheet 64 / 2,307, while the Chart and Countries sheets each report 64 / 2,127. Do not combine dimension totals or calculate query-to-page CTR from these exports.
 
-Examples from the page table include `/tomorrowland/winter/` at 137 impressions, 2 clicks, and average position 8.31, and `/tomorrowland/cost-from-india/` at 62 impressions, 2 clicks, and average position 16.79. The data is insufficient to diagnose CTR performance without query/page matching, longer periods, and a comparable baseline.
+The Queries sheet contains 200 data rows, including six clicks across visible Tomorrowland query rows (301 impressions); “tomorrowland thailand packages from india” has 3 / 7 at position 8.71. “Mysteryland 2027” has 4 / 290 at position 8.16. These query rows cannot be attributed to a landing page from this workbook.
 
-The Queries and Pages sheets contain 111 and 44 rows respectively, including headers; the Country sheet has 69 data rows and the Device sheet has three. GSC may omit low-volume/private queries, so these are not complete query inventories.
+Selected page results:
+
+| Page group | Clicks | Impressions | Notes |
+|---|---:|---:|---|
+| Tomorrowland guides | 21 | 824 | Thailand: 6 / 83, position 8.13; Winter: 4 / 292, position 7.75; cost guide: 2 / 145, position 15.04. |
+| Europe pages | 1 | 60 | Three listed pages; Europe hub 1 / 15, cost page 0 / 29, under-₹2-lakh page 0 / 16. |
+| Jim Corbett pages | 2 | 22 | Hub 2 / 3; low-volume evidence. |
+| India Tours | 0 | 8 | Main hub 0 / 6; insufficient to assess. |
+| Product pages | 27 | 1,248 | Product URLs have varied click-through; page rows include URL slash variants. |
+
+These page totals are grouped from the Pages sheet only. They should not be added to the Chart or query totals. Europe-themed query rows show 23 impressions and no clicks, but the separate dimensions cannot establish which Europe page appeared for those queries.
+
+Country rows show India at 34 clicks / 637 impressions (5.34% CTR, position 14.88). Device rows show mobile 36 / 1,378 (2.61%), desktop 28 / 737 (3.80%), and tablet 0 / 12. Product snippets show 8 clicks / 582 impressions (1.37%). These are property-wide, not landing-page-specific performance.
+
+## Comparison limits and implementation status
+
+The prior local `travel4life.net-Performance-on-Search-2026-10-17.xlsx` is a Last 7 days export for 8–14 October. Its chart matches the same seven-day slice in the 28-day workbook (8 clicks / 295 impressions); it is an overlapping snapshot, not an independent before/after comparison. The 23 October export does not establish whether SEO changes caused the observed performance.
+
+The three destination snippet updates made in source on 23 October are not evidence of ranking or CTR gains until deployed, recrawled and compared in a subsequent complete period. A local SEO validator and 71 SEO tests pass after these edits; this does not prove Google has processed them or will display the supplied titles and descriptions.
 
 ## Requested reports unavailable
 
 No account-level evidence was available for:
 
-- Page indexing reasons and counts.
-- Sitemap submission/read status or URL discovery diagnostics.
-- URL Inspection, Google-selected canonical, last crawl, or rendered-page details.
-- Field Core Web Vitals URL groups, reporting period, or sample counts.
-- HTTPS, mobile usability, manual actions, or security issue reports.
-- Search clicks/impressions for a representative 28-day or 3-month period and year-over-year comparison.
-- Confirmed organic leads, bookings, revenue, or margin.
+- Page indexing reasons, sitemap processing or URL Inspection / Google-selected canonicals.
+- Field Core Web Vitals URL groups, device status, reporting period or sample counts.
+- HTTPS, mobile usability, manual actions or security issue reports.
+- A query × landing-page report, a three-month trend, or a comparable prior period.
+- Organic leads, bookings, revenue or margin joined to search visits.
 
-## Exact owner steps to unblock
+## Exact owner steps to improve the evidence
 
-1. Share authorized read-only GSC access or export the verified `https://travel4life.net/` property reports.
-2. Export Performance (Web) by date, query, page, country, device, and search appearance for the last 3 complete months plus a comparable prior period. Preserve each dimension separately and include export date.
-3. Export Page indexing examples with reason, sitemap status, and affected URL; provide URL Inspection results for homepage, India hub, a representative trip page, and locale routes after deployment.
-4. Export Core Web Vitals mobile/desktop status and sample counts, plus HTTPS, manual action, and security reports.
-5. Join GSC landing-page data to consented analytics and received/qualified lead records using non-PII dimensions; do not treat clicks as leads or bookings.
-
+1. Provide authorised read-only access or export the verified `https://travel4life.net/` property reports.
+2. Export Performance (Web) for at least three complete months and a comparable prior period, preserving date, query, page, country, device and search appearance dimensions separately.
+3. Export query × page data for Tomorrowland, Mysteryland, Europe and India Tours; keep privacy omissions explicit.
+4. Export Page indexing examples and URL Inspection results for the homepage, target hubs, representative trip pages and locale routes after deployment.
+5. Export Core Web Vitals, HTTPS, manual-action and security reports.
+6. Join canonical landing-page data to consented analytics and received/qualified lead records using non-PII dimensions. Do not treat clicks or WhatsApp opens as submitted leads or bookings.
