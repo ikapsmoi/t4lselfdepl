@@ -1,5 +1,5 @@
 import React, { useState, useEffect, memo, useRef } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'framer-motion';
+import { useReducedMotion } from 'framer-motion';
 import { SearchBar } from '../search/SearchBar';
 import type { SearchFilters, Trip } from '../../types';
 
@@ -14,8 +14,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   const [loadedBackgrounds, setLoadedBackgrounds] = useState(() => new Set([0]));
   const [isVideoUnavailable, setIsVideoUnavailable] = useState(false);
   const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
-  const heroParallax = useTransform(scrollYProgress, [0, 1], [0, 20]);
   const reduceMotion = useReducedMotion();
 
   const [isTextVisible, setIsTextVisible] = useState(true);
@@ -29,7 +27,6 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
   ];
   const activeHeadline = heroHeadlines[currentBgIndex];
   const headlineWords = activeHeadline.split(' ');
-  const [visibleHeadlineCharacters, setVisibleHeadlineCharacters] = useState(0);
 
   const heroBackgrounds = React.useMemo(() => [
     {
@@ -86,35 +83,13 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
     return () => window.clearTimeout(timeout);
   }, [currentBgIndex, heroBackgrounds, loadedBackgrounds]);
 
-  useEffect(() => {
-    const headlineLength = activeHeadline.length;
-    setVisibleHeadlineCharacters(0);
-
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      setVisibleHeadlineCharacters(headlineLength);
-      return undefined;
-    }
-
-    const typingInterval = window.setInterval(() => {
-      setVisibleHeadlineCharacters((visibleCharacters) => {
-        if (visibleCharacters >= headlineLength) {
-          window.clearInterval(typingInterval);
-          return headlineLength;
-        }
-        return visibleCharacters + 1;
-      });
-    }, 42);
-
-    return () => window.clearInterval(typingInterval);
-  }, [activeHeadline]);
-
   return (
     <> {/* This fragment is necessary to return multiple elements */}
       <section ref={heroRef} className="hero-section bg-gray-950 max-lg:min-h-[44svh] max-lg:items-start max-lg:overflow-visible max-lg:pb-10 max-lg:pt-14 lg:justify-start">
         {/* New Users Ticker */}
 
         {/* Dynamic Background Slideshow */}
-        <motion.div style={reduceMotion ? undefined : { y: heroParallax }} className="absolute inset-0 overflow-hidden max-lg:!inset-0 lg:left-1/2">
+        <div className="absolute inset-0 overflow-hidden max-lg:!inset-0 lg:left-1/2">
           {(!heroVideoUrl || isVideoUnavailable || reduceMotion) && heroBackgrounds.map((bg, index) => (
             <div
               key={index}
@@ -178,40 +153,22 @@ const Hero: React.FC<HeroProps> = memo(({ trips, tripsLoading, searchTrips }) =>
               </button>
             ))}
           </div>
-        </motion.div>
+        </div>
 
         <div className="hero-content lg:mx-auto lg:max-w-7xl lg:px-8 lg:text-left">
             <div className="relative z-10 mx-auto max-w-4xl animate-fade-in text-center text-white lg:ml-0 lg:mr-auto lg:w-3/5 lg:max-w-none lg:text-left">
               <h1
-                aria-label={activeHeadline}
                 className={`hero-headline mb-3 text-[32px] font-display font-extrabold leading-[1.08] tracking-tight text-white transition-opacity duration-300 sm:text-5xl md:text-6xl lg:mb-5 lg:text-7xl ${
                   isTextVisible ? 'opacity-100' : 'opacity-0'
                 }`}
               >
                 {headlineWords.map((word, wordIndex) => {
-                  const precedingCharacterCount = headlineWords
-                    .slice(0, wordIndex)
-                    .reduce((count, previousWord) => count + previousWord.length + 1, 0);
-
                   return (
                     <span
                       key={`${currentBgIndex}-${wordIndex}`}
-                      aria-hidden="true"
                       className="hero-headline__word"
                     >
-                      {Array.from(word).map((character, characterIndex) => {
-                        const index = precedingCharacterCount + characterIndex;
-                        return (
-                          <span
-                            key={index}
-                            className={`hero-headline__character ${
-                              index < visibleHeadlineCharacters ? 'is-visible' : ''
-                            }`}
-                          >
-                            {character}
-                          </span>
-                        );
-                      })}
+                      {word}
                     </span>
                   );
                 })}
