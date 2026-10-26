@@ -32,6 +32,7 @@ const BlogPage = lazy(() => import('./pages/BlogPage').then(m => ({ default: m.B
 const ReviewsPage = lazy(() => import('./pages/ReviewsPage').then(m => ({ default: m.ReviewsPage })));
 const StoriesPage = lazy(() => import('./pages/StoriesPage').then(m => ({ default: m.StoriesPage })));
 const PackageCreatorPage = lazy(() => import('./pages/PackageCreatorPage').then(m => ({ default: m.PackageCreatorPage })));
+const CashTravelPage = lazy(() => import('./pages/CashTravelPage').then(m => ({ default: m.CashTravelPage })));
 const VoucherDispatchCenter = lazy(() => import('./components/admin/VoucherDispatchCenter').then(m => ({ default: m.VoucherDispatchCenter })));
 
 // Loading component for pages
@@ -145,6 +146,7 @@ const AppContent: React.FC = () => {
       case 'terms': return <Suspense fallback={<PageLoader />}><TermsPage /></Suspense>;
       case 'privacy': return <Suspense fallback={<PageLoader />}><PrivacyPage /></Suspense>;
       case 'help': return <Suspense fallback={<PageLoader />}><HelpPage /></Suspense>;
+      case 'cash-travel-guide': return <Suspense fallback={<PageLoader />}><CashTravelPage /></Suspense>;
       case 'safety': return <Suspense fallback={<PageLoader />}><SafetyPage /></Suspense>;
       case 'trips': return <Suspense fallback={<PageLoader />}><TripsPage /></Suspense>;
       case 'blog': return <Suspense fallback={<PageLoader />}><BlogPage /></Suspense>;

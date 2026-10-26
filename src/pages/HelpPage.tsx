@@ -1,5 +1,5 @@
 import React from 'react';
-import { HelpCircle, MessageCircle, Phone, Mail, Search } from 'lucide-react';
+import { HelpCircle, MessageCircle, Phone, Mail, Search, Banknote } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
 
@@ -44,6 +44,12 @@ export const HelpPage: React.FC = () => {
       title: 'Host Resources',
       description: 'Information for trip hosts',
       articles: 20
+    },
+    {
+      icon: Banknote,
+      title: 'Cash & Airport Guide',
+      description: 'PAN, TCS, receipts and counter-payment basics',
+      articles: 8
     }
   ];
 
@@ -99,9 +105,27 @@ export const HelpPage: React.FC = () => {
       {/* Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         {/* Help Categories */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-20">
           {helpCategories.map((category, index) => (
-            <div key={index} className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer">
+            <div
+              key={index}
+              className="bg-white rounded-xl shadow-md p-6 hover:shadow-lg transition-shadow cursor-pointer"
+              onClick={() => {
+                if (category.title === 'Cash & Airport Guide') {
+                  window.location.hash = 'cash-travel-guide';
+                }
+              }}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(event) => {
+                if (event.key === 'Enter' || event.key === ' ') {
+                  event.preventDefault();
+                  if (category.title === 'Cash & Airport Guide') {
+                    window.location.hash = 'cash-travel-guide';
+                  }
+                }
+              }}
+            >
               <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-xl mb-4">
                 <category.icon className="w-8 h-8 text-blue-600" />
               </div>

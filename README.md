@@ -62,6 +62,7 @@ The command center distinguishes measured Search Console rows from planned query
 ### SEO strategy deliverables
 
 - [Keyword map](./docs/seo/keyword-map.md)
+- [Cash travel payment guide map](./docs/seo/cash-travel-keyword-map.md)
 - [Competitor gap analysis](./docs/seo/competitor-gap-analysis.md)
 - [Market prioritization](./docs/seo/market-prioritization.md)
 

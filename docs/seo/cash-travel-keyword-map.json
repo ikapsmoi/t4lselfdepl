@@ -1,0 +1,96 @@
+{
+  "meta": {
+    "title": "Cash Travel Payment & Airport Counter Keyword Map",
+    "reviewed": "2026-10-26",
+    "primaryLandingPage": "/cash-travel-guide",
+    "appHashRoute": "#cash-travel-guide",
+    "guardrails": [
+      "Do not instruct users to evade tax, reporting, or KYC standards.",
+      "Do not recommend transaction splitting or undeclared cash handling.",
+      "Use official airline, agency and tax guidance as the final authority."
+    ]
+  },
+  "clusterA": [
+    "cash limit for buying foreign tour package india",
+    "pan card mandatory for cash flight booking",
+    "how much cash can i give travel agent for europe trip",
+    "income tax limits on cash payment to travel agents",
+    "tcs on international travel booking cash limits",
+    "7 percent tcs on foreign travel packages cash",
+    "cash payment limits under section 40a3 travel business",
+    "can we buy international flight ticket with cash above 2 lakhs",
+    "fine for paying cash to travel agent in india",
+    "income tax notice for cash international tour packages",
+    "is pan card required to buy flight ticket with cash",
+    "maximum cash allowed for international booking offline",
+    "reporting cash travel bookings to income tax department",
+    "sbn cash booking rules for airlines india",
+    "cash deposit limit in travel agency bank account",
+    "lcs cash limits for international luxury tour operators",
+    "can i split cash payments for an international holiday package",
+    "undisclosed cash usage for booking thailand packages",
+    "tax rules on paying travel agent in cash",
+    "do travel agencies accept cash without bills",
+    "cash bill format for international flight booking",
+    "what happens if you buy international ticket in cash",
+    "can i use physical cash for honeymoon packages booking",
+    "cash transaction declaration form travel agents",
+    "limit of cash payment for passport and visa services",
+    "rules for cash booking of international cruises",
+    "avoiding tcs by paying cash for holiday package",
+    "cash limit per person for booking international group tours",
+    "it department tracking cash airline tickets",
+    "foreign exchange cash buying limit for travel agent",
+    "cash handling charges by offline travel agents",
+    "can i pay for a business class ticket in pure cash",
+    "income tax section 269st travel business application",
+    "cash invoice format for international flight ticket",
+    "how to deposit cash at travel agent counter"
+  ],
+  "clusterB": [
+    "buying international ticket with cash at airport",
+    "delhi airport airline counter cash booking",
+    "mumbai airport t2 buying ticket cash",
+    "can i buy flight ticket with cash at airport counter",
+    "paying cash for international flight ticket at counter",
+    "can raw cash be used for flight modifications at airport",
+    "air india counter cash booking international",
+    "indigo airport counter cash payment rules",
+    "spicejet international flight cash booking at airport",
+    "emirates delhi office cash ticket booking",
+    "qatar airways mumbai office accept cash",
+    "singapore airlines office cash booking india",
+    "lufthansa flight booking by paying cash at office",
+    "malaysia airlines cash booking counter delhi",
+    "thai airways accept cash at airport counter",
+    "do airport ticket counters accept cash 24 7",
+    "can i book last minute international flight at airport with cash",
+    "airport ticketing counter cash payment receipt",
+    "extra charges for buying ticket with cash at airport",
+    "can i pay passport name change fee in cash at airport",
+    "excess baggage payment in cash at airport counter",
+    "upgrading to business class with cash at airport counter",
+    "can a friend pay cash for my ticket at airline office",
+    "airline ticketing office cash timing delhi cp",
+    "buying connecting flights with cash at airport",
+    "airport counter flight ticket cash booking without card",
+    "cash refund policies for tickets bought at airport counter",
+    "can i buy a ticket with cash at an overseas airport"
+  ],
+  "doNotTargetDirectly": [
+    "avoiding tcs by paying cash for holiday package",
+    "can i split cash payments for an international holiday package",
+    "undisclosed cash usage for booking thailand packages",
+    "how to hide travel payments from tax authorities"
+  ],
+  "routing": {
+    "cash-travel-guide": {
+      "pageType": "landing page",
+      "use": "Primary landing page for all compliant cash-payment, tax, and airport-counter search intent."
+    },
+    "help": {
+      "pageType": "support hub",
+      "use": "Entry point from Travel4life help center and support navigation."
+    }
+  }
+}

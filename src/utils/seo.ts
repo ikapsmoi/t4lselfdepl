@@ -58,6 +58,11 @@ const publicPages: Record<string, SeoConfig> = {
     description: 'Find answers and support for using Travel4life, booking trips and joining group travel experiences.',
     indexable: true,
   },
+  'cash-travel-guide': {
+    title: 'Cash Travel Payments, PAN and Airport Counter Guidance | Travel4life',
+    description: 'Understand cash payment limits, PAN requirements, TCS and airline counter booking policies for legitimate international travel planning.',
+    indexable: true,
+  },
   careers: {
     title: 'Careers at Travel4life',
     description: 'Explore career opportunities with Travel4life and help build better group travel experiences.',
