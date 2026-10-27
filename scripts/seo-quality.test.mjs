@@ -353,3 +353,62 @@ test('static trip HTML contains escaped inventory details, canonical and structu
   assert.match(html, /\\u003c\/script>/);
   assert.doesNotMatch(html, /<script>alert\(1\)<\/script>/);
 });
+
+test('Tomorrowland product pages link back to the relevant planning checklist only when applicable', () => {
+  const tomorrowlandTrip = {
+    ...trip,
+    title: 'Tomorrowland Winter group trip',
+    location: "Alpe d'Huez, France",
+  };
+  const tomorrowlandHtml = renderProductPage(template, tomorrowlandTrip);
+  const unrelatedHtml = renderProductPage(template, trip);
+
+  assert.match(tomorrowlandHtml, /Tomorrowland trip planning/);
+  assert.match(tomorrowlandHtml, /href="\/tomorrowland\/packages\/">Review the Tomorrowland package and ticket checklist/);
+  assert.match(tomorrowlandHtml, /Festival access is included only if the written trip inclusions say so/);
+  assert.doesNotMatch(unrelatedHtml, /tomorrowland-planning|\/tomorrowland\/packages\//);
+});
+
+test('Tomorrowland ticket guidance uses current official status without unverified prices', async () => {
+  const readPublic = (path) => readFile(new URL(`../public/${path}`, import.meta.url), 'utf8');
+  const [ticket, belgium, winter, thailand, cost, intentMap, sitemap] = await Promise.all([
+    readPublic('tomorrowland/tickets/index.html'),
+    readPublic('tomorrowland/belgium/index.html'),
+    readPublic('tomorrowland/winter/index.html'),
+    readPublic('tomorrowland/thailand/index.html'),
+    readPublic('tomorrowland/cost-from-india/index.html'),
+    readPublic('tomorrowland/search-intent-map.json').then(JSON.parse),
+    readPublic('sitemap-static.xml'),
+  ]);
+  const priceTables = [belgium, winter, thailand, cost].join('\n');
+  const ticketOwner = intentMap.owners.find(({ url }) => url === '/tomorrowland/tickets/');
+  const thailandOwner = intentMap.owners.find(({ url }) => url === '/tomorrowland/thailand/');
+
+  assert.ok(ticketOwner);
+  assert.match(sitemap, /https:\/\/travel4life\.net\/tomorrowland\/tickets\//);
+  assert.match(ticket, /Tomorrowland Winter/);
+  assert.match(ticket, /festival tickets are on sale/i);
+  assert.match(ticket, /2026 event is sold out/i);
+  assert.match(ticket, /Global Journey packages are sold out/i);
+  assert.match(ticket, /festival takes place in Boom, Belgium/i);
+  assert.match(ticket, /How do you check official Tomorrowland ticket availability/i);
+  assert.match(ticket, /href="#ticket-availability"/);
+  assert.match(ticket, /Where should you stay for Tomorrowland/i);
+  assert.match(ticket, /href="\/tomorrowland\/accommodation\/"/);
+  assert.match(ticket, /Tomorrowland ticket prices in India \(INR\)/i);
+  assert.match(ticket, /How much do Tomorrowland tickets cost in Indian rupees/i);
+  assert.match(ticket, /When do Tomorrowland Belgium tickets go on sale/i);
+  assert.match(ticket, /Can I buy Tomorrowland tickets at the venue/i);
+  assert.match(ticket, /Can I buy or sell a Tomorrowland ticket through a resale listing/i);
+  assert.match(ticket, /"@type":"FAQPage"/);
+  assert.match(ticket, /"dateModified":"2026-10-27"/);
+  assert.match(ticket, /relevant official edition checkout for the live amount/i);
+  assert.match(ticket, /not the festival organiser or an authorised ticket seller/i);
+  assert.match(ticket, /<title>Tomorrowland Tickets: Prices &amp; Official Sales \| Travel4life<\/title>/);
+  assert.match(belgium, /those dates have passed/i);
+  assert.match(winter, /4- and 7-day packages.*sold out/i);
+  assert.match(thailand, /2026 event is sold out/i);
+  assert.doesNotMatch(priceTables, /(?:€|THB|R\$)\s?[\d,]+|₹\s?[\d,]+/);
+  assert.doesNotMatch(thailand, /thailand\.tomorrowland\.com\/en\/passes-packages\//);
+  assert.equal(thailandOwner?.tripInventory, undefined);
+});
