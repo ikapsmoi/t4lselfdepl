@@ -21,6 +21,24 @@ test('creates a WhatsApp message from only the selected trip details', () => {
   assert.doesNotMatch(message, /@|\+91|phone|email/i);
 });
 
+test('marks Thailand enquiries as future-edition planning while 2026 is sold out', () => {
+  const url = new URL(createTomorrowlandWhatsAppUrl({
+    destination: 'Thailand',
+    whatsappNumber: '919511446642',
+    futureEditionOnly: true,
+  }));
+  const message = url.searchParams.get('text');
+
+  assert.match(message, /future Tomorrowland Thailand travel planning from India/);
+  assert.match(message, /2026 event is sold out/);
+  assert.match(message, /not a ticket request/);
+  assert.throws(() => createTomorrowlandWhatsAppUrl({
+    destination: 'Winter',
+    whatsappNumber: '919511446642',
+    futureEditionOnly: true,
+  }), /supported for Thailand/);
+});
+
 test('permits a partially completed enquiry', () => {
   const url = new URL(createTomorrowlandWhatsAppUrl({
     destination: 'Winter',

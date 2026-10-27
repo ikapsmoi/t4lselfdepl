@@ -1,12 +1,20 @@
 # 06 — Google Search Console
 
-**Updated:** 23 October 2026
+**Updated:** 26 October 2026
 
 ## Access and evidence sources
 
 No authorised GSC connector or authenticated account session was available. The current local workbook, `travel4life.net-Performance-on-Search-2026-10-23.xlsx`, is filtered to Web search and “Last 28 days”; its Chart sheet covers 24 September–21 October 2026. The verified GSC property is not recorded in the workbook; page URLs use `https://travel4life.net/`.
 
 The workbook exports date, query, page, country, device and search-appearance dimensions separately. They are sampled reports, not a query × page × country × device cross-tab. GSC can omit low-volume and privacy-thresholded query data.
+
+## Latest 7-day report (26 October workbook)
+
+The new workbook, `travel4life.net-Performance-on-Search-2026-10-26.xlsx`, is filtered to Web search and “Last 7 days”; its Chart sheet contains 18–24 October 2026. The seven daily rows total **10 clicks and 333 impressions** (derived CTR **3.00%**, impression-weighted position **13.99**).
+
+No visible Tomorrowland or Mysteryland query row recorded a click in this export. Visible Tomorrowland queries include “tomorrowland packages from india” (0 / 13, position 14.46), “tomorrowland packages” (0 / 5, position 27.00), “tomorrowland india” (0 / 2, position 24.50), and several ticket-price and flight variations with one or two impressions each. “Mysteryland 2027” also recorded 0 / 32 at position 9.19; visible Mysteryland-related rows have no clicks. Therefore this latest report does **not** support the claim that Mysteryland queries are currently getting clicks while Tomorrowland queries are not.
+
+The separate Pages sheet lists Tomorrowland page rows with **2 clicks / 90 impressions**: `/tomorrowland/packages/` has 1 / 48 at position 14.67 and `/tomorrowland/belgium/` has 1 / 11 at position 7.45; other visible Tomorrowland page rows have no clicks. These page clicks cannot be assigned to any query from this workbook. The data indicates a possible snippet opportunity for the package page, but the sample is small and does not establish a trend.
 
 ## Search performance observed
 

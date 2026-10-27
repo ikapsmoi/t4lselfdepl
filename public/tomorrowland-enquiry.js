@@ -7,6 +7,7 @@ export const createTomorrowlandWhatsAppUrl = ({
   departureCity = '',
   travelMonth = '',
   travellers = '',
+  futureEditionOnly = false,
 }) => {
   if (!destinations.has(destination)) {
     throw new TypeError('A supported Tomorrowland destination is required.');
@@ -16,6 +17,9 @@ export const createTomorrowlandWhatsAppUrl = ({
   }
   if (travellers && (!/^\d+$/.test(String(travellers)) || Number(travellers) < 1 || Number(travellers) > 40)) {
     throw new RangeError('Traveller count must be a whole number from 1 to 40.');
+  }
+  if (futureEditionOnly && destination !== 'Thailand') {
+    throw new TypeError('Future-edition-only context is currently supported for Thailand.');
   }
 
   const details = [
@@ -27,8 +31,11 @@ export const createTomorrowlandWhatsAppUrl = ({
     details.push(['Travellers', String(travellerCount)]);
   }
 
+  const opening = futureEditionOnly
+    ? 'Hello Travel4life, I am interested in future Tomorrowland Thailand travel planning from India. The official 2026 event is sold out; this is not a ticket request.'
+    : `Hello Travel4life, I am interested in Tomorrowland ${destination} travel options from India.`;
   const message = [
-    `Hello Travel4life, I am interested in Tomorrowland ${destination} travel options from India.`,
+    opening,
     ...details.map(([label, value]) => `${label}: ${value}`),
     'Please let me know what travel options may be available.',
   ].join('\n');
@@ -45,6 +52,7 @@ if (typeof document !== 'undefined') {
         const url = createTomorrowlandWhatsAppUrl({
           destination: panel.dataset.destination,
           whatsappNumber: panel.dataset.whatsappNumber,
+          futureEditionOnly: panel.dataset.futureEditionOnly === 'true',
           departureCity: panel.querySelector('[data-enquiry-departure]')?.value,
           travelMonth: panel.querySelector('[data-enquiry-month]')?.value,
           travellers: panel.querySelector('[data-enquiry-travellers]')?.value,

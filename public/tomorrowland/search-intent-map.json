@@ -1,10 +1,10 @@
 {
   "schemaVersion": 1,
-  "reviewedOn": "2026-10-13",
+  "reviewedOn": "2026-10-24",
   "evidence": {
-    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-10-13.xlsx",
-    "finding": "The last-7-days report shows the Tomorrowland Winter page at 123 impressions, 2 clicks, 1.63% CTR and average position 7.93; the Thailand page at 56 impressions, 4 clicks and position 8.48; and the cost-from-India page at 56 impressions, 1 click and position 17.25. Queries include Tomorrowland 2027 ticket-price intent and Mysteryland 2027 (59 impressions, 2 clicks).",
-    "limitation": "This is a short last-7-days snapshot, not a sustained trend. Query and page rows do not establish a one-to-one query-to-URL relationship, current ticket prices, official event details, package inventory, or the terms of any Travel4life offer.",
+    "searchConsoleExport": "travel4life.net-Performance-on-Search-2026-10-23.xlsx",
+    "finding": "The 28-day export (24 September–21 October 2026) reports six clicks across visible Tomorrowland query rows (301 impressions); the query “tomorrowland thailand packages from india” has 3 clicks, 7 impressions and average position 8.71. The separate Pages report groups Tomorrowland guides at 21 clicks and 824 impressions; Thailand is 6/83 at position 8.13, Winter 4/292 at position 7.75, and cost-from-India 2/145 at position 15.04.",
+    "limitation": "The workbook dimensions are separately sampled and do not establish query-to-URL attribution, sustained trends, current ticket prices, official event details, package inventory, or the terms of any Travel4life offer. Search-volume and keyword-difficulty values are not available.",
     "originCityDecision": "Do not publish Delhi, Mumbai, Bengaluru, or other origin-city landing pages without query evidence and genuinely differentiated departure or product information."
   },
   "owners": [
@@ -17,6 +17,15 @@
       "primaryQuery": "Tomorrowland travel planning from India",
       "relatedQueries": ["Tomorrowland India travel", "Tomorrowland trip from India", "Tomorrowland destinations"],
       "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/welcome/"]
+    },
+    {
+      "url": "/tomorrowland/tickets/",
+      "file": "tomorrowland/tickets/index.html",
+      "schemaType": "Article",
+      "intent": "Official ticket-channel guidance and edition-specific status; not ticket sales",
+      "primaryQuery": "Tomorrowland tickets",
+      "relatedQueries": ["Tomorrowland ticket information", "Tomorrowland ticket availability", "Tomorrowland tickets from India", "Tomorrowland tickets versus travel packages", "Tomorrowland France tickets", "Tomorrowland Brasil tickets"],
+      "officialSources": ["https://belgium.tomorrowland.com/en/welcome/", "https://winter.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/welcome/", "https://brasil.tomorrowland.com/en/welcome/"]
     },
     {
       "url": "/tomorrowland/packages/",
@@ -70,12 +79,11 @@
     {
       "url": "/tomorrowland/thailand/",
       "file": "tomorrowland/thailand/index.html",
-      "tripInventory": "thailand",
       "schemaType": "Article",
       "intent": "Thailand destination and festival travel planning",
       "primaryQuery": "Tomorrowland Thailand from India",
       "relatedQueries": ["Tomorrowland Thailand travel guide", "Tomorrowland Thailand pass types", "Thailand festival hotel travel"],
-      "officialSources": ["https://thailand.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/passes-packages/festival-passes", "https://thailand.tomorrowland.com/en/passes-packages/hotel-packages"]
+      "officialSources": ["https://thailand.tomorrowland.com/en/welcome/"]
     },
     {
       "url": "/tomorrowland/cost-from-india/",
@@ -85,7 +93,7 @@
       "intent": "Cost research and budget methodology",
       "primaryQuery": "Tomorrowland trip cost from India",
       "relatedQueries": ["Tomorrowland India trip budget", "Tomorrowland travel cost breakdown", "festival package versus separate costs"],
-      "officialSources": []
+      "officialSources": ["https://belgium.tomorrowland.com/en/sales-info/", "https://winter.tomorrowland.com/en/welcome/", "https://thailand.tomorrowland.com/en/welcome/", "https://brasil.tomorrowland.com/en/welcome/"]
     },
     {
       "url": "/tomorrowland/from-india/",

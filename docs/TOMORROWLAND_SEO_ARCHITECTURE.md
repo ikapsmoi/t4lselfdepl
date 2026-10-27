@@ -4,7 +4,7 @@
 
 This is an independent, India-focused travel-planning cluster. Travel4life is not presented as the festival organiser, an authorised ticket seller, or an official partner. Editorial pages do not promise rankings, invent product inventory, or publish unverified ticket prices, event dates, review scores, or availability.
 
-Reviewed on **2 October 2026**. The supplied Search Console export is labelled `travel4life.net-Performance-on-Search-2026-09-23`. No Tomorrowland query row appeared in `Queries.csv`, and no Tomorrowland landing-page row appeared in `Pages.csv`. These exports therefore do not establish Tomorrowland demand or validate a city-specific page opportunity.
+Updated **24 October 2026**. The newer Search Console workbook (`travel4life.net-Performance-on-Search-2026-10-23.xlsx`) contains visible Tomorrowland query rows and page-level impressions; see [`audit/06-google-search-console.md`](../audit/06-google-search-console.md) for the sampled values and limitations. The query and page exports are separate and do not establish query-to-URL attribution, keyword volume, or a city-specific page opportunity.
 
 ## URL ownership
 
@@ -15,11 +15,12 @@ Selected commercial and destination owners also declare a `tripInventory` match 
 | Canonical URL | Search intent owner | Status |
 | --- | --- | --- |
 | `/tomorrowland/` | Broad India-first discovery and destination selection | Indexable hub |
+| `/tomorrowland/tickets/` | Official ticket channels and edition-specific status guidance | Indexable information page; not a ticket shop |
 | `/tomorrowland/belgium/` | Belgium destination planning from India | Indexable guide |
 | `/tomorrowland/belgium/packages/` | Package enquiry and due-diligence checklist | Indexable; not a live offer |
-| `/tomorrowland/winter/` | Winter destination and Alps travel planning | Indexable evergreen guide |
-| `/tomorrowland/thailand/` | Thailand destination and travel planning | Indexable guide; official site currently describes the 2026 edition |
-| `/tomorrowland/cost-from-india/` | Cost methodology and budget research | Indexable guide; no fixed quote |
+| `/tomorrowland/winter/` | Winter ticket status and Alps travel planning | Indexable guide; 2027 ticket status dated and sourced |
+| `/tomorrowland/thailand/` | Thailand destination and travel planning | Indexable guide; 2026 event sold out per official site |
+| `/tomorrowland/cost-from-india/` | Cost methodology and budget research | Indexable guide; no unverified ticket prices or fixed quote |
 | `/tomorrowland/from-india/` | India departure logistics and trip planning | Indexable guide |
 | `/tomorrowland/compare/` | Destination comparison | Indexable guide |
 | `/tomorrowland/accommodation/` | Accommodation and stay planning | Indexable guide |
@@ -31,7 +32,7 @@ Selected commercial and destination owners also declare a `tripInventory` match 
 ### Consolidated URLs
 
 - `/tomorrowland-india.html` permanently redirects to `/tomorrowland/from-india/`.
-- `/tomorrowland/winter/2027/` permanently redirects to `/tomorrowland/winter/`. The year-specific page was consolidated because the current official page response available for review did not expose verifiable edition dates or prices.
+- `/tomorrowland/winter/2027/` permanently redirects to `/tomorrowland/winter/`. The year-specific URL remains consolidated into the evergreen Winter guide to avoid duplicate content; current edition facts are maintained on the guide and the ticket-status page.
 - Both legacy documents remain minimal `noindex` fallbacks for hosts that do not process the repository's Netlify `_redirects` file. They use the destination canonical and redirect the browser.
 - Neither redirected URL appears in the static sitemap or internal editorial links.
 
@@ -39,13 +40,14 @@ Do not publish Indian origin-city pages (Delhi, Mumbai, Bengaluru, or others) wi
 
 ## Current official-source review
 
-Official source pages were checked on 2 October 2026:
+Official source pages were checked on 24 October 2026:
 
-- [Tomorrowland Belgium welcome](https://belgium.tomorrowland.com/en/welcome/) and [sales information](https://belgium.tomorrowland.com/en/sales-info/). The accessible sales page says sale timing and offered pass/package types depend on the sale. No stable price was verified.
-- [Tomorrowland Winter welcome](https://winter.tomorrowland.com/en/welcome/) and [festival-ticket information](https://winter.tomorrowland.com/en/tickets/festival-ticket). The accessible ticket page describes regular and Comfort tickets and says the Comfort Festival Ticket includes general access and a lift and ski pass. No current edition dates or prices were verified from the pages retrieved.
-- [Tomorrowland Thailand welcome](https://thailand.tomorrowland.com/en/welcome/) describes the announced 2026 event at Wisdom Valley. The [festival-pass page](https://thailand.tomorrowland.com/en/passes-packages/festival-passes) exposes pass information but did not provide verifiable numeric prices or sales status in the retrieved content. The [hotel-package page](https://thailand.tomorrowland.com/en/passes-packages/hotel-packages) is linked for current package terms.
+- [Tomorrowland Belgium welcome](https://belgium.tomorrowland.com/en/welcome/) lists the 2026 weekends (17–19 and 24–26 July) and says “Thank You”; those dates have passed. The official [sales information](https://belgium.tomorrowland.com/en/sales-info/) describes ticket ordering and personalisation, but the pages reviewed do not confirm Belgium 2027 dates, sales timing or prices.
+- [Tomorrowland Winter welcome](https://winter.tomorrowland.com/en/welcome/) lists 20–27 March 2027 in Alpe d'Huez, says 7-, 4- and 1-day festival tickets are on sale, and marks 4- and 7-day packages sold out. It describes ticket/package inclusions. The [festival-ticket page](https://winter.tomorrowland.com/en/tickets/festival-ticket) was reviewed for ticket benefits. Numeric 2027 prices were not verified.
+- [Tomorrowland Thailand welcome](https://thailand.tomorrowland.com/en/welcome/) lists 11–13 December 2026 at Wisdom Valley and explicitly says the event is sold out. The reviewed official page does not announce a later edition. Previously linked `passes-packages` URLs returned 404 during this review and were removed from the Thailand guide.
+- [Tomorrowland Brasil welcome](https://brasil.tomorrowland.com/en/welcome/) lists 30 April–2 May 2027 in Itu, São Paulo. It reports Saturday and Full Madness tickets sold out, Friday/Sunday tickets or remaining DreamVille packages available, and Global Journey sold out. Availability can change; no numeric price was verified.
 
-Accordingly, the Belgium, Winter and Thailand guides link to official sources and tell readers to re-check current edition and sale information. Unverified 2026 Thailand prices/sold-out status and 2027 Winter dates/prices were removed. No source-free “current” price, currency conversion, or inventory claim should be reintroduced.
+Accordingly, `/tomorrowland/tickets/` centralises dated status and direct official links, while the Belgium, Winter and Thailand pages retain distinct destination intent. Unverified ticket-price tables and stale exchange-rate conversions were removed from the edition pages and cost guide. Recheck and update the dated claims before future editions; no source-free current price, conversion, inventory or ticket-access claim should be reintroduced.
 
 ## Forty-point implementation and coverage checklist
 
@@ -72,11 +74,11 @@ This checklist describes the implemented page system and its limits; it is not a
 | 17 | Duplicate India-guide consolidation | `/tomorrowland-india.html` redirects to `/from-india/` |
 | 18 | Year-specific Winter consolidation | Unverified `/winter/2027/` redirects to `/winter/` |
 | 19 | Origin-city landing pages | Deliberately not created; no GSC evidence or differentiated route data |
-| 20 | Search Console query evidence | Supplied exports contain no matching Tomorrowland rows |
+| 20 | Search Console query evidence | 23 October export contains visible Tomorrowland query rows; separate dimensions prevent URL attribution |
 | 21 | Search volume and ranking statements | None invented or inferred from missing rows |
 | 22 | Ticket prices | Unverified amounts removed; official sale links provided |
-| 23 | Ticket availability and sold-out claims | Unverified statements removed |
-| 24 | Edition dates | Not asserted where the current official source could not verify them |
+| 23 | Ticket availability and sold-out claims | Dated Winter 2027, Thailand 2026 and Brasil 2027 status is linked to official pages |
+| 24 | Edition dates | Current dates are stated only where verified; unknown next editions remain qualified |
 | 25 | Package prices and live inventory | Not invented; requires a real, active product record |
 | 26 | Official partnership and reseller claims | Explicitly disclaimed; no affiliation claimed |
 | 27 | Scarcity and countdowns | Not used |

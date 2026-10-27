@@ -102,6 +102,9 @@ export const renderProductPage = (template, trip, relatedTrips = [], siteUrlOver
   const metaDescription = `${summary}${description.length > summary.length ? '...' : ''} ${details}`.trim();
   const included = Array.isArray(trip.itinerary.included) ? trip.itinerary.included : [];
   const groupSize = Number(trip.group_size);
+  const tomorrowlandPlanning = /\btomorrowland\b/i.test(`${trip.title} ${destination} ${description}`)
+    ? `<section aria-labelledby="tomorrowland-planning"><h2 id="tomorrowland-planning">Tomorrowland trip planning</h2><p>This listing explicitly references Tomorrowland. Festival access is included only if the written trip inclusions say so; confirm the edition, current availability and terms before booking.</p><p><a href="/tomorrowland/packages/">Review the Tomorrowland package and ticket checklist</a></p></section>`
+    : '';
   const relatedLinks = relatedTrips.length
     ? `<section aria-labelledby="related-trips"><h2 id="related-trips">More ${escapeHtml(trip.category.replaceAll('_', ' '))} trips</h2><ul>${relatedTrips.map((relatedTrip) => `<li><a href="${escapeHtml(productPath(relatedTrip.id))}">${escapeHtml(relatedTrip.title)}</a> — ${escapeHtml(relatedTrip.location)}</li>`).join('')}</ul></section>`
     : '';
@@ -120,6 +123,7 @@ export const renderProductPage = (template, trip, relatedTrips = [], siteUrlOver
           <dt>Price per person</dt><dd>${escapeHtml(formatPrice(trip.price_per_person, currency))}</dd>
         </dl>
         ${included.length ? `<section aria-labelledby="included"><h2 id="included">What's included</h2><ul>${included.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ul></section>` : ''}
+        ${tomorrowlandPlanning}
         ${relatedLinks}
         <p><a href="/trips">Browse all current trips</a></p>
       </article>
