@@ -102,7 +102,7 @@ export const FloatingWhatsAppEnquiry: React.FC = () => {
         </button>
       </div>
 
-      <MobileBottomBar onClick={() => setIsOpen(true)} buttonLabel="WhatsApp Us" />
+      <MobileBottomBar onClick={() => setIsOpen(true)} buttonLabel="WhatsApp Us" className="mobile-whatsapp-footer" />
 
       {isOpen && (
         <div

@@ -2,6 +2,7 @@ export interface TripCityImageCredit {
   city: string;
   asset: string;
   source: string;
+  articleUrl?: string;
   artist: string;
   license: string;
   licenseUrl: string;
@@ -9,6 +10,141 @@ export interface TripCityImageCredit {
 }
 
 export const TRIP_CITY_IMAGE_CREDITS: Record<string, TripCityImageCredit> = {
+  "corbett": {
+    "city": "Corbett Tiger Reserve",
+    "asset": "/trip-city-images/corbett.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Morning_Mist_Dhikala_Corbett_Reserve_Dec2019_R16_02285.jpg",
+    "artist": "Timothy Gonsalves",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "description": "Morning mist burning off with the rising sun, grasslands near Dhikala, Corbett Tiger Reserve, Uttarakhand, India."
+  },
+  "spain": {
+    "city": "Barcelona",
+    "asset": "/trip-city-images/spain.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Barcelona_Cityscape_Panorama_-_Jan_2007.jpg",
+    "artist": "Diliff",
+    "license": "CC BY 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.5",
+    "description": "Panorama of the city of Barcelona from Montjuïc."
+  },
+  "greece": {
+    "city": "Santorini",
+    "asset": "/trip-city-images/greece.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Panoramic_view_of_Fira_coast_line,_Santorini_island_(Thira),_Greece.jpg",
+    "artist": "Mstyslav Chernov",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "description": "Panoramic view of Fira coast line, Santorini island (Thira), Greece."
+  },
+  "united-kingdom": {
+    "city": "London",
+    "asset": "/trip-city-images/united-kingdom.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:London_Thames_Sunset_panorama_-_Feb_2008.jpg",
+    "artist": "Diliff",
+    "license": "CC BY 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/3.0",
+    "description": "Panoramic image of the London skyline from the Bermondsey banks of the Thames."
+  },
+  "norway": {
+    "city": "Lyngen Fjord",
+    "asset": "/trip-city-images/norway.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:At_Lyngen_fjord,_Sp%C3%A5kenes_in_2012_June.jpg",
+    "artist": "Ximonic (Simo Räsänen)",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "description": "Landscape at Lyngen fjord towards north, Spåkenes, Nordreisa, Troms."
+  },
+  "italy": {
+    "city": "Rome",
+    "asset": "/trip-city-images/italy.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Colosseum_in_Rome,_Italy_-_April_2007.jpg",
+    "artist": "Diliff",
+    "license": "CC BY-SA 2.5",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/2.5",
+    "description": "Panorama of the Colosseum in Rome at dusk."
+  },
+  "switzerland": {
+    "city": "Matterhorn",
+    "asset": "/trip-city-images/switzerland.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Matterhorn_Riffelsee_2005-06-11.jpg",
+    "artist": "Dirk Beyer",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "description": "Matterhorn mirrored in Riffelsee, photograph taken from the shore."
+  },
+  "iceland": {
+    "city": "Gullfoss",
+    "asset": "/trip-city-images/iceland.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Gullfoss,_Su%C3%B0urland,_Islandia,_2014-08-16,_DD_119.JPG",
+    "artist": "Diego Delso",
+    "license": "CC BY-SA 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/4.0",
+    "description": "Rainbow over Gullfoss, a waterfall in the canyon of the Hvítá river in Iceland."
+  },
+  "finland": {
+    "city": "Lapland",
+    "asset": "/trip-city-images/finland.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Aurora_borealis_over_Lapland_(Unsplash).jpg",
+    "artist": "Vincent Guth",
+    "license": "CC0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "description": "Aurora borealis over Lapland, Finland."
+  },
+  "portugal": {
+    "city": "Lisbon",
+    "asset": "/trip-city-images/portugal.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Lisbon_city_(1439238681).jpg",
+    "artist": "Feliciano Guimarães",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "description": "Lisbon city."
+  },
+  "sweden": {
+    "city": "Stockholm",
+    "asset": "/trip-city-images/sweden.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Gamla_stan,_Stockholm.jpg",
+    "artist": "Andy Eick",
+    "license": "CC BY 2.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/2.0",
+    "description": "Gamla stan in Stockholm."
+  },
+  "denmark": {
+    "city": "Copenhagen",
+    "asset": "/trip-city-images/denmark.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Nyhavn_55_Copenhagen.jpg",
+    "artist": "Jebulon",
+    "license": "CC0",
+    "licenseUrl": "https://creativecommons.org/publicdomain/zero/1.0/",
+    "description": "55 Nyhavn, Copenhagen, Denmark."
+  },
+  "germany": {
+    "city": "Berlin",
+    "asset": "/trip-city-images/germany.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Berlin_Skyline.jpg",
+    "artist": "Tobi85",
+    "license": "Public domain",
+    "licenseUrl": "",
+    "description": "View of Berlin from the direction of the Siegessäule."
+  },
+  "budapest": {
+    "city": "Budapest",
+    "asset": "/trip-city-images/budapest.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Full_panorama_skyline_of_Budapest.jpg",
+    "artist": "Bopennings",
+    "license": "CC BY-SA 3.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by-sa/3.0",
+    "description": "Panorama skyline of Budapest."
+  },
+  "prague": {
+    "city": "Prague",
+    "asset": "/trip-city-images/prague.webp",
+    "source": "https://commons.wikimedia.org/wiki/File:Prague-Skyline.jpg",
+    "artist": "acediscovery",
+    "license": "CC BY 4.0",
+    "licenseUrl": "https://creativecommons.org/licenses/by/4.0",
+    "description": "Skyline and panorama of Prague, Czech Republic."
+  },
   "kochi": {
     "city": "Kochi",
     "asset": "/trip-city-images/kochi.jpg",

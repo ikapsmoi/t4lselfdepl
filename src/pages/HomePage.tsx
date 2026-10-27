@@ -10,6 +10,7 @@ import { TRIP_TYPES } from '../utils/constants';
 import { TrustBar } from '../components/home/TrustBar';
 import { ViralGallery } from '../components/home/ViralGallery';
 import { FloatingWhatsAppEnquiry } from '../components/common/FloatingWhatsAppEnquiry';
+import { SocialRail } from '../components/home/SocialRail';
 
 const Newsletter = lazy(() => import('../components/home/Newsletter').then(({ Newsletter: Component }) => ({ default: Component })));
 const FAQ = lazy(() => import('../components/home/FAQ').then(({ FAQ: Component }) => ({ default: Component })));
@@ -102,7 +103,7 @@ const StorytellingSection: React.FC = () => (
 
 export const HomePage: React.FC = () => {
   const { trips, loading, searchTrips } = useTrips();
-  const [topRatedCategory, setTopRatedCategory] = React.useState('all');
+  const [topRatedCategory, setTopRatedCategory] = React.useState('europe');
   const topRatedTrips = trips
     .filter(trip =>
       trip.type !== 'indian_special' &&
@@ -111,9 +112,11 @@ export const HomePage: React.FC = () => {
     .sort((firstTrip, secondTrip) =>
       Number(secondTrip.type === 'festival') - Number(firstTrip.type === 'festival')
     );
-  const topRatedCategories = TRIP_TYPES.filter(type =>
-    type.value !== 'indian_special' && trips.some(trip => trip.type === type.value)
-  );
+  const topRatedCategories = TRIP_TYPES
+    .filter(type =>
+      type.value !== 'indian_special' && trips.some(trip => trip.type === type.value)
+    )
+    .sort((first, second) => Number(second.value === 'europe') - Number(first.value === 'europe'));
   const { viewHome } = useAnalytics();
   const [showSafety, setShowSafety] = React.useState(false);
   const [showHowItWorksSection, setShowHowItWorksSection] = React.useState(false);
@@ -270,6 +273,7 @@ export const HomePage: React.FC = () => {
       <SectionDivider />
       <DeferredHomeSection reserveHeight={260}><Newsletter /></DeferredHomeSection>
       <FloatingWhatsAppEnquiry />
+      <SocialRail />
     </div>
   );
 };

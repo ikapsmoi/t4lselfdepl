@@ -7,6 +7,7 @@ interface MobileBottomBarProps {
   contextValue?: string;
   buttonLabel?: string;
   disabled?: boolean;
+  className?: string;
 }
 
 export const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
@@ -15,8 +16,9 @@ export const MobileBottomBar: React.FC<MobileBottomBarProps> = ({
   contextValue,
   buttonLabel = 'Design My Trip',
   disabled = false,
+  className = '',
 }) => (
-  <div className="fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-gray-200 bg-white/95 p-3.5 px-4 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur-lg md:hidden">
+  <div className={`fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-3 border-t border-gray-200 bg-white/95 p-3.5 px-4 pb-[calc(0.875rem+env(safe-area-inset-bottom))] shadow-[0_-4px_20px_rgba(0,0,0,0.08)] backdrop-blur-lg md:hidden ${className}`}>
     <div className="min-w-0">
       {contextValue ? (
         <>

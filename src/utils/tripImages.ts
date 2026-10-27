@@ -6,6 +6,64 @@ export interface ResolvedTripImage {
 }
 
 const titleAliases: Array<readonly [string, string]> = [
+  ['corbett', 'corbett'],
+  ['uttarakhand', 'corbett'],
+  ['nainital', 'corbett'],
+  ['mussoorie', 'corbett'],
+  ['ranikhet', 'corbett'],
+  ['united kingdom', 'united-kingdom'],
+  ['london', 'united-kingdom'],
+  ['scotland', 'united-kingdom'],
+  ['edinburgh', 'united-kingdom'],
+  ['glasgow', 'united-kingdom'],
+  ['england', 'united-kingdom'],
+  ['norway', 'norway'],
+  ['oslo', 'norway'],
+  ['bergen', 'norway'],
+  ['tromso', 'norway'],
+  ['greece', 'greece'],
+  ['athens', 'greece'],
+  ['mykonos', 'greece'],
+  ['santorini', 'greece'],
+  ['crete', 'greece'],
+  ['switzerland', 'switzerland'],
+  ['lucerne', 'switzerland'],
+  ['zurich', 'switzerland'],
+  ['interlaken', 'switzerland'],
+  ['geneva', 'switzerland'],
+  ['spain', 'spain'],
+  ['barcelona', 'spain'],
+  ['madrid', 'spain'],
+  ['seville', 'spain'],
+  ['portugal', 'portugal'],
+  ['lisbon', 'portugal'],
+  ['porto', 'portugal'],
+  ['algarve', 'portugal'],
+  ['faro', 'portugal'],
+  ['italy', 'italy'],
+  ['rome', 'italy'],
+  ['florence', 'italy'],
+  ['venice', 'italy'],
+  ['milan', 'italy'],
+  ['iceland', 'iceland'],
+  ['reykjavik', 'iceland'],
+  ['finland', 'finland'],
+  ['sweden', 'sweden'],
+  ['stockholm', 'sweden'],
+  ['denmark', 'denmark'],
+  ['copenhagen', 'denmark'],
+  ['helsinki', 'finland'],
+  ['rovaniemi', 'finland'],
+  ['turku', 'finland'],
+  ['oulu', 'finland'],
+  ['germany', 'germany'],
+  ['berlin', 'germany'],
+  ['prague', 'prague'],
+  ['czech republic', 'prague'],
+  ['czechia', 'prague'],
+  ['budapest', 'budapest'],
+  ['hungary', 'budapest'],
+  ['vienna', 'salzburg'],
   ['south korea', 'seoul'],
   ['hong kong', 'hong-kong'],
   ['mount abu', 'mount-abu'],
@@ -123,6 +181,7 @@ const findCityImage = (title: string, destination: string): ResolvedTripImage | 
   if (match.city === 'amsterdam') return { src: '/optimized/amster1.webp' };
   if (match.city === 'salzburg') return { src: '/optimized/salzburg1.webp' };
   if (match.city === 'belgium') return { src: '/trip-thumbnails/belgium.jpg' };
+  if (match.city === 'paris') return { src: '/trip-thumbnails/paris.jpg' };
 
   const credit = TRIP_CITY_IMAGE_CREDITS[match.city];
   return credit ? { src: credit.asset, credit } : undefined;
@@ -139,11 +198,7 @@ export const resolveTripThumbnail = (
   images: string[] | undefined,
   fallbackImage: string
 ): ResolvedTripImage => {
-  if (normalize(category) !== ' europe ') {
-    return resolveTripImage(title, destination, category, images, fallbackImage);
-  }
-
-  return { src: '/optimized/pkg1.webp' };
+  return resolveTripImage(title, destination, category, images, fallbackImage);
 };
 
 export const resolveTripImage = (
@@ -153,24 +208,22 @@ export const resolveTripImage = (
   images: string[] | undefined,
   fallbackImage: string
 ): ResolvedTripImage => {
+  const existingImage = images?.find(Boolean);
+  if (isFestivalSpecial(category)) return { src: existingImage || fallbackImage };
+  if (existingImage && !isPlaceholderImage(existingImage)) {
+    const credit = Object.values(TRIP_CITY_IMAGE_CREDITS).find((item) => item.asset === existingImage);
+    return { src: existingImage, credit };
+  }
+  const normalizedTitle = normalize(title);
+  if (normalizedTitle.includes(' kerala ') || normalizedTitle.includes(' kerela ')) {
+    return { src: '/trip-thumbnails/kerala.jpg' };
+  }
+  const cityImage = findCityImage(title, destination);
+  if (cityImage) return cityImage;
   if (normalize(category) === ' wildlife ') {
     return {
       src: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80',
     };
   }
-
-  const existingImage = images?.find(Boolean);
-  if (normalize(category) === ' europe ') {
-    return { src: '/optimized/pkg1.webp' };
-  }
-  if (isFestivalSpecial(category)) return { src: existingImage || fallbackImage };
-  const normalizedTitle = normalize(title);
-  if (normalizedTitle.includes(' kerala ') || normalizedTitle.includes(' kerela ')) {
-    return { src: '/trip-thumbnails/kerala.jpg' };
-  }
-  if (existingImage && !isPlaceholderImage(existingImage)) {
-    const credit = Object.values(TRIP_CITY_IMAGE_CREDITS).find((item) => item.asset === existingImage);
-    return { src: existingImage, credit };
-  }
-  return findCityImage(title, destination) || { src: existingImage || fallbackImage };
+  return { src: existingImage || fallbackImage };
 };
