@@ -6,6 +6,7 @@ import { Button } from '../components/ui/Button';
 import { TripCard } from '../components/trips/TripCard';
 import { TripDetails } from '../components/trips/TripDetails';
 import { supabase } from '../lib/supabase';
+import { INDIAN_TRAVEL_CREATORS } from '../data/indianTravelCreators';
 
 export const CreatorTripsPage: React.FC = () => {
   const [selectedCreator, setSelectedCreator] = useState<string | null>(null);
@@ -92,6 +93,21 @@ export const CreatorTripsPage: React.FC = () => {
     { value: 'food', label: 'Food & Wine' }
   ];
 
+  const featuredCreators = [
+    ...creators.slice(0, 6).map((creator) => ({ ...creator, isIndependent: false })),
+    ...INDIAN_TRAVEL_CREATORS.map((creator) => ({
+      id: `independent-${creator.handle}`,
+      name: creator.name,
+      avatar_url: '',
+      creator_followers: creator.followersCount,
+      followers_label: creator.followers,
+      creator_verified: false,
+      instagram_id: creator.handle.slice(1),
+      profile_url: creator.profileUrl,
+      isIndependent: true,
+    })),
+  ];
+
   return (
     <div className="min-h-screen bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -137,13 +153,17 @@ export const CreatorTripsPage: React.FC = () => {
             <div className="mb-12">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Featured Creators</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-                {creators.slice(0, 6).map((creator) => (
+                {featuredCreators.map((creator) => (
                   <div
                     key={creator.id}
                     className={`bg-white rounded-xl p-4 shadow-md hover:shadow-lg transition-all duration-300 cursor-pointer border-2 relative overflow-hidden ${
                       selectedCreator === creator.id ? 'border-purple-500' : 'border-transparent hover:border-purple-200'
                     }`}
-                    onClick={() => setSelectedCreator(selectedCreator === creator.id ? null : creator.id)}
+                    onClick={() => {
+                      if (!creator.isIndependent) {
+                        setSelectedCreator(selectedCreator === creator.id ? null : creator.id);
+                      }
+                    }}
                   >
                     <div className="absolute inset-0 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 rounded-xl opacity-0 hover:opacity-10 transition-opacity duration-300"></div>
 
@@ -152,25 +172,43 @@ export const CreatorTripsPage: React.FC = () => {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            if (creator.id) {
+                            if (creator.isIndependent) {
+                              window.open(creator.profile_url, '_blank', 'noopener,noreferrer');
+                            } else if (creator.id) {
                               window.location.hash = `creator-profile?id=${creator.id}`;
                             }
                           }}
                           className="block mx-auto"
                         >
-                          <img
-                            src={creator.avatar_url || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(creator.name)}`}
-                            alt={creator.name}
-                            className="w-14 h-14 rounded-full object-cover border-3 shadow-md"
-                          />
+                          {creator.avatar_url ? (
+                            <img
+                              src={creator.avatar_url}
+                              alt={creator.name}
+                              className="w-14 h-14 rounded-full object-cover border-3 shadow-md"
+                            />
+                          ) : (
+                            <span
+                              aria-hidden="true"
+                              className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 text-sm font-bold text-white shadow-md"
+                            >
+                              {creator.name.split(' ').map((part) => part[0]).join('')}
+                            </span>
+                          )}
                         </button>
-                        <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
-                          <Star className="w-3 h-3 text-white fill-current" />
-                        </div>
+                        {!creator.isIndependent && (
+                          <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
+                            <Star className="w-3 h-3 text-white fill-current" />
+                          </div>
+                        )}
                       </div>
 
                       <h3 className="font-bold text-gray-900 text-sm mb-0.5 truncate">{creator.name}</h3>
-                      <p className="text-xs text-gray-500 mb-3">{(creator.creator_followers / 1000).toFixed(0)}K followers</p>
+                      <p className="text-xs text-gray-500 mb-1">
+                        {creator.followers_label || `${(creator.creator_followers / 1000).toFixed(0)}K`} followers
+                      </p>
+                      {creator.isIndependent && (
+                        <p className="mb-3 text-[10px] text-gray-400">Independent creator</p>
+                      )}
 
                       <div className="space-y-1.5">
                         {creator.instagram_id && (
@@ -180,24 +218,26 @@ export const CreatorTripsPage: React.FC = () => {
                             icon={Instagram}
                             onClick={(e) => {
                               e.stopPropagation();
-                              window.open(`https://www.instagram.com/${creator.instagram_id}`, '_blank');
+                              window.open(creator.profile_url || `https://www.instagram.com/${creator.instagram_id}`, '_blank', 'noopener,noreferrer');
                             }}
                             className="w-full border-pink-500 text-pink-500 hover:bg-pink-50 text-xs py-1.5"
                           >
                             Follow
                           </Button>
                         )}
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full border-purple-500 text-purple-500 hover:bg-purple-50 text-xs py-1.5"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedCreator(creator.id);
-                          }}
-                        >
-                          View Trips
-                        </Button>
+                        {!creator.isIndependent && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            className="w-full border-purple-500 text-purple-500 hover:bg-purple-50 text-xs py-1.5"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedCreator(creator.id);
+                            }}
+                          >
+                            View Trips
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </div>

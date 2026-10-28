@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { TripDetails } from '../trips/TripDetails';
 import { cleanTripTitle } from '../../utils/formatters';
 import { useSlowMobileCarousel } from '../../hooks/useSlowMobileCarousel';
+import { INDIAN_TRAVEL_CREATORS } from '../../data/indianTravelCreators';
 
 
 
@@ -205,6 +206,22 @@ export const CreatorTrips: React.FC = () => {
     void fetchCreatorTrips();
   }, [fetchCreatorTrips, fetchTopCreators, shouldLoad]);
 
+  const featuredCreators = [
+    ...dynamicTopCreators,
+    ...INDIAN_TRAVEL_CREATORS.map((creator) => ({
+      id: `independent-${creator.handle}`,
+      name: creator.name,
+      avatar: '',
+      followers: creator.followersCount,
+      followersLabel: creator.followers,
+      specialty: creator.specialty,
+      verified: false,
+      instagram_id: creator.handle.slice(1),
+      profileUrl: creator.profileUrl,
+      isIndependent: true,
+    })),
+  ];
+
   return (
     <div ref={sectionRef} className="space-y-2">
       {/* Header
@@ -221,7 +238,10 @@ export const CreatorTrips: React.FC = () => {
       {/* Featured Creator Spotlight */}
       {/* Top Creators Section */}
       <div className="bg-white rounded-3xl p-4 shadow-lg border border-gray-100 md:p-8">
-        <h3 className="text-2xl font-bold text-gray-900 mb-4 text-center md:mb-8">Top Verified Creators</h3>
+        <h3 className="text-2xl font-bold text-gray-900 mb-2 text-center">Travel Creators</h3>
+        <p className="mb-4 text-center text-sm text-gray-500 md:mb-8">
+          Travel4life hosts and independent Indian travel creators
+        </p>
         {loadingCreators ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-purple-600 mx-auto mb-4"></div>
@@ -243,10 +263,10 @@ export const CreatorTrips: React.FC = () => {
             onBlurCapture={creatorsCarousel.onBlurCapture}
             className="relative -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 scrollbar-hide sm:-mx-8 sm:px-8 md:mx-0 md:px-0"
           >
-            {dynamicTopCreators.length === 0 && (
+            {featuredCreators.length === 0 && (
               <p className="w-full py-6 text-center text-sm text-gray-600">No creator profiles are available right now.</p>
             )}
-            {dynamicTopCreators.map((creator) => (
+            {featuredCreators.map((creator) => (
                 <div key={creator.id} className="w-[82vw] max-w-[320px] shrink-0 snap-start md:w-56 md:max-w-none">
                   <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white p-3.5 shadow-[0_2px_12px_rgba(0,0,0,0.06)] transition-transform duration-150 ease-out active:scale-[0.98] hover:shadow-lg">
                     {/* Instagram-style gradient border */}
@@ -256,8 +276,13 @@ export const CreatorTrips: React.FC = () => {
                     <div className="relative z-10 text-center">
                       <div className="relative mb-3 inline-block">
                         <button
+                          aria-label={`Open ${creator.name}${creator.isIndependent ? ' Instagram profile' : ' Travel4life creator profile'}`}
                           onClick={() => {
-                            window.location.hash = `creator-profile?id=${creator.id}`;
+                            if (creator.isIndependent) {
+                              window.open(creator.profileUrl, '_blank', 'noopener,noreferrer');
+                            } else {
+                              window.location.hash = `creator-profile?id=${creator.id}`;
+                            }
                           }}
                         >
                           {creator.avatar ? (
@@ -272,32 +297,41 @@ export const CreatorTrips: React.FC = () => {
                             </span>
                           )}
                         </button>
-                        <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
-                          <Verified className="w-3 h-3 text-white" />
-                        </div>
+                        {creator.verified && (
+                          <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
+                            <Verified className="w-3 h-3 text-white" />
+                          </div>
+                        )}
                       </div>
 
                       <h4 className="font-bold text-gray-900 text-sm mb-0.5 truncate">{creator.name}</h4>
-                      <p className="text-xs text-gray-500 mb-3">{creator.specialty}</p>
+                      <p className="text-xs text-gray-500 mb-1">{creator.specialty}</p>
+                      {creator.isIndependent && (
+                        <p className="text-[10px] text-gray-400 mb-2">Independent creator</p>
+                      )}
 
                       {creator.followers > 0 && (
                         <div className="mb-3 text-center">
-                          <div className="text-sm font-bold text-gray-900">{creator.followers.toLocaleString()}</div>
+                          <div className="text-sm font-bold text-gray-900">
+                            {creator.followersLabel || creator.followers.toLocaleString()}
+                          </div>
                           <div className="text-[10px] text-gray-400">followers</div>
                         </div>
                       )}
 
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        icon={Instagram}
-                        onClick={() => {
-                          window.open(`https://www.instagram.com/${creator.instagram_id}`, '_blank');
-                        }}
-                        className="border-pink-500 text-pink-500 hover:bg-pink-50 w-full text-xs py-1.5"
-                      >
-                        Follow
-                      </Button>
+                      {creator.instagram_id && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          icon={Instagram}
+                          onClick={() => {
+                            window.open(creator.profileUrl || `https://www.instagram.com/${creator.instagram_id}`, '_blank', 'noopener,noreferrer');
+                          }}
+                          className="border-pink-500 text-pink-500 hover:bg-pink-50 w-full text-xs py-1.5"
+                        >
+                          Follow
+                        </Button>
+                      )}
                     </div>
                   </div>
                 </div>

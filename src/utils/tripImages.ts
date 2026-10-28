@@ -198,6 +198,11 @@ export const resolveTripThumbnail = (
   images: string[] | undefined,
   fallbackImage: string
 ): ResolvedTripImage => {
+  if (normalize(category) === ' europe ') {
+    const europeImage = TRIP_CITY_IMAGE_CREDITS.italy;
+    return { src: europeImage.asset, credit: europeImage };
+  }
+
   return resolveTripImage(title, destination, category, images, fallbackImage);
 };
 
@@ -208,13 +213,19 @@ export const resolveTripImage = (
   images: string[] | undefined,
   fallbackImage: string
 ): ResolvedTripImage => {
+  const normalizedTitle = normalize(title);
+  if (normalizedTitle.includes(' bavarian castles ') && normalizedTitle.includes(' venetian canals ')) {
+    return {
+      src: 'https://images.unsplash.com/photo-1514890547357-a9ee288728e0?auto=format&fit=crop&w=800&q=80',
+    };
+  }
+
   const existingImage = images?.find(Boolean);
   if (isFestivalSpecial(category)) return { src: existingImage || fallbackImage };
   if (existingImage && !isPlaceholderImage(existingImage)) {
     const credit = Object.values(TRIP_CITY_IMAGE_CREDITS).find((item) => item.asset === existingImage);
     return { src: existingImage, credit };
   }
-  const normalizedTitle = normalize(title);
   if (normalizedTitle.includes(' kerala ') || normalizedTitle.includes(' kerela ')) {
     return { src: '/trip-thumbnails/kerala.jpg' };
   }

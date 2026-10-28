@@ -126,6 +126,12 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             }}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
           />
+          {trip.type === 'europe' && (
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-orange-500/45 via-orange-400/10 to-amber-300/20"
+            />
+          )}
           {tripImage.credit && (
             <a
               href={tripImage.credit.source}
@@ -230,6 +236,12 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           }}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
         />
+        {trip.type === 'europe' && (
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-orange-500/45 via-orange-400/10 to-amber-300/20"
+          />
+        )}
         {tripImage.credit && (
           <a
             href={tripImage.credit.source}
