@@ -1,3 +1,5 @@
+import importedCreators from './importedTravelCreators.json';
+
 export interface IndianTravelCreator {
   name: string;
   handle: string;
@@ -5,11 +7,11 @@ export interface IndianTravelCreator {
   specialty: string;
   followers: string;
   followersCount: number;
-  followersCheckedOn: string;
+  followersCheckedOn?: string;
   profileUrl: string;
 }
 
-export const INDIAN_TRAVEL_CREATORS: IndianTravelCreator[] = [
+const existingCreators: IndianTravelCreator[] = [
   {
     name: 'Anuradha Goyal',
     handle: '@anuradhagoyal',
@@ -61,3 +63,32 @@ export const INDIAN_TRAVEL_CREATORS: IndianTravelCreator[] = [
     profileUrl: 'https://www.instagram.com/hkmurali/',
   },
 ];
+
+const importedCreatorList: IndianTravelCreator[] = importedCreators.map((creator) => {
+  const locationParts = creator.location
+    .split(', ')
+    .filter((part, index, parts) => index === 0 || part !== parts[index - 1]);
+
+  return {
+    name: creator.name,
+    handle: `@${creator.instagram_id}`,
+    location: locationParts.join(', ') || 'India',
+    specialty: 'Travel creator',
+    followers: new Intl.NumberFormat('en', {
+      notation: 'compact',
+      maximumFractionDigits: 1,
+    }).format(creator.followers),
+    followersCount: creator.followers,
+    profileUrl: `https://www.instagram.com/${creator.instagram_id}/`,
+  };
+});
+
+const creatorsByHandle = new Map<string, IndianTravelCreator>();
+for (const creator of [...importedCreatorList, ...existingCreators]) {
+  const normalizedHandle = creator.handle.toLowerCase();
+  if (!creatorsByHandle.has(normalizedHandle)) {
+    creatorsByHandle.set(normalizedHandle, creator);
+  }
+}
+
+export const INDIAN_TRAVEL_CREATORS = [...creatorsByHandle.values()];

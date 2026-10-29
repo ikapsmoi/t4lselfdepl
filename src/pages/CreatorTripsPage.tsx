@@ -94,19 +94,27 @@ export const CreatorTripsPage: React.FC = () => {
     { value: 'food', label: 'Food & Wine' }
   ];
 
+  const featuredProfiles = creators.slice(0, 6);
+  const featuredCreatorHandles = new Set(
+    featuredProfiles
+      .map((profile) => profile.instagram_id?.toLowerCase())
+      .filter(Boolean),
+  );
   const featuredCreators = [
-    ...creators.slice(0, 6).map((creator) => ({ ...creator, isIndependent: false })),
-    ...INDIAN_TRAVEL_CREATORS.map((creator) => ({
-      id: `independent-${creator.handle}`,
-      name: creator.name,
-      avatar_url: '',
-      creator_followers: creator.followersCount,
-      followers_label: creator.followers,
-      creator_verified: false,
-      instagram_id: creator.handle.slice(1),
-      profile_url: creator.profileUrl,
-      isIndependent: true,
-    })),
+    ...featuredProfiles.map((creator) => ({ ...creator, isIndependent: false })),
+    ...INDIAN_TRAVEL_CREATORS
+      .filter((creator) => !featuredCreatorHandles.has(creator.handle.slice(1).toLowerCase()))
+      .map((creator) => ({
+        id: `independent-${creator.handle}`,
+        name: creator.name,
+        avatar_url: '',
+        creator_followers: creator.followersCount,
+        followers_label: creator.followers,
+        creator_verified: false,
+        instagram_id: creator.handle.slice(1),
+        profile_url: creator.profileUrl,
+        isIndependent: true,
+      })),
   ];
 
   return (

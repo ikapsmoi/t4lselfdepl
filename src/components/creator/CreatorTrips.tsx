@@ -207,20 +207,27 @@ export const CreatorTrips: React.FC = () => {
     void fetchCreatorTrips();
   }, [fetchCreatorTrips, fetchTopCreators, shouldLoad]);
 
+  const dynamicCreatorHandles = new Set(
+    dynamicTopCreators
+      .map((profile) => profile.instagram_id?.toLowerCase())
+      .filter(Boolean),
+  );
   const featuredCreators = [
     ...dynamicTopCreators,
-    ...INDIAN_TRAVEL_CREATORS.map((creator) => ({
-      id: `independent-${creator.handle}`,
-      name: creator.name,
-      avatar: '',
-      followers: creator.followersCount,
-      followersLabel: creator.followers,
-      specialty: creator.specialty,
-      verified: false,
-      instagram_id: creator.handle.slice(1),
-      profileUrl: creator.profileUrl,
-      isIndependent: true,
-    })),
+    ...INDIAN_TRAVEL_CREATORS
+      .filter((creator) => !dynamicCreatorHandles.has(creator.handle.slice(1).toLowerCase()))
+      .map((creator) => ({
+        id: `independent-${creator.handle}`,
+        name: creator.name,
+        avatar: '',
+        followers: creator.followersCount,
+        followersLabel: creator.followers,
+        specialty: creator.specialty,
+        verified: false,
+        instagram_id: creator.handle.slice(1),
+        profileUrl: creator.profileUrl,
+        isIndependent: true,
+      })),
   ];
 
   return (
