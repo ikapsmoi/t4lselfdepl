@@ -140,6 +140,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
   const [form, setForm] = useState<InvoiceForm>(initialForm);
   const [company, setCompany] = useState<CompanyDetails>(fallbackCompanyDetails);
   const [companyLoading, setCompanyLoading] = useState(false);
+  const [excludeTaxes, setExcludeTaxes] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -163,9 +164,9 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
     });
     const childSubtotal = childPrices.reduce((sum, child) => sum + child.price, 0);
     const subtotal = adultPrice * adults + childSubtotal;
-    const gst = subtotal * 0.05;
+    const gst = excludeTaxes ? 0 : subtotal * 0.05;
     const gstInclusive = subtotal + gst;
-    const tcs = gstInclusive * 0.05;
+    const tcs = excludeTaxes ? 0 : gstInclusive * 0.05;
     return {
       subtotal,
       adults,
@@ -175,9 +176,9 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
       gst,
       gstInclusive,
       tcs,
-      total: gstInclusive + tcs,
+      total: excludeTaxes ? subtotal : gstInclusive + tcs,
     };
-  }, [adultPrice, form.childAges, form.children, form.people, isPackageInvoice]);
+  }, [adultPrice, excludeTaxes, form.childAges, form.children, form.people, isPackageInvoice]);
 
   const invoiceDates = useMemo(() => {
     const issued = new Date();
@@ -253,6 +254,7 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
         modifier,
         price,
       })),
+      taxesExcluded: excludeTaxes,
       totals: {
         subtotal: totals.subtotal,
         gst: totals.gst,
@@ -264,8 +266,8 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
       ? `Children (${totals.children}) · age-based pricing`
       : `Child price × ${totals.children}`;
     const amountSummary = isPackageInvoice
-      ? `${amountLine(`Adult price × ${totals.adults}`, formatMoney(adultPrice * totals.adults, currencySymbol), 780)}${amountLine(childLabel, formatMoney(totals.childSubtotal, currencySymbol), 835)}${amountLine('Subtotal', formatMoney(totals.subtotal, currencySymbol), 890)}${amountLine('GST 5%', formatMoney(totals.gst, currencySymbol), 945)}${amountLine('TCS 5%', formatMoney(totals.tcs, currencySymbol), 1000)}`
-      : `${amountLine('Product price per person', formatMoney(adultPrice, currencySymbol), 780)}${amountLine(`Quantity (${totals.adults})`, formatMoney(totals.subtotal, currencySymbol), 835)}${amountLine('GST 5%', formatMoney(totals.gst, currencySymbol), 890)}${amountLine('Amount including GST', formatMoney(totals.gstInclusive, currencySymbol), 945)}${amountLine('TCS 5%', formatMoney(totals.tcs, currencySymbol), 1000)}`;
+      ? `${amountLine(`Adult price × ${totals.adults}`, formatMoney(adultPrice * totals.adults, currencySymbol), 780)}${amountLine(childLabel, formatMoney(totals.childSubtotal, currencySymbol), 835)}${amountLine('Subtotal', formatMoney(totals.subtotal, currencySymbol), 890)}${(excludeTaxes ? '' : `${amountLine('GST 5%', formatMoney(totals.gst, currencySymbol), 945)}${amountLine('TCS 5%', formatMoney(totals.tcs, currencySymbol), 1000)}`)}`
+      : `${amountLine('Product price per person', formatMoney(adultPrice, currencySymbol), 780)}${amountLine(`Quantity (${totals.adults})`, formatMoney(totals.subtotal, currencySymbol), 835)}${(excludeTaxes ? '' : `${amountLine('GST 5%', formatMoney(totals.gst, currencySymbol), 890)}${amountLine('Amount including GST', formatMoney(totals.gstInclusive, currencySymbol), 945)}${amountLine('TCS 5%', formatMoney(totals.tcs, currencySymbol), 1000)}`)}`;
     const travellerCount = totals.adults + totals.children;
     const childDetailsLine = isPackageInvoice && childBreakdownLines.length
       ? childBreakdownLines.map((line, index) => `<text x="750" y="${603 + index * 24}" font-size="14" class="muted">${text(line)}</text>`).join('')
@@ -281,7 +283,7 @@ ${invoiceMetadata}
 <rect x="70" y="360" width="610" height="250" rx="14" class="box"/><rect x="720" y="360" width="610" height="${250 + summaryOffset}" rx="14" class="box"/><text x="100" y="410" class="label">BILLED TO</text><text x="100" y="455" class="bold">${text(form.fullName)}</text><text x="100" y="492" class="muted">${text(form.email)}</text><text x="100" y="529" class="muted">${text(form.phone)}</text><text x="100" y="566" class="muted">${text(form.address)}</text>${form.gstCompany ? `<text x="100" y="603" class="muted">GST / Company: ${text(form.gstCompany)}</text>` : ''}<text x="750" y="410" class="label">TRIP</text><text x="750" y="455" class="bold">${text(tripTitle)}</text><text x="750" y="492" class="muted">${text(tripDestination)}</text><text x="750" y="529" class="muted">${text(tripDuration.toString())} days</text><text x="750" y="566" class="muted">${text(tripStartDate)} to ${text(tripEndDate)}</text>${childDetailsLine}
 <rect x="70" y="${660 + summaryOffset}" width="1260" height="470" rx="14" class="box"/><text x="100" y="${715 + summaryOffset}" class="label">AMOUNT SUMMARY</text>${amountSummary}<rect x="90" y="${1030 + summaryOffset}" width="1220" height="70" rx="10" class="total"/>${amountLine('Total amount due', formatMoney(totals.total, currencySymbol), 1075, true)}
 <rect x="70" y="${1180 + summaryOffset}" width="610" height="380" rx="14" class="box"/><rect x="720" y="${1180 + summaryOffset}" width="610" height="380" rx="14" class="box"/><text x="100" y="${1230 + summaryOffset}" class="label">PAYMENT DETAILS</text><text x="100" y="${1275 + summaryOffset}" class="muted">Pay by card: ${text(company.cardUrl)}</text><text x="100" y="${1315 + summaryOffset}" class="muted">Bank: ${text(company.bankName)}</text><text x="100" y="${1355 + summaryOffset}" class="muted">Account: ${text(company.accountName)}</text><text x="100" y="${1395 + summaryOffset}" class="muted">A/C: ${text(company.accountNumber)}</text><text x="100" y="${1435 + summaryOffset}" class="muted">IFSC: ${text(company.ifsc)}</text><text x="100" y="${1475 + summaryOffset}" class="muted">Type: ${text(company.accountType)}</text><text x="750" y="${1230 + summaryOffset}" class="label">SUPPORT</text><text x="750" y="${1275 + summaryOffset}" class="muted">${text(company.phone)}</text><text x="750" y="${1315 + summaryOffset}" class="muted">${text(company.email)}</text><text x="750" y="${1355 + summaryOffset}" class="muted">${text(company.support)}</text><text x="750" y="${1435 + summaryOffset}" class="muted">This invoice is not payment confirmation.</text>
-<line x1="70" y1="${1650 + summaryOffset}" x2="1330" y2="${1650 + summaryOffset}" class="line"/><text x="70" y="${1700 + summaryOffset}" class="muted">Payment due by ${text(invoiceDates.due)}. GST and TCS are calculated as shown above.</text><text x="70" y="${1740 + summaryOffset}" class="muted">Prices and availability remain subject to the trip booking terms.</text>
+<line x1="70" y1="${1650 + summaryOffset}" x2="1330" y2="${1650 + summaryOffset}" class="line"/><text x="70" y="${1700 + summaryOffset}" class="muted">Payment due by ${text(invoiceDates.due)}. ${excludeTaxes ? 'GST and TCS are not included in this invoice.' : 'GST and TCS are calculated as shown above.'}</text><text x="70" y="${1740 + summaryOffset}" class="muted">Prices and availability remain subject to the trip booking terms.</text>
 </svg>`;
   };
 
@@ -322,8 +324,8 @@ ${invoiceMetadata}
       <form onSubmit={event => { event.preventDefault(); handleDownloadImage(); }} className="space-y-4">
         <div className="rounded-lg border border-sky-100 bg-sky-50 p-3 text-xs leading-relaxed text-sky-900">
           {isPackageInvoice
-            ? 'Enter the customer details and traveler counts. Child prices use the adult package price and age-based tiers. GST is calculated at 5%, then TCS at 5% on the GST-inclusive amount. Payment is due within 14 days.'
-            : 'Enter the customer details and booking quantity. GST is calculated at 5%, then TCS at 5% on the GST-inclusive amount. Payment is due within 14 days.'}
+            ? `Enter the customer details and traveler counts. Child prices use the adult package price and age-based tiers. ${excludeTaxes ? 'Taxes are excluded; the total is based on the traveler prices only.' : 'GST is calculated at 5%, then TCS at 5% on the GST-inclusive amount.'} Payment is due within 14 days.`
+            : `Enter the customer details and booking quantity. ${excludeTaxes ? 'Taxes are excluded; the total is the price per person multiplied by the number of people.' : 'GST is calculated at 5%, then TCS at 5% on the GST-inclusive amount.'} Payment is due within 14 days.`}
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -379,14 +381,27 @@ ${invoiceMetadata}
           )}
         </div>
 
+        <label className="flex items-start gap-2 text-sm text-gray-700">
+          <input
+            type="checkbox"
+            checked={excludeTaxes}
+            onChange={event => setExcludeTaxes(event.target.checked)}
+            className="mt-0.5 h-4 w-4 rounded border-gray-300 text-sky-600 focus:ring-sky-500"
+          />
+          <span>
+            Exclude taxes (GST and TCS)
+            <span className="mt-0.5 block text-xs text-gray-500">Calculate the invoice total using the number of people and traveler prices only.</span>
+          </span>
+        </label>
+
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
           <div className="mb-3 flex items-center gap-2 font-semibold text-gray-900"><FileText className="h-4 w-4 text-sky-600" /> {tripTitle}</div>
           <div className="grid grid-cols-2 gap-2 text-gray-600 md:grid-cols-5">
             <span>{packageDetails ? `Adult: ${formatMoney(adultPrice, currencySymbol)} × ${totals.adults}` : `Unit: ${formatMoney(adultPrice, currencySymbol)}`}</span>
             {isPackageInvoice && <span>Children: {formatMoney(totals.childSubtotal, currencySymbol)}</span>}
             {!isPackageInvoice && <span>Qty: {form.people}</span>}
-            <span>GST: {formatMoney(totals.gst, currencySymbol)}</span>
-            <span>TCS: {formatMoney(totals.tcs, currencySymbol)}</span>
+            {!excludeTaxes && <span>GST: {formatMoney(totals.gst, currencySymbol)}</span>}
+            {!excludeTaxes && <span>TCS: {formatMoney(totals.tcs, currencySymbol)}</span>}
             <strong className="text-gray-900">Total: {formatMoney(totals.total, currencySymbol)}</strong>
           </div>
           <p className="mt-2 text-xs text-gray-500">Invoice date: {invoiceDates.issued} · Due date: {invoiceDates.due}{companyLoading ? ' · Loading company details...' : ''}</p>
