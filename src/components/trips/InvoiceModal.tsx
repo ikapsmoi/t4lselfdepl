@@ -36,6 +36,12 @@ interface InvoiceForm {
   childAges: string[];
 }
 
+interface PaymentInstallment {
+  name: string;
+  date: string;
+  amount: string;
+}
+
 interface ChildPricingTier {
   category: string;
   modifier: number;
@@ -141,6 +147,8 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
   const [company, setCompany] = useState<CompanyDetails>(fallbackCompanyDetails);
   const [companyLoading, setCompanyLoading] = useState(false);
   const [excludeTaxes, setExcludeTaxes] = useState(false);
+  const [paymentPlan, setPaymentPlan] = useState<PaymentInstallment[]>([]);
+  const [paymentPlanError, setPaymentPlanError] = useState('');
 
   useEffect(() => {
     if (!isOpen) return;
@@ -220,6 +228,31 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
     }));
   };
 
+  const updatePaymentInstallment = (index: number, field: keyof PaymentInstallment, value: string) => {
+    setPaymentPlan((previous) => previous.map((installment, currentIndex) =>
+      currentIndex === index ? { ...installment, [field]: value } : installment
+    ));
+    setPaymentPlanError('');
+  };
+
+  const validatePaymentPlan = () => {
+    if (paymentPlan.length === 0) return '';
+
+    if (paymentPlan.some(({ name, date, amount }) =>
+      !name.trim() || !date || !amount.trim() || !Number.isFinite(Number(amount)) || Number(amount) <= 0
+    )) {
+      return 'Complete each installment with a name, date, and positive amount.';
+    }
+
+    const plannedTotal = paymentPlan.reduce((sum, installment) => sum + Math.round(Number(installment.amount) * 100), 0);
+    const invoiceTotal = Math.round(totals.total * 100);
+    if (plannedTotal !== invoiceTotal) {
+      return `Installment amounts must add up to ${formatMoney(totals.total, currencySymbol)}.`;
+    }
+
+    return '';
+  };
+
   const buildInvoiceSvg = () => {
     const text = (value: string) => escapeHtml(value);
     const childBreakdownLines: string[] = [];
@@ -235,6 +268,8 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
     });
     if (currentChildLine) childBreakdownLines.push(currentChildLine);
     const summaryOffset = Math.max(0, childBreakdownLines.length - 1) * 24;
+    const paymentPlanOffset = paymentPlan.length > 0 ? 220 + paymentPlan.length * 38 : 0;
+    const invoiceHeight = 1900 + summaryOffset + paymentPlanOffset;
     const amountLine = (label: string, value: string, y: number, bold = false) =>
       `<text x="90" y="${y + summaryOffset}" class="${bold ? 'bold' : ''}">${text(label)}</text><text x="1310" y="${y + summaryOffset}" text-anchor="end" class="${bold ? 'bold' : ''}">${text(value)}</text>`;
     const invoiceData = {
@@ -255,6 +290,11 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
         price,
       })),
       taxesExcluded: excludeTaxes,
+      paymentPlan: paymentPlan.map(({ name, date, amount }) => ({
+        name,
+        date,
+        amount: Number(amount),
+      })),
       totals: {
         subtotal: totals.subtotal,
         gst: totals.gst,
@@ -272,18 +312,24 @@ export const InvoiceModal: React.FC<InvoiceModalProps> = (props) => {
     const childDetailsLine = isPackageInvoice && childBreakdownLines.length
       ? childBreakdownLines.map((line, index) => `<text x="750" y="${603 + index * 24}" font-size="14" class="muted">${text(line)}</text>`).join('')
       : `<text x="750" y="603" class="muted">Travellers: ${travellerCount}</text>`;
+    const paymentPlanSection = paymentPlan.length > 0
+      ? `<rect x="70" y="${1180 + summaryOffset}" width="1260" height="${180 + paymentPlan.length * 38}" rx="14" class="box"/><text x="100" y="${1230 + summaryOffset}" class="label">PAYMENT PLAN</text>${paymentPlan.map(({ name, date, amount }, index) => {
+        const y = 1280 + summaryOffset + index * 38;
+        return `<text x="100" y="${y}" class="muted">${text(name)} · ${text(date)}</text><text x="1300" y="${y}" text-anchor="end" class="muted">${text(formatMoney(Number(amount), currencySymbol))}</text>`;
+      }).join('')}`
+      : '';
     const invoiceMetadata = `<metadata>${text(JSON.stringify(invoiceData))}</metadata>`;
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="${1900 + summaryOffset}" viewBox="0 0 1400 ${1900 + summaryOffset}">
+    return `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1400" height="${invoiceHeight}" viewBox="0 0 1400 ${invoiceHeight}">
 ${invoiceMetadata}
-<rect width="1400" height="${1900 + summaryOffset}" fill="#ffffff"/>
+<rect width="1400" height="${invoiceHeight}" fill="#ffffff"/>
 <style>text{font-family:Arial,Helvetica,sans-serif;fill:#111827;font-size:25px}.muted{fill:#64748b;font-size:21px}.label{fill:#0369a1;font-size:19px;font-weight:bold;letter-spacing:2px}.bold{font-weight:bold}.line{stroke:#e5e7eb;stroke-width:2}.box{fill:#f8fafc;stroke:#e5e7eb;stroke-width:2}.total{fill:#ecfdf5;stroke:#a7f3d0;stroke-width:2}</style>
 <rect x="0" y="0" width="1400" height="18" fill="#0ea5e9"/><text x="90" y="105" font-size="42" class="bold">TRAVEL4LIFE GLOBAL</text><text x="90" y="150" class="muted">${text(company.website)}</text><text x="90" y="185" class="muted">${text(company.address)}</text><text x="90" y="220" class="muted">GST: ${text(company.gst)}</text>
 <text x="1310" y="105" text-anchor="end" font-size="48" class="bold">Invoice</text><text x="1310" y="150" text-anchor="end" class="muted">Invoice no: ${text(invoiceNumber)}</text><text x="1310" y="185" text-anchor="end" class="muted">Issued: ${text(invoiceDates.issued)}</text><text x="1310" y="220" text-anchor="end" class="muted">Due: ${text(invoiceDates.due)}</text>
 <rect x="70" y="360" width="610" height="250" rx="14" class="box"/><rect x="720" y="360" width="610" height="${250 + summaryOffset}" rx="14" class="box"/><text x="100" y="410" class="label">BILLED TO</text><text x="100" y="455" class="bold">${text(form.fullName)}</text><text x="100" y="492" class="muted">${text(form.email)}</text><text x="100" y="529" class="muted">${text(form.phone)}</text><text x="100" y="566" class="muted">${text(form.address)}</text>${form.gstCompany ? `<text x="100" y="603" class="muted">GST / Company: ${text(form.gstCompany)}</text>` : ''}<text x="750" y="410" class="label">TRIP</text><text x="750" y="455" class="bold">${text(tripTitle)}</text><text x="750" y="492" class="muted">${text(tripDestination)}</text><text x="750" y="529" class="muted">${text(tripDuration.toString())} days</text><text x="750" y="566" class="muted">${text(tripStartDate)} to ${text(tripEndDate)}</text>${childDetailsLine}
 <rect x="70" y="${660 + summaryOffset}" width="1260" height="470" rx="14" class="box"/><text x="100" y="${715 + summaryOffset}" class="label">AMOUNT SUMMARY</text>${amountSummary}<rect x="90" y="${1030 + summaryOffset}" width="1220" height="70" rx="10" class="total"/>${amountLine('Total amount due', formatMoney(totals.total, currencySymbol), 1075, true)}
-<rect x="70" y="${1180 + summaryOffset}" width="610" height="380" rx="14" class="box"/><rect x="720" y="${1180 + summaryOffset}" width="610" height="380" rx="14" class="box"/><text x="100" y="${1230 + summaryOffset}" class="label">PAYMENT DETAILS</text><text x="100" y="${1275 + summaryOffset}" class="muted">Pay by card: ${text(company.cardUrl)}</text><text x="100" y="${1315 + summaryOffset}" class="muted">Bank: ${text(company.bankName)}</text><text x="100" y="${1355 + summaryOffset}" class="muted">Account: ${text(company.accountName)}</text><text x="100" y="${1395 + summaryOffset}" class="muted">A/C: ${text(company.accountNumber)}</text><text x="100" y="${1435 + summaryOffset}" class="muted">IFSC: ${text(company.ifsc)}</text><text x="100" y="${1475 + summaryOffset}" class="muted">Type: ${text(company.accountType)}</text><text x="750" y="${1230 + summaryOffset}" class="label">SUPPORT</text><text x="750" y="${1275 + summaryOffset}" class="muted">${text(company.phone)}</text><text x="750" y="${1315 + summaryOffset}" class="muted">${text(company.email)}</text><text x="750" y="${1355 + summaryOffset}" class="muted">${text(company.support)}</text><text x="750" y="${1435 + summaryOffset}" class="muted">This invoice is not payment confirmation.</text>
-<line x1="70" y1="${1650 + summaryOffset}" x2="1330" y2="${1650 + summaryOffset}" class="line"/><text x="70" y="${1700 + summaryOffset}" class="muted">Payment due by ${text(invoiceDates.due)}. ${excludeTaxes ? 'GST and TCS are not included in this invoice.' : 'GST and TCS are calculated as shown above.'}</text><text x="70" y="${1740 + summaryOffset}" class="muted">Prices and availability remain subject to the trip booking terms.</text>
+${paymentPlanSection}<rect x="70" y="${1180 + summaryOffset + paymentPlanOffset}" width="610" height="380" rx="14" class="box"/><rect x="720" y="${1180 + summaryOffset + paymentPlanOffset}" width="610" height="380" rx="14" class="box"/><text x="100" y="${1230 + summaryOffset + paymentPlanOffset}" class="label">PAYMENT DETAILS</text><text x="100" y="${1275 + summaryOffset + paymentPlanOffset}" class="muted">Pay by card: ${text(company.cardUrl)}</text><text x="100" y="${1315 + summaryOffset + paymentPlanOffset}" class="muted">Bank: ${text(company.bankName)}</text><text x="100" y="${1355 + summaryOffset + paymentPlanOffset}" class="muted">Account: ${text(company.accountName)}</text><text x="100" y="${1395 + summaryOffset + paymentPlanOffset}" class="muted">A/C: ${text(company.accountNumber)}</text><text x="100" y="${1435 + summaryOffset + paymentPlanOffset}" class="muted">IFSC: ${text(company.ifsc)}</text><text x="100" y="${1475 + summaryOffset + paymentPlanOffset}" class="muted">Type: ${text(company.accountType)}</text><text x="750" y="${1230 + summaryOffset + paymentPlanOffset}" class="label">SUPPORT</text><text x="750" y="${1275 + summaryOffset + paymentPlanOffset}" class="muted">${text(company.phone)}</text><text x="750" y="${1315 + summaryOffset + paymentPlanOffset}" class="muted">${text(company.email)}</text><text x="750" y="${1355 + summaryOffset + paymentPlanOffset}" class="muted">${text(company.support)}</text><text x="750" y="${1435 + summaryOffset + paymentPlanOffset}" class="muted">This invoice is not payment confirmation.</text>
+<line x1="70" y1="${1650 + summaryOffset + paymentPlanOffset}" x2="1330" y2="${1650 + summaryOffset + paymentPlanOffset}" class="line"/><text x="70" y="${1700 + summaryOffset + paymentPlanOffset}" class="muted">Payment due by ${text(invoiceDates.due)}. ${excludeTaxes ? 'GST and TCS are not included in this invoice.' : 'GST and TCS are calculated as shown above.'}</text><text x="70" y="${1740 + summaryOffset + paymentPlanOffset}" class="muted">Prices and availability remain subject to the trip booking terms.</text>
 </svg>`;
   };
 
@@ -292,6 +338,12 @@ ${invoiceMetadata}
 
   const handleDownloadImage = async () => {
     if (!hasRequiredDetails()) return;
+
+    const planError = validatePaymentPlan();
+    if (planError) {
+      setPaymentPlanError(planError);
+      return;
+    }
 
     const svgBlob = new Blob([buildInvoiceSvg()], { type: 'image/svg+xml;charset=utf-8' });
     const svgUrl = URL.createObjectURL(svgBlob);
@@ -393,6 +445,72 @@ ${invoiceMetadata}
             <span className="mt-0.5 block text-xs text-gray-500">Calculate the invoice total using the number of people and traveler prices only.</span>
           </span>
         </label>
+
+        <section className="rounded-lg border border-gray-200 p-4" aria-labelledby="payment-plan-heading">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h3 id="payment-plan-heading" className="text-sm font-semibold text-gray-900">Payment plan <span className="font-normal text-gray-500">(optional)</span></h3>
+              <p className="mt-1 text-xs text-gray-500">Add installments with a name, due date, and amount. Amounts must add up to the invoice total.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setPaymentPlan(previous => [...previous, { name: '', date: '', amount: '' }]);
+                setPaymentPlanError('');
+              }}
+              className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            >
+              Add installment
+            </button>
+          </div>
+          {paymentPlan.map((installment, index) => (
+            <div key={`payment-installment-${index}`} className="mb-3 grid grid-cols-1 items-end gap-3 rounded-lg bg-gray-50 p-3 sm:grid-cols-[1fr_1fr_1fr_auto]">
+              <label className="text-xs font-medium text-gray-700">
+                Installment name
+                <input
+                  type="text"
+                  value={installment.name}
+                  onChange={event => updatePaymentInstallment(index, 'name', event.target.value)}
+                  placeholder="e.g. Booking deposit"
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              </label>
+              <label className="text-xs font-medium text-gray-700">
+                Due date
+                <input
+                  type="date"
+                  value={installment.date}
+                  onChange={event => updatePaymentInstallment(index, 'date', event.target.value)}
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              </label>
+              <label className="text-xs font-medium text-gray-700">
+                Amount
+                <input
+                  type="number"
+                  min="0.01"
+                  step="0.01"
+                  value={installment.amount}
+                  onChange={event => updatePaymentInstallment(index, 'amount', event.target.value)}
+                  placeholder="0.00"
+                  className="mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm font-normal text-gray-900 outline-none focus:border-sky-500 focus:ring-2 focus:ring-sky-100"
+                />
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setPaymentPlan(previous => previous.filter((_, currentIndex) => currentIndex !== index));
+                  setPaymentPlanError('');
+                }}
+                aria-label={`Remove installment ${index + 1}`}
+                className="rounded-lg border border-gray-300 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-white"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          {paymentPlanError && <p role="alert" className="mt-2 text-sm text-red-600">{paymentPlanError}</p>}
+        </section>
 
         <div className="rounded-lg border border-gray-200 bg-gray-50 p-4 text-sm">
           <div className="mb-3 flex items-center gap-2 font-semibold text-gray-900"><FileText className="h-4 w-4 text-sky-600" /> {tripTitle}</div>
