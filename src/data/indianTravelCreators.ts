@@ -8,6 +8,7 @@ export interface IndianTravelCreator {
   followers: string;
   followersCount: number;
   followersCheckedOn?: string;
+  avatarUrl?: string;
   profileUrl: string;
 }
 
@@ -79,6 +80,7 @@ const importedCreatorList: IndianTravelCreator[] = importedCreators.map((creator
       maximumFractionDigits: 1,
     }).format(creator.followers),
     followersCount: creator.followers,
+    avatarUrl: creator.avatar_url,
     profileUrl: `https://www.instagram.com/${creator.instagram_id}/`,
   };
 });

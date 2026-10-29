@@ -219,7 +219,7 @@ export const CreatorTrips: React.FC = () => {
       .map((creator) => ({
         id: `independent-${creator.handle}`,
         name: creator.name,
-        avatar: '',
+        avatar: creator.avatarUrl || '',
         followers: creator.followersCount,
         followersLabel: creator.followers,
         specialty: creator.specialty,

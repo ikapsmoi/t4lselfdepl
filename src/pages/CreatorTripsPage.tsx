@@ -107,7 +107,7 @@ export const CreatorTripsPage: React.FC = () => {
       .map((creator) => ({
         id: `independent-${creator.handle}`,
         name: creator.name,
-        avatar_url: '',
+        avatar_url: creator.avatarUrl || '',
         creator_followers: creator.followersCount,
         followers_label: creator.followers,
         creator_verified: false,
