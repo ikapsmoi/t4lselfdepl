@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Star, Users, Instagram, Youtube, MapPin, Calendar, Heart, ArrowLeft, Filter } from 'lucide-react';
+import { Star, Users, Instagram, User, Youtube, MapPin, Calendar, Heart, ArrowLeft, Filter } from 'lucide-react';
 import { CreatorTrip, Trip } from '../types';
 import { Badge } from '../components/ui/Badge';
 import { Button } from '../components/ui/Button';
@@ -7,6 +7,7 @@ import { TripCard } from '../components/trips/TripCard';
 import { TripDetails } from '../components/trips/TripDetails';
 import { supabase } from '../lib/supabase';
 import { INDIAN_TRAVEL_CREATORS } from '../data/indianTravelCreators';
+import { CreatorAvatar } from '../components/creator/CreatorAvatar';
 
 export const CreatorTripsPage: React.FC = () => {
   const [selectedCreator, setSelectedCreator] = useState<string | null>(null);
@@ -180,20 +181,11 @@ export const CreatorTripsPage: React.FC = () => {
                           }}
                           className="block mx-auto"
                         >
-                          {creator.avatar_url ? (
-                            <img
-                              src={creator.avatar_url}
-                              alt={creator.name}
-                              className="w-14 h-14 rounded-full object-cover border-3 shadow-md"
-                            />
-                          ) : (
-                            <span
-                              aria-hidden="true"
-                              className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-pink-500 via-purple-500 to-orange-400 text-sm font-bold text-white shadow-md"
-                            >
-                              {creator.name.split(' ').map((part) => part[0]).join('')}
-                            </span>
-                          )}
+                          <CreatorAvatar
+                            src={creator.avatar_url}
+                            name={creator.name}
+                            className="h-14 w-14 rounded-full object-cover border-3 border-purple-200 shadow-md"
+                          />
                         </button>
                         {!creator.isIndependent && (
                           <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
@@ -211,20 +203,29 @@ export const CreatorTripsPage: React.FC = () => {
                       )}
 
                       <div className="space-y-1.5">
-                        {creator.instagram_id && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            icon={Instagram}
-                            onClick={(e) => {
-                              e.stopPropagation();
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          icon={creator.instagram_id ? Instagram : User}
+                          ariaLabel={creator.instagram_id ? `Follow ${creator.name} on Instagram` : `View ${creator.name}'s profile`}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            if (creator.instagram_id) {
                               window.open(creator.profile_url || `https://www.instagram.com/${creator.instagram_id}`, '_blank', 'noopener,noreferrer');
-                            }}
-                            className="w-full border-pink-500 text-pink-500 hover:bg-pink-50 text-xs py-1.5"
-                          >
-                            Follow
-                          </Button>
-                        )}
+                            } else if (creator.isIndependent && creator.profile_url) {
+                              window.open(creator.profile_url, '_blank', 'noopener,noreferrer');
+                            } else if (creator.id && !creator.isIndependent) {
+                              window.location.hash = `creator-profile?id=${creator.id}`;
+                            }
+                          }}
+                          className={`w-full text-xs py-1.5 ${
+                            creator.instagram_id
+                              ? 'border-pink-500 text-pink-500 hover:bg-pink-50'
+                              : 'border-purple-500 text-purple-500 hover:bg-purple-50'
+                          }`}
+                        >
+                          {creator.instagram_id ? 'Follow' : 'View profile'}
+                        </Button>
                         {!creator.isIndependent && (
                           <Button
                             variant="outline"

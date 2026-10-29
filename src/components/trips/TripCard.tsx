@@ -110,7 +110,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           onClick?.();
         }}
       >
-        <div className="relative aspect-[4/3] overflow-hidden">
+        <div className={`relative overflow-hidden ${trip.type === 'europe' ? 'aspect-video' : 'aspect-[4/3]'}`}>
           <img
             src={optimizeImageUrl(tripImage.src, { width: 480, height: 320 })}
             alt={trip.title}
@@ -126,12 +126,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
             }}
             className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
           />
-          {trip.type === 'europe' && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-orange-500/45 via-orange-400/10 to-amber-300/20"
-            />
-          )}
           {tripImage.credit && (
             <a
               href={tripImage.credit.source}
@@ -220,7 +214,7 @@ export const TripCard: React.FC<TripCardProps> = memo(({
       }}
     >
       {/* Image takes 65% of card height */}
-      <div className="relative aspect-[4/3] overflow-hidden">
+      <div className={`relative overflow-hidden ${trip.type === 'europe' ? 'aspect-video' : 'aspect-[4/3]'}`}>
         <img
           src={optimizeImageUrl(tripImage.src, { width: 640, height: 420 })}
           alt={trip.title}
@@ -236,12 +230,6 @@ export const TripCard: React.FC<TripCardProps> = memo(({
           }}
           className="w-full h-full object-cover group-hover:scale-[1.04] transition-transform duration-600"
         />
-        {trip.type === 'europe' && (
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 bg-gradient-to-tr from-orange-500/45 via-orange-400/10 to-amber-300/20"
-          />
-        )}
         {tripImage.credit && (
           <a
             href={tripImage.credit.source}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
-import { Star, Instagram, EggFried as Verified } from 'lucide-react';
+import { Star, Instagram, User, EggFried as Verified } from 'lucide-react';
 import { CreatorTrip, Trip } from '../../types';
 import { Button } from '../ui/Button';
 import { CreatorApplicationModal } from './CreatorApplicationModal';
@@ -8,6 +8,7 @@ import { TripDetails } from '../trips/TripDetails';
 import { cleanTripTitle } from '../../utils/formatters';
 import { useSlowMobileCarousel } from '../../hooks/useSlowMobileCarousel';
 import { INDIAN_TRAVEL_CREATORS } from '../../data/indianTravelCreators';
+import { CreatorAvatar } from './CreatorAvatar';
 
 
 
@@ -285,17 +286,11 @@ export const CreatorTrips: React.FC = () => {
                             }
                           }}
                         >
-                          {creator.avatar ? (
-                            <img
-                              src={creator.avatar}
-                              alt={creator.name}
-                              className="w-14 h-14 rounded-full object-cover border-3 border-gradient-to-r from-pink-500 to-purple-500 shadow-md"
-                            />
-                          ) : (
-                            <span className="flex h-14 w-14 items-center justify-center rounded-full bg-gray-100 font-semibold text-gray-500" aria-hidden="true">
-                              {creator.name.charAt(0)}
-                            </span>
-                          )}
+                          <CreatorAvatar
+                            src={creator.avatar}
+                            name={creator.name}
+                            className="h-14 w-14 rounded-full object-cover border-3 border-purple-200 shadow-md"
+                          />
                         </button>
                         {creator.verified && (
                           <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full flex items-center justify-center shadow">
@@ -319,19 +314,26 @@ export const CreatorTrips: React.FC = () => {
                         </div>
                       )}
 
-                      {creator.instagram_id && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          icon={Instagram}
-                          onClick={() => {
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        icon={creator.instagram_id ? Instagram : User}
+                        ariaLabel={creator.instagram_id ? `Follow ${creator.name} on Instagram` : `View ${creator.name}'s profile`}
+                        onClick={() => {
+                          if (creator.instagram_id) {
                             window.open(creator.profileUrl || `https://www.instagram.com/${creator.instagram_id}`, '_blank', 'noopener,noreferrer');
-                          }}
-                          className="border-pink-500 text-pink-500 hover:bg-pink-50 w-full text-xs py-1.5"
-                        >
-                          Follow
-                        </Button>
-                      )}
+                          } else if (creator.id) {
+                            window.location.hash = `creator-profile?id=${creator.id}`;
+                          }
+                        }}
+                        className={`w-full text-xs py-1.5 ${
+                          creator.instagram_id
+                            ? 'border-pink-500 text-pink-500 hover:bg-pink-50'
+                            : 'border-purple-500 text-purple-500 hover:bg-purple-50'
+                        }`}
+                      >
+                        {creator.instagram_id ? 'Follow' : 'View profile'}
+                      </Button>
                     </div>
                   </div>
                 </div>

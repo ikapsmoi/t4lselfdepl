@@ -199,8 +199,7 @@ export const resolveTripThumbnail = (
   fallbackImage: string
 ): ResolvedTripImage => {
   if (normalize(category) === ' europe ') {
-    const europeImage = TRIP_CITY_IMAGE_CREDITS.italy;
-    return { src: europeImage.asset, credit: europeImage };
+    return { src: '/europa.png' };
   }
 
   return resolveTripImage(title, destination, category, images, fallbackImage);
