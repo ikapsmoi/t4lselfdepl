@@ -1,0 +1,14 @@
+url,http_status,redirect_chain,canonical,robots,title,h1,sitemap,schema,initial_html,status,notes
+/tomorrowland/,200,none,self,index, follow,Tomorrowland Festival Travel Planning from India | Travel4life,Tomorrowland Festival Travel Planning from India,festivals.xml,verified,yes,VERIFIED COMPLETE,priority hub
+/tomorrowland/packages/,200,none,self,index, follow,Tomorrowland Packages from India: Cost &amp; Inclusions | Travel4life,Tomorrowland Packages from India,festival-packages.xml,verified,yes,PARTIALLY COMPLETE,commercial improvement needed
+/tomorrowland/belgium/,200,none,self,index, follow,Tomorrowland Belgium Tickets &amp; Travel from India | Travel4life,Plan Your Tomorrowland Belgium Trip from India,festivals.xml,verified,yes,VERIFIED COMPLETE,
+/tomorrowland/belgium/packages/,200,none,self,index, follow,Tomorrowland Belgium Package Enquiry | Travel4life,Tomorrowland Belgium Travel Packages from India,festival-packages.xml,verified,yes,PARTIALLY COMPLETE,GSC 33.54
+/tomorrowland/thailand/,200,none,self,index, follow,Tomorrowland Thailand 2026 Status &amp; Travel Guide | Travel4life,Tomorrowland Thailand Travel from India: Passes and Trip Planning,festivals.xml,verified,yes,PARTIALLY COMPLETE,position opportunity near 8.51
+/tomorrowland/winter/,200,none,self,index, follow,Tomorrowland Winter Tickets &amp; Travel from India | Travel4life,Plan Your Tomorrowland Winter Trip from India,festivals.xml,verified,yes,PARTIALLY COMPLETE,query attribution needed
+/tomorrowland/cost-from-india/,200,none,self,index, follow,Tomorrowland Trip Cost from India | Travel4life,Tomorrowland Trip Cost from India: Ticket and Travel Budget,festivals.xml,verified,yes,PARTIALLY COMPLETE,commercial cost intent
+/tomorrowland/tickets/,200,none,self,index, follow,Tomorrowland Tickets: Prices &amp; Official Sales | Travel4life,Tomorrowland tickets: official channels and travel planning,festivals.xml,verified,yes,VERIFIED COMPLETE,
+/tomorrowland/from-india/,200,none,self,index, follow,Todayland placeholder not audited,plan from source HTML,festivals.xml,verified,yes,NOT TESTED,title extraction deferred
+/tomorrowland-india.html,301,/tomorrowland/from-india/,none,n/a,n/a,n/a,n/a,n/a,n/a,VERIFIED COMPLETE,
+/tomorrowland/winter/2027/,301,/tomorrowland/winter/,none,n/a,n/a,n/a,n/a,n/a,n/a,VERIFIED COMPLETE,
+/trips/504a42d6-3a87-4a7f-8e3f-e0788f7ade94,301,/trips/504a42d6-3a87-4a7f-8e3f-e0788f7ade94/,not inspected,n/a,n/a,n/a,n/a,n/a,n/a,VERIFIED COMPLETE,Mysteryland only
+/trips/504a42d6-3a87-4a7f-8e3f-e0788f7ade94/,200,none,inspect product page,n/a,n/a,n/a,sitemap separate,n/a,yes,NOT FULLY VERIFIED,slashed canonical needs URL Inspection

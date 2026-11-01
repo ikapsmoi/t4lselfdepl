@@ -1,0 +1,9 @@
+issue_id,priority,url_or_surface,observed_evidence,recommended_change,authorization_required,status
+TL-001,P0,/trips/ Mysteryland variants,GSC slash and no-slash variants,Verify canonical URL owner and implement one permanent redirect,yes,diagnosis_required
+TL-002,P0,/trips/priority products,Client-rendered trip metadata,Verify source HTML and pre-render if required,yes,pending
+TL-003,P0,internal links and sitemap,Duplicate product URL forms observed,Standardize trailing-slash URL builder,yes,pending
+TL-004,P0,Search Console data,Workbook lacks India-only query-page attribution,Generate India query/page exports,no,data_required
+TL-005,P1,/tomorrowland/packages/,107 impressions 1 click position 16.33,Improve commercial India package intent,no,planned
+TL-006,P1,/tomorrowland/thailand/,68 impressions 5 clicks position 8.51,Improve package enquiry context,no,planned
+TL-007,P1,/tomorrowland/cost-from-india/,71 impressions 1 click position 15.56,Improve INR cost methodology,no,planned
+TL-008,P1,/tomorrowland/belgium/packages/,13 impressions 0 clicks position 33.54,Strengthen Belgium package intent,no,planned

@@ -1,0 +1,11 @@
+keyword,primary_url,intent,funnel_stage,clicks,impressions,ctr,position,status
+tomorrowland thailand packages from india,/tomorrowland/thailand/,commercial,conversion,3,6,50%,9.5,immediate
+tomorrowland packages from india,/tomorrowland/packages/,commercial,consideration,0,43,0%,23,primary_gap
+tomorrowland india,/tomorrowland/,commercial_discovery,consideration,1,16,6.25%,14.88,inspect_attribution
+tomorrowland 2027 tickets price in indian rupees,/tomorrowland/cost-from-india/,informational_price,consideration,0,19,0%,6.47,wrong_page_risk
+tomorrowland cost from india,/tomorrowland/cost-from-india/,informational_price,consideration,0,3,0%,10,optimize
+tomorrowland package,/tomorrowland/packages/,commercial,consideration,0,3,0%,14,consolidate
+tomorrowland travel packages,/tomorrowland/packages/,commercial,consideration,0,1,0%,19,support_owner
+tomorrowland belgium packages,/tomorrowland/belgium/packages/,commercial,consideration,,,, ,improve
+tomorrowland winter packages,/tomorrowland/winter/,commercial,consideration,,,,,protect_and_improve
+tomorrowland tickets,/tomorrowland/tickets/,informational,awareness,,,,,official_source

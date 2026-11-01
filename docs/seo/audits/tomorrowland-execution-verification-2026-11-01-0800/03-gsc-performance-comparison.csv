@@ -1,0 +1,10 @@
+metric_or_query,current_clicks,current_impressions,current_ctr,current_position,baseline_clicks,baseline_impressions,baseline_position,comparison_limit
+property,52,1818,2.86%,not present,52,1818,not present,global workbook; supplied and file totals match
+India country,32,559,5.72%,16.42,not available,not available,not available,India country row is available; not query-page attribution
+Tomorrowland Thailand packages from India,3,6,50%,9.5,3,7,8.71,attributed export differences need equivalent date and dimensions
+Tomorrowland packages from India,0,43,0%,23,0,43,23,comparison from supplied historical figure but same data not proven equivalent
+/tomorrowland/packages/,1,107,0.93%,16.33,1,107,16.33,current and supplied page figures match
+/tomorrowland/cost-from-india/,1,71,1.41%,15.56,1,71,15.56,current and supplied page figures match
+/tomorrowland/thailand/,5,68,7.35%,8.51,not available,not available,not available,no equivalent authoritative current baseline
+/tomorrowland/winter/,3,172,1.74%,7.89,not available,not available,not available,no exact Winter query/click data
+/tomorrowland/belgium/packages/,0,13,0%,33.54,not available,not available,not available,no equivalent authoritative current baseline

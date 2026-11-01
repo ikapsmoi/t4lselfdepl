@@ -1,0 +1,11 @@
+defect_id,severity,page_or_surface,observation,evidence,required_action,owner_or_dependency,status
+SEO-001,P1,/tomorrowland/packages/,broad package query at position 23 with zero clicks,GSC workbook 43 impressions position 23,Improve commercial intent,content owner,open
+SEO-002,P1,/tomorrowland/cost-from-india/,71 impressions but one click at position 15.56,GSC workbook,Improve full-trip methodology,content owner,open
+SEO-003,P1,/tomorrowland/belgium/packages/,13 impressions zero clicks position 33.54,GSC workbook,Improve package evidence and CTA,content owner,open
+SEO-004,P1,India query reporting,global workbook has separate country row but no query-page table,GSC workbook,Provide India query/page and 90-day exports,GSC owner,blocked
+SEO-005,P1,Winter price intent,high visibility in queried rows but exact clicks and landing page unclear,GSC separate dimensions,Obtain query-page export,GSC owner,blocked
+SEO-006,P1,organic conversion,analytics exists but qualified enquiry records unavailable,source tests and report limitation,Verify server-backed conversions with production analytics,owner,blocked
+SEO-007,P2,competitor ranking,live locale SERP not collected,audit status,Run dated SERP matrix,SEO analyst,blocked
+SEO-008,P2,mobile performance,no PageSpeed measurement in evidence,PageSpeed report untested,Run lighthouse/PageSpeed for priority routes,release owner,blocked
+SEO-009,P1,product canonical/SLASH,HTTP redirect works but final canonical not URL Inspected,redirect curl response,Verify rendered canonical and GSC selected canonical,owner/GSC access,open
+SEO-010,P1,proposed new URLs,existing equivalent owners already live,route inventory,new URLs should not be created without evidence,SEO analyst,open

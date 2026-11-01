@@ -1,0 +1,8 @@
+task_id,priority,url_or_file,recommended_change,business_rationale,effort,dependencies,acceptance_criteria,measurement
+task-001,P0,production routes,Diagnose Mysteryland slash variants,Protect product identity and consolidate signals,medium,canonical owner and sitemap verification,One canonical and redirect where required,GSC URL variants merge
+task-002,P0,Search Console export,Obtain India query/page exports,Measure India opportunity accurately,low,GSC access,28-day and 90-day CSVs available,India query-page scorecard
+task-003,P1,/tomorrowland/packages/,Improve India commercial package hub,Capture primary broad-package gap,medium,current route audit,Clear edition routing and quote CTA,query clicks impressions CTR position
+task-004,P1,/tomorrowland/thailand/,Improve Thailand commercial intent,Prioritize strongest commercial signal,medium,edition status verification,Direct package CTA and linked planning sections,Thailand query and page performance
+task-005,P1,/tomorrowland/cost-from-india/,Improve INR methodology,Own uncertain price searches honestly,medium,official source refresh,Dated ticket and full-trip methodology,price-query clicks and CTR
+task-006,P1,/tomorrowland/belgium/packages/,Improve Belgium commercial page,Address 33.54 package page gap,medium,current inventory and package terms,Verified quote process and edition context,Belgium package queries and landing-page performance
+task-007,P1,/tomorrowland/winter/,Protect and improve Winter snippet,Convert high visibility into qualified traffic,medium,exact query-page data,Edition status and balanced commercial content,clicks CTR and enquiries

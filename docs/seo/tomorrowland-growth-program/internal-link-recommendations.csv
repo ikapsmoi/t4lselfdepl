@@ -1,0 +1,11 @@
+source_url,target_url,anchor_text,purpose,status
+/,,tomorrowland travel planning,Connect homepage to the hub,review
+/tomorrowland/,/tomorrowland/packages/,Tomorrowland packages from India,Commercial owner
+/tomorrowland/packages/,/tomorrowland/belgium/packages/,Tomorrowland Belgium packages,Edition routing
+/tomorrowland/packages/,/tomorrowland/thailand/,Tomorrowland Thailand travel planning,Edition routing
+/tomorrowland/packages/,/tomorrowland/winter/,Tomorrowland Winter travel planning,Edition routing
+/tomorrowland/cost-from-india/,/tomorrowland/packages/,travel packages from India,Commercial conversion
+/tomorrowland/flights-from-india/,/tomorrowland/from-india/,India departure planning,Topical support
+/tomorrowland/tickets/,/tomorrowland/packages/,Travel4Life package planning,Commercial separation
+/tomorrowland/belgium/packages/,/tomorrowland/flights-from-india/,flights from India,Planning support
+/tomorrowland/winter/,/tomorrowland/accommodation/,Winter accommodation planning,Planning support
