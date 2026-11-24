@@ -389,8 +389,8 @@ test('Tomorrowland ticket guidance uses current official status without unverifi
   assert.match(ticket, /Tomorrowland Winter/);
   assert.match(ticket, /festival tickets are on sale/i);
   assert.match(ticket, /2026 event is sold out/i);
-  assert.match(ticket, /Global Journey packages are sold out/i);
-  assert.match(ticket, /festival takes place in Boom, Belgium/i);
+  assert.match(ticket, /remaining DreamVille Packages are available/i);
+  assert.match(ticket, /16–18 July and 23–25 July 2027/i);
   assert.match(ticket, /How do you check official Tomorrowland ticket availability/i);
   assert.match(ticket, /href="#ticket-availability"/);
   assert.match(ticket, /Where should you stay for Tomorrowland/i);
@@ -401,11 +401,11 @@ test('Tomorrowland ticket guidance uses current official status without unverifi
   assert.match(ticket, /Can I buy Tomorrowland tickets at the venue/i);
   assert.match(ticket, /Can I buy or sell a Tomorrowland ticket through a resale listing/i);
   assert.match(ticket, /"@type":"FAQPage"/);
-  assert.match(ticket, /"dateModified":"2026-10-27"/);
+  assert.match(ticket, /"dateModified":"2026-11-24"/);
   assert.match(ticket, /relevant official edition checkout for the live amount/i);
   assert.match(ticket, /not the festival organiser or an authorised ticket seller/i);
   assert.match(ticket, /<title>Tomorrowland Tickets: Prices &amp; Official Sales \| Travel4life<\/title>/);
-  assert.match(belgium, /those dates have passed/i);
+  assert.match(belgium, /16–18 July 2027/i);
   assert.match(winter, /4- and 7-day packages.*sold out/i);
   assert.match(thailand, /2026 event is sold out/i);
   assert.doesNotMatch(priceTables, /(?:€|THB|R\$)\s?[\d,]+|₹\s?[\d,]+/);

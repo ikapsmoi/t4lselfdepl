@@ -1,6 +1,6 @@
 # Tomorrowland Keyword Map
 
-**Reviewed:** 24 October 2026
+**Reviewed:** 24 November 2026
 **Purpose:** One primary URL per distinct search intent. Query examples are coverage targets, not claims of search volume or ranking.
 
 ## Evidence available
@@ -15,7 +15,7 @@ For data definitions and caveats, see [`audit/06-google-search-console.md`](../.
 | --- | --- | --- | --- | --- |
 | Tomorrowland tickets; buy tickets; ticket availability; registration; official ticket sale; ticket types; festival passes | Official purchase and information | `/tomorrowland/tickets/` | A central information route is now implemented. Buy/sale terms direct users to official edition sources; no Travel4life ticket offer is implied. | P0 |
 | Tomorrowland tickets from India; ticket booking information; tickets versus travel package | Information / comparison | `/tomorrowland/tickets/` | India-origin guidance distinguishes festival access from flights, hotels and travel quotes. | P1 |
-| Tomorrowland Belgium tickets; Belgium ticket sale dates; ticket prices; registration | Edition-specific official information | `/tomorrowland/belgium/` | Belgium 2026 dates have passed; no 2027 dates or sale timing were verified. No numeric prices shown. | P0 |
+| Tomorrowland Belgium tickets; Belgium ticket sale dates; ticket prices; registration | Edition-specific official information | `/tomorrowland/belgium/` | Official 2027 dates are 16–18 July and 23–25 July 2027. Confirmed milestones include 2 December 2026 pre-registration, 30 January 2027 Global Journey sales, 6 February 2027 WorldWide Pre-Sale and 13 February 2027 WorldWide Ticket Sale. No numeric public ticket price is claimed. | P0 |
 | Belgium travel packages; Belgium hotel packages; group travel; travel agent India | Commercial research | `/tomorrowland/belgium/packages/`; B2B intent → `/tomorrowland/b2b-travel-agent-packages/` | Package page is due diligence, not a live offer. B2B route remains separate. | P1 |
 | Tomorrowland Winter tickets; Winter ticket availability; price; France tickets; Alpe d'Huez | Edition-specific official information | `/tomorrowland/winter/` | “Tomorrowland France tickets” maps to Tomorrowland Winter in France; no separate Tomorrowland France edition is asserted. 2027 dates and sale status verified on official page; numeric price unknown. | P0 |
 | Winter packages; ski and festival planning; accommodation; travel from India | Travel/commercial research | `/tomorrowland/winter/`; accommodation details → `/tomorrowland/accommodation/` | Official Winter 4-/7-day packages are shown sold out; travel availability is separate. | P0 |

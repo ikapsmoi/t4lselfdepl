@@ -2,6 +2,15 @@
 
 Timestamp: 2026-11-01
 
+## 24 November 2026 verification update
+
+- Updated the central ticket guide and Belgium edition hub with confirmed Tomorrowland Belgium 2027 dates and sale milestones from the official welcome page.
+- Updated the Belgium, Winter, Thailand and Brasil status language in the existing ticket guide.
+- Updated the India cost-guide notice so it no longer describes the Belgium 2026 edition as the latest confirmed Belgium status.
+- Verified the official Winter 2027 page: 20–27 March 2027, 7-/4-/1-day tickets on sale, 4-/7-day packages sold out.
+- Verified the official Thailand 2026 page: 11–13 December 2026, sold out, no later edition announced on the reviewed page.
+- No URL, redirect, canonical, sitemap or Supabase change was made.
+
 ## Completed in this execution
 
 - Created the requested timestamped growth-program directory.
